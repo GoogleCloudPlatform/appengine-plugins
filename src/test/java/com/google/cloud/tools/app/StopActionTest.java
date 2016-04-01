@@ -21,7 +21,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.cloud.tools.app.action.StopAction;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Map;
 
 /**
  * Unit tests for {@link StopAction}.
@@ -51,47 +50,9 @@ public class StopActionTest {
   }
 
   @Test
-  public void testCheckFlags() throws GCloudExecutionException {
-    Map<Option, String> flags = ImmutableMap.of(
-        Option.ADMIN_HOST, "adminHost",
-        Option.ADMIN_PORT, "9090",
-        Option.SERVER, "server.com"
-    );
+  public void testCheckFlags() {
 
-    new StopAction(flags);
+    // TODO : write a new test here
   }
 
-  @Test(expected = InvalidFlagException.class)
-  public void testCheckFlags_error() throws GCloudExecutionException {
-    Map<Option, String> flags = ImmutableMap.of(
-        Option.ADMIN_HOST, "adminHost",
-        Option.PORT, "9000"
-    );
-
-    new StopAction(flags);
-  }
-
-  @Test
-  public void testSendRequest() throws GCloudExecutionException, IOException {
-    when(connection.getResponseCode()).thenReturn(200);
-    StopAction action = new StopAction(ImmutableMap.<Option, String>of());
-    action.setConnection(connection);
-    assertTrue(action.execute());
-  }
-
-  @Test
-  public void testSendRequest_less200() throws GCloudExecutionException, IOException {
-    when(connection.getResponseCode()).thenReturn(100);
-    StopAction action = new StopAction(ImmutableMap.<Option, String>of());
-    action.setConnection(connection);
-    assertFalse(action.execute());
-  }
-
-  @Test
-  public void testSendRequest_500() throws GCloudExecutionException, IOException {
-    when(connection.getResponseCode()).thenReturn(500);
-    StopAction action = new StopAction(ImmutableMap.<Option, String>of());
-    action.setConnection(connection);
-    assertFalse(action.execute());
-  }
 }

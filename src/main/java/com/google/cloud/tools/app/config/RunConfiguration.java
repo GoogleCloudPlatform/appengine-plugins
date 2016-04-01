@@ -15,18 +15,20 @@
  */
 package com.google.cloud.tools.app.config;
 
-import java.nio.file.Path;
-import java.util.Collection;
+import com.google.cloud.tools.app.action.RunAction;
+
+import java.io.File;
+import java.util.List;
 
 /**
- * Configuration of {@link com.google.cloud.tools.app.RunAction}.
+ * Configuration of {@link RunAction}.
  */
 public interface RunConfiguration {
   // TODO(joaomartins): Only contains common, jvm, Python, VM and misc flags for now. Need to add
   // PHP, AppIdentity, Blobstore, etc.
-  Collection<Path> getAppYamls();
+  List<File> getAppYamls();
 
-  Boolean isSynchronous();
+  boolean isRunAsync();
 
   String getHost();
 
@@ -44,29 +46,29 @@ public interface RunConfiguration {
 
   Integer getMaxModuleInstances();
 
-  Boolean isUseMtimeFileWatcher();
+  boolean isUseMtimeFileWatcher();
 
-  Boolean isThreadsafeOverride();
+  String getThreadsafeOverride();
 
   String getPythonStartupScript();
 
   String getPythonStartupArgs();
 
-  Collection<String> getJvmFlags();
+  List<String> getJvmFlags();
 
   String getCustomEntrypoint();
 
   String getRuntime();
 
-  Boolean isAllowSkippedFiles();
+  boolean isAllowSkippedFiles();
 
   Integer getApiPort();
 
-  Boolean isAutomaticRestart();
+  boolean isAutomaticRestart();
 
   String getDevAppserverLogLevel();
 
-  Boolean isSkipSdkUpdateCheck();
+  boolean isSkipSdkUpdateCheck();
 
   String getDefaultGcsBucketName();
 }

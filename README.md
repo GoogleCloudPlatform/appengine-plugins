@@ -46,11 +46,11 @@ Path appYaml = Paths.get("path", "to", "appYaml");
 DeployConfiguration configuration = DefaultDeployConfiguration.newBuilder(appYaml)
 
   .bucket("gs://my-gcs-bucket")
-  
+
   .force(true)
-  
+
   .promote(true)
-  
+
   .build();
 
 // Create an action object.
@@ -60,4 +60,3 @@ AppAction deployAction = new DeployAction(configuration);
 // Execute the action.
 
 deployAction.execute();
-

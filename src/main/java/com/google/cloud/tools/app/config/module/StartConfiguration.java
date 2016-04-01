@@ -18,7 +18,7 @@ package com.google.cloud.tools.app.config.module;
 import java.util.Collection;
 
 /**
- * Configuration for {@link com.google.cloud.tools.app.module.StartAction}.
+ * Configuration for {@link com.google.cloud.tools.app.action.module.StartAction}.
  */
 public interface StartConfiguration {
 

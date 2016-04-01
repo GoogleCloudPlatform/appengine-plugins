@@ -15,24 +15,28 @@
  */
 package com.google.cloud.tools.app;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import com.google.cloud.tools.app.action.GenConfigAction;
+import com.google.cloud.tools.app.config.DefaultGenConfigConfiguration;
+import com.google.cloud.tools.app.config.GenConfigConfiguration;
+import com.google.cloud.tools.app.executor.AppExecutor;
+import com.google.cloud.tools.app.executor.ExecutorException;
+import com.google.common.collect.ImmutableList;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Unit tests for {@link GenConfigAction}.
@@ -41,85 +45,49 @@ import java.util.Set;
 public class GenConfigActionTest {
 
   @Mock
-  private ProcessCaller callerMock;
+  private AppExecutor appExecutor;
+
+  @Rule
+  public TemporaryFolder tmpDir = new TemporaryFolder();
+
+  private File source;
 
   @Before
-  public void setUp() throws GCloudExecutionException {
-    when(callerMock.getGCloudPath()).thenReturn("here");
-    when(callerMock.call()).thenReturn(true);
+  public void setUp() throws IOException {
+    source = tmpDir.newFolder("source");
   }
 
   @Test
-  public void testPrepareCommand_withFlags() {
-    GenConfigAction action = new GenConfigAction(
-        "source",
-        ImmutableMap.of(Option.CONFIG, "app.yaml",
-            Option.CUSTOM, "true",
-            Option.RUNTIME, "java"));
+  public void testPrepareCommand_allFlags() throws ExecutorException {
 
-    Set<String> expected = ImmutableSet.of(action.getProcessCaller().getGCloudPath(), "preview",
-        "app", "gen-config", "source", "--config", "app.yaml", "--custom", "true", "--runtime",
-        "java");
-    Set<String> actual = new HashSet<>(action.getProcessCaller().getCommand());
-    assertEquals(expected, actual);
-  }
+    GenConfigConfiguration configuration = DefaultGenConfigConfiguration
+        .newBuilder(source)
+        .config("app.yaml")
+        .custom(true)
+        .runtime("java")
+        .build();
+    GenConfigAction action = new GenConfigAction(configuration, appExecutor);
 
-  @Test
-  public void testPrepareCommand_noFlags() {
-    GenConfigAction action = new GenConfigAction(
-        "source",
-        ImmutableMap.<Option, String>of());
-
-    Set<String> expected = ImmutableSet.of(action.getProcessCaller().getGCloudPath(), "preview",
-        "app", "gen-config", "source");
-    Set<String> actual = new HashSet<>(action.getProcessCaller().getCommand());
-    assertEquals(expected, actual);
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void testNullSource() {
-    new GenConfigAction(null, ImmutableMap.<Option, String>of());
-  }
-
-  @Test
-  public void testCheckFlags_allFlags() {
-    Map<Option, String> flags = ImmutableMap.of(
-        Option.CONFIG, "app.yaml",
-        Option.CUSTOM, "true",
-        Option.RUNTIME, "java"
-    );
-
-    new GenConfigAction("source", flags);
-  }
-
-  @Test
-  public void testCheckFlags_oneFlag() {
-    Map<Option, String> flags = ImmutableMap.of(Option.CONFIG, "app.yaml");
-    new GenConfigAction("source", flags);
-  }
-
-  @Test(expected = InvalidFlagException.class)
-  public void testCheckFlags_error() {
-    Map<Option, String> flags = ImmutableMap.of(
-        Option.CONFIG, "app.yaml",
-        Option.CUSTOM, "true",
-        Option.RUNTIME, "java",
-        Option.SERVER, "server.com",
-        Option.ADMIN_HOST, "disallowed flag!!!"
-    );
-
-    new GenConfigAction("source", flags);
-  }
-
-  @Test
-  public void testExecute() throws GCloudExecutionException, IOException {
-    GenConfigAction action = new GenConfigAction(
-        "source",
-        ImmutableMap.<Option, String>of());
-    action.setProcessCaller(callerMock);
+    List<String> expected = ImmutableList
+        .of("gen-config", source.toString(), "--config", "app.yaml", "--custom", "--runtime",
+            "java");
 
     action.execute();
+    verify(appExecutor, times(1)).runApp(eq(expected));
+  }
 
-    verify(callerMock, times(1)).call();
+  @Test
+  public void testPrepareCommand_noFlags() throws ExecutorException {
+
+    GenConfigConfiguration configuration = DefaultGenConfigConfiguration
+        .newBuilder(source)
+        .build();
+
+    GenConfigAction action = new GenConfigAction(configuration, appExecutor);
+
+    List<String> expected = ImmutableList.of("gen-config", source.toString());
+
+    action.execute();
+    verify(appExecutor, times(1)).runApp(eq(expected));
   }
 }

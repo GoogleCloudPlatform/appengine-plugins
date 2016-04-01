@@ -15,12 +15,12 @@
  */
 package com.google.cloud.tools.app.config.module;
 
-import com.google.cloud.tools.app.module.SetManagedByAction.Manager;
+import com.google.cloud.tools.app.action.module.SetManagedByAction.Manager;
 
 import java.util.Collection;
 
 /**
- * Configuration for {@link com.google.cloud.tools.app.module.SetManagedByAction}.
+ * Configuration for {@link com.google.cloud.tools.app.action.module.SetManagedByAction}.
  */
 public interface SetManagedByConfiguration {
 

@@ -18,7 +18,7 @@ package com.google.cloud.tools.app.config.module;
 import java.util.Collection;
 
 /**
- * Configuration for {@link com.google.cloud.tools.app.module.GetLogsAction}.
+ * Configuration for {@link com.google.cloud.tools.app.action.module.GetLogsAction}.
  */
 public interface GetLogsConfiguration {
 

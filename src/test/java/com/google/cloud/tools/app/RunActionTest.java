@@ -1,39 +1,37 @@
 /**
  * Copyright 2016 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.google.cloud.tools.app;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import com.google.cloud.tools.app.action.RunAction;
+import com.google.cloud.tools.app.config.DefaultRunConfiguration;
+import com.google.cloud.tools.app.config.RunConfiguration;
+import com.google.cloud.tools.app.executor.DevAppServerExecutor;
+import com.google.cloud.tools.app.executor.ExecutorException;
+import com.google.common.collect.ImmutableList;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.File;
+import java.util.List;
 
 /**
  * Unit tests for {@link RunAction}.
@@ -42,171 +40,78 @@ import java.util.Set;
 public class RunActionTest {
 
   @Mock
-  ProcessCaller callerMock;
-
-  @Before
-  public void setUp() throws GCloudExecutionException {
-    when(callerMock.getGCloudPath()).thenReturn("here");
-    when(callerMock.call()).thenReturn(true);
-  }
+  DevAppServerExecutor devAppServerExecutor;
 
   @Test
-  public void testPrepareCommand_withFlags() {
-    Map<Option, String> flags = new HashMap();
-    flags.put(Option.HOST, "host");
-    flags.put(Option.PORT, "8000");
-    flags.put(Option.ADMIN_HOST, "adminHost");
-    flags.put(Option.ADMIN_PORT, "8080");
-    flags.put(Option.AUTH_DOMAIN, "example.com");
-    flags.put(Option.STORAGE_PATH, "storage path");
-    flags.put(Option.LOG_LEVEL, "debug");
-    flags.put(Option.MAX_MODULE_INSTANCES, "3");
-    flags.put(Option.USE_MTIME_FILE_WATCHER, "true");
-    flags.put(Option.THREADSAFE_OVERRIDE, "default:False,backend:True");
-    flags.put(Option.PYTHON_STARTUP_SCRIPT, "start this");
-    flags.put(Option.PYTHON_STARTUP_ARGS, "arguments");
-    flags.put(Option.JVM_FLAG, "flag");
-    flags.put(Option.CUSTOM_ENTRYPOINT, "custom entrypoint");
-    flags.put(Option.RUNTIME, "java");
-    flags.put(Option.ALLOW_SKIPPED_FILES, "true");
-    flags.put(Option.API_PORT, "8091");
-    flags.put(Option.AUTOMATIC_RESTART, "true");
-    flags.put(Option.DEV_APPSERVER_LOG_LEVEL, "info");
-    flags.put(Option.SKIP_SDK_UPDATE_CHECK, "false");
-    flags.put(Option.DEFAULT_GCS_BUCKET_NAME, "buckets");
+  public void testPrepareCommand_allFlags() throws ExecutorException {
 
-    RunAction action = new RunAction("app.yaml", true, flags);
+    RunConfiguration configuration = DefaultRunConfiguration.newBuilder(new File("app.yaml"))
+        .host("host")
+        .port(8090)
+        .adminHost("adminHost")
+        .adminPort(8000)
+        .authDomain("example.com")
+        .storagePath("storage/path")
+        .logLevel("debug")
+        .maxModuleInstances(3)
+        .useMtimeFileWatcher(true)
+        .threadsafeOverride("default:False,backend:True")
+        .pythonStartupScript("script.py")
+        .pythonStartupArgs("arguments")
+        .jvmFlags(ImmutableList.of("-Dtomato", "-Dpotato"))
+        .customEntrypoint("entrypoint")
+        .runtime("java")
+        .allowSkippedFiles(true)
+        .apiPort(8091)
+        .automaticRestart(true)
+        .devAppserverLogLevel("info")
+        .skipSdkUpdateCheck(true)
+        .defaultGcsBucketName("buckets")
+        .build();
 
-    Set<String> expected = ImmutableSet.of(action.getProcessCaller().getDevAppserverPath(),
-        "app.yaml", "--threadsafe_override", "default:False,backend:True", "--storage_path",
-        "storage path", "--python_startup_script", "start this", "--host", "host",
-        "--default_gcs_bucket_name", "buckets", "--automatic_restart", "true",
-        "--dev_appserver_log_level", "info", "--runtime", "java", "--skip_sdk_update_check",
-        "false", "--admin_port", "8080", "--port", "8000", "--use_mtime_file_watcher", "true",
-        "--admin_host", "adminHost", "--log_level", "debug", "--max_module_instances", "3",
-        "--jvm_flag", "flag", "--allow_skipped_files", "true", "--custom_entrypoint",
-        "custom entrypoint", "--api_port", "8091", "--auth_domain", "example.com",
-        "--python_startup_args", "arguments");
-    Set<String> actual = new HashSet<>(action.getProcessCaller().getCommand());
-    assertEquals(expected, actual);
-  }
+    RunAction action = new RunAction(configuration, devAppServerExecutor);
 
-  @Test
-  public void testPrepareCommand_async() {
-    // Non-synchronous produces the same command.
-    Map<Option, String> flags = new HashMap();
-    flags.put(Option.HOST, "host");
-    flags.put(Option.PORT, "8000");
-    flags.put(Option.ADMIN_HOST, "adminHost");
-    flags.put(Option.ADMIN_PORT, "8080");
-    flags.put(Option.AUTH_DOMAIN, "example.com");
-    flags.put(Option.STORAGE_PATH, "storage path");
-    flags.put(Option.LOG_LEVEL, "debug");
-    flags.put(Option.MAX_MODULE_INSTANCES, "3");
-    flags.put(Option.USE_MTIME_FILE_WATCHER, "true");
-    flags.put(Option.THREADSAFE_OVERRIDE, "default:False,backend:True");
-    flags.put(Option.PYTHON_STARTUP_SCRIPT, "start this");
-    flags.put(Option.PYTHON_STARTUP_ARGS, "arguments");
-    flags.put(Option.JVM_FLAG, "flag");
-    flags.put(Option.CUSTOM_ENTRYPOINT, "custom entrypoint");
-    flags.put(Option.RUNTIME, "java");
-    flags.put(Option.ALLOW_SKIPPED_FILES, "true");
-    flags.put(Option.API_PORT, "8091");
-    flags.put(Option.AUTOMATIC_RESTART, "true");
-    flags.put(Option.DEV_APPSERVER_LOG_LEVEL, "info");
-    flags.put(Option.SKIP_SDK_UPDATE_CHECK, "false");
-    flags.put(Option.DEFAULT_GCS_BUCKET_NAME, "buckets");
-
-    RunAction action = new RunAction("app.yaml", false, flags);
-    Set<String> actual = new HashSet<>(action.getProcessCaller().getCommand());
-    Set<String> expected = ImmutableSet.of(action.getProcessCaller().getDevAppserverPath(),
-        "app.yaml", "--threadsafe_override", "default:False,backend:True", "--storage_path",
-        "storage path", "--python_startup_script", "start this", "--host", "host",
-        "--default_gcs_bucket_name", "buckets", "--automatic_restart", "true",
-        "--dev_appserver_log_level", "info", "--runtime", "java", "--skip_sdk_update_check",
-        "false", "--admin_port", "8080", "--port", "8000", "--use_mtime_file_watcher", "true",
-        "--admin_host", "adminHost", "--log_level", "debug", "--max_module_instances", "3",
-        "--jvm_flag", "flag", "--allow_skipped_files", "true", "--custom_entrypoint",
-        "custom entrypoint", "--api_port", "8091", "--auth_domain", "example.com",
-        "--python_startup_args", "arguments");
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  public void testPrepareCommand_noFlags() {
-    Map<Option, String> flags = ImmutableMap.of();
-    RunAction action = new RunAction("app.yaml", true, flags);
-    Set<String> expected =
-        ImmutableSet.of(action.getProcessCaller().getDevAppserverPath(), "app.yaml");
-    Set<String> actual = new HashSet<>(action.getProcessCaller().getCommand());
-
-    assertEquals(expected, actual);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testEmptyAppYaml() {
-    new RunAction("", false, ImmutableMap.<Option, String>of());
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullAppYaml() {
-    new RunAction(null, false, ImmutableMap.<Option, String>of());
-  }
-
-  @Test
-  public void testCheckFlags_allFlags() {
-    Map<Option, String> flags = new HashMap();
-    flags.put(Option.HOST, "host");
-    flags.put(Option.PORT, "8000");
-    flags.put(Option.ADMIN_HOST, "adminHost");
-    flags.put(Option.ADMIN_PORT, "8080");
-    flags.put(Option.AUTH_DOMAIN, "example.com");
-    flags.put(Option.STORAGE_PATH, "storage path");
-    flags.put(Option.LOG_LEVEL, "debug");
-    flags.put(Option.MAX_MODULE_INSTANCES, "3");
-    flags.put(Option.USE_MTIME_FILE_WATCHER, "true");
-    flags.put(Option.THREADSAFE_OVERRIDE, "default:False,backend:True");
-    flags.put(Option.PYTHON_STARTUP_SCRIPT, "start this");
-    flags.put(Option.PYTHON_STARTUP_ARGS, "arguments");
-    flags.put(Option.JVM_FLAG, "flag");
-    flags.put(Option.CUSTOM_ENTRYPOINT, "custom entrypoint");
-    flags.put(Option.RUNTIME, "java");
-    flags.put(Option.ALLOW_SKIPPED_FILES, "true");
-    flags.put(Option.API_PORT, "8091");
-    flags.put(Option.AUTOMATIC_RESTART, "true");
-    flags.put(Option.DEV_APPSERVER_LOG_LEVEL, "info");
-    flags.put(Option.SKIP_SDK_UPDATE_CHECK, "false");
-    flags.put(Option.DEFAULT_GCS_BUCKET_NAME, "buckets");
-
-    new RunAction("app.yaml", false, flags);
-  }
-
-  @Test
-  public void testCheckFlags_oneFlag() {
-    Map<Option, String> flags = ImmutableMap.of(Option.DEFAULT_GCS_BUCKET_NAME, "buckets");
-    new RunAction("app.yaml", false, flags);
-  }
-
-  @Test(expected = InvalidFlagException.class)
-  public void testCheckFlags_error() {
-    Map<Option, String> flags = ImmutableMap.of(
-        Option.CONFIG, "app.yaml",
-        Option.CUSTOM, "true",
-        Option.RUNTIME, "java",
-        Option.SERVER, "server.com",
-        Option.INSTANCE, "disallowed flag!!!"
-    );
-
-    new RunAction("app.yaml", false, flags);
-  }
-
-  @Test
-  public void testExecute() throws GCloudExecutionException, IOException {
-    RunAction action = new RunAction("app.yaml", false, ImmutableMap.<Option, String>of());
-    action.setProcessCaller(callerMock);
+    List<String> expected = ImmutableList
+        .of("app.yaml", "--host", "host", "--port", "8090", "--admin_host", "adminHost",
+            "--admin_port", "8000", "--auth_domain", "example.com", "--storage_path",
+            "storage/path", "--log_level", "debug", "--max_module_instances", "3",
+            "--use_mtime_file_watcher", "--threadsafe_override", "default:False,backend:True",
+            "--python_startup_script", "script.py", "--python_startup_args", "arguments",
+            "--jvm_flag", "-Dtomato", "--jvm_flag", "-Dpotato", "--custom_entrypoint", "entrypoint",
+            "--runtime", "java", "--allow_skipped_files", "--api_port", "8091",
+            "--automatic_restart", "--dev_appserver_log_level", "info", "--skip_sdk_update_check",
+            "--default_gcs_bucket_name", "buckets");
 
     action.execute();
-
-    verify(callerMock, times(1)).call();
+    verify(devAppServerExecutor, times(1)).runDevAppServer(eq(expected));
   }
+
+  @Test
+  public void testPrepareCommand_noFlags() throws ExecutorException {
+
+    RunConfiguration configuration = DefaultRunConfiguration.newBuilder(new File("app.yaml"))
+        .build();
+
+    RunAction action = new RunAction(configuration, devAppServerExecutor);
+
+    List<String> expected = ImmutableList.of("app.yaml");
+
+    action.execute();
+    verify(devAppServerExecutor, times(1)).runDevAppServer(eq(expected));
+  }
+
+  public void testPrepareCommand_noFlagsAsync() throws ExecutorException {
+
+    RunConfiguration configuration = DefaultRunConfiguration.newBuilder(new File("app.yaml"))
+        .async(true)
+        .build();
+
+    RunAction action = new RunAction(configuration, devAppServerExecutor);
+
+    List<String> expected = ImmutableList.of("app.yaml");
+
+    action.execute();
+    verify(devAppServerExecutor, times(1)).runDevAppServerAsync(eq(expected));
+  }
+
 }
