@@ -18,9 +18,7 @@ import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.google.cloud.tools.app.action.StageAction;
-import com.google.cloud.tools.app.config.DefaultStageConfiguration;
-import com.google.cloud.tools.app.config.StageConfiguration;
+import com.google.cloud.tools.app.deploy.StageConfiguration;
 import com.google.cloud.tools.app.executor.StageExecutor;
 import com.google.common.collect.ImmutableList;
 

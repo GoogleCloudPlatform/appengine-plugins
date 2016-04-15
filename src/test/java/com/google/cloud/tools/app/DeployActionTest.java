@@ -17,9 +17,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.google.cloud.tools.app.action.DeployAction;
-import com.google.cloud.tools.app.config.DefaultDeployConfiguration;
-import com.google.cloud.tools.app.config.DeployConfiguration;
+import com.google.cloud.tools.app.deploy.DeployConfiguration;
 import com.google.cloud.tools.app.executor.AppExecutor;
 import com.google.cloud.tools.app.executor.ExecutorException;
 import com.google.common.collect.ImmutableList;
@@ -62,7 +60,7 @@ public class DeployActionTest {
 
     DeployConfiguration configuration = DefaultDeployConfiguration.newBuilder(appYaml1)
         .bucket("gs://a-bucket")
-        .dockerBuild("remote")
+        .dockerBuild("cloud")
         .force(true)
         .imageUrl("imageUrl")
         .promote(false)
@@ -74,8 +72,8 @@ public class DeployActionTest {
     DeployAction action = new DeployAction(configuration, appExecutor);
 
     List<String> expectedCommand = ImmutableList
-        .of("deploy", appYaml1.toString(), "--bucket", "gs://a-bucket", "--docker-build",
-            "remote", "--force", "--image-url", "imageUrl", "--server", "appengine.google.com",
+        .of("cloud", appYaml1.toString(), "--bucket", "gs://a-bucket", "--docker-build",
+            "cloud", "--force", "--image-url", "imageUrl", "--server", "appengine.google.com",
             "--stop-previous-version", "--version", "v1", "--quiet");
 
     action.execute();
@@ -90,7 +88,7 @@ public class DeployActionTest {
 
     DeployAction action = new DeployAction(configuration, appExecutor);
 
-    List<String> expectedCommand = ImmutableList.of("deploy", appYaml1.toString(), "--quiet");
+    List<String> expectedCommand = ImmutableList.of("cloud", appYaml1.toString(), "--quiet");
 
     action.execute();
     verify(appExecutor, times(1)).runApp(eq(expectedCommand));
@@ -105,7 +103,7 @@ public class DeployActionTest {
     DeployAction action = new DeployAction(configuration, appExecutor);
 
     List<String> expectedCommand = ImmutableList
-        .of("deploy", appYaml1.toString(), appYaml2.toString(), "--quiet");
+        .of("cloud", appYaml1.toString(), appYaml2.toString(), "--quiet");
 
     action.execute();
     verify(appExecutor, times(1)).runApp(eq(expectedCommand));

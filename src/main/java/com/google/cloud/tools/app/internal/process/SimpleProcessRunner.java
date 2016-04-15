@@ -17,16 +17,36 @@ package com.google.cloud.tools.app.internal.process;
 
 
 import java.io.IOException;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * Simple process runner that doesn't do anything special to process streams
  */
 public class SimpleProcessRunner implements ProcessRunner {
+  Logger logger = Logger.getLogger(SimpleProcessRunner.class.getName());
 
   public int run(String[] command) throws ProcessRunnerException {
     final ProcessBuilder pb = new ProcessBuilder(command);
     pb.inheritIO();
 
+    logger.addHandler(new Handler() {
+      @Override
+      public void publish(LogRecord record) {
+
+      }
+
+      @Override
+      public void flush() {
+
+      }
+
+      @Override
+      public void close() throws SecurityException {
+
+      }
+    });
     try {
       final Process process = pb.start();
 

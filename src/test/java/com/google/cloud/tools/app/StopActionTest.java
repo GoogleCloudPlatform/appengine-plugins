@@ -21,8 +21,6 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.app.action.StopAction;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

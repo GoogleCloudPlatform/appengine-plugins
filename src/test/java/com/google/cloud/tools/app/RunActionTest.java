@@ -18,9 +18,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.google.cloud.tools.app.action.RunAction;
-import com.google.cloud.tools.app.config.DefaultRunConfiguration;
-import com.google.cloud.tools.app.config.RunConfiguration;
+import com.google.cloud.tools.app.devserver.RunConfiguration;
 import com.google.cloud.tools.app.executor.DevAppServerExecutor;
 import com.google.cloud.tools.app.executor.ExecutorException;
 import com.google.common.collect.ImmutableList;
