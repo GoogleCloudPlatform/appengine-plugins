@@ -13,11 +13,14 @@
  */
 package com.google.cloud.tools.app;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.app.api.deploy.DeployConfiguration;
+import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment;
 import com.google.cloud.tools.app.impl.executor.ExecutorException;
 import com.google.common.collect.ImmutableList;
 
@@ -25,19 +28,16 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 /**
- * Unit tests for {@link DeployAction}.
+ * Unit tests for {@link CloudSdkAppEngineDeployment}
  */
-@RunWith(MockitoJUnitRunner.class)
-public class DeployActionTest {
+public class CloudSdkAppEngineDeploymentTest {
 
   @Rule
   public TemporaryFolder tmpDir = new TemporaryFolder();
@@ -58,16 +58,17 @@ public class DeployActionTest {
   @Test
   public void testNewDeployAction_allFlags() throws ExecutorException {
 
-    DeployConfiguration configuration = DefaultDeployConfiguration.newBuilder(appYaml1)
-        .bucket("gs://a-bucket")
-        .dockerBuild("cloud")
-        .force(true)
-        .imageUrl("imageUrl")
-        .promote(false)
-        .server("appengine.google.com")
-        .stopPreviousVersion(true)
-        .version("v1")
-        .build();
+    DeployConfiguration configuration = mock(DeployConfiguration.class);
+    when(configuration.getBucket()).thenReturn("gs://a-bucket");
+    when(configuration.getDockerBuild()).thenReturn("cloud");
+    when(configuration.isForce()).thenReturn(true);
+    when(configuration.getImageUrl()).thenReturn("imageUrl");
+    when(configuration.isPromote()).thenReturn(false);
+    when(configuration.getServer()).thenReturn("appengine.google.com");
+    when(configuration.isStopPreviousVersion()).thenReturn(true);
+    when(configuration.getVersion()).thenReturn("v1");
+
+    CloudSdkAppEngineDeployment deployment = new CloudSdkAppEngineDeployment();
 
     DeployAction action = new DeployAction(configuration, appExecutor);
 

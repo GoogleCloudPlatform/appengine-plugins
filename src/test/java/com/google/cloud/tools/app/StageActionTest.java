@@ -18,8 +18,7 @@ import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.google.cloud.tools.app.deploy.StageConfiguration;
-import com.google.cloud.tools.app.executor.StageExecutor;
+import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Test;
@@ -48,7 +47,7 @@ public class StageActionTest {
   @Test
   public void testCheckFlags_allFlags() throws IOException {
 
-    StageConfiguration configuration = DefaultStageConfiguration
+    StageStandardConfiguration configuration = DefaultStageConfiguration
         .newBuilder(source, destination)
         .dockerfile(dockerfile)
         .enableQuickstart(true)
@@ -78,7 +77,7 @@ public class StageActionTest {
   @Test
   public void testCheckFlags_noFlags() throws IOException {
 
-    StageConfiguration configuration = DefaultStageConfiguration
+    StageStandardConfiguration configuration = DefaultStageConfiguration
         .newBuilder(new File("source"), new File("destination")).build();
 
     StageAction action = new StageAction(configuration, stageExecutor);
