@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Created by appu on 4/1/16.
+ * App Engine SDK CLI wrapper.
  */
 public class AppEngineSdk {
 
@@ -14,6 +14,9 @@ public class AppEngineSdk {
     this.appengineSdk = appengineSdk;
   }
 
+  /**
+   * Executes an App Engine SDK CLI command synchronously.
+   */
   public void runCommand(List<String> args) {
     // AppEngineSdk requires this system property to be set.
     System.setProperty("appengine.impl.root", appengineSdk.toString());

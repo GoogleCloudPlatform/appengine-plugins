@@ -16,8 +16,16 @@ package com.google.cloud.tools.app.api.deploy;
 import com.google.cloud.tools.app.api.AppEngineException;
 
 /**
- * Created by meltsufin on 4/18/16.
+ * Main interface for staging Java application for App Engine standard environment before
+ * deployment.
  */
 public interface AppEngineStandardStaging {
+
+  /**
+   * Stages the application for App Engine standard deployment.
+   *
+   * @param config Configuration parameters for staging.
+   * @throws AppEngineException When staging fails.
+   */
   void stageStandard(StageStandardConfiguration config) throws AppEngineException;
 }

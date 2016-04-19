@@ -16,7 +16,7 @@
 package com.google.cloud.tools.app.api.module;
 
 /**
- * Configuration for {@link com.google.cloud.tools.app.action.module.SetManagedByAction}.
+ * Configuration for {@link AppEngineModuleService#setManagedBy(SetManagedByConfiguration)}.
  */
 public interface SetManagedByConfiguration extends ModuleSelectionConfiguration {
 

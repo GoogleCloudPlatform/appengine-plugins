@@ -16,7 +16,7 @@
 package com.google.cloud.tools.app.api.module;
 
 /**
- * Configuration for {@link com.google.cloud.tools.app.action.module.GetLogsAction}.
+ * Configuration for {@link AppEngineModuleService#getLogs(GetLogsConfiguration)}.
  */
 public interface GetLogsConfiguration extends ModuleSelectionConfiguration {
 

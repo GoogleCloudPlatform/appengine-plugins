@@ -26,11 +26,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by meltsufin on 4/18/16.
+ * Cloud SDK based implementation of {@link GenConfigUtility}.
  */
 public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
 
   private CloudSdk sdk;
+
+  public CloudSdkAppEngineGenConfig(
+      CloudSdk sdk) {
+    this.sdk = sdk;
+  }
 
   /**
    * Generates missing configuration files.

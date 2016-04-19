@@ -16,7 +16,7 @@ package com.google.cloud.tools.app.api.module;
 import java.util.Collection;
 
 /**
- * Created by meltsufin on 4/14/16.
+ * Identifies a module or a set of modules for use in {@link AppEngineModuleService}
  */
 public interface ModuleSelectionConfiguration {
 

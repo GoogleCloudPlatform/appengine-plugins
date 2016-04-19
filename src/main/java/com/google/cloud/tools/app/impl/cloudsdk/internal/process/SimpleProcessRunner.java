@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Simple process runner that doesn't do anything special to process streams
+ * Synchronous process runner that doesn't do anything special to process streams.
  */
 public class SimpleProcessRunner implements ProcessRunner {
 

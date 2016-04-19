@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by meltsufin on 4/15/16.
+ * Cloud SDK based implementation of {@link AppEngineDevServer}.
  */
 public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
 

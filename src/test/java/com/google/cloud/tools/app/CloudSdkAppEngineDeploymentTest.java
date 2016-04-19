@@ -14,16 +14,14 @@
 package com.google.cloud.tools.app;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
+import com.google.cloud.tools.app.impl.config.DefaultDeployConfiguration;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Before;
@@ -45,37 +43,37 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineDeploymentTest {
 
+  @Mock
+  private CloudSdk sdk;
+
   @Rule
   public TemporaryFolder tmpDir = new TemporaryFolder();
 
   private File appYaml1;
   private File appYaml2;
 
-  @Mock
-  private CloudSdk sdk;
-
+  private CloudSdkAppEngineDeployment deployment;
 
   @Before
   public void setUp() throws IOException {
     appYaml1 = tmpDir.newFile("app1.yaml");
     appYaml2 = tmpDir.newFile("app2.yaml");
+    deployment = new CloudSdkAppEngineDeployment(sdk);
   }
 
   @Test
   public void testNewDeployAction_allFlags() throws AppEngineException, ProcessRunnerException {
 
-    DeployConfiguration configuration = mock(DeployConfiguration.class);
-    when(configuration.getDeployables()).thenReturn(Arrays.asList(appYaml1));
-    when(configuration.getBucket()).thenReturn("gs://a-bucket");
-    when(configuration.getDockerBuild()).thenReturn("cloud");
-    when(configuration.isForce()).thenReturn(true);
-    when(configuration.getImageUrl()).thenReturn("imageUrl");
-    when(configuration.isPromote()).thenReturn(false);
-    when(configuration.getServer()).thenReturn("appengine.google.com");
-    when(configuration.isStopPreviousVersion()).thenReturn(true);
-    when(configuration.getVersion()).thenReturn("v1");
-
-    CloudSdkAppEngineDeployment deployment = new CloudSdkAppEngineDeployment(sdk);
+    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+    configuration.setDeployables(Arrays.asList(appYaml1));
+    configuration.setBucket("gs://a-bucket");
+    configuration.setDockerBuild("cloud");
+    configuration.setForce(true);
+    configuration.setImageUrl("imageUrl");
+    configuration.setPromote(false);
+    configuration.setServer("appengine.google.com");
+    configuration.setStopPreviousVersion(true);
+    configuration.setVersion("v1");
 
     deployment.deploy(configuration);
 
@@ -86,34 +84,34 @@ public class CloudSdkAppEngineDeploymentTest {
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
-/*
+
   @Test
-  public void testNewDeployAction_noFlags() throws ExecutorException {
+  public void testNewDeployAction_noFlags() throws AppEngineException, ProcessRunnerException {
 
-    DeployConfiguration configuration = DefaultDeployConfiguration.newBuilder(appYaml1)
-        .build();
-
-    DeployAction action = new DeployAction(configuration, appExecutor);
+    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+    configuration.setDeployables(Arrays.asList(appYaml1));
 
     List<String> expectedCommand = ImmutableList.of("cloud", appYaml1.toString(), "--quiet");
 
-    action.execute();
-    verify(appExecutor, times(1)).runCommand(eq(expectedCommand));
+    deployment.deploy(configuration);
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
 
   @Test
-  public void testNewDeployAction_multipleDeployables() throws ExecutorException {
+  public void testNewDeployAction_multipleDeployables()
+      throws AppEngineException, ProcessRunnerException {
 
-    DeployConfiguration configuration = DefaultDeployConfiguration.newBuilder(appYaml1, appYaml2)
-        .build();
+    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+    configuration.setDeployables(Arrays.asList(appYaml1, appYaml2));
 
-    DeployAction action = new DeployAction(configuration, appExecutor);
+    deployment.deploy(configuration);
 
     List<String> expectedCommand = ImmutableList
         .of("cloud", appYaml1.toString(), appYaml2.toString(), "--quiet");
 
-    action.execute();
-    verify(appExecutor, times(1)).runCommand(eq(expectedCommand));
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+
   }
-  */
+
 }

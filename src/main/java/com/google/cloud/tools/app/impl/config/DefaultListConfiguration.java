@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,16 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.cloud.tools.app.api.module;
+
+package com.google.cloud.tools.app.impl.config;
+
+import com.google.cloud.tools.app.api.module.ListConfiguration;
 
 import java.util.Collection;
 
 /**
- * Configuration for {@link AppEngineModuleService#list(ListConfiguration)}.
+ * Plain Java bean implementation of {@link ListConfiguration}
  */
-public interface ListConfiguration {
+public class DefaultListConfiguration implements ListConfiguration {
 
-  Collection<String> getModules();
+  private Collection<String> modules;
+  private String server;
 
-  String getServer();
+  @Override
+  public Collection<String> getModules() {
+    return modules;
+  }
+
+  public void setModules(Collection<String> modules) {
+    this.modules = modules;
+  }
+
+  @Override
+  public String getServer() {
+    return server;
+  }
+
+  public void setServer(String server) {
+    this.server = server;
+  }
 }

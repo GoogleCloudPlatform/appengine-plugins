@@ -16,10 +16,16 @@ package com.google.cloud.tools.app.api.deploy;
 import com.google.cloud.tools.app.api.AppEngineException;
 
 /**
- * Created by meltsufin on 4/15/16.
+ * Main interface for deploying to App Engine
  */
 public interface AppEngineDeployment {
 
+  /**
+   * Deploy the local code and/or configuration of your app to App Engine.
+   *
+   * @param config Deployment configuration
+   * @throws AppEngineException When deployment process fails
+   */
   void deploy(DeployConfiguration config) throws AppEngineException;
 
 }

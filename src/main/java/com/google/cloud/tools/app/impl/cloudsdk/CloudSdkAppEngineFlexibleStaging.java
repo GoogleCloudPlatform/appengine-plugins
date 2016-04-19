@@ -24,9 +24,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 /**
- * Created by meltsufin on 4/18/16.
+ * Cloud SDK based implementation of {@link AppEngineFlexibleStaging}.
  */
 public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStaging {
+
   /**
    * Stages a Java JAR/WAR Managed VMs application to be deployed.
    *

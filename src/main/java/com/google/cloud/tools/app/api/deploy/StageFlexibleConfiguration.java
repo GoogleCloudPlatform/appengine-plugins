@@ -16,7 +16,7 @@ package com.google.cloud.tools.app.api.deploy;
 import java.io.File;
 
 /**
- * Configuration for {@link ArtifactStageAction}.
+ * Configuration for {@link AppEngineFlexibleStaging#stageFlexible(StageFlexibleConfiguration)}.
  */
 public interface StageFlexibleConfiguration {
 

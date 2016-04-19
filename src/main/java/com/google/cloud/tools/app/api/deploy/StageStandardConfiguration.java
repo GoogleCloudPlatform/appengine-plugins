@@ -18,7 +18,7 @@ package com.google.cloud.tools.app.api.deploy;
 import java.io.File;
 
 /**
- * Configuration for {@link StageAction}.
+ * Configuration for {@link AppEngineStandardStaging#stageStandard(StageStandardConfiguration)}.
  */
 public interface StageStandardConfiguration {
 

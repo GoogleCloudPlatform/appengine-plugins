@@ -16,8 +16,17 @@ package com.google.cloud.tools.app.api.deploy;
 import com.google.cloud.tools.app.api.AppEngineException;
 
 /**
- * Created by meltsufin on 4/18/16.
+ * Main interface for staging Java application for App Engine flexible environment before
+ * deployment.
  */
 public interface AppEngineFlexibleStaging {
+
+  /**
+   * Stages a Java JAR/WAR artifact for App Engine flexible environment deployment. Copies app.yaml,
+   * Dockerfile and the application artifact to the staging area.
+   *
+   * @param config Specifies artifacts and staging destination
+   * @throws AppEngineException When staging fails
+   */
   void stageFlexible(StageFlexibleConfiguration config) throws AppEngineException;
 }

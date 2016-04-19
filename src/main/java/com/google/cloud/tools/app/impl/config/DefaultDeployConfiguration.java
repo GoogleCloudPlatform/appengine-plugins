@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Created by meltsufin on 4/19/16.
+ * Plain Java bean implementation of {@link DeployConfiguration}
  */
 public class DefaultDeployConfiguration implements DeployConfiguration {
 

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by meltsufin on 4/18/16.
+ * An implementation of {@link AppEngineStandardStaging} that uses App Engine SDK.
  */
 public class AppCfgAppEngineStandardStaging implements AppEngineStandardStaging {
 
@@ -38,9 +38,6 @@ public class AppCfgAppEngineStandardStaging implements AppEngineStandardStaging 
     this.appEngineSdk = appEngineSdk;
   }
 
-  /**
-   * Stages an application to be deployed.
-   */
   @Override
   public void stageStandard(StageStandardConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);

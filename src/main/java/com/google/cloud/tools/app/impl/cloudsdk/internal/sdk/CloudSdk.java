@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Default implementation of CloudSdk interface for known install locations
+ * Cloud SDK CLI wrapper.
  */
 public class CloudSdk {
 
