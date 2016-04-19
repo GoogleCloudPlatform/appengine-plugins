@@ -15,31 +15,20 @@
  */
 package com.google.cloud.tools.app.config;
 
-import com.google.cloud.tools.app.action.DeployAction;
+import com.google.cloud.tools.app.action.ArtifactStageAction;
 
 import java.io.File;
-import java.util.List;
 
 /**
- * Configuration for {@link DeployAction}.
+ * Configuration for {@link ArtifactStageAction}.
  */
-public interface DeployConfiguration {
+public interface ArtifactStageConfiguration {
 
-  List<File> getDeployables();
+  File getAppYaml();
 
-  String getBucket();
+  File getDockerfile();
 
-  String getDockerBuild();
+  File getArtifact();
 
-  boolean isForce();
-
-  String getImageUrl();
-
-  boolean isPromote();
-
-  String getServer();
-
-  boolean isStopPreviousVersion();
-
-  String getVersion();
+  File getStagingDirectory();
 }

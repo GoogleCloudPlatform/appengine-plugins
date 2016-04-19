@@ -15,18 +15,20 @@
  */
 package com.google.cloud.tools.app.config;
 
-import java.nio.file.Path;
+import com.google.cloud.tools.app.action.GenConfigAction;
+
+import java.io.File;
 
 /**
- * Configuration for {@link com.google.cloud.tools.app.GenConfigAction}.
+ * Configuration for {@link GenConfigAction}.
  */
 public interface GenConfigConfiguration {
 
-  Path getSourceDirectory();
+  File getSourceDirectory();
 
   String getConfig();
 
-  Boolean isCustom();
+  boolean isCustom();
 
   String getRuntime();
 }

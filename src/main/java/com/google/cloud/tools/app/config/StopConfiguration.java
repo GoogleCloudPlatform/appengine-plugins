@@ -15,8 +15,10 @@
  */
 package com.google.cloud.tools.app.config;
 
+import com.google.cloud.tools.app.action.StopAction;
+
 /**
- * Configuration for {@link com.google.cloud.tools.app.StopAction}.
+ * Configuration for {@link StopAction}.
  */
 public interface StopConfiguration {
 
