@@ -30,10 +30,10 @@ import java.util.List;
  */
 public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
-  private AppExecutor sdkExec;
+  private AppExecutor appExecutor;
 
-  public CloudSdkAppEngineDeployment(AppExecutor sdkExec) {
-    this.sdkExec = sdkExec;
+  public CloudSdkAppEngineDeployment(AppExecutor appExecutor) {
+    this.appExecutor = appExecutor;
   }
 
   @Override
@@ -41,7 +41,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getDeployables());
     Preconditions.checkArgument(configuration.getDeployables().size() > 0);
-    Preconditions.checkNotNull(sdkExec);
+    Preconditions.checkNotNull(appExecutor);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("cloud");
@@ -89,7 +89,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.add("--quiet");
 
     try {
-      sdkExec.runApp(arguments);
+      appExecutor.runApp(arguments);
     } catch (ExecutorException e) {
       throw new AppEngineException(e);
     }
