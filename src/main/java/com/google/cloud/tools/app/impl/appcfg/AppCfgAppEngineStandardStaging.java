@@ -17,8 +17,6 @@ import com.google.appengine.repackaged.com.google.api.client.util.Strings;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
-import com.google.cloud.tools.app.impl.executor.AppExecutor;
-import com.google.cloud.tools.app.impl.executor.ExecutorException;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -33,10 +31,11 @@ import java.util.List;
  */
 public class AppCfgAppEngineStandardStaging implements AppEngineStandardStaging {
 
-  private AppExecutor appExecutor;
+  private AppEngineSdk appEngineSdk;
 
-  public AppCfgAppEngineStandardStaging(AppExecutor appExecutor) {
-    this.appExecutor = appExecutor;
+  public AppCfgAppEngineStandardStaging(
+      AppEngineSdk appEngineSdk) {
+    this.appEngineSdk = appEngineSdk;
   }
 
   /**
@@ -47,7 +46,7 @@ public class AppCfgAppEngineStandardStaging implements AppEngineStandardStaging 
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getSourceDirectory());
     Preconditions.checkNotNull(configuration.getStagingDirectory());
-    Preconditions.checkNotNull(appExecutor);
+    Preconditions.checkNotNull(appEngineSdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add(0, "stage");
@@ -91,15 +90,13 @@ public class AppCfgAppEngineStandardStaging implements AppEngineStandardStaging 
 
     try {
 
-      appExecutor.runApp(arguments);
+      appEngineSdk.runCommand(arguments);
 
       if (dockerfile != null && dockerfileDestination != null) {
         Files.copy(dockerfile, dockerfileDestination, StandardCopyOption.REPLACE_EXISTING);
       }
 
     } catch (IOException e) {
-      throw new AppEngineException(e);
-    } catch (ExecutorException e) {
       throw new AppEngineException(e);
     }
 

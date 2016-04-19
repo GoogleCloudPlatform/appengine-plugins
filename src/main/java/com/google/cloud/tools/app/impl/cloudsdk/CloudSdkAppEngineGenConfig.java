@@ -16,10 +16,10 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.impl.executor.AppExecutor;
-import com.google.cloud.tools.app.impl.executor.ExecutorException;
 import com.google.cloud.tools.app.api.genconfig.GenConfigParams;
 import com.google.cloud.tools.app.api.genconfig.GenConfigUtility;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
 
-  private AppExecutor sdkExec;
+  private CloudSdk sdk;
 
   /**
    * Generates missing configuration files.
@@ -38,7 +38,7 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
   @Override
   public void genConfig(GenConfigParams configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(sdkExec);
+    Preconditions.checkNotNull(sdk);
 
     if (!configuration.getSourceDirectory().exists()) {
       throw new AppEngineException("Source directory does not exist. Location: "
@@ -68,9 +68,13 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
     }
 
     try {
-      sdkExec.runApp(arguments);
-    } catch (ExecutorException e) {
+      int result = sdk.runAppCommand(arguments);
+      if (result != 0) {
+        throw new AppEngineException("Generating configuration failed with error code: " + result);
+      }
+    } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
+
   }
 }

@@ -14,8 +14,13 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.SimpleProcessRunner;
+
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Default implementation of CloudSdk interface for known install locations
@@ -29,40 +34,59 @@ public class CloudSdk {
   static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
 
   private Path sdkPath = null;
-
-  public CloudSdk(String sdkPath) {
-    if (sdkPath == null) {
-      throw new NullPointerException("sdkPath cannot be null - use PathResolver for defaults");
-    }
-    this.sdkPath = Paths.get(sdkPath);
-  }
+  private ProcessRunner processRunner = null;
 
   public CloudSdk(Path sdkPath) {
+    this(sdkPath, new SimpleProcessRunner());
+  }
+
+  public CloudSdk(Path sdkPath, ProcessRunner processRunner) {
     if (sdkPath == null) {
       throw new NullPointerException("sdkPath cannot be null - use PathResolver for defaults");
     }
     this.sdkPath = sdkPath;
+    this.processRunner = processRunner;
   }
 
-  public Path getSdkPath() {
+  public int runAppCommand(List<String> args) throws ProcessRunnerException {
+    List<String> command = new ArrayList<>();
+    command.add(getGCloudPath().toString());
+    command.add("preview");
+    command.add("app");
+    command.addAll(args);
+
+    return processRunner.run(command.toArray(new String[command.size()]));
+  }
+
+
+  public int runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
+    List<String> command = new ArrayList<>();
+    command.add(getDevAppServerPath().toString());
+    command.addAll(args);
+
+    return processRunner.run(command.toArray(new String[command.size()]));
+  }
+
+  private Path getSdkPath() {
     return sdkPath;
   }
 
-  public Path getGCloudPath() {
+  private Path getGCloudPath() {
     return sdkPath.resolve(GCLOUD);
   }
 
-  public Path getDevAppServerPath() {
+  private Path getDevAppServerPath() {
     return sdkPath.resolve(DEV_APPSERVER_PY);
   }
 
-  public Path getJavaAppEngineSdkPath() {
+  private Path getJavaAppEngineSdkPath() {
     return sdkPath.resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
-  public Path getJavaToolsJar() {
+  private Path getJavaToolsJar() {
     return getJavaAppEngineSdkPath().resolve(JAVA_TOOLS_JAR);
   }
+
 
   /**
    * For validation purposes, though should not be in use
@@ -94,7 +118,4 @@ public class CloudSdk {
     }
   }
 
-  public CloudSdkCommandFactory getCommandFactory() {
-    return new CloudSdkCommandFactory(this);
-  }
 }

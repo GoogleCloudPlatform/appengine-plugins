@@ -22,8 +22,8 @@ import static org.mockito.Mockito.when;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment;
-import com.google.cloud.tools.app.impl.executor.AppExecutor;
-import com.google.cloud.tools.app.impl.executor.ExecutorException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Before;
@@ -52,7 +52,7 @@ public class CloudSdkAppEngineDeploymentTest {
   private File appYaml2;
 
   @Mock
-  private AppExecutor appExecutor;
+  private CloudSdk sdk;
 
 
   @Before
@@ -62,7 +62,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_allFlags() throws AppEngineException, ExecutorException {
+  public void testNewDeployAction_allFlags() throws AppEngineException, ProcessRunnerException {
 
     DeployConfiguration configuration = mock(DeployConfiguration.class);
     when(configuration.getDeployables()).thenReturn(Arrays.asList(appYaml1));
@@ -75,7 +75,7 @@ public class CloudSdkAppEngineDeploymentTest {
     when(configuration.isStopPreviousVersion()).thenReturn(true);
     when(configuration.getVersion()).thenReturn("v1");
 
-    CloudSdkAppEngineDeployment deployment = new CloudSdkAppEngineDeployment(appExecutor);
+    CloudSdkAppEngineDeployment deployment = new CloudSdkAppEngineDeployment(sdk);
 
     deployment.deploy(configuration);
 
@@ -84,7 +84,7 @@ public class CloudSdkAppEngineDeploymentTest {
             "cloud", "--force", "--image-url", "imageUrl", "--server", "appengine.google.com",
             "--stop-previous-version", "--version", "v1", "--quiet");
 
-    verify(appExecutor, times(1)).runApp(eq(expectedCommand));
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
 /*
   @Test
@@ -98,7 +98,7 @@ public class CloudSdkAppEngineDeploymentTest {
     List<String> expectedCommand = ImmutableList.of("cloud", appYaml1.toString(), "--quiet");
 
     action.execute();
-    verify(appExecutor, times(1)).runApp(eq(expectedCommand));
+    verify(appExecutor, times(1)).runCommand(eq(expectedCommand));
   }
 
   @Test
@@ -113,7 +113,7 @@ public class CloudSdkAppEngineDeploymentTest {
         .of("cloud", appYaml1.toString(), appYaml2.toString(), "--quiet");
 
     action.execute();
-    verify(appExecutor, times(1)).runApp(eq(expectedCommand));
+    verify(appExecutor, times(1)).runCommand(eq(expectedCommand));
   }
   */
 }

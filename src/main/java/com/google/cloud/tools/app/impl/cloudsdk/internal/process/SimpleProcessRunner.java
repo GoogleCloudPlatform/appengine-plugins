@@ -15,6 +15,8 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Simple process runner that doesn't do anything special to process streams
@@ -22,6 +24,9 @@ import java.io.IOException;
 public class SimpleProcessRunner implements ProcessRunner {
 
   public int run(String[] command) throws ProcessRunnerException {
+
+    command = makeOsSpecific(command);
+
     final ProcessBuilder pb = new ProcessBuilder(command);
     pb.inheritIO();
 
@@ -42,6 +47,18 @@ public class SimpleProcessRunner implements ProcessRunner {
     } catch (IOException | InterruptedException e) {
       throw new ProcessRunnerException(e);
     }
+  }
+
+  private String[] makeOsSpecific(String[] command) {
+    String[] osCommand = command;
+
+    if (System.getProperty("os.name").startsWith("Windows")) {
+      List<String> windowsCommand = Arrays.asList(command);
+      windowsCommand.add(0, "cmd.exe");
+      windowsCommand.add(1, "/c");
+      osCommand = windowsCommand.toArray(new String[windowsCommand.size()]);
+    }
+    return osCommand;
   }
 
 }

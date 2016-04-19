@@ -17,8 +17,8 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.app.api.devserver.RunConfiguration;
 import com.google.cloud.tools.app.api.devserver.StopConfiguration;
-import com.google.cloud.tools.app.impl.executor.AppExecutor;
-import com.google.cloud.tools.app.impl.executor.ExecutorException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
@@ -34,13 +34,14 @@ import java.util.List;
  */
 public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
 
-  private AppExecutor appExecutor;
+  private CloudSdk sdk;
 
   private static final String DEFAULT_ADMIN_HOST = "localhost";
   private static final int DEFAULT_ADMIN_PORT = 8000;
 
-  public CloudSdkAppEngineDevServer(AppExecutor appExecutor) {
-    this.appExecutor = appExecutor;
+  public CloudSdkAppEngineDevServer(
+      CloudSdk sdk) {
+    this.sdk = sdk;
   }
 
   /**
@@ -51,7 +52,7 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getAppYamls());
     Preconditions.checkArgument(configuration.getAppYamls().size() > 0);
-    Preconditions.checkNotNull(appExecutor);
+    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     for (File appYaml : configuration.getAppYamls()) {
@@ -141,12 +142,12 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     }
 
     try {
-      int result = appExecutor.runApp(arguments);
+      int result = sdk.runDevAppServerCommand(arguments);
       if (result != 0) {
         throw new AppEngineException(
             "Development App Server process failed with exit code " + result);
       }
-    } catch (ExecutorException e) {
+    } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
   }

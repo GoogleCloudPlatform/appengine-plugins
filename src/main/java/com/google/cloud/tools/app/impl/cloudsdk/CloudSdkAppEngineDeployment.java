@@ -17,8 +17,8 @@ import com.google.appengine.repackaged.com.google.api.client.util.Strings;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.app.api.deploy.DeployConfiguration;
-import com.google.cloud.tools.app.impl.executor.AppExecutor;
-import com.google.cloud.tools.app.impl.executor.ExecutorException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
 
 import java.io.File;
@@ -30,10 +30,11 @@ import java.util.List;
  */
 public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
-  private AppExecutor appExecutor;
+  private CloudSdk sdk;
 
-  public CloudSdkAppEngineDeployment(AppExecutor appExecutor) {
-    this.appExecutor = appExecutor;
+  public CloudSdkAppEngineDeployment(
+      CloudSdk sdk) {
+    this.sdk = sdk;
   }
 
   @Override
@@ -41,7 +42,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getDeployables());
     Preconditions.checkArgument(configuration.getDeployables().size() > 0);
-    Preconditions.checkNotNull(appExecutor);
+    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("cloud");
@@ -89,8 +90,11 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.add("--quiet");
 
     try {
-      appExecutor.runApp(arguments);
-    } catch (ExecutorException e) {
+      int result = sdk.runAppCommand(arguments);
+      if (result != 0) {
+        throw new AppEngineException("Deployment failed with error code: " + result);
+      }
+    } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
 

@@ -16,13 +16,13 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.impl.executor.AppExecutor;
-import com.google.cloud.tools.app.impl.executor.ExecutorException;
 import com.google.cloud.tools.app.api.module.AppEngineModuleService;
 import com.google.cloud.tools.app.api.module.GetLogsConfiguration;
 import com.google.cloud.tools.app.api.module.ListConfiguration;
 import com.google.cloud.tools.app.api.module.ModuleSelectionConfiguration;
 import com.google.cloud.tools.app.api.module.SetManagedByConfiguration;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
@@ -34,19 +34,20 @@ import java.util.List;
  */
 public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
 
-  private AppExecutor sdkExec;
+  private CloudSdk sdk;
 
-  public CloudSdkAppEngineModuleService(AppExecutor sdkExec) {
-    this.sdkExec = sdkExec;
+  public CloudSdkAppEngineModuleService(
+      CloudSdk sdk) {
+    this.sdk = sdk;
   }
 
   private void execute(List<String> arguments) throws AppEngineException {
     try {
-      int result = sdkExec.runApp(arguments);
+      int result = sdk.runAppCommand(arguments);
       if (result != 0) {
         throw new AppEngineException("Process failed with exit code " + result);
       }
-    } catch (ExecutorException e) {
+    } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
   }
@@ -60,7 +61,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
     Preconditions.checkNotNull(configuration.getModules());
     Preconditions.checkArgument(configuration.getModules().size() > 0);
     Preconditions.checkArgument(!Strings.isNullOrEmpty(configuration.getVersion()));
-    Preconditions.checkNotNull(sdkExec);
+    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("modules");
@@ -86,7 +87,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
     Preconditions.checkNotNull(configuration.getModules());
     Preconditions.checkArgument(configuration.getModules().size() > 0);
     Preconditions.checkArgument(!Strings.isNullOrEmpty(configuration.getVersion()));
-    Preconditions.checkNotNull(sdkExec);
+    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("modules");
@@ -136,7 +137,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
     Preconditions.checkNotNull(configuration.getModules());
     Preconditions.checkArgument(configuration.getModules().size() > 0);
     Preconditions.checkArgument(!Strings.isNullOrEmpty(configuration.getVersion()));
-    Preconditions.checkNotNull(sdkExec);
+    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("modules");
@@ -161,7 +162,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
     Preconditions.checkNotNull(configuration.getModules());
     Preconditions.checkArgument(configuration.getModules().size() > 0);
     Preconditions.checkArgument(!Strings.isNullOrEmpty(configuration.getVersion()));
-    Preconditions.checkNotNull(sdkExec);
+    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("modules");
@@ -212,7 +213,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   public void list(ListConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getModules());
-    Preconditions.checkNotNull(sdkExec);
+    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("modules");
@@ -237,7 +238,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
     Preconditions.checkArgument(configuration.getModules().size() > 0);
     Preconditions.checkArgument(!Strings.isNullOrEmpty(configuration.getVersion()));
     Preconditions.checkNotNull(configuration.getManager());
-    Preconditions.checkNotNull(sdkExec);
+    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
 

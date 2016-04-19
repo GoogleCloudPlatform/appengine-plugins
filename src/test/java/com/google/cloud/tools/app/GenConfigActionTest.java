@@ -53,7 +53,7 @@ public class GenConfigActionTest {
             "java");
 
     action.execute();
-    verify(appExecutor, times(1)).runApp(eq(expected));
+    verify(appExecutor, times(1)).runCommand(eq(expected));
   }
 
   @Test
@@ -68,7 +68,7 @@ public class GenConfigActionTest {
     List<String> expected = ImmutableList.of("gen-config", source.toString());
 
     action.execute();
-    verify(appExecutor, times(1)).runApp(eq(expected));
+    verify(appExecutor, times(1)).runCommand(eq(expected));
   }
 
   */

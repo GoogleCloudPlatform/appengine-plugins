@@ -13,20 +13,6 @@
  */
 package com.google.cloud.tools.app;
 
-import com.google.cloud.tools.app.impl.executor.AppExecutor;
-import com.google.cloud.tools.app.impl.executor.ExecutorException;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.io.File;
-import java.io.IOException;
-
 /**
  * Unit tests for {@link com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDeployment}.
  */
@@ -71,7 +57,7 @@ public class DeployActionTest {
             "--stop-previous-version", "--version", "v1", "--quiet");
 
     action.execute();
-    verify(appExecutor, times(1)).runApp(eq(expectedCommand));
+    verify(appExecutor, times(1)).runCommand(eq(expectedCommand));
   }
 
   @Test
@@ -85,7 +71,7 @@ public class DeployActionTest {
     List<String> expectedCommand = ImmutableList.of("cloud", appYaml1.toString(), "--quiet");
 
     action.execute();
-    verify(appExecutor, times(1)).runApp(eq(expectedCommand));
+    verify(appExecutor, times(1)).runCommand(eq(expectedCommand));
   }
 
   @Test
@@ -100,7 +86,7 @@ public class DeployActionTest {
         .of("cloud", appYaml1.toString(), appYaml2.toString(), "--quiet");
 
     action.execute();
-    verify(appExecutor, times(1)).runApp(eq(expectedCommand));
+    verify(appExecutor, times(1)).runCommand(eq(expectedCommand));
   }
   */
 }
