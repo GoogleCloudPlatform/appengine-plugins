@@ -1,0 +1,10 @@
+**/*.iml
+target/
+.idea/modules.xml
+.idea/misc.xml
+.idea/compiler.xml
+.idea/vcs.xml
+.idea/uiDesigner.xml
+.idea/encodings.xml
+.idea/libraries/
+.idea/workspace.xml
