@@ -45,7 +45,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
-    arguments.add("cloud");
+    arguments.add("deploy");
     for (File deployable : configuration.getDeployables()) {
       if (!deployable.exists()) {
         throw new IllegalArgumentException(

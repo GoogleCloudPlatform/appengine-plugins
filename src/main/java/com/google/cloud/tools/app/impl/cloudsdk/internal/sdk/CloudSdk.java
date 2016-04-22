@@ -55,6 +55,8 @@ public class CloudSdk {
     command.add("app");
     command.addAll(args);
 
+    sysOutCommand(command);
+
     return processRunner.run(command.toArray(new String[command.size()]));
   }
 
@@ -64,7 +66,18 @@ public class CloudSdk {
     command.add(getDevAppServerPath().toString());
     command.addAll(args);
 
+    sysOutCommand(command);
+
     return processRunner.run(command.toArray(new String[command.size()]));
+  }
+
+  private void sysOutCommand(List<String> command) {
+    StringBuilder commandString = new StringBuilder();
+    for (String argument : command) {
+      commandString.append(" ");
+      commandString.append(argument);
+    }
+    System.out.println("submitting command:" + commandString);
   }
 
   private Path getSdkPath() {
