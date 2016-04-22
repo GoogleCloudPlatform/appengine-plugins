@@ -22,11 +22,14 @@ import com.google.common.base.Joiner;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Cloud SDK CLI wrapper.
  */
 public class CloudSdk {
+
+  private final static Logger log = Logger.getLogger(CloudSdk.class.toString());
 
   // TODO : does this continue to work on windows?
   static final String GCLOUD = "bin/gcloud";
@@ -74,7 +77,7 @@ public class CloudSdk {
 
   private void sysOutCommand(List<String> command) {
     Joiner joiner = Joiner.on(" ");
-    System.out.println("submitting command:" + joiner.join(command));
+    log.info("submitting command: " + joiner.join(command));
   }
 
   private Path getSdkPath() {
