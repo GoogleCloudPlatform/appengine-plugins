@@ -17,6 +17,7 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.SimpleProcessRunner;
+import com.google.common.base.Joiner;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -72,12 +73,8 @@ public class CloudSdk {
   }
 
   private void sysOutCommand(List<String> command) {
-    StringBuilder commandString = new StringBuilder();
-    for (String argument : command) {
-      commandString.append(" ");
-      commandString.append(argument);
-    }
-    System.out.println("submitting command:" + commandString);
+    Joiner joiner = Joiner.on(" ");
+    System.out.println("submitting command:" + joiner.join(command));
   }
 
   private Path getSdkPath() {
