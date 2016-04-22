@@ -59,7 +59,7 @@ public class CloudSdk {
     command.add("app");
     command.addAll(args);
 
-    sysOutCommand(command);
+    outputCommand(command);
 
     return processRunner.run(command.toArray(new String[command.size()]));
   }
@@ -70,12 +70,12 @@ public class CloudSdk {
     command.add(getDevAppServerPath().toString());
     command.addAll(args);
 
-    sysOutCommand(command);
+    outputCommand(command);
 
     return processRunner.run(command.toArray(new String[command.size()]));
   }
 
-  private void sysOutCommand(List<String> command) {
+  private void outputCommand(List<String> command) {
     Joiner joiner = Joiner.on(" ");
     log.info("submitting command: " + joiner.join(command));
   }
