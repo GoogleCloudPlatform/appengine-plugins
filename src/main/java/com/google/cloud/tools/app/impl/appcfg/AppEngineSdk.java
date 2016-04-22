@@ -21,7 +21,7 @@ public class AppEngineSdk {
    */
   public void runCommand(List<String> args) {
     // AppEngineSdk requires this system property to be set.
-    System.setProperty("appengine.impl.root", appengineSdk.toString());
+    System.setProperty("appengine.sdk.root", appengineSdk.toString());
     AppCfg.main(args.toArray(new String[args.size()]));
   }
 
