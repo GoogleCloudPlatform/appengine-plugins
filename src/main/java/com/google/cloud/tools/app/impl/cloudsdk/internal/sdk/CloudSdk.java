@@ -29,12 +29,13 @@ import java.util.logging.Logger;
  */
 public class CloudSdk {
 
-  private final static Logger log = Logger.getLogger(CloudSdk.class.toString());
+  private static final Logger log = Logger.getLogger(CloudSdk.class.toString());
 
   // TODO : does this continue to work on windows?
   static final String GCLOUD = "bin/gcloud";
   static final String DEV_APPSERVER_PY = "bin/dev_appserver.py";
-  static final String JAVA_APPENGINE_SDK_PATH = "platform/google_appengine/google/appengine/tools/java/lib";
+  static final String JAVA_APPENGINE_SDK_PATH =
+      "platform/google_appengine/google/appengine/tools/java/lib";
   static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
 
   private Path sdkPath = null;
@@ -44,6 +45,11 @@ public class CloudSdk {
     this(sdkPath, new SimpleProcessRunner());
   }
 
+  /**
+   * Initializes an instance using the specified SDK path and ProcessRunner.
+   *
+   * @param sdkPath The home directory of Google Cloud SDK
+   */
   public CloudSdk(Path sdkPath, ProcessRunner processRunner) {
     if (sdkPath == null) {
       throw new NullPointerException("sdkPath cannot be null - use PathResolver for defaults");
@@ -52,6 +58,12 @@ public class CloudSdk {
     this.processRunner = processRunner;
   }
 
+  /**
+   * Uses the process runner to execute the gcloud app command with the provided arguments.
+   *
+   * @param args The arguments to pass to "gcloud app" command.
+   * @return The result of the process execution. 0 = successful.
+   */
   public int runAppCommand(List<String> args) throws ProcessRunnerException {
     List<String> command = new ArrayList<>();
     command.add(getGCloudPath().toString());
@@ -64,7 +76,12 @@ public class CloudSdk {
     return processRunner.run(command.toArray(new String[command.size()]));
   }
 
-
+  /**
+   * Uses the process runner to execute a dev_appserver.py command.
+   * @param args The arguments to pass to dev_appserver.py.
+   * @return The result of the process execution. 0 = successful.
+   * @throws ProcessRunnerException When process runner encounters an error.
+   */
   public int runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
     List<String> command = new ArrayList<>();
     command.add(getDevAppServerPath().toString());
@@ -102,7 +119,7 @@ public class CloudSdk {
 
 
   /**
-   * For validation purposes, though should not be in use
+   * For validation purposes, though should not be in use.
    */
   public void validate() throws CloudSdkConfigurationException {
     if (sdkPath == null) {

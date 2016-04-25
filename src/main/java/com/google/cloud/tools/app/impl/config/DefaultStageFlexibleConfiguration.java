@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.impl.config;
 
 import com.google.cloud.tools.app.api.deploy.StageFlexibleConfiguration;
@@ -18,7 +19,7 @@ import com.google.cloud.tools.app.api.deploy.StageFlexibleConfiguration;
 import java.io.File;
 
 /**
- * Plain Java bean implementation of {@link StageFlexibleConfiguration}
+ * Plain Java bean implementation of {@link StageFlexibleConfiguration}.
  */
 public class DefaultStageFlexibleConfiguration implements StageFlexibleConfiguration {
 

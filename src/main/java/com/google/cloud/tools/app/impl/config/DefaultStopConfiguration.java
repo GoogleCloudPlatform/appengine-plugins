@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.tools.app.impl.config;
 
 import com.google.cloud.tools.app.api.devserver.StopConfiguration;
 
 /**
- * Plain Java bean implementation of {@link StopConfiguration}
+ * Plain Java bean implementation of {@link StopConfiguration}.
  */
 public class DefaultStopConfiguration implements StopConfiguration {
 

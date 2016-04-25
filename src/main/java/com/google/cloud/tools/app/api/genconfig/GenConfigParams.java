@@ -11,12 +11,14 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.api.genconfig;
 
 import java.io.File;
 
 /**
- * Parameters for generating configuration files using {@link GenConfigUtility#genConfig(GenConfigParams)}.
+ * Parameters for generating configuration files using
+ * {@link GenConfigUtility#genConfig(GenConfigParams)}.
  */
 public interface GenConfigParams {
 

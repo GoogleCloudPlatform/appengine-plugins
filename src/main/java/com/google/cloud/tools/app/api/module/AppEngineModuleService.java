@@ -11,13 +11,14 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.api.module;
 
 import com.google.cloud.tools.app.api.AppEngineException;
 
 /**
  * This set of commands can be used to manage existing App Engine modules. To create new deployments
- * of modules, use {@link com.google.cloud.tools.app.api.deploy.AppEngineDeployment}
+ * of modules, use {@link com.google.cloud.tools.app.api.deploy.AppEngineDeployment}.
  */
 public interface AppEngineModuleService {
 
@@ -37,7 +38,7 @@ public interface AppEngineModuleService {
   void delete(ModuleSelectionConfiguration configuration) throws AppEngineException;
 
   /**
-   * Set the default serving version for the given modules
+   * Set the default serving version for the given modules.
    */
   void setDefault(ModuleSelectionConfiguration configuration) throws AppEngineException;
 

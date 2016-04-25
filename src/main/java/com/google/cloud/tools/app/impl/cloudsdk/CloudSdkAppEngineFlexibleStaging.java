@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -31,7 +32,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   /**
    * Stages a Java JAR/WAR Managed VMs application to be deployed.
    *
-   * Copies app.yaml, Dockerfile and the application artifact to the staging area.
+   * <p></p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
    *
    * <p>If app.yaml or Dockerfile do not exist, gcloud cloud will create them.
    */

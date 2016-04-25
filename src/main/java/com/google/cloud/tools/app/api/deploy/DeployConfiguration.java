@@ -11,13 +11,14 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.api.deploy;
 
 import java.io.File;
 import java.util.List;
 
 /**
- * Configuration for {@link AppEngineDeployment#deploy(DeployConfiguration)}
+ * Configuration for {@link AppEngineDeployment#deploy(DeployConfiguration)}.
  */
 public interface DeployConfiguration {
 

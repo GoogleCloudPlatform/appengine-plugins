@@ -21,7 +21,7 @@ import com.google.cloud.tools.app.api.genconfig.GenConfigParams;
 import java.io.File;
 
 /**
- * Plain Java bean implementation of {@link GenConfigParams}
+ * Plain Java bean implementation of {@link GenConfigParams}.
  */
 public class DefaultGenConfigParams implements GenConfigParams {
 

@@ -11,13 +11,15 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.api.devserver;
 
 import java.io.File;
 import java.util.List;
 
 /**
- * Configuration of running local Development Server. {@link AppEngineDevServer#run(RunConfiguration)}.
+ * Configuration of running local Development Server.
+ * {@link AppEngineDevServer#run(RunConfiguration)}.
  */
 public interface RunConfiguration {
 

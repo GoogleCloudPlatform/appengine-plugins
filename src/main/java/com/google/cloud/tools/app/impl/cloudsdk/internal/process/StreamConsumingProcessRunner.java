@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.io.StreamConsumer;
@@ -18,7 +19,7 @@ import com.google.cloud.tools.app.impl.cloudsdk.internal.process.io.StreamConsum
 import java.io.IOException;
 
 /**
- * Process Runner impl that allows for specialized stream consumption
+ * Process Runner impl that allows for specialized stream consumption.
  */
 public class StreamConsumingProcessRunner implements ProcessRunner {
 
@@ -28,6 +29,9 @@ public class StreamConsumingProcessRunner implements ProcessRunner {
     this.streamConsumer = streamConsumer;
   }
 
+  /**
+   * Run the specified shell command while redirecting output to the StreamConsumer.
+   */
   public int run(String[] command) throws ProcessRunnerException {
     final ProcessBuilder pb = new ProcessBuilder(command);
     pb.redirectErrorStream(true);

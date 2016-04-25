@@ -21,7 +21,7 @@ import com.google.cloud.tools.app.api.module.GetLogsConfiguration;
 import java.util.Collection;
 
 /**
- * Plain Java bean implementation of {@link GetLogsConfiguration}
+ * Plain Java bean implementation of {@link GetLogsConfiguration}.
  */
 public class DefaultGetLogsConfiguration implements GetLogsConfiguration {
 

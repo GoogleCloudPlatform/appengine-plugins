@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
 import java.util.concurrent.Callable;
@@ -26,7 +27,8 @@ public class AsynchronousProcessRunnerRunner {
   /**
    * Run command asynchronously and return a future to access the result/exceptions.
    */
-  public Future<Integer> runAsynchronous(final String[] command, final ProcessRunner processRunner) {
+  public Future<Integer> runAsynchronous(final String[] command,
+      final ProcessRunner processRunner) {
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     Callable<Integer> asyncProcess = new Callable<Integer>() {
       @Override
@@ -43,7 +45,8 @@ public class AsynchronousProcessRunnerRunner {
   /**
    * Run command asynchronously and callback when finished.
    */
-  public void runAsynchronous(final String[] command, final ProcessRunner processRunner, final Callback callback) {
+  public void runAsynchronous(final String[] command, final ProcessRunner processRunner,
+      final Callback callback) {
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     Runnable asyncProcess = new Runnable() {
       @Override
@@ -62,7 +65,9 @@ public class AsynchronousProcessRunnerRunner {
   }
 
   public interface Callback {
+
     void onCompleted(int exitCode);
+
     void onFailedWithException(ProcessRunnerException ex);
   }
 

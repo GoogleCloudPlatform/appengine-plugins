@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.impl.config;
 
 import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
@@ -18,7 +19,7 @@ import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
 import java.io.File;
 
 /**
- * Plain Java bean implementation of {@link StageStandardConfiguration}
+ * Plain Java bean implementation of {@link StageStandardConfiguration}.
  */
 public class DefaultStageStandardConfiguration implements StageStandardConfiguration {
 

@@ -21,7 +21,7 @@ import com.google.cloud.tools.app.api.module.ListConfiguration;
 import java.util.Collection;
 
 /**
- * Plain Java bean implementation of {@link ListConfiguration}
+ * Plain Java bean implementation of {@link ListConfiguration}.
  */
 public class DefaultListConfiguration implements ListConfiguration {
 

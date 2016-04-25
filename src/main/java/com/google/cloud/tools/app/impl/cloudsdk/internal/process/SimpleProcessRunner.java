@@ -11,8 +11,8 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
+package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,6 +23,9 @@ import java.util.List;
  */
 public class SimpleProcessRunner implements ProcessRunner {
 
+  /**
+   * Executes a shell command synchronously.
+   */
   public int run(String[] command) throws ProcessRunnerException {
 
     command = makeOsSpecific(command);

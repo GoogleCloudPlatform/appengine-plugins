@@ -11,6 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.google.cloud.tools.app.impl.config;
 
 import com.google.cloud.tools.app.api.devserver.RunConfiguration;
@@ -19,7 +20,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Plain Java bean implementation of {@link RunConfiguration}
+ * Plain Java bean implementation of {@link RunConfiguration}.
  */
 public class DefaultRunConfiguration implements RunConfiguration {
 

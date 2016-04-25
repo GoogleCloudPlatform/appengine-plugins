@@ -21,7 +21,7 @@ import com.google.cloud.tools.app.api.module.ModuleSelectionConfiguration;
 import java.util.Collection;
 
 /**
- * Plain Java bean implementation of {@link ModuleSelectionConfiguration}
+ * Plain Java bean implementation of {@link ModuleSelectionConfiguration}.
  */
 public class DefaultModuleSelectionConfiguration implements ModuleSelectionConfiguration {
 
