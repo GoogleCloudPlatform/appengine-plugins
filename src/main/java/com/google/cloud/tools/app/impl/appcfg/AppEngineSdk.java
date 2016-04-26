@@ -16,7 +16,7 @@ package com.google.cloud.tools.app.impl.appcfg;
 
 import com.google.appengine.tools.admin.AppCfg;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -24,10 +24,10 @@ import java.util.List;
  */
 public class AppEngineSdk {
 
-  private final Path appengineSdk;
+  private final File appengineSdkPath;
 
-  public AppEngineSdk(Path appengineSdk) {
-    this.appengineSdk = appengineSdk;
+  public AppEngineSdk(File appengineSdkPath) {
+    this.appengineSdkPath = appengineSdkPath;
   }
 
   /**
@@ -35,7 +35,7 @@ public class AppEngineSdk {
    */
   public void runCommand(List<String> args) {
     // AppEngineSdk requires this system property to be set.
-    System.setProperty("appengine.sdk.root", appengineSdk.toString());
+    System.setProperty("appengine.sdk.root", appengineSdkPath.toString());
     AppCfg.main(args.toArray(new String[args.size()]));
   }
 

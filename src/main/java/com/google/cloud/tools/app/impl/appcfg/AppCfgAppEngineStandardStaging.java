@@ -20,9 +20,9 @@ import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
 import com.google.common.base.Preconditions;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,16 +82,17 @@ public class AppCfgAppEngineStandardStaging implements AppEngineStandardStaging 
       arguments.add("--enable_jar_classes");
     }
 
-    Path dockerfile =
-        configuration.getDockerfile() == null ? null : configuration.getDockerfile().toPath();
-    Path dockerfileDestination = configuration.getStagingDirectory().toPath();
+    File dockerfile =
+        configuration.getDockerfile() == null ? null : configuration.getDockerfile();
+    File dockerfileDestination = configuration.getStagingDirectory();
 
     try {
 
       appEngineSdk.runCommand(arguments);
 
       if (dockerfile != null && dockerfileDestination != null) {
-        Files.copy(dockerfile, dockerfileDestination, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(dockerfile.toPath(), dockerfileDestination.toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
       }
 
     } catch (IOException e) {

@@ -19,7 +19,7 @@ import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerEx
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.SimpleProcessRunner;
 import com.google.common.base.Joiner;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -38,10 +38,10 @@ public class CloudSdk {
       "platform/google_appengine/google/appengine/tools/java/lib";
   static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
 
-  private Path sdkPath = null;
+  private File sdkPath = null;
   private ProcessRunner processRunner = null;
 
-  public CloudSdk(Path sdkPath) {
+  public CloudSdk(File sdkPath) {
     this(sdkPath, new SimpleProcessRunner());
   }
 
@@ -50,7 +50,7 @@ public class CloudSdk {
    *
    * @param sdkPath The home directory of Google Cloud SDK
    */
-  public CloudSdk(Path sdkPath, ProcessRunner processRunner) {
+  public CloudSdk(File sdkPath, ProcessRunner processRunner) {
     if (sdkPath == null) {
       throw new NullPointerException("sdkPath cannot be null - use PathResolver for defaults");
     }
@@ -97,24 +97,24 @@ public class CloudSdk {
     log.info("submitting command: " + joiner.join(command));
   }
 
-  private Path getSdkPath() {
+  private File getSdkPath() {
     return sdkPath;
   }
 
-  private Path getGCloudPath() {
-    return sdkPath.resolve(GCLOUD);
+  private File getGCloudPath() {
+    return sdkPath.toPath().resolve(GCLOUD).toFile();
   }
 
-  private Path getDevAppServerPath() {
-    return sdkPath.resolve(DEV_APPSERVER_PY);
+  private File getDevAppServerPath() {
+    return sdkPath.toPath().resolve(DEV_APPSERVER_PY).toFile();
   }
 
-  private Path getJavaAppEngineSdkPath() {
-    return sdkPath.resolve(JAVA_APPENGINE_SDK_PATH);
+  private File getJavaAppEngineSdkPath() {
+    return sdkPath.toPath().resolve(JAVA_APPENGINE_SDK_PATH).toFile();
   }
 
-  private Path getJavaToolsJar() {
-    return getJavaAppEngineSdkPath().resolve(JAVA_TOOLS_JAR);
+  private File getJavaToolsJar() {
+    return getJavaAppEngineSdkPath().toPath().resolve(JAVA_TOOLS_JAR).toFile();
   }
 
 
@@ -125,24 +125,24 @@ public class CloudSdk {
     if (sdkPath == null) {
       throw new CloudSdkConfigurationException("Validation Error : Sdk path is null");
     }
-    if (sdkPath.toFile().isDirectory()) {
+    if (sdkPath.isDirectory()) {
       throw new CloudSdkConfigurationException(
           "Validation Error : Sdk directory '" + sdkPath + "' is not valid");
     }
-    if (getGCloudPath().toFile().isFile()) {
+    if (getGCloudPath().isFile()) {
       throw new CloudSdkConfigurationException(
           "Validation Error : gcloud path '" + getGCloudPath() + "' is not valid");
     }
-    if (getDevAppServerPath().toFile().isFile()) {
+    if (getDevAppServerPath().isFile()) {
       throw new CloudSdkConfigurationException(
           "Validation Error : dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
     }
-    if (getJavaAppEngineSdkPath().toFile().isFile()) {
+    if (getJavaAppEngineSdkPath().isFile()) {
       throw new CloudSdkConfigurationException(
           "Validation Error : Java App Engine SDK path '" + getJavaAppEngineSdkPath()
               + "' is not valid");
     }
-    if (getJavaToolsJar().toFile().isFile()) {
+    if (getJavaToolsJar().isFile()) {
       throw new CloudSdkConfigurationException(
           "Validation Error : Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
     }

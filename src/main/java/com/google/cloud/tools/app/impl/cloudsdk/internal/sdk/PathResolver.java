@@ -16,7 +16,6 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
 
 /**
  * Resolve paths with CloudSdk and Python defaults.
@@ -30,7 +29,7 @@ public enum PathResolver {
    *
    * @return Path to Google Cloud SDK or null
    */
-  public Path getCloudSdkPath() throws FileNotFoundException {
+  public File getCloudSdkPath() throws FileNotFoundException {
     String sdkDir = System.getenv("GOOGLE_CLOUD_SDK_HOME");
     if (sdkDir == null) {
       boolean isWindows = System.getProperty("os.name").contains("Windows");
@@ -60,7 +59,7 @@ public enum PathResolver {
     }
     File file = new File(sdkDir);
     if (file.exists()) {
-      return file.toPath();
+      return file;
     } else {
       return null;
     }
