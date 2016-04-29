@@ -78,6 +78,7 @@ public class CloudSdk {
 
   /**
    * Uses the process runner to execute a dev_appserver.py command.
+   *
    * @param args The arguments to pass to dev_appserver.py.
    * @return The result of the process execution. 0 = successful.
    * @throws ProcessRunnerException When process runner encounters an error.
@@ -102,7 +103,7 @@ public class CloudSdk {
   }
 
   private File getGCloudPath() {
-    return sdkPath.toPath().resolve(GCLOUD).toFile();
+    return new File(sdkPath, GCLOUD);
   }
 
   private File getDevAppServerPath() {
@@ -110,7 +111,7 @@ public class CloudSdk {
   }
 
   private File getJavaAppEngineSdkPath() {
-    return sdkPath.toPath().resolve(JAVA_APPENGINE_SDK_PATH).toFile();
+    return new File(sdkPath, JAVA_APPENGINE_SDK_PATH);
   }
 
   private File getJavaToolsJar() {
