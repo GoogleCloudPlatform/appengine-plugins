@@ -16,6 +16,7 @@ package com.google.cloud.tools.app.impl.appcfg;
 
 import com.google.appengine.tools.admin.AppCfg;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -26,8 +27,8 @@ public class AppEngineSdk {
 
   private final Path appengineSdkPath;
 
-  public AppEngineSdk(Path appengineSdkPath) {
-    this.appengineSdkPath = appengineSdkPath;
+  public AppEngineSdk(File appengineSdkPath) {
+    this.appengineSdkPath = appengineSdkPath.toPath();
   }
 
   /**

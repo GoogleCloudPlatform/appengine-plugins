@@ -19,6 +19,7 @@ import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerEx
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.SimpleProcessRunner;
 import com.google.common.base.Joiner;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class CloudSdk {
   private Path sdkPath = null;
   private ProcessRunner processRunner = null;
 
-  public CloudSdk(Path sdkPath) {
+  public CloudSdk(File sdkPath) {
     this(sdkPath, new SimpleProcessRunner());
   }
 
@@ -50,11 +51,11 @@ public class CloudSdk {
    *
    * @param sdkPath The home directory of Google Cloud SDK
    */
-  public CloudSdk(Path sdkPath, ProcessRunner processRunner) {
+  public CloudSdk(File sdkPath, ProcessRunner processRunner) {
     if (sdkPath == null) {
       throw new NullPointerException("sdkPath cannot be null - use PathResolver for defaults");
     }
-    this.sdkPath = sdkPath;
+    this.sdkPath = sdkPath.toPath();
     this.processRunner = processRunner;
   }
 
