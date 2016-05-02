@@ -14,17 +14,9 @@
 
 package com.google.cloud.tools.app;
 
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.impl.appcfg.AppCfgAppEngineStandardStaging;
-import com.google.cloud.tools.app.impl.appcfg.AppEngineSdk;
+import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.config.DefaultStageStandardConfiguration;
 import com.google.common.collect.ImmutableList;
 
@@ -41,24 +33,32 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.List;
 
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 
 /**
- * Unit tests for {@link AppCfgAppEngineStandardStaging}.
+ * Unit tests for {@link CloudSdkAppEngineStandardStaging}.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AppCfgAppEngineStandardStagingTest {
+public class CloudSdkAppEngineStandardStagingTest {
 
   @Rule
   public TemporaryFolder tmpDir = new TemporaryFolder();
 
   @Mock
-  private AppEngineSdk sdk;
+  private CloudSdk sdk;
 
   private File source;
   private File destination;
   private File dockerfile;
 
-  private AppCfgAppEngineStandardStaging staging;
+  private CloudSdkAppEngineStandardStaging staging;
 
   @Before
   public void setUp() throws IOException {
@@ -66,7 +66,7 @@ public class AppCfgAppEngineStandardStagingTest {
     destination = tmpDir.newFolder("destination");
     dockerfile = tmpDir.newFile("dockerfile");
 
-    staging = new AppCfgAppEngineStandardStaging(sdk);
+    staging = new CloudSdkAppEngineStandardStaging(sdk);
   }
 
   @Test
@@ -94,7 +94,7 @@ public class AppCfgAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runCommand(eq(expected));
+    verify(sdk, times(1)).runAppEngineSdkCommand(eq(expected));
   }
 
   @Test
@@ -109,7 +109,7 @@ public class AppCfgAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runCommand(eq(expected));
+    verify(sdk, times(1)).runAppEngineSdkCommand(eq(expected));
   }
 
   @Test

@@ -1,23 +1,26 @@
-/**
+/*
  * Copyright 2016 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-package com.google.cloud.tools.app.impl.appcfg;
+package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.appengine.repackaged.com.google.api.client.util.Strings;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -28,15 +31,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An implementation of {@link AppEngineStandardStaging} that uses App Engine SDK.
+ * An implementation of {@link AppEngineStandardStaging} that uses App Engine SDK bundled with the
+ * Cloud SDK.
  */
-public class AppCfgAppEngineStandardStaging implements AppEngineStandardStaging {
+public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStaging {
 
-  private AppEngineSdk appEngineSdk;
+  private CloudSdk cloudSdk;
 
-  public AppCfgAppEngineStandardStaging(
-      AppEngineSdk appEngineSdk) {
-    this.appEngineSdk = appEngineSdk;
+  public CloudSdkAppEngineStandardStaging(
+      CloudSdk cloudSdk) {
+    this.cloudSdk = cloudSdk;
   }
 
   @Override
@@ -44,7 +48,7 @@ public class AppCfgAppEngineStandardStaging implements AppEngineStandardStaging 
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getSourceDirectory());
     Preconditions.checkNotNull(configuration.getStagingDirectory());
-    Preconditions.checkNotNull(appEngineSdk);
+    Preconditions.checkNotNull(cloudSdk);
 
     List<String> arguments = new ArrayList<>();
     if (configuration.isEnableQuickstart()) {
@@ -82,7 +86,7 @@ public class AppCfgAppEngineStandardStaging implements AppEngineStandardStaging 
 
     try {
 
-      appEngineSdk.runCommand(arguments);
+      cloudSdk.runAppEngineSdkCommand(arguments);
 
       if (dockerfile != null) {
         Files.copy(dockerfile, dockerfileDestination, StandardCopyOption.REPLACE_EXISTING);

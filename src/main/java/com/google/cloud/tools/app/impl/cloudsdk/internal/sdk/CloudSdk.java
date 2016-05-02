@@ -14,6 +14,7 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
+import com.google.appengine.tools.admin.AppCfg;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.SimpleProcessRunner;
@@ -92,6 +93,15 @@ public class CloudSdk {
     outputCommand(command);
 
     return processRunner.run(command.toArray(new String[command.size()]));
+  }
+
+  /**
+   * Executes an App Engine SDK CLI command synchronously.
+   */
+  public void runAppEngineSdkCommand(List<String> args) {
+    // AppEngineSdk requires this system property to be set.
+    System.setProperty("appengine.sdk.root", getJavaAppEngineSdkPath().toString());
+    AppCfg.main(args.toArray(new String[args.size()]));
   }
 
   private void outputCommand(List<String> command) {
