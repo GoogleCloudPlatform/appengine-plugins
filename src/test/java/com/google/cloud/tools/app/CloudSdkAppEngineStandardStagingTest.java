@@ -94,7 +94,7 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runAppEngineSdkCommand(eq(expected));
+    verify(sdk, times(1)).runAppCfgCommand(eq(expected));
   }
 
   @Test
@@ -109,7 +109,7 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runAppEngineSdkCommand(eq(expected));
+    verify(sdk, times(1)).runAppCfgCommand(eq(expected));
   }
 
   @Test

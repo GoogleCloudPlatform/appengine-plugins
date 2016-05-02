@@ -98,7 +98,7 @@ public class CloudSdk {
   /**
    * Executes an App Engine SDK CLI command synchronously.
    */
-  public void runAppEngineSdkCommand(List<String> args) {
+  public void runAppCfgCommand(List<String> args) {
     // AppEngineSdk requires this system property to be set.
     System.setProperty("appengine.sdk.root", getJavaAppEngineSdkPath().toString());
     AppCfg.main(args.toArray(new String[args.size()]));
