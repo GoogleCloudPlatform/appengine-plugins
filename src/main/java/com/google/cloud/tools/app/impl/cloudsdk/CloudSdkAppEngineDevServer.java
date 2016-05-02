@@ -143,11 +143,7 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     }
 
     try {
-      int result = sdk.runDevAppServerCommand(arguments);
-      if (result != 0) {
-        throw new AppEngineException(
-            "Development App Server process failed with exit code " + result);
-      }
+      sdk.runDevAppServerCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

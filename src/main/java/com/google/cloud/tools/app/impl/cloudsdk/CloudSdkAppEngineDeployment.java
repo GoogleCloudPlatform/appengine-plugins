@@ -100,10 +100,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.add("--quiet");
 
     try {
-      int result = sdk.runAppCommand(arguments);
-      if (result != 0) {
-        throw new AppEngineException("Deployment failed with error code: " + result);
-      }
+      sdk.runAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
