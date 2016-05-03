@@ -52,8 +52,8 @@ public class DefaultProcessRunner implements ProcessRunner {
    * @param command The shell command to execute
    */
   public void run(String[] command) throws ProcessRunnerException {
-
-    command = makeOsSpecific(command);
+    
+    processBuilder.command(makeOsSpecific(command));
 
     try {
       final Process process = processBuilder.start();
