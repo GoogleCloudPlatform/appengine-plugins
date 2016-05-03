@@ -58,6 +58,9 @@ public class DefaultProcessRunner implements ProcessRunner {
     try {
       final Process process = processBuilder.start();
 
+      handleStdOut(process);
+      handleErrOut(process);
+
       if (async) {
         asyncRun(process);
       } else {
@@ -65,8 +68,6 @@ public class DefaultProcessRunner implements ProcessRunner {
         syncRun(process);
       }
 
-      handleStdOut(process);
-      handleErrOut(process);
 
     } catch (IOException | InterruptedException e) {
       throw new ProcessRunnerException(e);
@@ -84,6 +85,7 @@ public class DefaultProcessRunner implements ProcessRunner {
 
   /**
    * Set the listener for standard output of the subprocess.
+   * Note that this will not work if you set inheritIO
    *
    * @param stdOutLineListener Can be null.
    */
