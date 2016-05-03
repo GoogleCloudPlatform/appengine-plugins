@@ -22,41 +22,39 @@ You must also install the app-engine-java component:
 
 The library implements the following operations:
 
-* Deploy an application
-* Run an application on the local server
-* Generate missing configuration files
-* Delete a version of one or more modules
-* Get logs for a version of one or more modules
-* List versions of one or more modules
-* Set the default version of a module
-* Sets a Managed VM instance to managed by Google or the user
-* Starts serving a version of one or more modules
-* Stops serving a version of one or more modules
+* Deploy an application to standard or flexible environment
+* Stage an application for deployment
+* Run an application on the local server synchronously or asynchronously
 
 # How to use
 
-Build the library using the "mvn clean install" command at the repository root directory, where the pom.xml file is located. This produces a app-tools-lib-for-java-0.3-SNAPSHOT.jar file in the "target" directory that you can import to your application's class path.
+Build the library using the "mvn clean install" command at the repository root directory, where the pom.xml file is located. This produces a app-tools-lib-for-java-0.1.0-SNAPSHOT.jar file in the "target" directory that you can import to your application's class path.
 
 To deploy a new version, a client calls the library in the following way:
 
 // Create action configuration. For example:
+```java
+    // Create a Cloud SDK
+    File cloudSdkPath = PathResolver.INSTANCE.getCloudSdkPath().toFile();
+    CloudSdk cloudSdk = new CloudSdk(cloudSdkPath);
+    
+    // Create a deployment
+    AppEngineDeployment deployment = new CloudSdkAppEngineDeployment(cloudSdk);
+    
+    // Configure deployment
+    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+    configuration.setDeployables(Arrays.asList(appYaml1));
+    configuration.setBucket("gs://a-bucket");
+    configuration.setDockerBuild("cloud");
+    configuration.setForce(true);
+    configuration.setImageUrl("imageUrl");
+    configuration.setProject("project");
+    configuration.setPromote(true);
+    configuration.setServer("appengine.google.com");
+    configuration.setStopPreviousVersion(true);
+    configuration.setVersion("v1");
 
-Path appYaml = Paths.get("path", "to", "appYaml");
-
-DeployConfiguration configuration = DefaultDeployConfiguration.newBuilder(appYaml)
-
-  .bucket("gs://my-gcs-bucket")
-
-  .force(true)
-
-  .promote(true)
-
-  .build();
-
-// Create an action object.
-
-AppAction deployAction = new DeployAction(configuration);
-
-// Execute the action.
-
-deployAction.execute();
+    // deploy
+    deploy.deploy(deployConfiguration);
+    
+```
