@@ -19,6 +19,6 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
  */
 public interface ProcessRunner {
 
-  int run(String[] command) throws ProcessRunnerException;
+  void run(String[] command) throws ProcessRunnerException;
 
 }

@@ -15,9 +15,9 @@
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
 import com.google.appengine.tools.admin.AppCfg;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.process.SimpleProcessRunner;
 import com.google.common.base.Joiner;
 
 import java.io.File;
@@ -44,7 +44,7 @@ public class CloudSdk {
   private ProcessRunner processRunner = null;
 
   public CloudSdk(File sdkPath) {
-    this(sdkPath, new SimpleProcessRunner());
+    this(sdkPath, new DefaultProcessRunner());
   }
 
   /**
@@ -64,9 +64,8 @@ public class CloudSdk {
    * Uses the process runner to execute the gcloud app command with the provided arguments.
    *
    * @param args The arguments to pass to "gcloud app" command.
-   * @return The result of the process execution. 0 = successful.
    */
-  public int runAppCommand(List<String> args) throws ProcessRunnerException {
+  public void runAppCommand(List<String> args) throws ProcessRunnerException {
     List<String> command = new ArrayList<>();
     command.add(getGCloudPath().toString());
     command.add("preview");
@@ -75,24 +74,23 @@ public class CloudSdk {
 
     outputCommand(command);
 
-    return processRunner.run(command.toArray(new String[command.size()]));
+    processRunner.run(command.toArray(new String[command.size()]));
   }
 
   /**
    * Uses the process runner to execute a dev_appserver.py command.
    *
    * @param args The arguments to pass to dev_appserver.py.
-   * @return The result of the process execution. 0 = successful.
    * @throws ProcessRunnerException When process runner encounters an error.
    */
-  public int runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
+  public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
     List<String> command = new ArrayList<>();
     command.add(getDevAppServerPath().toString());
     command.addAll(args);
 
     outputCommand(command);
 
-    return processRunner.run(command.toArray(new String[command.size()]));
+    processRunner.run(command.toArray(new String[command.size()]));
   }
 
   /**

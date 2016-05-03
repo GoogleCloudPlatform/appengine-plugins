@@ -74,10 +74,7 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
     }
 
     try {
-      int result = sdk.runAppCommand(arguments);
-      if (result != 0) {
-        throw new AppEngineException("Generating configuration failed with error code: " + result);
-      }
+      sdk.runAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

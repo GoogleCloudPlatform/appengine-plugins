@@ -42,10 +42,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
 
   private void execute(List<String> arguments) throws AppEngineException {
     try {
-      int result = sdk.runAppCommand(arguments);
-      if (result != 0) {
-        throw new AppEngineException("Process failed with exit code " + result);
-      }
+      sdk.runAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
