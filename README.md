@@ -32,7 +32,6 @@ Build the library using the "mvn clean install" command at the repository root d
 
 To deploy a new version, a client calls the library in the following way:
 
-// Create action configuration. For example:
 ```java
 // Create a Cloud SDK
 File cloudSdkPath = PathResolver.INSTANCE.getCloudSdkPath().toFile();
