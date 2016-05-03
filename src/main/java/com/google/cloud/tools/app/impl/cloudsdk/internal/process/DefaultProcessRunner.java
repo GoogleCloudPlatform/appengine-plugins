@@ -25,12 +25,26 @@ import java.util.Scanner;
  */
 public class DefaultProcessRunner implements ProcessRunner {
 
-  private boolean inheritIo = true;
+  private ProcessBuilder processBuilder;
   private boolean async = false;
   private ProcessOutputLineListener stdOutLineListener;
   private ProcessOutputLineListener stdErrLineListener;
   private ProcessExitListener exitListener;
 
+  /**
+   * Create the process runner with a default process builder, with inheritIO enabled.
+   */
+  public DefaultProcessRunner() {
+    this(new ProcessBuilder());
+    processBuilder.inheritIO();
+  }
+
+  /**
+   * Create the process runner with the provided process builder.
+   */
+  public DefaultProcessRunner(ProcessBuilder processBuilder) {
+    this.processBuilder = processBuilder;
+  }
 
   /**
    * Executes a shell command.
@@ -41,14 +55,8 @@ public class DefaultProcessRunner implements ProcessRunner {
 
     command = makeOsSpecific(command);
 
-    final ProcessBuilder pb = new ProcessBuilder(command);
-
-    if (inheritIo) {
-      pb.inheritIO();
-    }
-
     try {
-      final Process process = pb.start();
+      final Process process = processBuilder.start();
 
       if (async) {
         asyncRun(process);
@@ -63,16 +71,6 @@ public class DefaultProcessRunner implements ProcessRunner {
     } catch (IOException | InterruptedException e) {
       throw new ProcessRunnerException(e);
     }
-  }
-
-  /**
-   * Sets the source and destination for subprocess standard I/O to be the same as those of the
-   * current Java process.
-   *
-   * @param inheritIo True by default.
-   */
-  public void setInheritIo(boolean inheritIo) {
-    this.inheritIo = inheritIo;
   }
 
   /**
