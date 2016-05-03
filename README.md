@@ -34,27 +34,26 @@ To deploy a new version, a client calls the library in the following way:
 
 // Create action configuration. For example:
 ```java
-    // Create a Cloud SDK
-    File cloudSdkPath = PathResolver.INSTANCE.getCloudSdkPath().toFile();
-    CloudSdk cloudSdk = new CloudSdk(cloudSdkPath);
-    
-    // Create a deployment
-    AppEngineDeployment deployment = new CloudSdkAppEngineDeployment(cloudSdk);
-    
-    // Configure deployment
-    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
-    configuration.setDeployables(Arrays.asList(appYaml1));
-    configuration.setBucket("gs://a-bucket");
-    configuration.setDockerBuild("cloud");
-    configuration.setForce(true);
-    configuration.setImageUrl("imageUrl");
-    configuration.setProject("project");
-    configuration.setPromote(true);
-    configuration.setServer("appengine.google.com");
-    configuration.setStopPreviousVersion(true);
-    configuration.setVersion("v1");
+// Create a Cloud SDK
+File cloudSdkPath = PathResolver.INSTANCE.getCloudSdkPath().toFile();
+CloudSdk cloudSdk = new CloudSdk(cloudSdkPath);
 
-    // deploy
-    deploy.deploy(deployConfiguration);
-    
+// Create a deployment
+AppEngineDeployment deployment = new CloudSdkAppEngineDeployment(cloudSdk);
+
+// Configure deployment
+DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+configuration.setDeployables(Arrays.asList(appYaml1));
+configuration.setBucket("gs://a-bucket");
+configuration.setDockerBuild("cloud");
+configuration.setForce(true);
+configuration.setImageUrl("imageUrl");
+configuration.setProject("project");
+configuration.setPromote(true);
+configuration.setServer("appengine.google.com");
+configuration.setStopPreviousVersion(true);
+configuration.setVersion("v1");
+
+// deploy
+deploy.deploy(deployConfiguration);
 ```
