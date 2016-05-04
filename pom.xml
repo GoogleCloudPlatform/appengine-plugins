@@ -9,7 +9,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <appengine.target.version>1.9.34</appengine.target.version>
+    <appengine.target.version>1.9.36</appengine.target.version>
   </properties>
 
   <dependencies>
