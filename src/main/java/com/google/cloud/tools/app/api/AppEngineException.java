@@ -15,9 +15,9 @@
 package com.google.cloud.tools.app.api;
 
 /**
- * API-level checked exception for wrapping any failures in performing library operations.
+ * API-level runtime exception for wrapping any failures in performing library operations.
  */
-public class AppEngineException extends Exception {
+public class AppEngineException extends RuntimeException {
 
   public AppEngineException() {
   }
