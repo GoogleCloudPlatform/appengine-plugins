@@ -19,19 +19,17 @@ package com.google.cloud.tools.app.impl.cloudsdk.util;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Command Line argument converter
+ * Command Line argument helper.
  */
 public class Args {
 
   /**
-   * @return [--name, value] or [] if value=null
+   * @return [--name, value] or [] if value=null.
    */
   public static List<String> string(String name, String value) {
     if (!Strings.isNullOrEmpty(value)) {
@@ -41,7 +39,7 @@ public class Args {
   }
 
   /**
-   * @return [--name=value] or [] if value=null
+   * @return [--name=value] or [] if value=null.
    */
   public static List<String> stringEq(String name, String value) {
     if (!Strings.isNullOrEmpty(value)) {
@@ -51,7 +49,7 @@ public class Args {
   }
 
   /**
-   * @return [--name, value1, --name, value2, ...] or [] if value=null
+   * @return [--name, value1, --name, value2, ...] or [] if value=null.
    */
   public static List<String> strings(String name, List<String> values) {
     List<String> result = Lists.newArrayList();
@@ -65,7 +63,7 @@ public class Args {
   }
 
   /**
-   * @return [--name, value] or [] if value=null
+   * @return [--name, value] or [] if value=null.
    */
   public static List<String> integer(String name, Integer value) {
     if (value != null) {
@@ -75,7 +73,7 @@ public class Args {
   }
 
   /**
-   * @return [--name] if value=true, [--no-name] if value=false, [] if value=null
+   * @return [--name] if value=true, [--no-name] if value=false, [] if value=null.
    */
   public static List<String> boolWithNo(String name, Boolean value) {
     if (value != null) {
@@ -88,7 +86,7 @@ public class Args {
   }
 
   /**
-   * @return [--name] if value=true, [] if value=false/null
+   * @return [--name] if value=true, [] if value=false/null.
    */
   public static List<String> bool(String name, Boolean value) {
     if (Boolean.TRUE.equals(value)) {
