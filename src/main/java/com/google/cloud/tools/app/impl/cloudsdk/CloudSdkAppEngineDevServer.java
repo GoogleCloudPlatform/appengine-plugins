@@ -20,8 +20,8 @@ import com.google.cloud.tools.app.api.devserver.RunConfiguration;
 import com.google.cloud.tools.app.api.devserver.StopConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
+import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,98 +49,38 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
    * Starts the local development server, synchronous or asynchronously.
    */
   @Override
-  public void run(RunConfiguration configuration) throws AppEngineException {
-    Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(configuration.getAppYamls());
-    Preconditions.checkArgument(configuration.getAppYamls().size() > 0);
+  public void run(RunConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getAppYamls());
+    Preconditions.checkArgument(config.getAppYamls().size() > 0);
     Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
-    for (File appYaml : configuration.getAppYamls()) {
+    for (File appYaml : config.getAppYamls()) {
       arguments.add(appYaml.toPath().toString());
     }
-    if (!Strings.isNullOrEmpty(configuration.getHost())) {
-      arguments.add("--host");
-      arguments.add(configuration.getHost());
-    }
-    if (configuration.getPort() != null) {
-      arguments.add("--port");
-      arguments.add(String.valueOf(configuration.getPort()));
-    }
-    if (!Strings.isNullOrEmpty(configuration.getAdminHost())) {
-      arguments.add("--admin_host");
-      arguments.add(configuration.getAdminHost());
-    }
-    if (configuration.getAdminPort() != null) {
-      arguments.add("--admin_port");
-      arguments.add(String.valueOf(configuration.getAdminPort()));
-    }
-    if (!Strings.isNullOrEmpty(configuration.getAuthDomain())) {
-      arguments.add("--auth_domain");
-      arguments.add(configuration.getAuthDomain());
-    }
-    if (!Strings.isNullOrEmpty(configuration.getStoragePath())) {
-      arguments.add("--storage_path");
-      arguments.add(configuration.getStoragePath());
-    }
-    if (!Strings.isNullOrEmpty(configuration.getLogLevel())) {
-      arguments.add("--log_level");
-      arguments.add(configuration.getLogLevel());
-    }
-    if (configuration.getMaxModuleInstances() != null) {
-      arguments.add("--max_module_instances");
-      arguments.add(String.valueOf(configuration.getMaxModuleInstances()));
-    }
-    if (configuration.isUseMtimeFileWatcher()) {
-      arguments.add("--use_mtime_file_watcher");
-    }
-    if (!Strings.isNullOrEmpty(configuration.getThreadsafeOverride())) {
-      arguments.add("--threadsafe_override");
-      arguments.add(configuration.getThreadsafeOverride());
-    }
-    if (!Strings.isNullOrEmpty(configuration.getPythonStartupScript())) {
-      arguments.add("--python_startup_script");
-      arguments.add(configuration.getPythonStartupScript());
-    }
-    if (!Strings.isNullOrEmpty(configuration.getPythonStartupArgs())) {
-      arguments.add("--python_startup_args");
-      arguments.add(configuration.getPythonStartupArgs());
-    }
-    if (configuration.getJvmFlags() != null) {
-      for (String jvmFlag : configuration.getJvmFlags()) {
-        arguments.add("--jvm_flag");
-        arguments.add(jvmFlag);
-      }
-    }
-    if (!Strings.isNullOrEmpty(configuration.getCustomEntrypoint())) {
-      arguments.add("--custom_entrypoint");
-      arguments.add(configuration.getCustomEntrypoint());
-    }
-    if (!Strings.isNullOrEmpty(configuration.getRuntime())) {
-      arguments.add("--runtime");
-      arguments.add(configuration.getRuntime());
-    }
-    if (configuration.isAllowSkippedFiles()) {
-      arguments.add("--allow_skipped_files");
-    }
-    if (configuration.getApiPort() != null) {
-      arguments.add("--api_port");
-      arguments.add(String.valueOf(configuration.getApiPort()));
-    }
-    if (configuration.isAutomaticRestart()) {
-      arguments.add("--automatic_restart");
-    }
-    if (!Strings.isNullOrEmpty(configuration.getDevAppserverLogLevel())) {
-      arguments.add("--dev_appserver_log_level");
-      arguments.add(configuration.getDevAppserverLogLevel());
-    }
-    if (configuration.isSkipSdkUpdateCheck()) {
-      arguments.add("--skip_sdk_update_check");
-    }
-    if (!Strings.isNullOrEmpty(configuration.getDefaultGcsBucketName())) {
-      arguments.add("--default_gcs_bucket_name");
-      arguments.add(configuration.getDefaultGcsBucketName());
-    }
+
+    arguments.addAll(Args.string("host", config.getHost()));
+    arguments.addAll(Args.integer("port", config.getPort()));
+    arguments.addAll(Args.string("admin_host", config.getAdminHost()));
+    arguments.addAll(Args.integer("admin_port", config.getAdminPort()));
+    arguments.addAll(Args.string("auth_domain", config.getAuthDomain()));
+    arguments.addAll(Args.string("storage_path", config.getStoragePath()));
+    arguments.addAll(Args.string("log_level", config.getLogLevel()));
+    arguments.addAll(Args.integer("max_module_instances", config.getMaxModuleInstances()));
+    arguments.addAll(Args.bool("use_mtime_file_watcher", config.getUseMtimeFileWatcher()));
+    arguments.addAll(Args.string("threadsafe_override", config.getThreadsafeOverride()));
+    arguments.addAll(Args.string("python_startup_script", config.getPythonStartupScript()));
+    arguments.addAll(Args.string("python_startup_args", config.getPythonStartupArgs()));
+    arguments.addAll(Args.strings("jvm_flag", config.getJvmFlags()));
+    arguments.addAll(Args.string("custom_entrypoint", config.getCustomEntrypoint()));
+    arguments.addAll(Args.string("runtime", config.getRuntime()));
+    arguments.addAll(Args.bool("allow_skipped_files", config.getAllowSkippedFiles()));
+    arguments.addAll(Args.integer("api_port", config.getApiPort()));
+    arguments.addAll(Args.bool("automatic_restart", config.getAutomaticRestart()));
+    arguments.addAll(Args.string("dev_appserver_log_level", config.getDevAppserverLogLevel()));
+    arguments.addAll(Args.bool("skip_sdk_update_check", config.getSkipSdkUpdateCheck()));
+    arguments.addAll(Args.string("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
 
     try {
       sdk.runDevAppServerCommand(arguments);

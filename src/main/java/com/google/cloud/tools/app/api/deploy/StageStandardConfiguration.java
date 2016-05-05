@@ -27,17 +27,17 @@ public interface StageStandardConfiguration {
 
   File getDockerfile();
 
-  boolean isEnableQuickstart();
+  Boolean getEnableQuickstart();
 
-  boolean isDisableUpdateCheck();
+  Boolean getDisableUpdateCheck();
 
-  boolean isEnableJarSplitting();
+  Boolean getEnableJarSplitting();
 
   String getJarSplittingExcludes();
 
   String getCompileEncoding();
 
-  boolean isDeleteJsps();
+  Boolean getDeleteJsps();
 
-  boolean isEnableJarClasses();
+  Boolean getEnableJarClasses();
 }

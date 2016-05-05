@@ -27,7 +27,7 @@ public class DefaultGenConfigParams implements GenConfigParams {
 
   private File sourceDirectory;
   private String config;
-  private boolean custom;
+  private Boolean custom;
   private String runtime;
 
   @Override
@@ -49,11 +49,11 @@ public class DefaultGenConfigParams implements GenConfigParams {
   }
 
   @Override
-  public boolean isCustom() {
+  public Boolean getCustom() {
     return custom;
   }
 
-  public void setCustom(boolean custom) {
+  public void setCustom(Boolean custom) {
     this.custom = custom;
   }
 

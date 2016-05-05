@@ -27,12 +27,12 @@ public class DefaultDeployConfiguration implements DeployConfiguration {
   private List<File> deployables;
   private String bucket;
   private String dockerBuild;
-  private boolean force;
+  private Boolean force;
   private String imageUrl;
   private String project;
-  private boolean promote;
+  private Boolean promote;
   private String server;
-  private boolean stopPreviousVersion;
+  private Boolean stopPreviousVersion;
   private String version;
 
   @Override
@@ -63,11 +63,11 @@ public class DefaultDeployConfiguration implements DeployConfiguration {
   }
 
   @Override
-  public boolean isForce() {
+  public Boolean getForce() {
     return force;
   }
 
-  public void setForce(boolean force) {
+  public void setForce(Boolean force) {
     this.force = force;
   }
 
@@ -90,11 +90,11 @@ public class DefaultDeployConfiguration implements DeployConfiguration {
   }
 
   @Override
-  public boolean isPromote() {
+  public Boolean getPromote() {
     return promote;
   }
 
-  public void setPromote(boolean promote) {
+  public void setPromote(Boolean promote) {
     this.promote = promote;
   }
 
@@ -108,11 +108,11 @@ public class DefaultDeployConfiguration implements DeployConfiguration {
   }
 
   @Override
-  public boolean isStopPreviousVersion() {
+  public Boolean getStopPreviousVersion() {
     return stopPreviousVersion;
   }
 
-  public void setStopPreviousVersion(boolean stopPreviousVersion) {
+  public void setStopPreviousVersion(Boolean stopPreviousVersion) {
     this.stopPreviousVersion = stopPreviousVersion;
   }
 

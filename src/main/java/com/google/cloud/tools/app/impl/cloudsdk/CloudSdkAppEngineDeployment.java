@@ -19,8 +19,8 @@ import com.google.cloud.tools.app.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.app.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
+import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,15 +39,15 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   }
 
   @Override
-  public void deploy(DeployConfiguration configuration) throws AppEngineException {
-    Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(configuration.getDeployables());
-    Preconditions.checkArgument(configuration.getDeployables().size() > 0);
+  public void deploy(DeployConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getDeployables());
+    Preconditions.checkArgument(config.getDeployables().size() > 0);
     Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
-    for (File deployable : configuration.getDeployables()) {
+    for (File deployable : config.getDeployables()) {
       if (!deployable.exists()) {
         throw new IllegalArgumentException(
             "Deployable " + deployable.toPath().toString() + " does not exist.");
@@ -55,47 +55,16 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
       arguments.add(deployable.toPath().toString());
     }
 
-    if (!Strings.isNullOrEmpty(configuration.getBucket())) {
-      arguments.add("--bucket");
-      arguments.add(configuration.getBucket());
-    }
-
-    if (!Strings.isNullOrEmpty(configuration.getDockerBuild())) {
-      arguments.add("--docker-build");
-      arguments.add(configuration.getDockerBuild());
-    }
-
-    if (configuration.isForce()) {
-      arguments.add("--force");
-    }
-
-    if (!Strings.isNullOrEmpty(configuration.getImageUrl())) {
-      arguments.add("--image-url");
-      arguments.add(configuration.getImageUrl());
-    }
-
-    if (!Strings.isNullOrEmpty(configuration.getProject())) {
-      arguments.add("--project");
-      arguments.add(configuration.getProject());
-    }
-
-    if (configuration.isPromote()) {
-      arguments.add("--promote");
-    }
-
-    if (!Strings.isNullOrEmpty(configuration.getServer())) {
-      arguments.add("--server");
-      arguments.add(configuration.getServer());
-    }
-
-    if (configuration.isStopPreviousVersion()) {
-      arguments.add("--stop-previous-version");
-    }
-
-    if (!Strings.isNullOrEmpty(configuration.getVersion())) {
-      arguments.add("--version");
-      arguments.add(configuration.getVersion());
-    }
+    arguments.addAll(Args.string("bucket", config.getBucket()));
+    arguments.addAll(Args.string("docker-build", config.getDockerBuild()));
+    arguments.addAll(Args.boolWithNo("force", config.getForce()));
+    arguments.addAll(Args.string("image-url", config.getImageUrl()));
+    arguments.addAll(Args.string("project", config.getProject()));
+    arguments.addAll(Args.boolWithNo("promote", config.getPromote()));
+    arguments.addAll(Args.string("server", config.getServer()));
+    arguments
+        .addAll(Args.boolWithNo("stop-previous-version", config.getStopPreviousVersion()));
+    arguments.addAll(Args.string("version", config.getVersion()));
 
     arguments.add("--quiet");
 

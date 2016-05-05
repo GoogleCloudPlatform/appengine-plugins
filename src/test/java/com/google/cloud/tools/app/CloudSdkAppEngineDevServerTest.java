@@ -87,14 +87,29 @@ public class CloudSdkAppEngineDevServerTest {
             "--python_startup_script", "script.py", "--python_startup_args", "arguments",
             "--jvm_flag", "-Dtomato", "--jvm_flag", "-Dpotato", "--custom_entrypoint", "entrypoint",
             "--runtime", "java", "--allow_skipped_files", "--api_port", "8091",
-            "--automatic_restart", "--dev_appserver_log_level", "info", "--skip_sdk_update_check",
-            "--default_gcs_bucket_name", "buckets");
+            "--automatic_restart", "--dev_appserver_log_level", "info",
+            "--skip_sdk_update_check", "--default_gcs_bucket_name", "buckets");
 
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
   }
 
+  public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+
+    devServer.run(configuration);
+    configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
+    configuration.setUseMtimeFileWatcher(false);
+    configuration.setAllowSkippedFiles(false);
+    configuration.setAutomaticRestart(false);
+    configuration.setSkipSdkUpdateCheck(false);
+
+    List<String> expected = ImmutableList.of("app.yaml");
+
+    devServer.run(configuration);
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+  }
   @Test
   public void testPrepareCommand_noFlags() throws AppEngineException, ProcessRunnerException {
 
@@ -107,20 +122,5 @@ public class CloudSdkAppEngineDevServerTest {
 
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
   }
-
-  @Test
-  public void testPrepareCommand_noFlagsAsync() throws AppEngineException, ProcessRunnerException {
-
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
-    configuration.setAsync(true);
-
-    List<String> expected = ImmutableList.of("app.yaml");
-
-    devServer.run(configuration);
-
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
-  }
-
 
 }

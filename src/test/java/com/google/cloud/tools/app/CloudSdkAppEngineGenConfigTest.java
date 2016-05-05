@@ -69,8 +69,23 @@ public class CloudSdkAppEngineGenConfigTest {
     params.setRuntime("java");
 
     List<String> expected = ImmutableList
-        .of("gen-config", source.toString(), "--config", "app.yaml", "--custom", "--runtime",
-            "java");
+        .of("gen-config", source.toString(), "--config", "app.yaml", "--custom",
+            "--runtime", "java");
+
+    genConfig.genConfig(params);
+
+    verify(sdk, times(1)).runAppCommand(eq(expected));
+  }
+
+  @Test
+  public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
+
+    DefaultGenConfigParams params = new DefaultGenConfigParams();
+    params.setSourceDirectory(source);
+    params.setCustom(false);
+
+    List<String> expected = ImmutableList
+        .of("gen-config", source.toString(), "--no-custom");
 
     genConfig.genConfig(params);
 

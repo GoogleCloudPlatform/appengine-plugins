@@ -37,45 +37,45 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
    * <p>If app.yaml or Dockerfile do not exist, gcloud cloud will create them.
    */
   @Override
-  public void stageFlexible(StageFlexibleConfiguration configuration) throws AppEngineException {
-    Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(configuration.getStagingDirectory());
-    Preconditions.checkNotNull(configuration.getArtifact());
+  public void stageFlexible(StageFlexibleConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getStagingDirectory());
+    Preconditions.checkNotNull(config.getArtifact());
 
-    if (!configuration.getStagingDirectory().exists()) {
+    if (!config.getStagingDirectory().exists()) {
       throw new AppEngineException("Staging directory does not exist. Location: "
-          + configuration.getStagingDirectory().toPath().toString());
+          + config.getStagingDirectory().toPath().toString());
     }
-    if (!configuration.getStagingDirectory().isDirectory()) {
+    if (!config.getStagingDirectory().isDirectory()) {
       throw new AppEngineException("Staging location is not a directory. Location: "
-          + configuration.getStagingDirectory().toPath().toString());
+          + config.getStagingDirectory().toPath().toString());
     }
 
     try {
 
       // Copy app.yaml to staging.
-      if (configuration.getAppYaml() != null && configuration.getAppYaml().exists()) {
-        Files.copy(configuration.getAppYaml().toPath(),
-            configuration.getStagingDirectory().toPath()
-                .resolve(configuration.getAppYaml().toPath().getFileName()),
+      if (config.getAppYaml() != null && config.getAppYaml().exists()) {
+        Files.copy(config.getAppYaml().toPath(),
+            config.getStagingDirectory().toPath()
+                .resolve(config.getAppYaml().toPath().getFileName()),
             REPLACE_EXISTING);
       }
 
       // Copy Dockerfile to staging.
-      if (configuration.getDockerfile() != null && configuration.getDockerfile().exists()) {
-        Files.copy(configuration.getDockerfile().toPath(),
-            configuration.getStagingDirectory().toPath()
-                .resolve(configuration.getDockerfile().toPath().getFileName()),
+      if (config.getDockerfile() != null && config.getDockerfile().exists()) {
+        Files.copy(config.getDockerfile().toPath(),
+            config.getStagingDirectory().toPath()
+                .resolve(config.getDockerfile().toPath().getFileName()),
             REPLACE_EXISTING);
       }
 
       // TODO : looks like this section should error on no artifacts found? and maybe the
       // TODO : earlier ones should warn?
       // Copy the JAR/WAR file to staging.
-      if (configuration.getArtifact() != null && configuration.getArtifact().exists()) {
-        Files.copy(configuration.getArtifact().toPath(),
-            configuration.getStagingDirectory().toPath()
-                .resolve(configuration.getArtifact().toPath().getFileName()),
+      if (config.getArtifact() != null && config.getArtifact().exists()) {
+        Files.copy(config.getArtifact().toPath(),
+            config.getStagingDirectory().toPath()
+                .resolve(config.getArtifact().toPath().getFileName()),
             REPLACE_EXISTING);
       }
     } catch (IOException e) {

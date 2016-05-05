@@ -99,6 +99,28 @@ public class CloudSdkAppEngineStandardStagingTest {
   }
 
   @Test
+  public void testCheckFlags_booleanFlags()
+      throws IOException, AppEngineException, ProcessRunnerException {
+
+    DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
+    configuration.setSourceDirectory(source);
+    configuration.setStagingDirectory(destination);
+    configuration.setDockerfile(dockerfile);
+    configuration.setEnableQuickstart(false);
+    configuration.setDisableUpdateCheck(false);
+    configuration.setEnableJarSplitting(false);
+    configuration.setDeleteJsps(false);
+    configuration.setEnableJarClasses(false);
+
+    List<String> expected = ImmutableList
+        .of("stage", source.toPath().toString(), destination.toPath().toString());
+
+    staging.stageStandard(configuration);
+
+    verify(sdk, times(1)).runAppCfgCommand(eq(expected));
+  }
+
+  @Test
   public void testCheckFlags_noFlags()
       throws IOException, AppEngineException, ProcessRunnerException {
 

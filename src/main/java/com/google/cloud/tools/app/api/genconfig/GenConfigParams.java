@@ -26,7 +26,7 @@ public interface GenConfigParams {
 
   String getConfig();
 
-  boolean isCustom();
+  Boolean getCustom();
 
   String getRuntime();
 }

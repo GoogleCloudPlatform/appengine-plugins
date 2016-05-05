@@ -21,8 +21,8 @@ import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
+import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -45,42 +45,29 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
   }
 
   @Override
-  public void stageStandard(StageStandardConfiguration configuration) throws AppEngineException {
-    Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(configuration.getSourceDirectory());
-    Preconditions.checkNotNull(configuration.getStagingDirectory());
+  public void stageStandard(StageStandardConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getSourceDirectory());
+    Preconditions.checkNotNull(config.getStagingDirectory());
     Preconditions.checkNotNull(cloudSdk);
 
     List<String> arguments = new ArrayList<>();
-    if (configuration.isEnableQuickstart()) {
-      arguments.add("--enable_quickstart");
-    }
-    if (configuration.isDisableUpdateCheck()) {
-      arguments.add("--disable_update_check");
-    }
-    if (configuration.isEnableJarSplitting()) {
-      arguments.add("--enable_jar_splitting");
-    }
-    if (!Strings.isNullOrEmpty(configuration.getJarSplittingExcludes())) {
-      arguments.add("--jar_splitting_excludes=" + configuration.getJarSplittingExcludes());
-    }
-    if (!Strings.isNullOrEmpty(configuration.getCompileEncoding())) {
-      arguments.add("--compile_encoding=" + configuration.getCompileEncoding());
-    }
-    if (configuration.isDeleteJsps()) {
-      arguments.add("--delete_jsps");
-    }
-    if (configuration.isEnableJarClasses()) {
-      arguments.add("--enable_jar_classes");
-    }
+
+    arguments.addAll(Args.bool("enable_quickstart", config.getEnableQuickstart()));
+    arguments.addAll(Args.bool("disable_update_check", config.getDisableUpdateCheck()));
+    arguments.addAll(Args.bool("enable_jar_splitting", config.getEnableJarSplitting()));
+    arguments.addAll(Args.stringEq("jar_splitting_excludes", config.getJarSplittingExcludes()));
+    arguments.addAll(Args.stringEq("compile_encoding", config.getCompileEncoding()));
+    arguments.addAll(Args.bool("delete_jsps", config.getDeleteJsps()));
+    arguments.addAll(Args.bool("enable_jar_classes", config.getEnableJarClasses()));
 
     arguments.add("stage");
-    arguments.add(configuration.getSourceDirectory().toPath().toString());
-    arguments.add(configuration.getStagingDirectory().toPath().toString());
+    arguments.add(config.getSourceDirectory().toPath().toString());
+    arguments.add(config.getStagingDirectory().toPath().toString());
 
     Path dockerfile =
-        configuration.getDockerfile() == null ? null : configuration.getDockerfile().toPath();
-    Path dockerfileDestination = configuration.getStagingDirectory().toPath();
+        config.getDockerfile() == null ? null : config.getDockerfile().toPath();
+    Path dockerfileDestination = config.getStagingDirectory().toPath();
 
     try {
 

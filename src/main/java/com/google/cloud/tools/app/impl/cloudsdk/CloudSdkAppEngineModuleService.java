@@ -153,50 +153,50 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
    * Gets the logs for a version of a module.
    */
   @Override
-  public void getLogs(GetLogsConfiguration configuration) throws AppEngineException {
-    Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(configuration.getModules());
-    Preconditions.checkArgument(configuration.getModules().size() > 0);
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(configuration.getVersion()));
+  public void getLogs(GetLogsConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getModules());
+    Preconditions.checkArgument(config.getModules().size() > 0);
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(config.getVersion()));
     Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("modules");
     arguments.add("get-logs");
-    arguments.addAll(configuration.getModules());
+    arguments.addAll(config.getModules());
     // TODO(joaomartins): Check if file is valid.
     // TODO(joaomartins): Should we disallow empty files? Printing to stdout will be cluttered
     // by Maven's artifacts, for example.
-    if (!Strings.isNullOrEmpty(configuration.getLogFileLocation())) {
-      arguments.add(configuration.getLogFileLocation());
+    if (!Strings.isNullOrEmpty(config.getLogFileLocation())) {
+      arguments.add(config.getLogFileLocation());
     }
     arguments.add("--version");
-    arguments.add(configuration.getVersion());
-    if (configuration.isAppend()) {
+    arguments.add(config.getVersion());
+    if (config.isAppend()) {
       arguments.add("--append");
     }
-    if (configuration.getDays() != null) {
+    if (config.getDays() != null) {
       arguments.add("--days");
-      arguments.add(String.valueOf(configuration.getDays()));
+      arguments.add(String.valueOf(config.getDays()));
     }
-    if (configuration.isDetails()) {
+    if (config.isDetails()) {
       arguments.add("--details");
     }
-    if (!Strings.isNullOrEmpty(configuration.getEndDate())) {
+    if (!Strings.isNullOrEmpty(config.getEndDate())) {
       arguments.add("--end-date");
-      arguments.add(configuration.getEndDate());
+      arguments.add(config.getEndDate());
     }
-    if (!Strings.isNullOrEmpty(configuration.getServer())) {
+    if (!Strings.isNullOrEmpty(config.getServer())) {
       arguments.add("--server");
-      arguments.add(configuration.getServer());
+      arguments.add(config.getServer());
     }
-    if (!Strings.isNullOrEmpty(configuration.getSeverity())) {
+    if (!Strings.isNullOrEmpty(config.getSeverity())) {
       arguments.add("--severity");
-      arguments.add(configuration.getSeverity());
+      arguments.add(config.getSeverity());
     }
-    if (!Strings.isNullOrEmpty(configuration.getVhost())) {
+    if (!Strings.isNullOrEmpty(config.getVhost())) {
       arguments.add("--vhost");
-      arguments.add(configuration.getVhost());
+      arguments.add(config.getVhost());
     }
 
     execute(arguments);

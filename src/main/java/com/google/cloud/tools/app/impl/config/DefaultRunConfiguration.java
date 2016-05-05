@@ -25,7 +25,6 @@ import java.util.List;
 public class DefaultRunConfiguration implements RunConfiguration {
 
   private List<File> appYamls;
-  private boolean async;
   private String host;
   private Integer port;
   private String adminHost;
@@ -34,18 +33,18 @@ public class DefaultRunConfiguration implements RunConfiguration {
   private String storagePath;
   private String logLevel;
   private Integer maxModuleInstances;
-  private boolean useMtimeFileWatcher;
+  private Boolean useMtimeFileWatcher;
   private String threadsafeOverride;
   private String pythonStartupScript;
   private String pythonStartupArgs;
   private List<String> jvmFlags;
   private String customEntrypoint;
   private String runtime;
-  private boolean allowSkippedFiles;
+  private Boolean allowSkippedFiles;
   private Integer apiPort;
-  private boolean automaticRestart;
+  private Boolean automaticRestart;
   private String devAppserverLogLevel;
-  private boolean skipSdkUpdateCheck;
+  private Boolean skipSdkUpdateCheck;
   private String defaultGcsBucketName;
 
   @Override
@@ -55,14 +54,6 @@ public class DefaultRunConfiguration implements RunConfiguration {
 
   public void setAppYamls(List<File> appYamls) {
     this.appYamls = appYamls;
-  }
-
-  public boolean isAsync() {
-    return async;
-  }
-
-  public void setAsync(boolean async) {
-    this.async = async;
   }
 
   @Override
@@ -138,11 +129,11 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
-  public boolean isUseMtimeFileWatcher() {
+  public Boolean getUseMtimeFileWatcher() {
     return useMtimeFileWatcher;
   }
 
-  public void setUseMtimeFileWatcher(boolean useMtimeFileWatcher) {
+  public void setUseMtimeFileWatcher(Boolean useMtimeFileWatcher) {
     this.useMtimeFileWatcher = useMtimeFileWatcher;
   }
 
@@ -201,11 +192,11 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
-  public boolean isAllowSkippedFiles() {
+  public Boolean getAllowSkippedFiles() {
     return allowSkippedFiles;
   }
 
-  public void setAllowSkippedFiles(boolean allowSkippedFiles) {
+  public void setAllowSkippedFiles(Boolean allowSkippedFiles) {
     this.allowSkippedFiles = allowSkippedFiles;
   }
 
@@ -219,11 +210,11 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
-  public boolean isAutomaticRestart() {
+  public Boolean getAutomaticRestart() {
     return automaticRestart;
   }
 
-  public void setAutomaticRestart(boolean automaticRestart) {
+  public void setAutomaticRestart(Boolean automaticRestart) {
     this.automaticRestart = automaticRestart;
   }
 
@@ -237,11 +228,11 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
-  public boolean isSkipSdkUpdateCheck() {
+  public Boolean getSkipSdkUpdateCheck() {
     return skipSdkUpdateCheck;
   }
 
-  public void setSkipSdkUpdateCheck(boolean skipSdkUpdateCheck) {
+  public void setSkipSdkUpdateCheck(Boolean skipSdkUpdateCheck) {
     this.skipSdkUpdateCheck = skipSdkUpdateCheck;
   }
 

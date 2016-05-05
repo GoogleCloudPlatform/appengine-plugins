@@ -43,7 +43,7 @@ public interface RunConfiguration {
 
   Integer getMaxModuleInstances();
 
-  boolean isUseMtimeFileWatcher();
+  Boolean getUseMtimeFileWatcher();
 
   String getThreadsafeOverride();
 
@@ -57,15 +57,15 @@ public interface RunConfiguration {
 
   String getRuntime();
 
-  boolean isAllowSkippedFiles();
+  Boolean getAllowSkippedFiles();
 
   Integer getApiPort();
 
-  boolean isAutomaticRestart();
+  Boolean getAutomaticRestart();
 
   String getDevAppserverLogLevel();
 
-  boolean isSkipSdkUpdateCheck();
+  Boolean getSkipSdkUpdateCheck();
 
   String getDefaultGcsBucketName();
 }

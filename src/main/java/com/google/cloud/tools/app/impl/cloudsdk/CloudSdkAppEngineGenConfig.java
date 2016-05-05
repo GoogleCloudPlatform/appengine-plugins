@@ -14,13 +14,12 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.genconfig.GenConfigParams;
 import com.google.cloud.tools.app.api.genconfig.GenConfigUtility;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
+import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -42,36 +41,29 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
    * Generates missing configuration files.
    */
   @Override
-  public void genConfig(GenConfigParams configuration) throws AppEngineException {
-    Preconditions.checkNotNull(configuration);
+  public void genConfig(GenConfigParams config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(sdk);
 
-    if (!configuration.getSourceDirectory().exists()) {
+    if (!config.getSourceDirectory().exists()) {
       throw new AppEngineException("Source directory does not exist. Location: "
-          + configuration.getSourceDirectory().toPath().toString());
+          + config.getSourceDirectory().toPath().toString());
     }
-    if (!configuration.getSourceDirectory().isDirectory()) {
+    if (!config.getSourceDirectory().isDirectory()) {
       throw new AppEngineException("Source location is not a directory. Location: "
-          + configuration.getSourceDirectory().toPath().toString());
+          + config.getSourceDirectory().toPath().toString());
     }
 
     List<String> arguments = new ArrayList<>();
     arguments.add("gen-config");
 
-    if (configuration.getSourceDirectory() != null) {
-      arguments.add(configuration.getSourceDirectory().toPath().toString());
+    if (config.getSourceDirectory() != null) {
+      arguments.add(config.getSourceDirectory().toPath().toString());
     }
-    if (!isNullOrEmpty(configuration.getConfig())) {
-      arguments.add("--config");
-      arguments.add(configuration.getConfig());
-    }
-    if (configuration.isCustom()) {
-      arguments.add("--custom");
-    }
-    if (!isNullOrEmpty(configuration.getRuntime())) {
-      arguments.add("--runtime");
-      arguments.add(configuration.getRuntime());
-    }
+
+    arguments.addAll(Args.string("config", config.getConfig()));
+    arguments.addAll(Args.boolWithNo("custom", config.getCustom()));
+    arguments.addAll(Args.string("runtime", config.getRuntime()));
 
     try {
       sdk.runAppCommand(arguments);

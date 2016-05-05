@@ -28,17 +28,17 @@ public interface DeployConfiguration {
 
   String getDockerBuild();
 
-  boolean isForce();
+  Boolean getForce();
 
   String getImageUrl();
 
   String getProject();
 
-  boolean isPromote();
+  Boolean getPromote();
 
   String getServer();
 
-  boolean isStopPreviousVersion();
+  Boolean getStopPreviousVersion();
 
   String getVersion();
 

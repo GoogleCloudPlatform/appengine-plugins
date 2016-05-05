@@ -81,8 +81,26 @@ public class CloudSdkAppEngineDeploymentTest {
 
     List<String> expectedCommand = ImmutableList
         .of("deploy", appYaml1.toString(), "--bucket", "gs://a-bucket", "--docker-build", "cloud",
-            "--force", "--image-url", "imageUrl", "--project", "project", "--promote", "--server",
-            "appengine.google.com", "--stop-previous-version", "--version", "v1", "--quiet");
+            "--force", "--image-url", "imageUrl", "--project", "project", "--promote",
+            "--server", "appengine.google.com", "--stop-previous-version",
+            "--version", "v1", "--quiet");
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+  }
+
+  @Test
+  public void testNewDeployAction_booleanFlags() throws AppEngineException, ProcessRunnerException {
+    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+    configuration.setDeployables(Arrays.asList(appYaml1));
+    configuration.setForce(false);
+    configuration.setPromote(false);
+    configuration.setStopPreviousVersion(false);
+
+    deployment.deploy(configuration);
+
+    List<String> expectedCommand = ImmutableList
+        .of("deploy", appYaml1.toString(), "--no-force", "--no-promote",
+            "--no-stop-previous-version", "--quiet");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
