@@ -60,6 +60,7 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
     arguments.addAll(Args.stringEq("compile_encoding", config.getCompileEncoding()));
     arguments.addAll(Args.bool("delete_jsps", config.getDeleteJsps()));
     arguments.addAll(Args.bool("enable_jar_classes", config.getEnableJarClasses()));
+    arguments.addAll(Args.bool("disable_jar_jsps", config.getDisableJarJsps()));
 
     arguments.add("stage");
     arguments.add(config.getSourceDirectory().toPath().toString());

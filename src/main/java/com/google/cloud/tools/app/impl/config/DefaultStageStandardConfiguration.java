@@ -33,6 +33,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   private String compileEncoding;
   private Boolean deleteJsps;
   private Boolean enableJarClasses;
+  private Boolean disableJarJsps;
 
   @Override
   public File getSourceDirectory() {
@@ -122,5 +123,14 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
 
   public void setEnableJarClasses(Boolean enableJarClasses) {
     this.enableJarClasses = enableJarClasses;
+  }
+
+  @Override
+  public Boolean getDisableJarJsps() {
+    return disableJarJsps;
+  }
+
+  public void setDisableJarJsps(Boolean disableJarJsps) {
+    this.disableJarJsps = disableJarJsps;
   }
 }

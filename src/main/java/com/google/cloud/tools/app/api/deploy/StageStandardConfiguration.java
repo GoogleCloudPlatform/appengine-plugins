@@ -40,4 +40,6 @@ public interface StageStandardConfiguration {
   Boolean getDeleteJsps();
 
   Boolean getEnableJarClasses();
+
+  Boolean getDisableJarJsps();
 }

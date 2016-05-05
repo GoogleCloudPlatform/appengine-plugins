@@ -85,11 +85,12 @@ public class CloudSdkAppEngineStandardStagingTest {
     configuration.setCompileEncoding("UTF8");
     configuration.setDeleteJsps(true);
     configuration.setEnableJarClasses(true);
+    configuration.setDisableJarJsps(true);
 
     List<String> expected = ImmutableList
-        .of("--enable_quickstart", "--disable_update_check",
-            "--enable_jar_splitting", "--jar_splitting_excludes=suffix1,suffix2",
-            "--compile_encoding=UTF8", "--delete_jsps", "--enable_jar_classes", "stage",
+        .of("--enable_quickstart", "--disable_update_check", "--enable_jar_splitting",
+            "--jar_splitting_excludes=suffix1,suffix2", "--compile_encoding=UTF8", "--delete_jsps",
+            "--enable_jar_classes", "--disable_jar_jsps", "stage",
             source.toPath().toString(),
             destination.toPath().toString());
 
@@ -111,6 +112,7 @@ public class CloudSdkAppEngineStandardStagingTest {
     configuration.setEnableJarSplitting(false);
     configuration.setDeleteJsps(false);
     configuration.setEnableJarClasses(false);
+    configuration.setDisableJarJsps(false);
 
     List<String> expected = ImmutableList
         .of("stage", source.toPath().toString(), destination.toPath().toString());
