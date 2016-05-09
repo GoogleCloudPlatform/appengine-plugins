@@ -18,7 +18,7 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-import com.google.cloud.tools.app.impl.config.DefaultInstanceSelectionConfiguration;
+import com.google.cloud.tools.app.impl.config.DefaultInstancesSelectionConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -64,8 +64,8 @@ public class CloudSdkAppEngineInstancesTest {
     verify(sdk, times(1)).runAppCommand(eq(args));
   }
 
-  private DefaultInstanceSelectionConfiguration getConfig() {
-    DefaultInstanceSelectionConfiguration configuration = new DefaultInstanceSelectionConfiguration();
+  private DefaultInstancesSelectionConfiguration getConfig() {
+    DefaultInstancesSelectionConfiguration configuration = new DefaultInstancesSelectionConfiguration();
     configuration.setVersion("v1");
     configuration.setService("myService");
 

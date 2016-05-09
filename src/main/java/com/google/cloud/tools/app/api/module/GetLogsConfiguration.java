@@ -17,7 +17,7 @@ package com.google.cloud.tools.app.api.module;
 /**
  * Configuration for {@link AppEngineModuleService#getLogs(GetLogsConfiguration)}.
  */
-public interface GetLogsConfiguration extends ModuleSelectionConfiguration {
+public interface GetLogsConfiguration extends ModulesSelectionConfiguration {
 
   String getLogFileLocation();
 

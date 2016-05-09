@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.version;
+package com.google.cloud.tools.app.api.service;
 
 import java.util.Collection;
 
 /**
- * Identifies a version or a set of versions for use in {@link AppEngineVersions}.
+ * Identifies a service or a set of services for use in {@link AppEngineServices}.
  */
-public interface VersionSelectionConfiguration {
+public interface ServicesSelectionConfiguration {
 
-  Collection<String> getVersions();
-
-  String getService();
+  Collection<String> getServices();
 }

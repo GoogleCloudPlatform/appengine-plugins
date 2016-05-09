@@ -16,14 +16,14 @@
 
 package com.google.cloud.tools.app.impl.config;
 
-import com.google.cloud.tools.app.api.module.ModuleSelectionConfiguration;
+import com.google.cloud.tools.app.api.module.ModulesSelectionConfiguration;
 
 import java.util.Collection;
 
 /**
- * Plain Java bean implementation of {@link ModuleSelectionConfiguration}.
+ * Plain Java bean implementation of {@link ModulesSelectionConfiguration}.
  */
-public class DefaultModuleSelectionConfiguration implements ModuleSelectionConfiguration {
+public class DefaultModulesSelectionConfiguration implements ModulesSelectionConfiguration {
 
   private String server;
   private String version;

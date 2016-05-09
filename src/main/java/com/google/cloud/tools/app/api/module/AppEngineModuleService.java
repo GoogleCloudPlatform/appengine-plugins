@@ -25,22 +25,22 @@ public interface AppEngineModuleService {
   /**
    * Start serving a specific version of the given modules.
    */
-  void start(ModuleSelectionConfiguration configuration) throws AppEngineException;
+  void start(ModulesSelectionConfiguration configuration) throws AppEngineException;
 
   /**
    * Stop serving a specific version of the given modules.
    */
-  void stop(ModuleSelectionConfiguration configuration) throws AppEngineException;
+  void stop(ModulesSelectionConfiguration configuration) throws AppEngineException;
 
   /**
    * Delete a specific version of the given modules.
    */
-  void delete(ModuleSelectionConfiguration configuration) throws AppEngineException;
+  void delete(ModulesSelectionConfiguration configuration) throws AppEngineException;
 
   /**
    * Set the default serving version for the given modules.
    */
-  void setDefault(ModuleSelectionConfiguration configuration) throws AppEngineException;
+  void setDefault(ModulesSelectionConfiguration configuration) throws AppEngineException;
 
   /**
    * Gets the logs for the given module.

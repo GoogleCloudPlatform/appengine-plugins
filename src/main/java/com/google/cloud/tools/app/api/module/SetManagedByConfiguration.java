@@ -17,7 +17,7 @@ package com.google.cloud.tools.app.api.module;
 /**
  * Configuration for {@link AppEngineModuleService#setManagedBy(SetManagedByConfiguration)}.
  */
-public interface SetManagedByConfiguration extends ModuleSelectionConfiguration {
+public interface SetManagedByConfiguration extends ModulesSelectionConfiguration {
 
   /**
    * Returns Option.GOOGLE or Option.SELF.

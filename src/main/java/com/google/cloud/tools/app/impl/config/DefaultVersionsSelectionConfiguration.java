@@ -17,14 +17,14 @@
 package com.google.cloud.tools.app.impl.config;
 
 
-import com.google.cloud.tools.app.api.version.VersionSelectionConfiguration;
+import com.google.cloud.tools.app.api.version.VersionsSelectionConfiguration;
 
 import java.util.Collection;
 
 /**
- * Plain Java bean implementation of {@link VersionSelectionConfiguration}.
+ * Plain Java bean implementation of {@link VersionsSelectionConfiguration}.
  */
-public class DefaultVersionSelectionConfiguration implements VersionSelectionConfiguration {
+public class DefaultVersionsSelectionConfiguration implements VersionsSelectionConfiguration {
 
   private Collection<String> versions;
   private String service;

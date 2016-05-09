@@ -16,23 +16,32 @@
 
 package com.google.cloud.tools.app.impl.config;
 
-import com.google.cloud.tools.app.api.service.ServiceSelectionConfiguration;
-
-import java.util.Collection;
+import com.google.cloud.tools.app.api.instance.InstancesSelectionConfiguration;
 
 /**
- * Plain Java bean implementation of {@link ServiceSelectionConfiguration}.
+ * Plain Java bean implementation of {@link InstancesSelectionConfiguration}.
  */
-public class DefaultServiceSelectionConfiguration implements ServiceSelectionConfiguration {
+public class DefaultInstancesSelectionConfiguration implements InstancesSelectionConfiguration {
 
-  private Collection<String> services;
+  private String service;
+
+  private String version;
 
   @Override
-  public Collection<String> getServices() {
-    return services;
+  public String getService() {
+    return service;
   }
 
-  public void setServices(Collection<String> services) {
-    this.services = services;
+  public void setService(String service) {
+    this.service = service;
+  }
+
+  @Override
+  public String getVersion() {
+    return version;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
   }
 }

@@ -19,7 +19,7 @@ import java.util.Collection;
 /**
  * Identifies a module or a set of modules for use in {@link AppEngineModuleService}.
  */
-public interface ModuleSelectionConfiguration {
+public interface ModulesSelectionConfiguration {
 
   Collection<String> getModules();
 

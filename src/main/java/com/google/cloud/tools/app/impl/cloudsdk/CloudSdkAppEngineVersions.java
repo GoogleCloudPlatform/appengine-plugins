@@ -18,8 +18,8 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.version.AppEngineVersions;
-import com.google.cloud.tools.app.api.version.VersionSelectionConfiguration;
 import com.google.cloud.tools.app.api.version.VersionsListConfiguration;
+import com.google.cloud.tools.app.api.version.VersionsSelectionConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
@@ -53,7 +53,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
    * Starts serving a specific version or versions.
    */
   @Override
-  public void start(VersionSelectionConfiguration configuration) throws AppEngineException {
+  public void start(VersionsSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
     Preconditions.checkArgument(configuration.getVersions().size() > 0);
@@ -75,7 +75,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
    * Stops serving a specific version or versions.
    */
   @Override
-  public void stop(VersionSelectionConfiguration configuration) throws AppEngineException {
+  public void stop(VersionsSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
     Preconditions.checkArgument(configuration.getVersions().size() > 0);
@@ -97,7 +97,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
    * Deletes a specified version or versions.
    */
   @Override
-  public void delete(VersionSelectionConfiguration configuration) throws AppEngineException {
+  public void delete(VersionsSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
     Preconditions.checkArgument(configuration.getVersions().size() > 0);

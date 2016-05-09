@@ -15,15 +15,15 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.api.instance.InstanceSelectionConfiguration;
+import com.google.cloud.tools.app.api.instance.InstancesSelectionConfiguration;
 import com.google.cloud.tools.app.api.module.AppEngineModuleService;
 import com.google.cloud.tools.app.api.module.GetLogsConfiguration;
-import com.google.cloud.tools.app.api.module.ModuleSelectionConfiguration;
 import com.google.cloud.tools.app.api.module.ModulesListConfiguration;
+import com.google.cloud.tools.app.api.module.ModulesSelectionConfiguration;
 import com.google.cloud.tools.app.api.module.SetManagedByConfiguration;
 import com.google.cloud.tools.app.api.service.TrafficSplitConfiguration;
-import com.google.cloud.tools.app.api.version.VersionSelectionConfiguration;
 import com.google.cloud.tools.app.api.version.VersionsListConfiguration;
+import com.google.cloud.tools.app.api.version.VersionsSelectionConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
@@ -55,11 +55,11 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   /**
    * Starts serving a specific version in one or more modules.
    *
-   * @deprecated use {@link CloudSdkAppEngineVersions#start(VersionSelectionConfiguration)}
+   * @deprecated use {@link CloudSdkAppEngineVersions#start(VersionsSelectionConfiguration)}
    */
   @Deprecated
   @Override
-  public void start(ModuleSelectionConfiguration configuration) throws AppEngineException {
+  public void start(ModulesSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getModules());
     Preconditions.checkArgument(configuration.getModules().size() > 0);
@@ -84,11 +84,11 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   /**
    * Stops serving a specific version of a module.
    *
-   * @deprecated use {@link CloudSdkAppEngineVersions#stop(VersionSelectionConfiguration)}
+   * @deprecated use {@link CloudSdkAppEngineVersions#stop(VersionsSelectionConfiguration)}
    */
   @Deprecated
   @Override
-  public void stop(ModuleSelectionConfiguration configuration) throws AppEngineException {
+  public void stop(ModulesSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getModules());
     Preconditions.checkArgument(configuration.getModules().size() > 0);
@@ -112,11 +112,11 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   /**
    * Deletes a version of one or more modules.
    *
-   * @deprecated use {@link CloudSdkAppEngineVersions#delete(VersionSelectionConfiguration)}
+   * @deprecated use {@link CloudSdkAppEngineVersions#delete(VersionsSelectionConfiguration)}
    */
   @Deprecated
   @Override
-  public void delete(ModuleSelectionConfiguration configuration) throws AppEngineException {
+  public void delete(ModulesSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getModules());
     Preconditions.checkArgument(configuration.getModules().size() > 0);
@@ -144,7 +144,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
    */
   @Deprecated
   @Override
-  public void setDefault(ModuleSelectionConfiguration configuration) throws AppEngineException {
+  public void setDefault(ModulesSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getModules());
     Preconditions.checkArgument(configuration.getModules().size() > 0);
@@ -246,8 +246,8 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   /**
    * Sets a specific instance or every instance of a module to managed by Google or Self.
    *
-   * @deprecated use {@link CloudSdkAppEngineInstances#enableDebug(InstanceSelectionConfiguration)}
-   *     or {@link CloudSdkAppEngineInstances#disableDebug(InstanceSelectionConfiguration)}
+   * @deprecated use {@link CloudSdkAppEngineInstances#enableDebug(InstancesSelectionConfiguration)}
+   *     or {@link CloudSdkAppEngineInstances#disableDebug(InstancesSelectionConfiguration)}
    */
   @Deprecated
   @Override

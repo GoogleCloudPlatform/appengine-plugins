@@ -22,7 +22,7 @@ import java.util.Map;
  * Identifies the traffic split for the version(s) of a given service or services
  * in {@link AppEngineServices}.
  */
-public interface TrafficSplitConfiguration extends ServiceSelectionConfiguration {
+public interface TrafficSplitConfiguration extends ServicesSelectionConfiguration {
 
   Map<String, Double> getVersionToTrafficSplit();
 }

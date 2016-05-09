@@ -26,17 +26,17 @@ public interface AppEngineVersions {
   /**
    * Start serving a specific version of an App Engine Application.
    */
-  void start(VersionSelectionConfiguration configuration) throws AppEngineException;
+  void start(VersionsSelectionConfiguration configuration) throws AppEngineException;
 
   /**
    * Stop serving a specific version of an App Engine application.
    */
-  void stop(VersionSelectionConfiguration configuration) throws AppEngineException;
+  void stop(VersionsSelectionConfiguration configuration) throws AppEngineException;
 
   /**
    * Delete a specific version of an App Engine application.
    */
-  void delete(VersionSelectionConfiguration configuration) throws AppEngineException;
+  void delete(VersionsSelectionConfiguration configuration) throws AppEngineException;
 
   /**
    * List your existing deployed versions.

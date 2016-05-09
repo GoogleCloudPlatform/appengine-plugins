@@ -18,7 +18,7 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.instance.AppEngineInstances;
-import com.google.cloud.tools.app.api.instance.InstanceSelectionConfiguration;
+import com.google.cloud.tools.app.api.instance.InstancesSelectionConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
@@ -51,7 +51,8 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
    * Enable debug on the instance.
    */
   @Override
-  public void enableDebug(InstanceSelectionConfiguration configuration) throws AppEngineException {
+  public void enableDebug(InstancesSelectionConfiguration configuration)
+      throws AppEngineException {
     setDebug(configuration, true);
 
   }
@@ -60,11 +61,12 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
    * Disable debug on the instance.
    */
   @Override
-  public void disableDebug(InstanceSelectionConfiguration configuration) throws AppEngineException {
+  public void disableDebug(InstancesSelectionConfiguration configuration)
+      throws AppEngineException {
     setDebug(configuration, false);
   }
 
-  private void setDebug(InstanceSelectionConfiguration configuration, boolean enable) {
+  private void setDebug(InstancesSelectionConfiguration configuration, boolean enable) {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersion());
     Preconditions.checkNotNull(sdk);

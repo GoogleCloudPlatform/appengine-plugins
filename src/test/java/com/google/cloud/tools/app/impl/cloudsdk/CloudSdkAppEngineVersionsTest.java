@@ -18,7 +18,7 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-import com.google.cloud.tools.app.impl.config.DefaultVersionSelectionConfiguration;
+import com.google.cloud.tools.app.impl.config.DefaultVersionsSelectionConfiguration;
 import com.google.cloud.tools.app.impl.config.DefaultVersionsListConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,8 +91,8 @@ public class CloudSdkAppEngineVersionsTest {
     verify(sdk, times(1)).runAppCommand(eq(args));
   }
 
-  private DefaultVersionSelectionConfiguration getVersionConfig() {
-    DefaultVersionSelectionConfiguration configuration = new DefaultVersionSelectionConfiguration();
+  private DefaultVersionsSelectionConfiguration getVersionConfig() {
+    DefaultVersionsSelectionConfiguration configuration = new DefaultVersionsSelectionConfiguration();
     configuration.setVersions(Arrays.asList("v1", "v2"));
     configuration.setService("myService");
     return configuration;

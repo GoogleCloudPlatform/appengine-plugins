@@ -26,10 +26,10 @@ public interface AppEngineInstances {
   /**
    * Enables debug mode for an instance.
    */
-  void enableDebug(InstanceSelectionConfiguration configuration) throws AppEngineException;
+  void enableDebug(InstancesSelectionConfiguration configuration) throws AppEngineException;
 
   /**
    * Disables debug mode for an instance.
    */
-  void disableDebug(InstanceSelectionConfiguration configuration) throws AppEngineException;
+  void disableDebug(InstancesSelectionConfiguration configuration) throws AppEngineException;
 }

@@ -19,7 +19,7 @@ package com.google.cloud.tools.app.api.instance;
 /**
  * Identifies an instance for use in {@link AppEngineInstances}.
  */
-public interface InstanceSelectionConfiguration {
+public interface InstancesSelectionConfiguration {
 
   String getService();
 
