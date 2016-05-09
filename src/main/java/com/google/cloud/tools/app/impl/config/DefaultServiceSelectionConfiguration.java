@@ -16,33 +16,23 @@
 
 package com.google.cloud.tools.app.impl.config;
 
-import com.google.cloud.tools.app.api.module.ListConfiguration;
+import com.google.cloud.tools.app.api.service.ServiceSelectionConfiguration;
 
 import java.util.Collection;
 
 /**
- * Plain Java bean implementation of {@link ListConfiguration}.
+ * Plain Java bean implementation of {@link ServiceSelectionConfiguration}.
  */
-public class DefaultListConfiguration implements ListConfiguration {
+public class DefaultServiceSelectionConfiguration implements ServiceSelectionConfiguration {
 
-  private Collection<String> modules;
-  private String server;
-
-  @Override
-  public Collection<String> getModules() {
-    return modules;
-  }
-
-  public void setModules(Collection<String> modules) {
-    this.modules = modules;
-  }
+  private Collection<String> services;
 
   @Override
-  public String getServer() {
-    return server;
+  public Collection<String> getServices() {
+    return services;
   }
 
-  public void setServer(String server) {
-    this.server = server;
+  public void setServices(Collection<String> services) {
+    this.services = services;
   }
 }

@@ -22,6 +22,7 @@ import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Command Line argument helper.
@@ -93,5 +94,14 @@ public class Args {
       return Collections.singletonList("--" + name);
     }
     return Collections.emptyList();
+  }
+
+  public static List<String> keyValue(Map<?, ?> keyValueMapping) {
+    List<String> result = Lists.newArrayList();
+    for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
+      result.add(entry.getKey() + "=" + entry.getValue());
+    }
+
+    return result;
   }
 }
