@@ -14,6 +14,7 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
+import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
@@ -74,7 +75,7 @@ public class CloudSdk {
     if (sdkPathFile == null) {
       Path discoveredSdkPath = PathResolver.INSTANCE.getCloudSdkPath();
       if (discoveredSdkPath == null) {
-        throw new NullPointerException("Google Cloud SDK path was not provided and could not be"
+        throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
             + " found in any known install locations.");
       }
       this.sdkPath = discoveredSdkPath;
