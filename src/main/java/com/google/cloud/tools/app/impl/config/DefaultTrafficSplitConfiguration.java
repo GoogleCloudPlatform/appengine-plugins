@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.app.impl.config;
 
-import com.google.cloud.tools.app.api.service.TrafficSplitConfiguration;
+import com.google.cloud.tools.app.api.services.TrafficSplitConfiguration;
 
 import java.util.Collection;
 import java.util.Map;

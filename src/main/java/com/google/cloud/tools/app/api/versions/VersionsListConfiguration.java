@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.service;
-
-import java.util.Map;
+package com.google.cloud.tools.app.api.versions;
 
 /**
- * Identifies the traffic split for the version(s) of a given service or services
- * in {@link AppEngineServices}.
+ * Configuration for {@link AppEngineVersions#list(VersionsListConfiguration)}.
  */
-public interface TrafficSplitConfiguration extends ServicesSelectionConfiguration {
+public interface VersionsListConfiguration {
 
-  Map<String, Double> getVersionToTrafficSplit();
+  String getService();
+
+  Boolean getHideNoTraffic();
+
 }

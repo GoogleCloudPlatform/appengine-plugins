@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.service;
+package com.google.cloud.tools.app.api.services;
 
-import java.util.Collection;
+import com.google.cloud.tools.app.api.AppEngineException;
 
 /**
- * Identifies a service or a set of services for use in {@link AppEngineServices}.
+ * This set of commands can be used to manage existing App Engine services.
  */
-public interface ServicesSelectionConfiguration {
+public interface AppEngineServices {
 
-  Collection<String> getServices();
+  /**
+   * Set the traffic splitting for the given service.
+   */
+  void setTraffic(TrafficSplitConfiguration configuration) throws AppEngineException;
+
 }

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.log;
+package com.google.cloud.tools.app.api.instances;
 
 /**
- * This set of commands can be used to manage existing App Engine logs.
+ * Identifies an instance for use in {@link AppEngineInstances}.
  */
-public interface AppEngineLogs {
+public interface InstancesSelectionConfiguration {
 
-  /**
-   * Reads log entries for the given App Engine application.
-   */
-  void read(LogsConfiguration configuration);
+  String getService();
+
+  String getVersion();
+
 }

@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.instance;
+package com.google.cloud.tools.app.api.versions;
 
-import com.google.cloud.tools.app.api.AppEngineException;
+import java.util.Collection;
 
 /**
- * This set of commands can be used to manage existing App Engine instance.
+ * Identifies a version or a set of versions for use in {@link AppEngineVersions}.
  */
-public interface AppEngineInstances {
+public interface VersionsSelectionConfiguration {
 
-  /**
-   * Enables debug mode for an instance.
-   */
-  void enableDebug(InstancesSelectionConfiguration configuration) throws AppEngineException;
+  Collection<String> getVersions();
 
-  /**
-   * Disables debug mode for an instance.
-   */
-  void disableDebug(InstancesSelectionConfiguration configuration) throws AppEngineException;
+  String getService();
 }

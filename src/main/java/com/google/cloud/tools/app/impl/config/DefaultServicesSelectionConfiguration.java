@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.app.impl.config;
 
-import com.google.cloud.tools.app.api.service.ServicesSelectionConfiguration;
+import com.google.cloud.tools.app.api.services.ServicesSelectionConfiguration;
 
 import java.util.Collection;
 

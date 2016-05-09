@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.log;
+package com.google.cloud.tools.app.api.services;
+
+import java.util.Map;
 
 /**
- * Identifies an application for use in {@link AppEngineLogs}.
+ * Identifies the traffic split for the version(s) of a given service or services
+ * in {@link AppEngineServices}.
  */
-public interface LogsConfiguration {
+public interface TrafficSplitConfiguration extends ServicesSelectionConfiguration {
 
-  String getLevel();
-
-  String getVersion();
-
-  String getService();
-
-  Integer getLimit();
-
+  Map<String, Double> getVersionToTrafficSplit();
 }

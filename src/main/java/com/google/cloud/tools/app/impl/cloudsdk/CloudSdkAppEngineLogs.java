@@ -17,8 +17,8 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.api.log.AppEngineLogs;
-import com.google.cloud.tools.app.api.log.LogsConfiguration;
+import com.google.cloud.tools.app.api.logs.AppEngineLogs;
+import com.google.cloud.tools.app.api.logs.LogsConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;

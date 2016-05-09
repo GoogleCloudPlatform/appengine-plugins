@@ -17,7 +17,7 @@
 package com.google.cloud.tools.app.impl.config;
 
 
-import com.google.cloud.tools.app.api.version.VersionsSelectionConfiguration;
+import com.google.cloud.tools.app.api.versions.VersionsSelectionConfiguration;
 
 import java.util.Collection;
 

@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.service;
-
-import com.google.cloud.tools.app.api.AppEngineException;
+package com.google.cloud.tools.app.api.logs;
 
 /**
- * This set of commands can be used to manage existing App Engine services.
+ * This set of commands can be used to manage existing App Engine logs.
  */
-public interface AppEngineServices {
+public interface AppEngineLogs {
 
   /**
-   * Set the traffic splitting for the given service.
+   * Reads log entries for the given App Engine application.
    */
-  void setTraffic(TrafficSplitConfiguration configuration) throws AppEngineException;
-
+  void read(LogsConfiguration configuration);
 }

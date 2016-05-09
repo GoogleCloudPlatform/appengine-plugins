@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.instance;
+package com.google.cloud.tools.app.api.logs;
 
 /**
- * Identifies an instance for use in {@link AppEngineInstances}.
+ * Identifies an application for use in {@link AppEngineLogs}.
  */
-public interface InstancesSelectionConfiguration {
+public interface LogsConfiguration {
+
+  String getLevel();
+
+  String getVersion();
 
   String getService();
 
-  String getVersion();
+  Integer getLimit();
 
 }

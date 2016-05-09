@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.version;
+package com.google.cloud.tools.app.api.versions;
 
 import com.google.cloud.tools.app.api.AppEngineException;
 

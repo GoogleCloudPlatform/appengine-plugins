@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.version;
+package com.google.cloud.tools.app.api.instances;
+
+import com.google.cloud.tools.app.api.AppEngineException;
 
 /**
- * Configuration for {@link AppEngineVersions#list(VersionsListConfiguration)}.
+ * This set of commands can be used to manage existing App Engine instance.
  */
-public interface VersionsListConfiguration {
+public interface AppEngineInstances {
 
-  String getService();
+  /**
+   * Enables debug mode for an instance.
+   */
+  void enableDebug(InstancesSelectionConfiguration configuration) throws AppEngineException;
 
-  Boolean getHideNoTraffic();
-
+  /**
+   * Disables debug mode for an instance.
+   */
+  void disableDebug(InstancesSelectionConfiguration configuration) throws AppEngineException;
 }

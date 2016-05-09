@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.app.impl.config;
 
-import com.google.cloud.tools.app.api.instance.InstancesSelectionConfiguration;
+import com.google.cloud.tools.app.api.instances.InstancesSelectionConfiguration;
 
 /**
  * Plain Java bean implementation of {@link InstancesSelectionConfiguration}.

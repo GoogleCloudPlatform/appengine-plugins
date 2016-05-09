@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.app.impl.config;
 
-import com.google.cloud.tools.app.api.log.LogsConfiguration;
+import com.google.cloud.tools.app.api.logs.LogsConfiguration;
 
 /**
  * Plain Java bean implementation of {@link LogsConfiguration}.

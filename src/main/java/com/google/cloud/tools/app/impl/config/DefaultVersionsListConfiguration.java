@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.app.impl.config;
 
-import com.google.cloud.tools.app.api.version.VersionsListConfiguration;
+import com.google.cloud.tools.app.api.versions.VersionsListConfiguration;
 
 /**
  * Plain Java bean implementation of {@link VersionsListConfiguration}.
