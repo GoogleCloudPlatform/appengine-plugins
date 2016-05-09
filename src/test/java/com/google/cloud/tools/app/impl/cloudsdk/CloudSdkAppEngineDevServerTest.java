@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app;
+package com.google.cloud.tools.app.impl.cloudsdk;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
