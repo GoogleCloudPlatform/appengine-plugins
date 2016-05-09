@@ -15,6 +15,7 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
+import com.google.cloud.tools.app.api.instance.InstanceSelectionConfiguration;
 import com.google.cloud.tools.app.api.module.AppEngineModuleService;
 import com.google.cloud.tools.app.api.module.GetLogsConfiguration;
 import com.google.cloud.tools.app.api.module.ModuleSelectionConfiguration;
@@ -244,7 +245,11 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
 
   /**
    * Sets a specific instance or every instance of a module to managed by Google or Self.
+   *
+   * @deprecated use {@link CloudSdkAppEngineInstances#enableDebug(InstanceSelectionConfiguration)}
+   *     or {@link CloudSdkAppEngineInstances#disableDebug(InstanceSelectionConfiguration)}
    */
+  @Deprecated
   @Override
   public void setManagedBy(SetManagedByConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
