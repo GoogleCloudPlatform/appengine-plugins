@@ -58,6 +58,7 @@ public class CloudSdkAppEngineLogs implements AppEngineLogs {
     List<String> arguments = new ArrayList<>();
     arguments.add("logs");
     arguments.add("read");
+    arguments.addAll(Args.string("level", configuration.getLevel()));
     arguments.addAll(Args.string("version", configuration.getVersion()));
     arguments.addAll(Args.string("service", configuration.getService()));
     arguments.addAll(Args.integer("limit", configuration.getLimit()));

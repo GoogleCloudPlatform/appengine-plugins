@@ -44,6 +44,7 @@ public class CloudSdkAppEngineLogsTest {
   public void readTest() throws ProcessRunnerException {
     CloudSdkAppEngineLogs appEngineLogs = new CloudSdkAppEngineLogs(sdk);
     DefaultLogsConfiguration configuration = new DefaultLogsConfiguration();
+    configuration.setLevel("warning");
     configuration.setVersion("v1");
     configuration.setService("myService");
     configuration.setLimit(10);
@@ -51,7 +52,8 @@ public class CloudSdkAppEngineLogsTest {
     appEngineLogs.read(configuration);
 
     List<String> args =
-        Arrays.asList("logs", "read", "--version", "v1", "--service", "myService", "--limit", "10");
+        Arrays.asList("logs", "read", "--level", "warning", "--version", "v1", "--service",
+            "myService", "--limit", "10");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }
