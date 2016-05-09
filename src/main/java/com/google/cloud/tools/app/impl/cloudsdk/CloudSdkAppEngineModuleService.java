@@ -168,6 +168,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   /**
    * Gets the logs for a version of a module.
    */
+  @Deprecated
   @Override
   public void getLogs(GetLogsConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);

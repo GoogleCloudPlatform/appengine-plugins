@@ -17,8 +17,8 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.api.service.AppEngineServices;
-import com.google.cloud.tools.app.api.service.TrafficSplitConfiguration;
+import com.google.cloud.tools.app.api.log.AppEngineLogs;
+import com.google.cloud.tools.app.api.log.LogsConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
@@ -28,13 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Cloud SDK based implementation of {@link AppEngineServices}.
+ * Cloud SDK based implementation of {@link AppEngineLogs}.
  */
-public class CloudSdkAppEngineServices implements AppEngineServices {
+public class CloudSdkAppEngineLogs implements AppEngineLogs {
 
   private CloudSdk sdk;
 
-  public CloudSdkAppEngineServices(
+  public CloudSdkAppEngineLogs(
       CloudSdk sdk) {
     this.sdk = sdk;
   }
@@ -48,23 +48,19 @@ public class CloudSdkAppEngineServices implements AppEngineServices {
   }
 
   /**
-   * Set the traffic splitting.
+   * Read log entries.
    */
   @Override
-  public void setTraffic(TrafficSplitConfiguration configuration) throws AppEngineException {
+  public void read(LogsConfiguration configuration) {
     Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(configuration.getServices());
-    Preconditions.checkArgument(configuration.getServices().size() > 0);
-    Preconditions.checkNotNull(configuration.getVersionToTrafficSplit());
-    Preconditions.checkArgument(configuration.getVersionToTrafficSplit().size() > 0);
     Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
-    arguments.add("services");
-    arguments.add("set-traffic");
-    arguments.addAll(configuration.getServices());
-    arguments.add("--splits");
-    arguments.addAll(Args.keyValues(configuration.getVersionToTrafficSplit()));
+    arguments.add("logs");
+    arguments.add("read");
+    arguments.addAll(Args.string("version", configuration.getVersion()));
+    arguments.addAll(Args.string("service", configuration.getService()));
+    arguments.addAll(Args.integer("limit", configuration.getLimit()));
 
     execute(arguments);
   }
