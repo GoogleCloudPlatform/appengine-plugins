@@ -24,7 +24,6 @@ import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerEx
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +62,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     arguments.add("versions");
     arguments.add("start");
     arguments.addAll(configuration.getVersions());
-    if (!Strings.isNullOrEmpty(configuration.getService())) {
-      arguments.add("--service");
-      arguments.add(configuration.getService());
-    }
+    arguments.addAll(Args.string("service", configuration.getService()));
 
     execute(arguments);
   }
@@ -85,10 +81,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     arguments.add("versions");
     arguments.add("stop");
     arguments.addAll(configuration.getVersions());
-    if (!Strings.isNullOrEmpty(configuration.getService())) {
-      arguments.add("--service");
-      arguments.add(configuration.getService());
-    }
+    arguments.addAll(Args.string("service", configuration.getService()));
 
     execute(arguments);
   }
@@ -106,10 +99,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     arguments.add("versions");
     arguments.add("delete");
     arguments.addAll(configuration.getVersions());
-    if (!Strings.isNullOrEmpty(configuration.getService())) {
-      arguments.add("--service");
-      arguments.add(configuration.getService());
-    }
+    arguments.addAll(Args.string("service", configuration.getService()));
 
     execute(arguments);
   }
@@ -125,10 +115,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     List<String> arguments = new ArrayList<>();
     arguments.add("versions");
     arguments.add("list");
-    if (!Strings.isNullOrEmpty(configuration.getService())) {
-      arguments.add("--service");
-      arguments.add(configuration.getService());
-    }
+    arguments.addAll(Args.string("service", configuration.getService()));
     arguments.addAll(Args.bool("hide-no-traffic", configuration.getHideNoTraffic()));
 
     execute(arguments);
