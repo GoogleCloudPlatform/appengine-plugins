@@ -80,6 +80,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
    *
    * @deprecated use {@link CloudSdkAppEngineVersion#stop(VersionSelectionConfiguration)}
    */
+  @Deprecated
   @Override
   public void stop(ModuleSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
@@ -107,6 +108,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
    *
    * @deprecated use {@link CloudSdkAppEngineVersion#delete(VersionSelectionConfiguration)}
    */
+  @Deprecated
   @Override
   public void delete(ModuleSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
@@ -134,6 +136,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
    *
    * @deprecated use {@link CloudSdkAppEngineService#setTraffic(TrafficSplitConfiguration)}
    */
+  @Deprecated
   @Override
   public void setDefault(ModuleSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
