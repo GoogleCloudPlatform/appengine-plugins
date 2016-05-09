@@ -16,12 +16,13 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.util;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link Args}
@@ -36,9 +37,9 @@ public class ArgsTest {
     versionToTrafficSplitMapping.put("v2", 0.3);
     versionToTrafficSplitMapping.put("v3", 0.5);
 
-    Assert.assertEquals(Collections.singletonList("v1=0.2,v2=0.3,v3=0.5"),
+    assertEquals(Collections.singletonList("v1=0.2,v2=0.3,v3=0.5"),
         Args.keyValues(versionToTrafficSplitMapping));
 
-    Assert.assertEquals(Collections.emptyList(), Args.keyValues(null));
+    assertEquals(Collections.emptyList(), Args.keyValues(null));
   }
 }
