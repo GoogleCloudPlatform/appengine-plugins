@@ -99,7 +99,7 @@ public class Args {
   /**
    * @return [key1=value1, key2=value2, ...]
    */
-  public static List<String> keyValue(Map<?, ?> keyValueMapping) {
+  public static List<String> keyValues(Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
     for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
       result.add(entry.getKey() + "=" + entry.getValue());
