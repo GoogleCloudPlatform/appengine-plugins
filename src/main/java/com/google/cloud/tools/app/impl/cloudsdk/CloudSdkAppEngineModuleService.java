@@ -15,7 +15,11 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.api.module.*;
+import com.google.cloud.tools.app.api.module.AppEngineModuleService;
+import com.google.cloud.tools.app.api.module.GetLogsConfiguration;
+import com.google.cloud.tools.app.api.module.ListConfiguration;
+import com.google.cloud.tools.app.api.module.ModuleSelectionConfiguration;
+import com.google.cloud.tools.app.api.module.SetManagedByConfiguration;
 import com.google.cloud.tools.app.api.service.TrafficSplitConfiguration;
 import com.google.cloud.tools.app.api.version.VersionSelectionConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
