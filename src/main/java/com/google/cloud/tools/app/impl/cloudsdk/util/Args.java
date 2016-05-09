@@ -98,14 +98,18 @@ public class Args {
   }
 
   /**
-   * @return [key1=value1,key2=value2,...]
+   * @return [key1=value1,key2=value2,...], [] if keyValueMapping=empty/null
    */
-  public static String keyValues(Map<?, ?> keyValueMapping) {
+  public static List<String> keyValues(Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
-    for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
-      result.add(entry.getKey() + "=" + entry.getValue());
+    if (keyValueMapping != null && keyValueMapping.size() > 0) {
+      for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
+        result.add(entry.getKey() + "=" + entry.getValue());
+      }
+      Joiner joiner = Joiner.on(",");
+      return Collections.singletonList(joiner.join(result));
     }
-    Joiner joiner = Joiner.on(",");
-    return joiner.join(result);
+
+    return Collections.emptyList();
   }
 }
