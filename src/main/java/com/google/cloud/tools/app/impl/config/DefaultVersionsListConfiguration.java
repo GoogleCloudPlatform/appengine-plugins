@@ -16,33 +16,30 @@
 
 package com.google.cloud.tools.app.impl.config;
 
-import com.google.cloud.tools.app.api.module.ListConfiguration;
-
-import java.util.Collection;
+import com.google.cloud.tools.app.api.version.VersionsListConfiguration;
 
 /**
- * Plain Java bean implementation of {@link ListConfiguration}.
+ * Plain Java bean implementation of {@link VersionsListConfiguration}.
  */
-public class ModuleListConfiguration implements ListConfiguration {
+public class DefaultVersionsListConfiguration implements VersionsListConfiguration {
 
-  private Collection<String> modules;
-  private String server;
-
-  @Override
-  public Collection<String> getModules() {
-    return modules;
-  }
-
-  public void setModules(Collection<String> modules) {
-    this.modules = modules;
-  }
+  private String service;
+  private Boolean hideNoTraffic;
 
   @Override
-  public String getServer() {
-    return server;
+  public String getService() {
+    return service;
   }
 
-  public void setServer(String server) {
-    this.server = server;
+  public void setService(String service) {
+    this.service = service;
+  }
+
+  public Boolean getHideNoTraffic() {
+    return hideNoTraffic;
+  }
+
+  public void setHideNoTraffic(Boolean hideNoTraffic) {
+    this.hideNoTraffic = hideNoTraffic;
   }
 }

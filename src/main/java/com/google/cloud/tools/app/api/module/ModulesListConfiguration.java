@@ -17,9 +17,9 @@ package com.google.cloud.tools.app.api.module;
 import java.util.Collection;
 
 /**
- * Configuration for {@link AppEngineModuleService#list(ListConfiguration)}.
+ * Configuration for {@link AppEngineModuleService#list(ModulesListConfiguration)}.
  */
-public interface ListConfiguration {
+public interface ModulesListConfiguration {
 
   Collection<String> getModules();
 

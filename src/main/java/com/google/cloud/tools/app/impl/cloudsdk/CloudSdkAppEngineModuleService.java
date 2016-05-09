@@ -17,11 +17,12 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.module.AppEngineModuleService;
 import com.google.cloud.tools.app.api.module.GetLogsConfiguration;
-import com.google.cloud.tools.app.api.module.ListConfiguration;
+import com.google.cloud.tools.app.api.module.ModulesListConfiguration;
 import com.google.cloud.tools.app.api.module.ModuleSelectionConfiguration;
 import com.google.cloud.tools.app.api.module.SetManagedByConfiguration;
 import com.google.cloud.tools.app.api.service.TrafficSplitConfiguration;
 import com.google.cloud.tools.app.api.version.VersionSelectionConfiguration;
+import com.google.cloud.tools.app.api.version.VersionsListConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
@@ -53,7 +54,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   /**
    * Starts serving a specific version in one or more modules.
    *
-   * @deprecated use {@link CloudSdkAppEngineVersion#start(VersionSelectionConfiguration)}
+   * @deprecated use {@link CloudSdkAppEngineVersions#start(VersionSelectionConfiguration)}
    */
   @Deprecated
   @Override
@@ -82,7 +83,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   /**
    * Stops serving a specific version of a module.
    *
-   * @deprecated use {@link CloudSdkAppEngineVersion#stop(VersionSelectionConfiguration)}
+   * @deprecated use {@link CloudSdkAppEngineVersions#stop(VersionSelectionConfiguration)}
    */
   @Deprecated
   @Override
@@ -110,7 +111,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   /**
    * Deletes a version of one or more modules.
    *
-   * @deprecated use {@link CloudSdkAppEngineVersion#delete(VersionSelectionConfiguration)}
+   * @deprecated use {@link CloudSdkAppEngineVersions#delete(VersionSelectionConfiguration)}
    */
   @Deprecated
   @Override
@@ -138,7 +139,7 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
   /**
    * Sets the default version of a module.
    *
-   * @deprecated use {@link CloudSdkAppEngineService#setTraffic(TrafficSplitConfiguration)}
+   * @deprecated use {@link CloudSdkAppEngineServices#setTraffic(TrafficSplitConfiguration)}
    */
   @Deprecated
   @Override
@@ -220,11 +221,11 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
    * Lists the versions for a module, or every version of every module if no module is specified.
    *
    * @deprecated use {@link
-   *     CloudSdkAppEngineVersion#list(com.google.cloud.tools.app.api.version.ListConfiguration)}
+   *     CloudSdkAppEngineVersions#list(VersionsListConfiguration)}
    */
   @Deprecated
   @Override
-  public void list(ListConfiguration configuration) throws AppEngineException {
+  public void list(ModulesListConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getModules());
     Preconditions.checkNotNull(sdk);

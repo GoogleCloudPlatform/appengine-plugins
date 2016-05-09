@@ -19,7 +19,7 @@ package com.google.cloud.tools.app.api.service;
 import java.util.Collection;
 
 /**
- * Identifies a service or a set of services for use in {@link AppEngineService}.
+ * Identifies a service or a set of services for use in {@link AppEngineServices}.
  */
 public interface ServiceSelectionConfiguration {
 

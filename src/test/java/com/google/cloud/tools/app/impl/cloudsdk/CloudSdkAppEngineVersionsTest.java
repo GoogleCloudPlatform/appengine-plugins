@@ -19,7 +19,7 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.config.DefaultVersionSelectionConfiguration;
-import com.google.cloud.tools.app.impl.config.VersionListConfiguration;
+import com.google.cloud.tools.app.impl.config.DefaultVersionsListConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -33,17 +33,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit tests for {@link CloudSdkAppEngineVersion}
+ * Unit tests for {@link CloudSdkAppEngineVersions}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineVersionTest {
+public class CloudSdkAppEngineVersionsTest {
 
   @Mock
   private CloudSdk sdk;
 
   @Test
   public void startTest() throws ProcessRunnerException {
-    CloudSdkAppEngineVersion appEngineVersion = new CloudSdkAppEngineVersion(sdk);
+    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.start(getVersionConfig());
 
     List<String> args = Arrays.asList("versions", "start", "v1", "v2", "--service", "myService");
@@ -53,7 +53,7 @@ public class CloudSdkAppEngineVersionTest {
 
   @Test
   public void stopTest() throws ProcessRunnerException {
-    CloudSdkAppEngineVersion appEngineVersion = new CloudSdkAppEngineVersion(sdk);
+    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.stop(getVersionConfig());
 
     List<String> args = Arrays.asList("versions", "stop", "v1", "v2", "--service", "myService");
@@ -63,7 +63,7 @@ public class CloudSdkAppEngineVersionTest {
 
   @Test
   public void deleteTest() throws ProcessRunnerException {
-    CloudSdkAppEngineVersion appEngineVersion = new CloudSdkAppEngineVersion(sdk);
+    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.delete(getVersionConfig());
 
     List<String> args = Arrays.asList("versions", "delete", "v1", "v2", "--service", "myService");
@@ -73,7 +73,7 @@ public class CloudSdkAppEngineVersionTest {
 
   @Test
   public void listTest_doHideNoTraffic() throws ProcessRunnerException {
-    CloudSdkAppEngineVersion appEngineVersion = new CloudSdkAppEngineVersion(sdk);
+    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.list(getListConfig(true));
 
     List<String> args = Arrays.asList("versions", "list", "--service", "myService", "--hide-no-traffic");
@@ -83,7 +83,7 @@ public class CloudSdkAppEngineVersionTest {
 
   @Test
   public void listTest_dontHideNoTraffic() throws ProcessRunnerException {
-    CloudSdkAppEngineVersion appEngineVersion = new CloudSdkAppEngineVersion(sdk);
+    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.list(getListConfig(false));
 
     List<String> args = Arrays.asList("versions", "list", "--service", "myService");
@@ -98,8 +98,8 @@ public class CloudSdkAppEngineVersionTest {
     return configuration;
   }
 
-  private VersionListConfiguration getListConfig(boolean hideNoTraffic) {
-    VersionListConfiguration listConfiguration = new VersionListConfiguration();
+  private DefaultVersionsListConfiguration getListConfig(boolean hideNoTraffic) {
+    DefaultVersionsListConfiguration listConfiguration = new DefaultVersionsListConfiguration();
     listConfiguration.setService("myService");
     listConfiguration.setHideNoTraffic(hideNoTraffic);
     return listConfiguration;

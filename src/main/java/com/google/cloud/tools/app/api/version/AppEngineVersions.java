@@ -21,7 +21,7 @@ import com.google.cloud.tools.app.api.AppEngineException;
 /**
  * This set of commands can be used to manage existing App Engine versions.
  */
-public interface AppEngineVersion {
+public interface AppEngineVersions {
 
   /**
    * Start serving a specific version of an App Engine Application.
@@ -41,6 +41,6 @@ public interface AppEngineVersion {
   /**
    * List your existing deployed versions.
    */
-  void list(ListConfiguration configuration) throws AppEngineException;
+  void list(VersionsListConfiguration configuration) throws AppEngineException;
 
 }

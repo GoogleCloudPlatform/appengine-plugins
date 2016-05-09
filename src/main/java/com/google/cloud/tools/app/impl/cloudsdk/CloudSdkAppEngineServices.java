@@ -17,7 +17,7 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.api.service.AppEngineService;
+import com.google.cloud.tools.app.api.service.AppEngineServices;
 import com.google.cloud.tools.app.api.service.TrafficSplitConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
@@ -28,13 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Cloud SDK based implementation of {@link AppEngineService}.
+ * Cloud SDK based implementation of {@link AppEngineServices}.
  */
-public class CloudSdkAppEngineService implements AppEngineService {
+public class CloudSdkAppEngineServices implements AppEngineServices {
 
   private CloudSdk sdk;
 
-  public CloudSdkAppEngineService(
+  public CloudSdkAppEngineServices(
       CloudSdk sdk) {
     this.sdk = sdk;
   }

@@ -19,7 +19,7 @@ package com.google.cloud.tools.app.api.version;
 import java.util.Collection;
 
 /**
- * Identifies a version or a set of versions for use in {@link AppEngineVersion}.
+ * Identifies a version or a set of versions for use in {@link AppEngineVersions}.
  */
 public interface VersionSelectionConfiguration {
 

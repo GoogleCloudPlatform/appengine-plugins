@@ -17,8 +17,8 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.api.version.AppEngineVersion;
-import com.google.cloud.tools.app.api.version.ListConfiguration;
+import com.google.cloud.tools.app.api.version.AppEngineVersions;
+import com.google.cloud.tools.app.api.version.VersionsListConfiguration;
 import com.google.cloud.tools.app.api.version.VersionSelectionConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
@@ -30,13 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Cloud SDK based implementation of {@link AppEngineVersion}.
+ * Cloud SDK based implementation of {@link AppEngineVersions}.
  */
-public class CloudSdkAppEngineVersion implements AppEngineVersion {
+public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
   private CloudSdk sdk;
 
-  public CloudSdkAppEngineVersion(
+  public CloudSdkAppEngineVersions(
       CloudSdk sdk) {
     this.sdk = sdk;
   }
@@ -118,7 +118,7 @@ public class CloudSdkAppEngineVersion implements AppEngineVersion {
    * Lists the versions for a service, or every version of every service if no service is specified.
    */
   @Override
-  public void list(ListConfiguration configuration) throws AppEngineException {
+  public void list(VersionsListConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(sdk);
 

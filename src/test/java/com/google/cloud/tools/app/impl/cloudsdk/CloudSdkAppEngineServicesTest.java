@@ -35,17 +35,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit tests for {@link CloudSdkAppEngineService}
+ * Unit tests for {@link CloudSdkAppEngineServices}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineServiceTest {
+public class CloudSdkAppEngineServicesTest {
 
   @Mock
   private CloudSdk sdk;
 
   @Test
   public void setTrafficTest() throws ProcessRunnerException {
-    CloudSdkAppEngineService appEngineService = new CloudSdkAppEngineService(sdk);
+    CloudSdkAppEngineServices appEngineService = new CloudSdkAppEngineServices(sdk);
 
     DefaultTrafficSplitConfiguration configuration = new DefaultTrafficSplitConfiguration();
     Map<String, Double> versionToSplitMap = new LinkedHashMap<>();

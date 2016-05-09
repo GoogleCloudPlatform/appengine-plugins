@@ -50,7 +50,7 @@ public interface AppEngineModuleService {
   /**
    * List your existing deployed modules and versions.
    */
-  void list(ListConfiguration configuration) throws AppEngineException;
+  void list(ModulesListConfiguration configuration) throws AppEngineException;
 
   /**
    * Sets the policy for the Managed VMs of the given modules and version.
