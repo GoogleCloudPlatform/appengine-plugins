@@ -18,6 +18,7 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Joiner;
 
 import java.io.File;
@@ -43,6 +44,8 @@ public class CloudSdk {
 
   private Path sdkPath = null;
   private ProcessRunner processRunner = null;
+
+  private String appCommandOutputFormat;
 
   /**
    * Initializes an instance using the default location of Cloud SDK and default ProcessRunner.
@@ -96,6 +99,8 @@ public class CloudSdk {
     command.add("preview");
     command.add("app");
     command.addAll(args);
+
+    command.addAll(Args.string("format", appCommandOutputFormat));
 
     outputCommand(command);
 
@@ -194,4 +199,7 @@ public class CloudSdk {
     }
   }
 
+  public void setAppCommandOutputFormat(String appCommandOutputFormat) {
+    this.appCommandOutputFormat = appCommandOutputFormat;
+  }
 }
