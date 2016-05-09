@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.util;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
@@ -97,14 +98,14 @@ public class Args {
   }
 
   /**
-   * @return [key1=value1, key2=value2, ...]
+   * @return [key1=value1,key2=value2,...]
    */
-  public static List<String> keyValues(Map<?, ?> keyValueMapping) {
+  public static String keyValues(Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
     for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
       result.add(entry.getKey() + "=" + entry.getValue());
     }
-
-    return result;
+    Joiner joiner = Joiner.on(",");
+    return joiner.join(result);
   }
 }

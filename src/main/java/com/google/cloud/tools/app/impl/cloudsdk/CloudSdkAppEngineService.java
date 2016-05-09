@@ -65,7 +65,7 @@ public class CloudSdkAppEngineService implements AppEngineService {
     arguments.add("set-traffic");
     arguments.addAll(configuration.getServices());
     arguments.add("--splits");
-    arguments.addAll(Args.keyValues(configuration.getVersionToTrafficSplit()));
+    arguments.add(Args.keyValues(configuration.getVersionToTrafficSplit()));
 
     execute(arguments);
   }
