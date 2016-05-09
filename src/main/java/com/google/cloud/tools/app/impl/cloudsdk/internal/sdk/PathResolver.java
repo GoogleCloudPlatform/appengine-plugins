@@ -15,7 +15,6 @@
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.nio.file.Path;
 
 /**
@@ -30,7 +29,7 @@ public enum PathResolver {
    *
    * @return Path to Google Cloud SDK or null
    */
-  public Path getCloudSdkPath() throws FileNotFoundException {
+  public Path getCloudSdkPath() {
     String sdkDir = System.getenv("GOOGLE_CLOUD_SDK_HOME");
     if (sdkDir == null) {
       boolean isWindows = System.getProperty("os.name").contains("Windows");
@@ -39,11 +38,7 @@ public enum PathResolver {
         if (programFiles == null) {
           programFiles = System.getenv("ProgramFiles(x86)");
         }
-        if (programFiles == null) {
-          throw new FileNotFoundException(
-              "Could not find ProgramFiles, please set the GOOGLE_CLOUD_SDK_HOME"
-                  + " environment variable");
-        } else {
+        if (programFiles != null) {
           sdkDir = programFiles + "\\Google\\Cloud SDK\\google-cloud-sdk";
         }
       } else {

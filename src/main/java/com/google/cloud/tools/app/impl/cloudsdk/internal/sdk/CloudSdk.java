@@ -14,9 +14,11 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
+import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Joiner;
 
 import java.io.File;
@@ -43,20 +45,46 @@ public class CloudSdk {
   private Path sdkPath = null;
   private ProcessRunner processRunner = null;
 
-  public CloudSdk(File sdkPath) {
-    this(sdkPath, new DefaultProcessRunner());
+  private String appCommandOutputFormat;
+
+  /**
+   * Initializes an instance using the default location of Cloud SDK and default ProcessRunner.
+   */
+  public CloudSdk() {
+    this((File) null);
+  }
+
+  /**
+   * Initialize an instance using the default location of Cloud SDK and custom ProcessRunner.
+   */
+  public CloudSdk(ProcessRunner processRunner) {
+    this(null, processRunner);
+  }
+
+  /**
+   * Initialize an instance using the provided Cloud SDK path and default ProcessRunner.
+   */
+  public CloudSdk(File sdkPathFile) {
+    this(sdkPathFile, new DefaultProcessRunner());
   }
 
   /**
    * Initializes an instance using the specified SDK path and ProcessRunner.
    *
-   * @param sdkPath The home directory of Google Cloud SDK
+   * @param sdkPathFile The home directory of Google Cloud SDK. If null, will attempt to look for
+   *                    the SDK in known install locations.
    */
-  public CloudSdk(File sdkPath, ProcessRunner processRunner) {
-    if (sdkPath == null) {
-      throw new NullPointerException("sdkPath cannot be null - use PathResolver for defaults");
+  public CloudSdk(File sdkPathFile, ProcessRunner processRunner) {
+    if (sdkPathFile == null) {
+      Path discoveredSdkPath = PathResolver.INSTANCE.getCloudSdkPath();
+      if (discoveredSdkPath == null) {
+        throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
+            + " found in any known install locations.");
+      }
+      this.sdkPath = discoveredSdkPath;
+    } else {
+      this.sdkPath = sdkPathFile.toPath();
     }
-    this.sdkPath = sdkPath.toPath();
     this.processRunner = processRunner;
   }
 
@@ -71,6 +99,8 @@ public class CloudSdk {
     command.add("preview");
     command.add("app");
     command.addAll(args);
+
+    command.addAll(Args.string("format", appCommandOutputFormat));
 
     outputCommand(command);
 
@@ -169,4 +199,7 @@ public class CloudSdk {
     }
   }
 
+  public void setAppCommandOutputFormat(String appCommandOutputFormat) {
+    this.appCommandOutputFormat = appCommandOutputFormat;
+  }
 }
