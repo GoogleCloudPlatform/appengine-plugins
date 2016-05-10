@@ -66,8 +66,6 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
         .addAll(Args.boolWithNo("stop-previous-version", config.getStopPreviousVersion()));
     arguments.addAll(Args.string("version", config.getVersion()));
 
-    arguments.add("--quiet");
-
     try {
       sdk.runAppCommand(arguments);
     } catch (ProcessRunnerException e) {

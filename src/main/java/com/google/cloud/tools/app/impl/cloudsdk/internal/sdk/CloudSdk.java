@@ -100,6 +100,7 @@ public class CloudSdk {
     command.add("app");
     command.addAll(args);
 
+    command.add("--quiet");
     command.addAll(Args.string("format", appCommandOutputFormat));
 
     outputCommand(command);

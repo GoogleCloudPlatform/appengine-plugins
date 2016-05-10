@@ -115,7 +115,6 @@ public class CloudSdkAppEngineModuleService implements AppEngineModuleService {
     arguments.addAll(configuration.getModules());
     arguments.add("--version");
     arguments.add(configuration.getVersion());
-    arguments.add("--quiet");
     if (!Strings.isNullOrEmpty(configuration.getServer())) {
       arguments.add("--server");
       arguments.add(configuration.getServer());
