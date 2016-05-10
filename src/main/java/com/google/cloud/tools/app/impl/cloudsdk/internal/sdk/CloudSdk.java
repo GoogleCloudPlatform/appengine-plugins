@@ -174,7 +174,9 @@ public class CloudSdk {
      * install locations.
      */
     public Builder sdkPath(File sdkPathFile) {
-      this.sdkPath = sdkPathFile.toPath();
+      if (sdkPathFile != null) {
+        this.sdkPath = sdkPathFile.toPath();
+      }
       return this;
     }
 
