@@ -44,11 +44,13 @@ public class CloudSdk {
 
   private final Path sdkPath;
   private final ProcessRunner processRunner;
+  private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
 
   private CloudSdk(Builder builder) {
     this.sdkPath = builder.sdkPath;
     this.processRunner = builder.processRunner;
+    this.appCommandCredentialFile = builder.appCommandCredentialFile;
     this.appCommandOutputFormat = builder.appCommandOutputFormat;
   }
 
@@ -65,6 +67,7 @@ public class CloudSdk {
     command.addAll(args);
 
     command.add("--quiet");
+    command.addAll(Args.filePath("credential-file-override", appCommandCredentialFile));
     command.addAll(Args.string("format", appCommandOutputFormat));
 
     outputCommand(command);
@@ -167,6 +170,7 @@ public class CloudSdk {
   public static class Builder {
     private Path sdkPath;
     private ProcessRunner processRunner;
+    private File appCommandCredentialFile;
     private String appCommandOutputFormat;
 
     /**
@@ -185,6 +189,14 @@ public class CloudSdk {
      */
     public Builder processRunner(ProcessRunner processRunner) {
       this.processRunner = processRunner;
+      return this;
+    }
+
+    /**
+     * Sets the path the credential override file.
+     */
+    public Builder appCommandCredentialFile(File appCommandCredentialFile) {
+      this.appCommandCredentialFile = appCommandCredentialFile;
       return this;
     }
 

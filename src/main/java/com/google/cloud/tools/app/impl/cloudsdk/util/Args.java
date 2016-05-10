@@ -19,6 +19,7 @@ package com.google.cloud.tools.app.impl.cloudsdk.util;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -91,6 +92,16 @@ public class Args {
   public static List<String> bool(String name, Boolean value) {
     if (Boolean.TRUE.equals(value)) {
       return Collections.singletonList("--" + name);
+    }
+    return Collections.emptyList();
+  }
+
+  /**
+   * @return [--name, file.getAbsolutePath()] or [] if file=null.
+   */
+  public static List<String> filePath(String name, File file) {
+    if (file != null && !Strings.isNullOrEmpty(file.getAbsolutePath())) {
+      return Arrays.asList("--" + name, file.getAbsolutePath());
     }
     return Collections.emptyList();
   }
