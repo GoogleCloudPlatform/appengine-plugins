@@ -39,53 +39,17 @@ public class CloudSdk {
   static final String GCLOUD = "bin/gcloud";
   static final String DEV_APPSERVER_PY = "bin/dev_appserver.py";
   static final String JAVA_APPENGINE_SDK_PATH =
-      "platform/google_appengine/google/appengine/tools/java/lib";
+          "platform/google_appengine/google/appengine/tools/java/lib";
   static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
 
-  private Path sdkPath = null;
-  private ProcessRunner processRunner = null;
+  private final Path sdkPath;
+  private final ProcessRunner processRunner;
+  private final String appCommandOutputFormat;
 
-  private String appCommandOutputFormat;
-
-  /**
-   * Initializes an instance using the default location of Cloud SDK and default ProcessRunner.
-   */
-  public CloudSdk() {
-    this((File) null);
-  }
-
-  /**
-   * Initialize an instance using the default location of Cloud SDK and custom ProcessRunner.
-   */
-  public CloudSdk(ProcessRunner processRunner) {
-    this(null, processRunner);
-  }
-
-  /**
-   * Initialize an instance using the provided Cloud SDK path and default ProcessRunner.
-   */
-  public CloudSdk(File sdkPathFile) {
-    this(sdkPathFile, new DefaultProcessRunner());
-  }
-
-  /**
-   * Initializes an instance using the specified SDK path and ProcessRunner.
-   *
-   * @param sdkPathFile The home directory of Google Cloud SDK. If null, will attempt to look for
-   *                    the SDK in known install locations.
-   */
-  public CloudSdk(File sdkPathFile, ProcessRunner processRunner) {
-    if (sdkPathFile == null) {
-      Path discoveredSdkPath = PathResolver.INSTANCE.getCloudSdkPath();
-      if (discoveredSdkPath == null) {
-        throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
-            + " found in any known install locations.");
-      }
-      this.sdkPath = discoveredSdkPath;
-    } else {
-      this.sdkPath = sdkPathFile.toPath();
-    }
-    this.processRunner = processRunner;
+  private CloudSdk(Builder builder) {
+    this.sdkPath = builder.sdkPath;
+    this.processRunner = builder.processRunner;
+    this.appCommandOutputFormat = builder.appCommandOutputFormat;
   }
 
   /**
@@ -133,7 +97,7 @@ public class CloudSdk {
 
     List<String> command = new ArrayList<>();
     command.add(
-        Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
+            Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
     command.add("-cp");
     command.add(getJavaToolsJar().toAbsolutePath().toString());
     command.add("com.google.appengine.tools.admin.AppCfg");
@@ -179,28 +143,80 @@ public class CloudSdk {
     }
     if (sdkPath.toFile().isDirectory()) {
       throw new CloudSdkConfigurationException(
-          "Validation Error : Sdk directory '" + sdkPath + "' is not valid");
+              "Validation Error : Sdk directory '" + sdkPath + "' is not valid");
     }
     if (getGCloudPath().toFile().isFile()) {
       throw new CloudSdkConfigurationException(
-          "Validation Error : gcloud path '" + getGCloudPath() + "' is not valid");
+              "Validation Error : gcloud path '" + getGCloudPath() + "' is not valid");
     }
     if (getDevAppServerPath().toFile().isFile()) {
       throw new CloudSdkConfigurationException(
-          "Validation Error : dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
+              "Validation Error : dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
     }
     if (getJavaAppEngineSdkPath().toFile().isFile()) {
       throw new CloudSdkConfigurationException(
-          "Validation Error : Java App Engine SDK path '" + getJavaAppEngineSdkPath()
-              + "' is not valid");
+              "Validation Error : Java App Engine SDK path '" + getJavaAppEngineSdkPath()
+                      + "' is not valid");
     }
     if (getJavaToolsJar().toFile().isFile()) {
       throw new CloudSdkConfigurationException(
-          "Validation Error : Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
+              "Validation Error : Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
     }
   }
 
-  public void setAppCommandOutputFormat(String appCommandOutputFormat) {
-    this.appCommandOutputFormat = appCommandOutputFormat;
+  public static class Builder {
+    private Path sdkPath;
+    private ProcessRunner processRunner;
+    private String appCommandOutputFormat;
+
+    /**
+     * The home directory of Google Cloud SDK. If not set, will attempt to look for the SDK in known
+     * install locations.
+     */
+    public Builder sdkPath(File sdkPathFile) {
+      this.sdkPath = sdkPathFile.toPath();
+      return this;
+    }
+
+    /**
+     * The process runner used to execute CLI commands.
+     */
+    public Builder processRunner(ProcessRunner processRunner) {
+      this.processRunner = processRunner;
+      return this;
+    }
+
+    /**
+     * Sets the format for printing command output resources. The default is a command-specific
+     * human-friendly output format. The supported formats are: csv, default, flattened, json, list,
+     * multi, none, table, text, value, yaml. For more details run $ gcloud topic formats.
+     */
+    public Builder appCommandOutputFormat(String appCommandOutputFormat) {
+      this.appCommandOutputFormat = appCommandOutputFormat;
+      return this;
+    }
+
+    /**
+     * Create a new instance of {@link CloudSdk}.
+     */
+    public CloudSdk build() {
+      // Default process runner
+      if (processRunner == null) {
+        processRunner = new DefaultProcessRunner();
+      }
+
+      // Default SDK path
+      if (sdkPath == null) {
+        Path discoveredSdkPath = PathResolver.INSTANCE.getCloudSdkPath();
+        if (discoveredSdkPath == null) {
+          throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
+                  + " found in any known install locations.");
+        }
+        sdkPath = discoveredSdkPath;
+      }
+
+      return new CloudSdk(this);
+    }
+
   }
 }
