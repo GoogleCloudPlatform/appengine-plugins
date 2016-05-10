@@ -53,18 +53,20 @@ public class DefaultProcessRunner implements ProcessRunner {
    *
    * @param command The shell command to execute
    */
-  public synchronized void run(String[] command) throws ProcessRunnerException {
+  public void run(String[] command) throws ProcessRunnerException {
     try {
 
       processBuilder.command(makeOsSpecific(command));
 
-      // check if the previous process is still executing
-      if (process != null) {
-        // will throw IllegalThreadStateException, if process is still running
-        process.exitValue();
-      }
+      synchronized (this) {
+        // check if the previous process is still executing
+        if (process != null) {
+          // will throw IllegalThreadStateException, if process is still running
+          process.exitValue();
+        }
 
-      process = processBuilder.start();
+        process = processBuilder.start();
+      }
 
       handleStdOut(process);
       handleErrOut(process);
