@@ -34,8 +34,7 @@ To deploy a new version, a client calls the library in the following way:
 
 ```java
 // Create a Cloud SDK
-File cloudSdkPath = PathResolver.INSTANCE.getCloudSdkPath().toFile();
-CloudSdk cloudSdk = new CloudSdk(cloudSdkPath);
+CloudSdk cloudSdk = new CloudSdk.Builder().build();
 
 // Create a deployment
 AppEngineDeployment deployment = new CloudSdkAppEngineDeployment(cloudSdk);
