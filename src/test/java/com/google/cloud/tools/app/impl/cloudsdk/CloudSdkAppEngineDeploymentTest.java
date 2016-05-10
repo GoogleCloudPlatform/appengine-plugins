@@ -83,7 +83,7 @@ public class CloudSdkAppEngineDeploymentTest {
         .of("deploy", appYaml1.toString(), "--bucket", "gs://a-bucket", "--docker-build", "cloud",
             "--force", "--image-url", "imageUrl", "--project", "project", "--promote",
             "--server", "appengine.google.com", "--stop-previous-version",
-            "--version", "v1", "--quiet");
+            "--version", "v1");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
@@ -100,7 +100,7 @@ public class CloudSdkAppEngineDeploymentTest {
 
     List<String> expectedCommand = ImmutableList
         .of("deploy", appYaml1.toString(), "--no-force", "--no-promote",
-            "--no-stop-previous-version", "--quiet");
+            "--no-stop-previous-version");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
@@ -111,7 +111,7 @@ public class CloudSdkAppEngineDeploymentTest {
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1));
 
-    List<String> expectedCommand = ImmutableList.of("deploy", appYaml1.toString(), "--quiet");
+    List<String> expectedCommand = ImmutableList.of("deploy", appYaml1.toString());
 
     deployment.deploy(configuration);
 
@@ -128,7 +128,7 @@ public class CloudSdkAppEngineDeploymentTest {
     deployment.deploy(configuration);
 
     List<String> expectedCommand = ImmutableList
-        .of("deploy", appYaml1.toString(), appYaml2.toString(), "--quiet");
+        .of("deploy", appYaml1.toString(), appYaml2.toString());
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
 

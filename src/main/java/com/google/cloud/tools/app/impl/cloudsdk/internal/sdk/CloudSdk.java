@@ -42,50 +42,16 @@ public class CloudSdk {
       "platform/google_appengine/google/appengine/tools/java/lib";
   static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
 
-  private Path sdkPath = null;
-  private ProcessRunner processRunner = null;
+  private final Path sdkPath;
+  private final ProcessRunner processRunner;
+  private final File appCommandCredentialFile;
+  private final String appCommandOutputFormat;
 
-  private String appCommandOutputFormat;
-
-  /**
-   * Initializes an instance using the default location of Cloud SDK and default ProcessRunner.
-   */
-  public CloudSdk() {
-    this((File) null);
-  }
-
-  /**
-   * Initialize an instance using the default location of Cloud SDK and custom ProcessRunner.
-   */
-  public CloudSdk(ProcessRunner processRunner) {
-    this(null, processRunner);
-  }
-
-  /**
-   * Initialize an instance using the provided Cloud SDK path and default ProcessRunner.
-   */
-  public CloudSdk(File sdkPathFile) {
-    this(sdkPathFile, new DefaultProcessRunner());
-  }
-
-  /**
-   * Initializes an instance using the specified SDK path and ProcessRunner.
-   *
-   * @param sdkPathFile The home directory of Google Cloud SDK. If null, will attempt to look for
-   *                    the SDK in known install locations.
-   */
-  public CloudSdk(File sdkPathFile, ProcessRunner processRunner) {
-    if (sdkPathFile == null) {
-      Path discoveredSdkPath = PathResolver.INSTANCE.getCloudSdkPath();
-      if (discoveredSdkPath == null) {
-        throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
-            + " found in any known install locations.");
-      }
-      this.sdkPath = discoveredSdkPath;
-    } else {
-      this.sdkPath = sdkPathFile.toPath();
-    }
-    this.processRunner = processRunner;
+  private CloudSdk(Builder builder) {
+    this.sdkPath = builder.sdkPath;
+    this.processRunner = builder.processRunner;
+    this.appCommandCredentialFile = builder.appCommandCredentialFile;
+    this.appCommandOutputFormat = builder.appCommandOutputFormat;
   }
 
   /**
@@ -100,6 +66,8 @@ public class CloudSdk {
     command.add("app");
     command.addAll(args);
 
+    command.add("--quiet");
+    command.addAll(Args.filePath("credential-file-override", appCommandCredentialFile));
     command.addAll(Args.string("format", appCommandOutputFormat));
 
     outputCommand(command);
@@ -199,7 +167,70 @@ public class CloudSdk {
     }
   }
 
-  public void setAppCommandOutputFormat(String appCommandOutputFormat) {
-    this.appCommandOutputFormat = appCommandOutputFormat;
+  public static class Builder {
+    private Path sdkPath;
+    private ProcessRunner processRunner;
+    private File appCommandCredentialFile;
+    private String appCommandOutputFormat;
+
+    /**
+     * The home directory of Google Cloud SDK. If not set, will attempt to look for the SDK in known
+     * install locations.
+     */
+    public Builder sdkPath(File sdkPathFile) {
+      if (sdkPathFile != null) {
+        this.sdkPath = sdkPathFile.toPath();
+      }
+      return this;
+    }
+
+    /**
+     * The process runner used to execute CLI commands.
+     */
+    public Builder processRunner(ProcessRunner processRunner) {
+      this.processRunner = processRunner;
+      return this;
+    }
+
+    /**
+     * Sets the path the credential override file.
+     */
+    public Builder appCommandCredentialFile(File appCommandCredentialFile) {
+      this.appCommandCredentialFile = appCommandCredentialFile;
+      return this;
+    }
+
+    /**
+     * Sets the format for printing command output resources. The default is a command-specific
+     * human-friendly output format. The supported formats are: csv, default, flattened, json, list,
+     * multi, none, table, text, value, yaml. For more details run $ gcloud topic formats.
+     */
+    public Builder appCommandOutputFormat(String appCommandOutputFormat) {
+      this.appCommandOutputFormat = appCommandOutputFormat;
+      return this;
+    }
+
+    /**
+     * Create a new instance of {@link CloudSdk}.
+     */
+    public CloudSdk build() {
+      // Default process runner
+      if (processRunner == null) {
+        processRunner = new DefaultProcessRunner();
+      }
+
+      // Default SDK path
+      if (sdkPath == null) {
+        Path discoveredSdkPath = PathResolver.INSTANCE.getCloudSdkPath();
+        if (discoveredSdkPath == null) {
+          throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
+              + " found in any known install locations.");
+        }
+        sdkPath = discoveredSdkPath;
+      }
+
+      return new CloudSdk(this);
+    }
+
   }
 }
