@@ -122,7 +122,7 @@ public class DefaultProcessRunner implements ProcessRunner {
 
   /**
    * @return The process that is currently executing or was the last one to be started using the run
-   * method.
+   *     method.
    */
   public Process getProcess() {
     return this.process;
