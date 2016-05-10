@@ -39,7 +39,7 @@ public class CloudSdk {
   static final String GCLOUD = "bin/gcloud";
   static final String DEV_APPSERVER_PY = "bin/dev_appserver.py";
   static final String JAVA_APPENGINE_SDK_PATH =
-          "platform/google_appengine/google/appengine/tools/java/lib";
+      "platform/google_appengine/google/appengine/tools/java/lib";
   static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
 
   private final Path sdkPath;
@@ -97,7 +97,7 @@ public class CloudSdk {
 
     List<String> command = new ArrayList<>();
     command.add(
-            Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
+        Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
     command.add("-cp");
     command.add(getJavaToolsJar().toAbsolutePath().toString());
     command.add("com.google.appengine.tools.admin.AppCfg");
@@ -143,24 +143,24 @@ public class CloudSdk {
     }
     if (sdkPath.toFile().isDirectory()) {
       throw new CloudSdkConfigurationException(
-              "Validation Error : Sdk directory '" + sdkPath + "' is not valid");
+          "Validation Error : Sdk directory '" + sdkPath + "' is not valid");
     }
     if (getGCloudPath().toFile().isFile()) {
       throw new CloudSdkConfigurationException(
-              "Validation Error : gcloud path '" + getGCloudPath() + "' is not valid");
+          "Validation Error : gcloud path '" + getGCloudPath() + "' is not valid");
     }
     if (getDevAppServerPath().toFile().isFile()) {
       throw new CloudSdkConfigurationException(
-              "Validation Error : dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
+          "Validation Error : dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
     }
     if (getJavaAppEngineSdkPath().toFile().isFile()) {
       throw new CloudSdkConfigurationException(
-              "Validation Error : Java App Engine SDK path '" + getJavaAppEngineSdkPath()
-                      + "' is not valid");
+          "Validation Error : Java App Engine SDK path '" + getJavaAppEngineSdkPath()
+              + "' is not valid");
     }
     if (getJavaToolsJar().toFile().isFile()) {
       throw new CloudSdkConfigurationException(
-              "Validation Error : Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
+          "Validation Error : Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
     }
   }
 
@@ -210,7 +210,7 @@ public class CloudSdk {
         Path discoveredSdkPath = PathResolver.INSTANCE.getCloudSdkPath();
         if (discoveredSdkPath == null) {
           throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
-                  + " found in any known install locations.");
+              + " found in any known install locations.");
         }
         sdkPath = discoveredSdkPath;
       }
