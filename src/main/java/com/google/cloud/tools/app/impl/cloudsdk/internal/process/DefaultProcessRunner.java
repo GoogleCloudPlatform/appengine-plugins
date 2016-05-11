@@ -17,6 +17,7 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -54,9 +55,20 @@ public class DefaultProcessRunner implements ProcessRunner {
    * @param command The shell command to execute
    */
   public void run(String[] command) throws ProcessRunnerException {
+    run(command, null);
+  }
+
+  /**
+   * Executes a shell command with environment variables.
+   *
+   * @param command The shell command to execute
+   * @param environment Environment variables to append to the current system environment variables.
+   */
+  public void run(String[] command, Map<String, String> environment) throws ProcessRunnerException {
     try {
 
       processBuilder.command(makeOsSpecific(command));
+      processBuilder.environment().putAll(environment);
 
       synchronized (this) {
         // check if the previous process is still executing
