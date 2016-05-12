@@ -20,7 +20,6 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
@@ -37,11 +36,11 @@ import java.util.List;
  */
 public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStaging {
 
-  private CloudSdk cloudSdk;
+  private CloudSdkCli sdkCli;
 
   public CloudSdkAppEngineStandardStaging(
-      CloudSdk cloudSdk) {
-    this.cloudSdk = cloudSdk;
+      CloudSdkCli sdkCli) {
+    this.sdkCli = sdkCli;
   }
 
   @Override
@@ -49,7 +48,7 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getSourceDirectory());
     Preconditions.checkNotNull(config.getStagingDirectory());
-    Preconditions.checkNotNull(cloudSdk);
+    Preconditions.checkNotNull(sdkCli);
 
     List<String> arguments = new ArrayList<>();
 
@@ -72,7 +71,7 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
 
     try {
 
-      cloudSdk.runAppCfgCommand(arguments);
+      sdkCli.runAppCfgCommand(arguments);
 
       if (dockerfile != null) {
         Files.copy(dockerfile, dockerfileDestination, StandardCopyOption.REPLACE_EXISTING);

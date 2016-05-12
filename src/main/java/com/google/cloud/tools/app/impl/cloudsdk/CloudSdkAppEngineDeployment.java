@@ -18,7 +18,6 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.app.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
@@ -31,11 +30,10 @@ import java.util.List;
  */
 public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
-  public CloudSdkAppEngineDeployment(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+  public CloudSdkAppEngineDeployment(CloudSdkCli sdkCli) {
+    this.sdkCli = sdkCli;
   }
 
   @Override
@@ -43,7 +41,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDeployables());
     Preconditions.checkArgument(config.getDeployables().size() > 0);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkNotNull(sdkCli);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
@@ -67,7 +65,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.addAll(Args.string("version", config.getVersion()));
 
     try {
-      sdk.runAppCommand(arguments);
+      sdkCli.runGcloudAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

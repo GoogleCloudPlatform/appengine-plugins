@@ -17,7 +17,6 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.config.DefaultTrafficSplitConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,11 +40,11 @@ import static org.mockito.Mockito.verify;
 public class CloudSdkAppEngineServicesTest {
 
   @Mock
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   @Test
   public void setTrafficTest() throws ProcessRunnerException {
-    CloudSdkAppEngineServices appEngineService = new CloudSdkAppEngineServices(sdk);
+    CloudSdkAppEngineServices appEngineService = new CloudSdkAppEngineServices(sdkCli);
 
     DefaultTrafficSplitConfiguration configuration = new DefaultTrafficSplitConfiguration();
     Map<String, Double> versionToSplitMap = new LinkedHashMap<>();
@@ -60,6 +59,6 @@ public class CloudSdkAppEngineServicesTest {
     List<String> args =
         Arrays.asList("services", "set-traffic", "myService", "--splits", "v1=0.3,v2=0.7");
 
-    verify(sdk, times(1)).runAppCommand(eq(args));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(args));
   }
 }

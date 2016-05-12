@@ -20,7 +20,6 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.instances.AppEngineInstances;
 import com.google.cloud.tools.app.api.instances.InstancesSelectionConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
@@ -32,16 +31,15 @@ import java.util.List;
  */
 public class CloudSdkAppEngineInstances implements AppEngineInstances {
 
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
-  public CloudSdkAppEngineInstances(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+  public CloudSdkAppEngineInstances(CloudSdkCli sdkCli) {
+    this.sdkCli = sdkCli;
   }
 
   private void execute(List<String> arguments) throws AppEngineException {
     try {
-      sdk.runAppCommand(arguments);
+      sdkCli.runGcloudAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
@@ -69,7 +67,7 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
   private void setDebug(InstancesSelectionConfiguration configuration, boolean enable) {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersion());
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkNotNull(sdkCli);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("instances");

@@ -21,9 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineGenConfig;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.config.DefaultGenConfigParams;
 import com.google.common.collect.ImmutableList;
 
@@ -46,7 +44,7 @@ import java.util.List;
 public class CloudSdkAppEngineGenConfigTest {
 
   @Mock
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   @Rule
   public TemporaryFolder tmpDir = new TemporaryFolder();
@@ -58,7 +56,7 @@ public class CloudSdkAppEngineGenConfigTest {
   @Before
   public void setUp() throws IOException {
     source = tmpDir.newFolder("source");
-    genConfig = new CloudSdkAppEngineGenConfig(sdk);
+    genConfig = new CloudSdkAppEngineGenConfig(sdkCli);
   }
 
   @Test
@@ -76,7 +74,7 @@ public class CloudSdkAppEngineGenConfigTest {
 
     genConfig.genConfig(params);
 
-    verify(sdk, times(1)).runAppCommand(eq(expected));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(expected));
   }
 
   @Test
@@ -91,7 +89,7 @@ public class CloudSdkAppEngineGenConfigTest {
 
     genConfig.genConfig(params);
 
-    verify(sdk, times(1)).runAppCommand(eq(expected));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(expected));
   }
 
   @Test
@@ -103,7 +101,7 @@ public class CloudSdkAppEngineGenConfigTest {
 
     genConfig.genConfig(params);
 
-    verify(sdk, times(1)).runAppCommand(eq(expected));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(expected));
 
   }
 

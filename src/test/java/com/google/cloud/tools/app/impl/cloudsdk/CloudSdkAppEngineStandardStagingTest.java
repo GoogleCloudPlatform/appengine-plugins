@@ -17,9 +17,7 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineStandardStaging;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.config.DefaultStageStandardConfiguration;
 import com.google.common.collect.ImmutableList;
 
@@ -55,7 +53,7 @@ public class CloudSdkAppEngineStandardStagingTest {
   public TemporaryFolder tmpDir = new TemporaryFolder();
 
   @Mock
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   private File source;
   private File destination;
@@ -69,7 +67,7 @@ public class CloudSdkAppEngineStandardStagingTest {
     destination = tmpDir.newFolder("destination");
     dockerfile = tmpDir.newFile("dockerfile");
 
-    staging = new CloudSdkAppEngineStandardStaging(sdk);
+    staging = new CloudSdkAppEngineStandardStaging(sdkCli);
   }
 
   @Test
@@ -98,7 +96,7 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runAppCfgCommand(eq(expected));
+    verify(sdkCli, times(1)).runAppCfgCommand(eq(expected));
   }
 
   @Test
@@ -121,7 +119,7 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runAppCfgCommand(eq(expected));
+    verify(sdkCli, times(1)).runAppCfgCommand(eq(expected));
   }
 
   @Test
@@ -137,7 +135,7 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runAppCfgCommand(eq(expected));
+    verify(sdkCli, times(1)).runAppCfgCommand(eq(expected));
   }
 
   @Test

@@ -38,11 +38,11 @@ import static org.mockito.Mockito.verify;
 public class CloudSdkAppEngineLogsTest {
 
   @Mock
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   @Test
   public void readTest() throws ProcessRunnerException {
-    CloudSdkAppEngineLogs appEngineLogs = new CloudSdkAppEngineLogs(sdk);
+    CloudSdkAppEngineLogs appEngineLogs = new CloudSdkAppEngineLogs(sdkCli);
     DefaultLogsConfiguration configuration = new DefaultLogsConfiguration();
     configuration.setLevel("warning");
     configuration.setVersion("v1");
@@ -55,6 +55,6 @@ public class CloudSdkAppEngineLogsTest {
         Arrays.asList("logs", "read", "--level", "warning", "--version", "v1", "--service",
             "myService", "--limit", "10");
 
-    verify(sdk, times(1)).runAppCommand(eq(args));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(args));
   }
 }

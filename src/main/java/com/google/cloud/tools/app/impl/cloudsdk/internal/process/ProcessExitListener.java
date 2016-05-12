@@ -17,7 +17,7 @@
 package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
 /**
- * Process listener that can be used with {@link DefaultProcessRunner} to retrieve the process exit
+ * Process listener that can be used with {@link ProcessRunner} to retrieve the process exit
  * code after it terminates.
  */
 public interface ProcessExitListener {

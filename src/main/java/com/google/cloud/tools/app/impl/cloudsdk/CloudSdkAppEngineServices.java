@@ -20,7 +20,6 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.services.AppEngineServices;
 import com.google.cloud.tools.app.api.services.TrafficSplitConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
@@ -32,16 +31,16 @@ import java.util.List;
  */
 public class CloudSdkAppEngineServices implements AppEngineServices {
 
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   public CloudSdkAppEngineServices(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+      CloudSdkCli sdkCli) {
+    this.sdkCli = sdkCli;
   }
 
   private void execute(List<String> arguments) throws AppEngineException {
     try {
-      sdk.runAppCommand(arguments);
+      sdkCli.runGcloudAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
@@ -57,7 +56,7 @@ public class CloudSdkAppEngineServices implements AppEngineServices {
     Preconditions.checkArgument(configuration.getServices().size() > 0);
     Preconditions.checkNotNull(configuration.getVersionToTrafficSplit());
     Preconditions.checkArgument(configuration.getVersionToTrafficSplit().size() > 0);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkNotNull(sdkCli);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("services");

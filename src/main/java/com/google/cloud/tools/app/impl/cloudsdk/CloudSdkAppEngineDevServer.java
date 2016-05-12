@@ -19,7 +19,6 @@ import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.app.api.devserver.RunConfiguration;
 import com.google.cloud.tools.app.api.devserver.StopConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
@@ -35,14 +34,13 @@ import java.util.List;
  */
 public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
 
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   private static final String DEFAULT_ADMIN_HOST = "localhost";
   private static final int DEFAULT_ADMIN_PORT = 8000;
 
-  public CloudSdkAppEngineDevServer(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+  public CloudSdkAppEngineDevServer(CloudSdkCli sdkCli) {
+    this.sdkCli = sdkCli;
   }
 
   /**
@@ -53,7 +51,7 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getAppYamls());
     Preconditions.checkArgument(config.getAppYamls().size() > 0);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkNotNull(sdkCli);
 
     List<String> arguments = new ArrayList<>();
     for (File appYaml : config.getAppYamls()) {
@@ -83,7 +81,7 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     arguments.addAll(Args.string("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
 
     try {
-      sdk.runDevAppServerCommand(arguments);
+      sdkCli.runDevAppServerCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

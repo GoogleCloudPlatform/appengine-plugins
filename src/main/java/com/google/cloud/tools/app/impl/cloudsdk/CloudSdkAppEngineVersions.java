@@ -21,7 +21,6 @@ import com.google.cloud.tools.app.api.versions.AppEngineVersions;
 import com.google.cloud.tools.app.api.versions.VersionsListConfiguration;
 import com.google.cloud.tools.app.api.versions.VersionsSelectionConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
@@ -33,16 +32,16 @@ import java.util.List;
  */
 public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   public CloudSdkAppEngineVersions(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+      CloudSdkCli sdkCli) {
+    this.sdkCli = sdkCli;
   }
 
   private void execute(List<String> arguments) throws AppEngineException {
     try {
-      sdk.runAppCommand(arguments);
+      sdkCli.runGcloudAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
@@ -56,7 +55,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
     Preconditions.checkArgument(configuration.getVersions().size() > 0);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkNotNull(sdkCli);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("versions");
@@ -75,7 +74,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
     Preconditions.checkArgument(configuration.getVersions().size() > 0);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkNotNull(sdkCli);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("versions");
@@ -110,7 +109,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
   @Override
   public void list(VersionsListConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkNotNull(sdkCli);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("versions");

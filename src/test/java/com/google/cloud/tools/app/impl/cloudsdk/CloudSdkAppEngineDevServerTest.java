@@ -21,9 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.impl.cloudsdk.CloudSdkAppEngineDevServer;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.config.DefaultRunConfiguration;
 import com.google.common.collect.ImmutableList;
 
@@ -43,13 +41,13 @@ import java.util.List;
 public class CloudSdkAppEngineDevServerTest {
 
   @Mock
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   private CloudSdkAppEngineDevServer devServer;
 
   @Before
   public void setUp() {
-    devServer = new CloudSdkAppEngineDevServer(sdk);
+    devServer = new CloudSdkAppEngineDevServer(sdkCli);
   }
 
   @Test
@@ -92,7 +90,7 @@ public class CloudSdkAppEngineDevServerTest {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+    verify(sdkCli, times(1)).runDevAppServerCommand(eq(expected));
   }
 
   public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
@@ -108,7 +106,7 @@ public class CloudSdkAppEngineDevServerTest {
     List<String> expected = ImmutableList.of("app.yaml");
 
     devServer.run(configuration);
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+    verify(sdkCli, times(1)).runDevAppServerCommand(eq(expected));
   }
   @Test
   public void testPrepareCommand_noFlags() throws AppEngineException, ProcessRunnerException {
@@ -120,7 +118,7 @@ public class CloudSdkAppEngineDevServerTest {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+    verify(sdkCli, times(1)).runDevAppServerCommand(eq(expected));
   }
 
 }

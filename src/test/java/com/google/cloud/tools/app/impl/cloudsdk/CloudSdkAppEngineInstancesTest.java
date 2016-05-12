@@ -17,7 +17,6 @@
 package com.google.cloud.tools.app.impl.cloudsdk;
 
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.config.DefaultInstancesSelectionConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,30 +37,30 @@ import static org.mockito.Mockito.verify;
 public class CloudSdkAppEngineInstancesTest {
 
   @Mock
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   @Test
   public void enableDebugTest() throws ProcessRunnerException  {
-    CloudSdkAppEngineInstances appEngineInstances = new CloudSdkAppEngineInstances(sdk);
+    CloudSdkAppEngineInstances appEngineInstances = new CloudSdkAppEngineInstances(sdkCli);
 
     appEngineInstances.enableDebug(getConfig());
 
     List<String> args =
         Arrays.asList("instances", "enable-debug", "--version", "v1", "--service", "myService");
 
-    verify(sdk, times(1)).runAppCommand(eq(args));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(args));
   }
 
   @Test
   public void disableDebugTest() throws ProcessRunnerException {
-    CloudSdkAppEngineInstances appEngineInstances = new CloudSdkAppEngineInstances(sdk);
+    CloudSdkAppEngineInstances appEngineInstances = new CloudSdkAppEngineInstances(sdkCli);
 
     appEngineInstances.disableDebug(getConfig());
 
     List<String> args =
         Arrays.asList("instances", "disable-debug", "--version", "v1", "--service", "myService");
 
-    verify(sdk, times(1)).runAppCommand(eq(args));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(args));
   }
 
   private DefaultInstancesSelectionConfiguration getConfig() {

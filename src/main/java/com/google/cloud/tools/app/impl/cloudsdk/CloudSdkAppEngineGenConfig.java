@@ -18,7 +18,6 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.genconfig.GenConfigParams;
 import com.google.cloud.tools.app.api.genconfig.GenConfigUtility;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
@@ -30,11 +29,10 @@ import java.util.List;
  */
 public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
 
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
-  public CloudSdkAppEngineGenConfig(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+  public CloudSdkAppEngineGenConfig(CloudSdkCli sdkCli) {
+    this.sdkCli = sdkCli;
   }
 
   /**
@@ -43,7 +41,7 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
   @Override
   public void genConfig(GenConfigParams config) throws AppEngineException {
     Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkNotNull(sdkCli);
 
     if (!config.getSourceDirectory().exists()) {
       throw new AppEngineException("Source directory does not exist. Location: "
@@ -66,7 +64,7 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
     arguments.addAll(Args.string("runtime", config.getRuntime()));
 
     try {
-      sdk.runAppCommand(arguments);
+      sdkCli.runGcloudAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

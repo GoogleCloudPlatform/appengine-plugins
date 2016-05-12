@@ -16,11 +16,15 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.config.DefaultDeployConfiguration;
 import com.google.common.collect.ImmutableList;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,10 +38,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 /**
  * Unit tests for {@link CloudSdkAppEngineDeployment}.
  */
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.verify;
 public class CloudSdkAppEngineDeploymentTest {
 
   @Mock
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
   @Rule
   public TemporaryFolder tmpDir = new TemporaryFolder();
@@ -59,7 +59,7 @@ public class CloudSdkAppEngineDeploymentTest {
   public void setUp() throws IOException {
     appYaml1 = tmpDir.newFile("app1.yaml");
     appYaml2 = tmpDir.newFile("app2.yaml");
-    deployment = new CloudSdkAppEngineDeployment(sdk);
+    deployment = new CloudSdkAppEngineDeployment(sdkCli);
   }
 
   @Test
@@ -85,7 +85,7 @@ public class CloudSdkAppEngineDeploymentTest {
             "--server", "appengine.google.com", "--stop-previous-version",
             "--version", "v1");
 
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(expectedCommand));
   }
 
   @Test
@@ -102,7 +102,7 @@ public class CloudSdkAppEngineDeploymentTest {
         .of("deploy", appYaml1.toString(), "--no-force", "--no-promote",
             "--no-stop-previous-version");
 
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(expectedCommand));
   }
 
   @Test
@@ -115,7 +115,7 @@ public class CloudSdkAppEngineDeploymentTest {
 
     deployment.deploy(configuration);
 
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(expectedCommand));
   }
 
   @Test
@@ -130,7 +130,7 @@ public class CloudSdkAppEngineDeploymentTest {
     List<String> expectedCommand = ImmutableList
         .of("deploy", appYaml1.toString(), appYaml2.toString());
 
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    verify(sdkCli, times(1)).runGcloudAppCommand(eq(expectedCommand));
 
   }
 

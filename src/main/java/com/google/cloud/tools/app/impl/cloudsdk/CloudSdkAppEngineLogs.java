@@ -20,7 +20,6 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.logs.AppEngineLogs;
 import com.google.cloud.tools.app.api.logs.LogsConfiguration;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
@@ -32,16 +31,15 @@ import java.util.List;
  */
 public class CloudSdkAppEngineLogs implements AppEngineLogs {
 
-  private CloudSdk sdk;
+  private CloudSdkCli sdkCli;
 
-  public CloudSdkAppEngineLogs(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+  public CloudSdkAppEngineLogs(CloudSdkCli sdkCli) {
+    this.sdkCli = sdkCli;
   }
 
   private void execute(List<String> arguments) throws AppEngineException {
     try {
-      sdk.runAppCommand(arguments);
+      sdkCli.runGcloudAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
@@ -53,7 +51,7 @@ public class CloudSdkAppEngineLogs implements AppEngineLogs {
   @Override
   public void read(LogsConfiguration configuration) {
     Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkNotNull(sdkCli);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("logs");
