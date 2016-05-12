@@ -23,6 +23,6 @@ public interface ProcessRunner {
 
   void run(String[] command) throws ProcessRunnerException;
 
-  void run(String[] command, Map<String, String> environment) throws ProcessRunnerException;
+  void setEnvironment(Map<String, String> environment);
 
 }

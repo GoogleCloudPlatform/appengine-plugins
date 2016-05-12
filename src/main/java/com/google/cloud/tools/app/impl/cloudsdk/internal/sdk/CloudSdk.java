@@ -86,7 +86,8 @@ public class CloudSdk {
       environment.put("CLOUDSDK_APP_USE_GSUTIL", String.valueOf(appCommandGsUtil));
     }
 
-    processRunner.run(command.toArray(new String[command.size()]), environment);
+    processRunner.setEnvironment(environment);
+    processRunner.run(command.toArray(new String[command.size()]));
   }
 
   /**

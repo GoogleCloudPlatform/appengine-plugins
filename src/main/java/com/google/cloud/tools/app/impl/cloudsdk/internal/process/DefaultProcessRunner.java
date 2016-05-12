@@ -55,20 +55,9 @@ public class DefaultProcessRunner implements ProcessRunner {
    * @param command The shell command to execute
    */
   public void run(String[] command) throws ProcessRunnerException {
-    run(command, null);
-  }
-
-  /**
-   * Executes a shell command with environment variables.
-   *
-   * @param command The shell command to execute
-   * @param environment Environment variables to append to the current system environment variables.
-   */
-  public void run(String[] command, Map<String, String> environment) throws ProcessRunnerException {
     try {
 
       processBuilder.command(makeOsSpecific(command));
-      processBuilder.environment().putAll(environment);
 
       synchronized (this) {
         // check if the previous process is still executing
@@ -94,6 +83,13 @@ public class DefaultProcessRunner implements ProcessRunner {
     } catch (IOException | InterruptedException | IllegalThreadStateException e) {
       throw new ProcessRunnerException(e);
     }
+  }
+
+  /**
+   * @param environment Environment variables to append to the current system environment variables.
+   */
+  public void setEnvironment(Map<String, String> environment) {
+    processBuilder.environment().putAll(environment);
   }
 
   /**
