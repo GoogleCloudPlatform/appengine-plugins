@@ -263,7 +263,7 @@ public class CloudSdk {
     public CloudSdk build() {
       // Default process runner
       if (processRunner == null) {
-        processRunner = new DefaultProcessRunner();
+        processRunner = new DefaultProcessRunner.Builder().build();
       }
 
       // Default SDK path

@@ -22,4 +22,8 @@ public class ProcessRunnerException extends Exception {
   public ProcessRunnerException(Exception cause) {
     super(cause);
   }
+
+  public ProcessRunnerException(String message) {
+    super(message);
+  }
 }
