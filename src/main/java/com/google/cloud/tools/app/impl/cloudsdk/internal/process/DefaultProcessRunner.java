@@ -17,6 +17,7 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -82,6 +83,13 @@ public class DefaultProcessRunner implements ProcessRunner {
     } catch (IOException | InterruptedException | IllegalThreadStateException e) {
       throw new ProcessRunnerException(e);
     }
+  }
+
+  /**
+   * @param environment Environment variables to append to the current system environment variables.
+   */
+  public void setEnvironment(Map<String, String> environment) {
+    processBuilder.environment().putAll(environment);
   }
 
   /**

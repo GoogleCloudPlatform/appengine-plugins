@@ -14,11 +14,15 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
+import java.util.Map;
+
 /**
  * Interface for running arbitrary commands.
  */
 public interface ProcessRunner {
 
   void run(String[] command) throws ProcessRunnerException;
+
+  void setEnvironment(Map<String, String> environment);
 
 }

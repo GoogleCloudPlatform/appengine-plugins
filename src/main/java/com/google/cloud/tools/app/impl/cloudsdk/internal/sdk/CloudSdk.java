@@ -20,12 +20,14 @@ import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Maps;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -44,12 +46,18 @@ public class CloudSdk {
 
   private final Path sdkPath;
   private final ProcessRunner processRunner;
+  private final String appCommandMetricsEnvironment;
+  private final String appCommandMetricsEnvironmentVersion;
+  private final Integer appCommandGsUtil;
   private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
 
   private CloudSdk(Builder builder) {
     this.sdkPath = builder.sdkPath;
     this.processRunner = builder.processRunner;
+    this.appCommandMetricsEnvironment = builder.appCommandMetricsEnvironment;
+    this.appCommandMetricsEnvironmentVersion = builder.appCommandMetricsEnvironmentVersion;
+    this.appCommandGsUtil = builder.appCommandGsUtil;
     this.appCommandCredentialFile = builder.appCommandCredentialFile;
     this.appCommandOutputFormat = builder.appCommandOutputFormat;
   }
@@ -72,6 +80,18 @@ public class CloudSdk {
 
     outputCommand(command);
 
+    Map<String, String> environment = Maps.newHashMap();
+    if (appCommandMetricsEnvironment != null) {
+      environment.put("CLOUDSDK_METRICS_ENVIRONMENT", appCommandMetricsEnvironment);
+    }
+    if (appCommandMetricsEnvironmentVersion != null) {
+      environment.put("CLOUDSDK_METRICS_ENVIRONMENT_VERSION", appCommandMetricsEnvironmentVersion);
+    }
+    if (appCommandGsUtil != null) {
+      environment.put("CLOUDSDK_APP_USE_GSUTIL", String.valueOf(appCommandGsUtil));
+    }
+
+    processRunner.setEnvironment(environment);
     processRunner.run(command.toArray(new String[command.size()]));
   }
 
@@ -170,6 +190,9 @@ public class CloudSdk {
   public static class Builder {
     private Path sdkPath;
     private ProcessRunner processRunner;
+    private String appCommandMetricsEnvironment;
+    private String appCommandMetricsEnvironmentVersion;
+    private Integer appCommandGsUtil;
     private File appCommandCredentialFile;
     private String appCommandOutputFormat;
 
@@ -189,6 +212,30 @@ public class CloudSdk {
      */
     public Builder processRunner(ProcessRunner processRunner) {
       this.processRunner = processRunner;
+      return this;
+    }
+
+    /**
+     * The metrics environment.
+     */
+    public Builder appCommandMetricsEnvironment(String appCommandMetricsEnvironment) {
+      this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
+      return this;
+    }
+
+    /**
+     * The metrics environment version.
+     */
+    public Builder appCommandMetricsEnvironmentVersion(String appCommandMetricsEnvironmentVersion) {
+      this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
+      return this;
+    }
+
+    /**
+     * Configures usage of gsutil.
+     */
+    public Builder appCommandGsUtil(Integer appCommandGsUtil) {
+      this.appCommandGsUtil = appCommandGsUtil;
       return this;
     }
 
