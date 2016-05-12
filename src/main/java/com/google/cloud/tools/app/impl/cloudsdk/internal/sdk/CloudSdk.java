@@ -47,6 +47,7 @@ public class CloudSdk {
   private final Path sdkPath;
   private final ProcessRunner processRunner;
   private final String appCommandMetricsEnvironment;
+  private final String appCommandMetricsEnvironmentVersion;
   private final Integer appCommandGsUtil;
   private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
@@ -55,6 +56,7 @@ public class CloudSdk {
     this.sdkPath = builder.sdkPath;
     this.processRunner = builder.processRunner;
     this.appCommandMetricsEnvironment = builder.appCommandMetricsEnvironment;
+    this.appCommandMetricsEnvironmentVersion = builder.appCommandMetricsEnvironmentVersion;
     this.appCommandGsUtil = builder.appCommandGsUtil;
     this.appCommandCredentialFile = builder.appCommandCredentialFile;
     this.appCommandOutputFormat = builder.appCommandOutputFormat;
@@ -81,6 +83,9 @@ public class CloudSdk {
     Map<String, String> environment = Maps.newHashMap();
     if (appCommandMetricsEnvironment != null) {
       environment.put("CLOUDSDK_METRICS_ENVIRONMENT", appCommandMetricsEnvironment);
+    }
+    if (appCommandMetricsEnvironmentVersion != null) {
+      environment.put("CLOUDSDK_METRICS_ENVIRONMENT_VERSION", appCommandMetricsEnvironmentVersion);
     }
     if (appCommandGsUtil != null) {
       environment.put("CLOUDSDK_APP_USE_GSUTIL", String.valueOf(appCommandGsUtil));
@@ -186,6 +191,7 @@ public class CloudSdk {
     private Path sdkPath;
     private ProcessRunner processRunner;
     private String appCommandMetricsEnvironment;
+    private String appCommandMetricsEnvironmentVersion;
     private Integer appCommandGsUtil;
     private File appCommandCredentialFile;
     private String appCommandOutputFormat;
@@ -209,11 +215,25 @@ public class CloudSdk {
       return this;
     }
 
+    /**
+     * The metrics environment.
+     */
     public Builder appCommandMetricsEnvironment(String appCommandMetricsEnvironment) {
       this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
       return this;
     }
 
+    /**
+     * The metrics environment version.
+     */
+    public Builder appCommandMetricsEnvironmentVersion(String appCommandMetricsEnvironmentVersion) {
+      this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
+      return this;
+    }
+
+    /**
+     * Configures usage of gsutil.
+     */
     public Builder appCommandGsUtil(Integer appCommandGsUtil) {
       this.appCommandGsUtil = appCommandGsUtil;
       return this;
