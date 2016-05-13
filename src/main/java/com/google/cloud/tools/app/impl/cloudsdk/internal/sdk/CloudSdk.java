@@ -15,7 +15,6 @@
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
-import com.google.cloud.tools.app.impl.cloudsdk.internal.process.AsyncProcessStartWaiter;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessExitListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
@@ -262,18 +261,18 @@ public class CloudSdk {
     }
 
     /**
-     * The client consumer of process standard output.
+     * Adds a client consumer of process standard output.
      */
-    public Builder stdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
-      this.processRunnerBuilder.stdOutLineListener(stdOutLineListener);
+    public Builder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
+      this.processRunnerBuilder.addStdOutLineListener(stdOutLineListener);
       return this;
     }
 
     /**
-     * The client consumer of process error output.
+     * Adds a client consumer of process error output.
      */
-    public Builder stdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
-      this.processRunnerBuilder.stdErrLineListener(stdErrLineListener);
+    public Builder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
+      this.processRunnerBuilder.addStdErrLineListener(stdErrLineListener);
       return this;
     }
 
@@ -282,15 +281,6 @@ public class CloudSdk {
      */
     public Builder exitListener(ProcessExitListener exitListener) {
       this.processRunnerBuilder.exitListener(exitListener);
-      return this;
-    }
-
-    /**
-     * {@link AsyncProcessStartWaiter} used to block the thread until the asynchronous process has
-     * started successfully.
-     */
-    public Builder asyncProcessStartWaiter(AsyncProcessStartWaiter asyncProcessStartWaiter) {
-      this.processRunnerBuilder.asyncProcessStartWaiter(asyncProcessStartWaiter);
       return this;
     }
 

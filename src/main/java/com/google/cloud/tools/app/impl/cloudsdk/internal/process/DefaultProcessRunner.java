@@ -15,6 +15,7 @@
 package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -26,38 +27,37 @@ import java.util.Scanner;
  */
 public class DefaultProcessRunner implements ProcessRunner {
   private boolean async;
-  private ProcessOutputLineListener stdOutLineListener;
-  private ProcessOutputLineListener stdErrLineListener;
+  private List<ProcessOutputLineListener> stdOutLineListeners;
+  private List<ProcessOutputLineListener> stdErrLineListeners;
   private ProcessExitListener exitListener;
-  private AsyncProcessStartWaiter asyncProcessStartWaiter;
 
+  private ProcessBuilder processBuilder = new ProcessBuilder();
   private Process process;
 
   private Map<String, String> environment;
 
   private DefaultProcessRunner(Builder builder) {
     this.async = builder.async;
-    this.stdOutLineListener = builder.stdOutLineListener;
-    this.stdErrLineListener = builder.stdErrLineListener;
+    this.stdOutLineListeners = builder.stdOutLineListeners;
+    this.stdErrLineListeners = builder.stdErrLineListeners;
     this.exitListener = builder.exitListener;
-    if (async) {
-      this.asyncProcessStartWaiter = builder.asyncProcessStartWaiter;
-    }
   }
 
   /**
    * Executes a shell command.
    *
+   * <p>If any output listeners were configured, output will go to them only. Otherwise, process
+   * output will be redirected to the caller via inheritIO.
+   *
    * @param command The shell command to execute
    */
   public void run(String[] command) throws ProcessRunnerException {
     try {
-
-      if (asyncProcessStartWaiter != null) {
-        asyncProcessStartWaiter.reset();
-      }
-
+      // configure process builder
       final ProcessBuilder processBuilder = new ProcessBuilder();
+      if (stdErrLineListeners.size() == 0 && stdOutLineListeners.size() == 0) {
+        processBuilder.inheritIO();
+      }
       if (environment != null) {
         processBuilder.environment().putAll(environment);
       }
@@ -83,10 +83,6 @@ public class DefaultProcessRunner implements ProcessRunner {
         syncRun(process);
       }
 
-      if (asyncProcessStartWaiter != null) {
-        asyncProcessStartWaiter.await();
-      }
-
     } catch (IOException | InterruptedException | IllegalThreadStateException e) {
       throw new ProcessRunnerException(e);
     }
@@ -97,44 +93,6 @@ public class DefaultProcessRunner implements ProcessRunner {
    */
   public void setEnvironment(Map<String, String> environment) {
     this.environment = environment;
-  }
-
-  /**
-   * Sets the process execution to be asynchronous
-   *
-   * @param async False by default.
-   */
-  public void setAsync(boolean async) {
-    this.async = async;
-  }
-
-  /**
-   * Set the listener for standard output of the subprocess. Note that this will not work if you set
-   * inheritIO.
-   *
-   * @param stdOutLineListener Can be null.
-   */
-  public void setStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
-    this.stdOutLineListener = stdOutLineListener;
-  }
-
-  /**
-   * Set the listener for standard error output of the subprocess. Note that this will not work if
-   * you set inheritIO.
-   *
-   * @param stdErrLineListener Can be null.
-   */
-  public void setStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
-    this.stdErrLineListener = stdErrLineListener;
-  }
-
-  /**
-   * Sets the subprocess exit listener for collecting the exit code of the subprocess.
-   *
-   * @param exitListener Can be null.
-   */
-  public void setExitListener(ProcessExitListener exitListener) {
-    this.exitListener = exitListener;
   }
 
   /**
@@ -176,17 +134,13 @@ public class DefaultProcessRunner implements ProcessRunner {
 
   private void consumeLine(String line, boolean errorStream) {
     if (errorStream) {
-      if (stdErrLineListener != null) {
+      for (ProcessOutputLineListener stdErrLineListener : stdErrLineListeners) {
         stdErrLineListener.outputLine(line);
       }
     } else {
-      if (stdOutLineListener != null) {
+      for (ProcessOutputLineListener stdOutLineListener : stdOutLineListeners) {
         stdOutLineListener.outputLine(line);
       }
-    }
-
-    if (asyncProcessStartWaiter != null) {
-      asyncProcessStartWaiter.inputLine(line);
     }
   }
 
@@ -241,10 +195,10 @@ public class DefaultProcessRunner implements ProcessRunner {
 
   public static class Builder {
     private boolean async = false;
-    private ProcessOutputLineListener stdOutLineListener;
-    private ProcessOutputLineListener stdErrLineListener;
+    private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
+    private List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
     private ProcessExitListener exitListener;
-    private AsyncProcessStartWaiter asyncProcessStartWaiter;
+    private WaitingProcessOutputLineListener waitingProcessOutputLineListener;
 
     /**
      * Whether to run commands asynchronously.
@@ -255,18 +209,18 @@ public class DefaultProcessRunner implements ProcessRunner {
     }
 
     /**
-     * The client consumer of process standard output.
+     * Adds a client consumer of process standard output.
      */
-    public Builder stdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
-      this.stdOutLineListener = stdOutLineListener;
+    public Builder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
+      this.stdOutLineListeners.add(stdOutLineListener);
       return this;
     }
 
     /**
-     * The client consumer of process error output.
+     * Adds a client consumer of process error output.
      */
-    public Builder stdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
-      this.stdErrLineListener = stdErrLineListener;
+    public Builder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
+      this.stdErrLineListeners.add(stdErrLineListener);
       return this;
     }
 
@@ -275,15 +229,6 @@ public class DefaultProcessRunner implements ProcessRunner {
      */
     public Builder exitListener(ProcessExitListener exitListener) {
       this.exitListener = exitListener;
-      return this;
-    }
-
-    /**
-     * {@link AsyncProcessStartWaiter} used to block the thread until the asynchronous process has
-     * started successfully.
-     */
-    public Builder asyncProcessStartWaiter(AsyncProcessStartWaiter asyncProcessStartWaiter) {
-      this.asyncProcessStartWaiter = asyncProcessStartWaiter;
       return this;
     }
 

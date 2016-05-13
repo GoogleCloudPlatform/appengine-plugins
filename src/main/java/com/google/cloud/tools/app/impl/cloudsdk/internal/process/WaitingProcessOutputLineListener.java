@@ -18,15 +18,12 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * Provides a mechanism to wait for a successful start of a process by monitoring the process output
  * and checking for a specific message in it.
  */
-public class AsyncProcessStartWaiter {
-  private static final Logger log = Logger.getLogger(AsyncProcessStartWaiter.class.toString());
-
+public class WaitingProcessOutputLineListener implements ProcessOutputLineListener {
   private final String message;
   private final int timeoutSeconds;
   private CountDownLatch waitLatch;
@@ -38,37 +35,31 @@ public class AsyncProcessStartWaiter {
    * @param timeoutSeconds The maximum number of seconds to wait for the message to be seen until
    *                       giving up. If set to 0, will skip waiting.
    */
-  public AsyncProcessStartWaiter(String message, int timeoutSeconds) {
+  public WaitingProcessOutputLineListener(String message, int timeoutSeconds) {
     this.message = message;
     this.timeoutSeconds = timeoutSeconds;
+    this.waitLatch = new CountDownLatch(1);
   }
 
   /**
    * Prepares the internal latch for monitoring messages and waiting.
    */
   public void reset() {
-    if (waitLatch != null) {
-      waitLatch.countDown();
-    }
+    waitLatch.countDown();
     waitLatch = new CountDownLatch(1);
   }
 
   /**
    * Blocks the executing thread until the specified message is seen through {@link
-   * #inputLine(String)}. If the message is not seen within the specified timeout, {@link
+   * #outputLine(String)}. If the message is not seen within the specified timeout, {@link
    * ProcessRunnerException} will be thrown.
    */
   public void await() throws InterruptedException, ProcessRunnerException {
     try {
       if (message != null && timeoutSeconds != 0) {
-        log.info("Waiting " + timeoutSeconds
-            + " seconds for the operation to succeed...");
         if (!waitLatch.await(timeoutSeconds, TimeUnit.SECONDS)) {
-          log.warning("Operation failed.");
           throw new ProcessRunnerException("Timed out waiting for the success message: '"
               + message + "'");
-        } else {
-          log.info("Operation succeeded.");
         }
       }
     } finally {
@@ -79,7 +70,8 @@ public class AsyncProcessStartWaiter {
   /**
    * Monitors the output of the process to check whether the wait condition is satisfied.
    */
-  public void inputLine(String line) {
+  @Override
+  public void outputLine(String line) {
     if (waitLatch.getCount() > 0 && message != null && line.contains(message)) {
       waitLatch.countDown();
     }
