@@ -19,26 +19,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * Default process runner that allows synchronous or asynchronous execution. It also allows
  * monitoring output and checking the exit code of the child process.
  */
 public class DefaultProcessRunner implements ProcessRunner {
-  private static final Logger log = Logger.getLogger(DefaultProcessRunner.class.toString());
-
   private boolean async;
   private ProcessOutputLineListener stdOutLineListener;
   private ProcessOutputLineListener stdErrLineListener;
   private ProcessExitListener exitListener;
-  private String waitSuccessMessage;
-  private int waitSuccessTimeoutSeconds;
+  private AsyncProcessStartWaiter asyncProcessStartWaiter;
 
   private Process process;
-  private CountDownLatch waitSuccessLatch;
 
   private Map<String, String> environment;
 
@@ -47,8 +40,9 @@ public class DefaultProcessRunner implements ProcessRunner {
     this.stdOutLineListener = builder.stdOutLineListener;
     this.stdErrLineListener = builder.stdErrLineListener;
     this.exitListener = builder.exitListener;
-    this.waitSuccessMessage = builder.waitSuccessMessage;
-    this.waitSuccessTimeoutSeconds = builder.waitSuccessTimeoutSeconds;
+    if (async) {
+      this.asyncProcessStartWaiter = builder.asyncProcessStartWaiter;
+    }
   }
 
   /**
@@ -59,7 +53,9 @@ public class DefaultProcessRunner implements ProcessRunner {
   public void run(String[] command) throws ProcessRunnerException {
     try {
 
-      waitSuccessLatch = new CountDownLatch(1);
+      if (asyncProcessStartWaiter != null) {
+        asyncProcessStartWaiter.reset();
+      }
 
       final ProcessBuilder processBuilder = new ProcessBuilder();
       if (environment != null) {
@@ -87,7 +83,9 @@ public class DefaultProcessRunner implements ProcessRunner {
         syncRun(process);
       }
 
-      handleWaitSuccess();
+      if (asyncProcessStartWaiter != null) {
+        asyncProcessStartWaiter.await();
+      }
 
     } catch (IOException | InterruptedException | IllegalThreadStateException e) {
       throw new ProcessRunnerException(e);
@@ -175,23 +173,6 @@ public class DefaultProcessRunner implements ProcessRunner {
     stdOutThread.start();
   }
 
-  private void handleWaitSuccess() throws InterruptedException, ProcessRunnerException {
-    try {
-      if (async && waitSuccessMessage != null && waitSuccessTimeoutSeconds != 0) {
-        log.info("Waiting " + waitSuccessTimeoutSeconds
-            + " seconds for the operation to succeed...");
-        if (!waitSuccessLatch.await(waitSuccessTimeoutSeconds, TimeUnit.SECONDS)) {
-          log.warning("Operation failed.");
-          throw new ProcessRunnerException("Timed out waiting for the success message: '"
-              + waitSuccessMessage + "'");
-        } else {
-          log.info("Operation succeeded.");
-        }
-      }
-    } finally {
-      waitSuccessLatch.countDown();
-    }
-  }
 
   private void consumeLine(String line, boolean errorStream) {
     if (errorStream) {
@@ -204,8 +185,8 @@ public class DefaultProcessRunner implements ProcessRunner {
       }
     }
 
-    if (waitSuccessMessage != null && line.contains(waitSuccessMessage)) {
-      waitSuccessLatch.countDown();
+    if (asyncProcessStartWaiter != null) {
+      asyncProcessStartWaiter.inputLine(line);
     }
   }
 
@@ -263,8 +244,7 @@ public class DefaultProcessRunner implements ProcessRunner {
     private ProcessOutputLineListener stdOutLineListener;
     private ProcessOutputLineListener stdErrLineListener;
     private ProcessExitListener exitListener;
-    private String waitSuccessMessage;
-    private int waitSuccessTimeoutSeconds = 30;
+    private AsyncProcessStartWaiter asyncProcessStartWaiter;
 
     /**
      * Whether to run commands asynchronously.
@@ -299,22 +279,11 @@ public class DefaultProcessRunner implements ProcessRunner {
     }
 
     /**
-     * The message to look for in the standard or error output of the process to consider it to be
-     * successfully started. If the message is not seen within the specified timeout {@link
-     * #waitSuccessTimeoutSeconds(int)}, a {@link ProcessRunnerException} will be thrown.
+     * {@link AsyncProcessStartWaiter} used to block the thread until the asynchronous process has
+     * started successfully.
      */
-    public Builder waitSuccessMessage(String waitSuccessMessage) {
-      this.waitSuccessMessage = waitSuccessMessage;
-      return this;
-    }
-
-    /**
-     * The number of seconds to wait for after starting the process to see the {@link
-     * #waitSuccessMessage(String)} in the process output. If set to 0, will not wait at all and
-     * pass. Default is 30 seconds.
-     */
-    public Builder waitSuccessTimeoutSeconds(int waitSuccessTimeoutSeconds) {
-      this.waitSuccessTimeoutSeconds = waitSuccessTimeoutSeconds;
+    public Builder asyncProcessStartWaiter(AsyncProcessStartWaiter asyncProcessStartWaiter) {
+      this.asyncProcessStartWaiter = asyncProcessStartWaiter;
       return this;
     }
 
@@ -326,4 +295,5 @@ public class DefaultProcessRunner implements ProcessRunner {
     }
 
   }
+
 }
