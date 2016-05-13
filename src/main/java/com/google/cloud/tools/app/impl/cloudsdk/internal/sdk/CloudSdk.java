@@ -15,7 +15,10 @@
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.AsyncProcessStartWaiter;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessExitListener;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
@@ -195,6 +198,7 @@ public class CloudSdk {
     private Integer appCommandGsUtil;
     private File appCommandCredentialFile;
     private String appCommandOutputFormat;
+    private DefaultProcessRunner.Builder processRunnerBuilder = new DefaultProcessRunner.Builder();
 
     /**
      * The home directory of Google Cloud SDK. If not set, will attempt to look for the SDK in known
@@ -204,14 +208,6 @@ public class CloudSdk {
       if (sdkPathFile != null) {
         this.sdkPath = sdkPathFile.toPath();
       }
-      return this;
-    }
-
-    /**
-     * The process runner used to execute CLI commands.
-     */
-    public Builder processRunner(ProcessRunner processRunner) {
-      this.processRunner = processRunner;
       return this;
     }
 
@@ -258,13 +254,52 @@ public class CloudSdk {
     }
 
     /**
+     * Whether to run commands asynchronously.
+     */
+    public Builder async(boolean async) {
+      this.processRunnerBuilder.async(async);
+      return this;
+    }
+
+    /**
+     * The client consumer of process standard output.
+     */
+    public Builder stdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
+      this.processRunnerBuilder.stdOutLineListener(stdOutLineListener);
+      return this;
+    }
+
+    /**
+     * The client consumer of process error output.
+     */
+    public Builder stdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
+      this.processRunnerBuilder.stdErrLineListener(stdErrLineListener);
+      return this;
+    }
+
+    /**
+     * The client listener of the process exit with code.
+     */
+    public Builder exitListener(ProcessExitListener exitListener) {
+      this.processRunnerBuilder.exitListener(exitListener);
+      return this;
+    }
+
+    /**
+     * {@link AsyncProcessStartWaiter} used to block the thread until the asynchronous process has
+     * started successfully.
+     */
+    public Builder asyncProcessStartWaiter(AsyncProcessStartWaiter asyncProcessStartWaiter) {
+      this.processRunnerBuilder.asyncProcessStartWaiter(asyncProcessStartWaiter);
+      return this;
+    }
+
+    /**
      * Create a new instance of {@link CloudSdk}.
      */
     public CloudSdk build() {
-      // Default process runner
-      if (processRunner == null) {
-        processRunner = new DefaultProcessRunner.Builder().build();
-      }
+      // create process runner
+      processRunner = processRunnerBuilder.build();
 
       // Default SDK path
       if (sdkPath == null) {
