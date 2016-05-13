@@ -15,6 +15,7 @@
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.AsyncProcessStartWaiter;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessExitListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
@@ -285,22 +286,11 @@ public class CloudSdk {
     }
 
     /**
-     * The message to look for in the standard or error output of the process to consider it to be
-     * successfully started. If the message is not seen within the specified timeout {@link
-     * #waitSuccessTimeoutSeconds(int)}, a {@link ProcessRunnerException} will be thrown.
+     * {@link AsyncProcessStartWaiter} used to block the thread until the asynchronous process has
+     * started successfully.
      */
-    public Builder waitSuccessMessage(String waitSuccessMessage) {
-      this.processRunnerBuilder.waitSuccessMessage(waitSuccessMessage);
-      return this;
-    }
-
-    /**
-     * The number of seconds to wait for after starting the process to see the {@link
-     * #waitSuccessMessage(String)} in the process output. If set to 0, will not wait at all and
-     * pass. Default is 30 seconds.
-     */
-    public Builder waitSuccessTimeoutSeconds(int waitSuccessTimeoutSeconds) {
-      this.processRunnerBuilder.waitSuccessTimeoutSeconds(waitSuccessTimeoutSeconds);
+    public Builder asyncProcessStartWaiter(AsyncProcessStartWaiter asyncProcessStartWaiter) {
+      this.processRunnerBuilder.asyncProcessStartWaiter(asyncProcessStartWaiter);
       return this;
     }
 
