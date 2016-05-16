@@ -17,12 +17,10 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 import static java.lang.ProcessBuilder.Redirect;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 
 
 /**
@@ -30,19 +28,26 @@ import java.util.Scanner;
  * monitoring output and checking the exit code of the child process.
  */
 public class DefaultProcessRunner implements ProcessRunner {
-  private boolean async;
-  private List<ProcessOutputLineListener> stdOutLineListeners;
-  private List<ProcessOutputLineListener> stdErrLineListeners;
-  private ProcessExitListener exitListener;
+  private final boolean async;
+  private final List<ProcessOutputLineListener> stdOutLineListeners;
+  private final List<ProcessOutputLineListener> stdErrLineListeners;
+  private final ProcessExitListener exitListener;
 
-  private ProcessBuilder processBuilder = new ProcessBuilder();
   private Process process;
 
   private Map<String, String> environment;
 
-  private DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
-                               List<ProcessOutputLineListener> stdErrLineListeners,
-                               ProcessExitListener exitListener) {
+  /**
+   * @param async               Whether to run commands asynchronously
+   * @param stdOutLineListeners Client consumers of process standard output. If empty, output will
+   *                            be inherited by parent process.
+   * @param stdErrLineListeners Client consumers of process error output. If empty, output will be
+   *                            inherited by parent process.
+   * @param exitListener        Client consumer of process exit event.
+   */
+  public DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
+                              List<ProcessOutputLineListener> stdErrLineListeners,
+                              ProcessExitListener exitListener) {
     this.async = async;
     this.stdOutLineListeners = stdOutLineListeners;
     this.stdErrLineListeners = stdErrLineListeners;
@@ -201,54 +206,4 @@ public class DefaultProcessRunner implements ProcessRunner {
     }
     return osCommand;
   }
-
-  public static class Builder {
-    private boolean async = false;
-    private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
-    private List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
-    private ProcessExitListener exitListener;
-    private WaitingProcessOutputLineListener waitingProcessOutputLineListener;
-
-    /**
-     * Whether to run commands asynchronously.
-     */
-    public Builder async(boolean async) {
-      this.async = async;
-      return this;
-    }
-
-    /**
-     * Adds a client consumer of process standard output.
-     */
-    public Builder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
-      this.stdOutLineListeners.add(stdOutLineListener);
-      return this;
-    }
-
-    /**
-     * Adds a client consumer of process error output.
-     */
-    public Builder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
-      this.stdErrLineListeners.add(stdErrLineListener);
-      return this;
-    }
-
-    /**
-     * The client listener of the process exit with code.
-     */
-    public Builder exitListener(ProcessExitListener exitListener) {
-      this.exitListener = exitListener;
-      return this;
-    }
-
-    /**
-     * Create a new instance of {@link DefaultProcessRunner}.
-     */
-    public DefaultProcessRunner build() {
-      return new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
-          exitListener);
-    }
-
-  }
-
 }

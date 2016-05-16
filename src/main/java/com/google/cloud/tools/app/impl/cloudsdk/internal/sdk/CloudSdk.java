@@ -20,6 +20,7 @@ import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessExitList
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.WaitingProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -53,17 +54,41 @@ public class CloudSdk {
   private final Integer appCommandGsUtil;
   private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
+  private final int runDevAppServerWaitSeconds;
+  private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
-  private CloudSdk(Path sdkPath, ProcessRunner processRunner, String appCommandMetricsEnvironment,
-                  String appCommandMetricsEnvironmentVersion, Integer appCommandGsUtil,
-                  File appCommandCredentialFile, String appCommandOutputFormat) {
+
+  private CloudSdk(Path sdkPath, String appCommandMetricsEnvironment,
+                   String appCommandMetricsEnvironmentVersion, Integer appCommandGsUtil,
+                   File appCommandCredentialFile, String appCommandOutputFormat, boolean async,
+                   List<ProcessOutputLineListener> stdOutLineListeners,
+                   List<ProcessOutputLineListener> stdErrLineListeners,
+                   ProcessExitListener exitListener,
+                   int runDevAppServerWaitSeconds) {
     this.sdkPath = sdkPath;
-    this.processRunner = processRunner;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
     this.appCommandGsUtil = appCommandGsUtil;
     this.appCommandCredentialFile = appCommandCredentialFile;
     this.appCommandOutputFormat = appCommandOutputFormat;
+
+    // configure listeners for async dev app server start with waiting
+    if (async && runDevAppServerWaitSeconds > 0) {
+      this.runDevAppServerWaitSeconds = runDevAppServerWaitSeconds;
+      this.runDevAppServerWaitListener = new WaitingProcessOutputLineListener(
+          "Dev App Server is now running", runDevAppServerWaitSeconds);
+
+      stdOutLineListeners.add(runDevAppServerWaitListener);
+      stdErrLineListeners.add(runDevAppServerWaitListener);
+    } else {
+      this.runDevAppServerWaitSeconds = 0;
+      this.runDevAppServerWaitListener = null;
+    }
+
+    // create process runner
+    this.processRunner = new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
+        exitListener);
+
   }
 
   /**
@@ -113,6 +138,11 @@ public class CloudSdk {
     outputCommand(command);
 
     processRunner.run(command.toArray(new String[command.size()]));
+
+    // wait for start if configured
+    if (runDevAppServerWaitListener != null) {
+      runDevAppServerWaitListener.await();
+    }
   }
 
   /**
@@ -193,13 +223,16 @@ public class CloudSdk {
 
   public static class Builder {
     private Path sdkPath;
-    private ProcessRunner processRunner;
     private String appCommandMetricsEnvironment;
     private String appCommandMetricsEnvironmentVersion;
     private Integer appCommandGsUtil;
     private File appCommandCredentialFile;
     private String appCommandOutputFormat;
-    private DefaultProcessRunner.Builder processRunnerBuilder = new DefaultProcessRunner.Builder();
+    private boolean async = false;
+    private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
+    private List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
+    private ProcessExitListener exitListener;
+    private int runDevAppServerWaitSeconds;
 
     /**
      * The home directory of Google Cloud SDK. If not set, will attempt to look for the SDK in known
@@ -258,23 +291,25 @@ public class CloudSdk {
      * Whether to run commands asynchronously.
      */
     public Builder async(boolean async) {
-      this.processRunnerBuilder.async(async);
+      this.async = async;
       return this;
     }
 
     /**
-     * Adds a client consumer of process standard output.
+     * Adds a client consumer of process standard output. If none, output will be inherited by
+     * parent process.
      */
     public Builder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
-      this.processRunnerBuilder.addStdOutLineListener(stdOutLineListener);
+      this.stdOutLineListeners.add(stdOutLineListener);
       return this;
     }
 
     /**
-     * Adds a client consumer of process error output.
+     * Adds a client consumer of process error output. If none, output will be inherited by parent
+     * process.
      */
     public Builder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
-      this.processRunnerBuilder.addStdErrLineListener(stdErrLineListener);
+      this.stdErrLineListeners.add(stdErrLineListener);
       return this;
     }
 
@@ -282,7 +317,18 @@ public class CloudSdk {
      * The client listener of the process exit with code.
      */
     public Builder exitListener(ProcessExitListener exitListener) {
-      this.processRunnerBuilder.exitListener(exitListener);
+      this.exitListener = exitListener;
+      return this;
+    }
+
+    /**
+     * When run asynchronously, configure the Dev App Server command to wait for successful start of
+     * the server. Setting this will force process output not to be inherited by the caller.
+     *
+     * @param runDevAppServerWaitSeconds Number of seconds to wait > 0.
+     */
+    public Builder runDevAppServerWait(int runDevAppServerWaitSeconds) {
+      this.runDevAppServerWaitSeconds = runDevAppServerWaitSeconds;
       return this;
     }
 
@@ -290,8 +336,6 @@ public class CloudSdk {
      * Create a new instance of {@link CloudSdk}.
      */
     public CloudSdk build() {
-      // create process runner
-      processRunner = processRunnerBuilder.build();
 
       // Default SDK path
       if (sdkPath == null) {
@@ -303,9 +347,10 @@ public class CloudSdk {
         sdkPath = discoveredSdkPath;
       }
 
-      return new CloudSdk(sdkPath, processRunner, appCommandMetricsEnvironment,
+      return new CloudSdk(sdkPath, appCommandMetricsEnvironment,
           appCommandMetricsEnvironmentVersion, appCommandGsUtil, appCommandCredentialFile,
-          appCommandOutputFormat);
+          appCommandOutputFormat, async, stdOutLineListeners, stdErrLineListeners, exitListener,
+          runDevAppServerWaitSeconds);
     }
 
   }

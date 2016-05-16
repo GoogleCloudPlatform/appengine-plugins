@@ -54,14 +54,15 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
    * #outputLine(String)}. If the message is not seen within the specified timeout, {@link
    * ProcessRunnerException} will be thrown.
    */
-  public void await() throws InterruptedException, ProcessRunnerException {
+  public void await() throws ProcessRunnerException {
     try {
-      if (message != null && timeoutSeconds != 0) {
-        if (!waitLatch.await(timeoutSeconds, TimeUnit.SECONDS)) {
-          throw new ProcessRunnerException("Timed out waiting for the success message: '"
-              + message + "'");
-        }
+      if (message != null && timeoutSeconds != 0
+          && !waitLatch.await(timeoutSeconds, TimeUnit.SECONDS)) {
+        throw new ProcessRunnerException("Timed out waiting for the success message: '"
+            + message + "'");
       }
+    } catch (InterruptedException e) {
+      throw new ProcessRunnerException(e);
     } finally {
       waitLatch.countDown();
     }
