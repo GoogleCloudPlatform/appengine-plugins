@@ -14,12 +14,16 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
+import static java.lang.ProcessBuilder.Redirect;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+
 
 /**
  * Default process runner that allows synchronous or asynchronous execution. It also allows
@@ -36,11 +40,13 @@ public class DefaultProcessRunner implements ProcessRunner {
 
   private Map<String, String> environment;
 
-  private DefaultProcessRunner(Builder builder) {
-    this.async = builder.async;
-    this.stdOutLineListeners = builder.stdOutLineListeners;
-    this.stdErrLineListeners = builder.stdErrLineListeners;
-    this.exitListener = builder.exitListener;
+  private DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
+                               List<ProcessOutputLineListener> stdErrLineListeners,
+                               ProcessExitListener exitListener) {
+    this.async = async;
+    this.stdOutLineListeners = stdOutLineListeners;
+    this.stdErrLineListeners = stdErrLineListeners;
+    this.exitListener = exitListener;
   }
 
   /**
@@ -55,8 +61,11 @@ public class DefaultProcessRunner implements ProcessRunner {
     try {
       // configure process builder
       final ProcessBuilder processBuilder = new ProcessBuilder();
-      if (stdErrLineListeners.size() == 0 && stdOutLineListeners.size() == 0) {
-        processBuilder.inheritIO();
+      if (stdOutLineListeners.isEmpty()) {
+        processBuilder.redirectOutput(Redirect.INHERIT);
+      }
+      if (stdErrLineListeners.isEmpty()) {
+        processBuilder.redirectError(Redirect.INHERIT);
       }
       if (environment != null) {
         processBuilder.environment().putAll(environment);
@@ -236,7 +245,8 @@ public class DefaultProcessRunner implements ProcessRunner {
      * Create a new instance of {@link DefaultProcessRunner}.
      */
     public DefaultProcessRunner build() {
-      return new DefaultProcessRunner(this);
+      return new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
+          exitListener);
     }
 
   }

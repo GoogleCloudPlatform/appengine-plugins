@@ -54,14 +54,16 @@ public class CloudSdk {
   private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
 
-  private CloudSdk(Builder builder) {
-    this.sdkPath = builder.sdkPath;
-    this.processRunner = builder.processRunner;
-    this.appCommandMetricsEnvironment = builder.appCommandMetricsEnvironment;
-    this.appCommandMetricsEnvironmentVersion = builder.appCommandMetricsEnvironmentVersion;
-    this.appCommandGsUtil = builder.appCommandGsUtil;
-    this.appCommandCredentialFile = builder.appCommandCredentialFile;
-    this.appCommandOutputFormat = builder.appCommandOutputFormat;
+  private CloudSdk(Path sdkPath, ProcessRunner processRunner, String appCommandMetricsEnvironment,
+                  String appCommandMetricsEnvironmentVersion, Integer appCommandGsUtil,
+                  File appCommandCredentialFile, String appCommandOutputFormat) {
+    this.sdkPath = sdkPath;
+    this.processRunner = processRunner;
+    this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
+    this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
+    this.appCommandGsUtil = appCommandGsUtil;
+    this.appCommandCredentialFile = appCommandCredentialFile;
+    this.appCommandOutputFormat = appCommandOutputFormat;
   }
 
   /**
@@ -301,7 +303,9 @@ public class CloudSdk {
         sdkPath = discoveredSdkPath;
       }
 
-      return new CloudSdk(this);
+      return new CloudSdk(sdkPath, processRunner, appCommandMetricsEnvironment,
+          appCommandMetricsEnvironmentVersion, appCommandGsUtil, appCommandCredentialFile,
+          appCommandOutputFormat);
     }
 
   }
