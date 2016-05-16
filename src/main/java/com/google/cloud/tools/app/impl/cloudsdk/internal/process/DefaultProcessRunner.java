@@ -14,49 +14,67 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
+import static java.lang.ProcessBuilder.Redirect;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+
 /**
  * Default process runner that allows synchronous or asynchronous execution. It also allows
  * monitoring output and checking the exit code of the child process.
  */
 public class DefaultProcessRunner implements ProcessRunner {
-
-  private ProcessBuilder processBuilder;
-  private boolean async = false;
-  private ProcessOutputLineListener stdOutLineListener;
-  private ProcessOutputLineListener stdErrLineListener;
-  private ProcessExitListener exitListener;
+  private final boolean async;
+  private final List<ProcessOutputLineListener> stdOutLineListeners;
+  private final List<ProcessOutputLineListener> stdErrLineListeners;
+  private final ProcessExitListener exitListener;
 
   private Process process;
 
-  /**
-   * Create the process runner with a default process builder, with inheritIO enabled.
-   */
-  public DefaultProcessRunner() {
-    this(new ProcessBuilder());
-    processBuilder.inheritIO();
-  }
+  private Map<String, String> environment;
 
   /**
-   * Create the process runner with the provided process builder.
+   * @param async               Whether to run commands asynchronously
+   * @param stdOutLineListeners Client consumers of process standard output. If empty, output will
+   *                            be inherited by parent process.
+   * @param stdErrLineListeners Client consumers of process error output. If empty, output will be
+   *                            inherited by parent process.
+   * @param exitListener        Client consumer of process exit event.
    */
-  public DefaultProcessRunner(ProcessBuilder processBuilder) {
-    this.processBuilder = processBuilder;
+  public DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
+                              List<ProcessOutputLineListener> stdErrLineListeners,
+                              ProcessExitListener exitListener) {
+    this.async = async;
+    this.stdOutLineListeners = stdOutLineListeners;
+    this.stdErrLineListeners = stdErrLineListeners;
+    this.exitListener = exitListener;
   }
 
   /**
    * Executes a shell command.
    *
+   * <p>If any output listeners were configured, output will go to them only. Otherwise, process
+   * output will be redirected to the caller via inheritIO.
+   *
    * @param command The shell command to execute
    */
   public void run(String[] command) throws ProcessRunnerException {
     try {
-
+      // configure process builder
+      final ProcessBuilder processBuilder = new ProcessBuilder();
+      if (stdOutLineListeners.isEmpty()) {
+        processBuilder.redirectOutput(Redirect.INHERIT);
+      }
+      if (stdErrLineListeners.isEmpty()) {
+        processBuilder.redirectError(Redirect.INHERIT);
+      }
+      if (environment != null) {
+        processBuilder.environment().putAll(environment);
+      }
       processBuilder.command(makeOsSpecific(command));
 
       synchronized (this) {
@@ -79,95 +97,56 @@ public class DefaultProcessRunner implements ProcessRunner {
         syncRun(process);
       }
 
-
     } catch (IOException | InterruptedException | IllegalThreadStateException e) {
       throw new ProcessRunnerException(e);
     }
   }
 
   /**
-   * @param environment Environment variables to append to the current system environment variables.
+   * Environment variables to append to the current system environment variables.
    */
   public void setEnvironment(Map<String, String> environment) {
-    processBuilder.environment().putAll(environment);
+    this.environment = environment;
   }
 
   /**
-   * Sets the process execution to be asynchronous
-   *
-   * @param async False by default.
-   */
-  public void setAsync(boolean async) {
-    this.async = async;
-  }
-
-  /**
-   * Set the listener for standard output of the subprocess. Note that this will not work if you set
-   * inheritIO.
-   *
-   * @param stdOutLineListener Can be null.
-   */
-  public void setStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
-    this.stdOutLineListener = stdOutLineListener;
-  }
-
-  /**
-   * Set the listener for standard error output of the subprocess. Note that this will not work if
-   * you set inheritIO.
-   *
-   * @param stdErrLineListener Can be null.
-   */
-  public void setStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
-    this.stdErrLineListener = stdErrLineListener;
-  }
-
-  /**
-   * Sets the subprocess exit listener for collecting the exit code of the subprocess.
-   *
-   * @param exitListener Can be nul.
-   */
-  public void setExitListener(ProcessExitListener exitListener) {
-    this.exitListener = exitListener;
-  }
-
-  /**
-   * @return The process that is currently executing or was the last one to be started using the run
-   *     method.
+   * The process that is currently executing or was the last one to be started using the run
+   * method.
    */
   public Process getProcess() {
     return this.process;
   }
 
-  private void handleErrOut(final Process process) {
-    if (stdErrLineListener != null) {
-      final Scanner stdErr = new Scanner(process.getErrorStream());
-      Thread stdErrThread = new Thread("standard-err") {
-        public void run() {
-          while (stdErr.hasNextLine() && !Thread.interrupted()) {
-            String line = stdErr.nextLine();
-            stdErrLineListener.outputLine(line);
-          }
-        }
-      };
-      stdErrThread.setDaemon(true);
-      stdErrThread.start();
-    }
-  }
-
   private void handleStdOut(final Process process) {
-    if (stdOutLineListener != null) {
-      final Scanner stdOut = new Scanner(process.getInputStream());
-      Thread stdOutThread = new Thread("standard-out") {
-        public void run() {
-          while (stdOut.hasNextLine() && !Thread.interrupted()) {
-            String line = stdOut.nextLine();
+    final Scanner stdOut = new Scanner(process.getInputStream());
+    Thread stdOutThread = new Thread("standard-out") {
+      public void run() {
+        while (stdOut.hasNextLine() && !Thread.interrupted()) {
+          String line = stdOut.nextLine();
+          for (ProcessOutputLineListener stdOutLineListener : stdOutLineListeners) {
             stdOutLineListener.outputLine(line);
           }
         }
-      };
-      stdOutThread.setDaemon(true);
-      stdOutThread.start();
-    }
+      }
+    };
+    stdOutThread.setDaemon(true);
+    stdOutThread.start();
+  }
+
+  private void handleErrOut(final Process process) {
+    final Scanner stdErr = new Scanner(process.getErrorStream());
+    Thread stdErrThread = new Thread("standard-err") {
+      public void run() {
+        while (stdErr.hasNextLine() && !Thread.interrupted()) {
+          String line = stdErr.nextLine();
+          for (ProcessOutputLineListener stdErrLineListener : stdErrLineListeners) {
+            stdErrLineListener.outputLine(line);
+          }
+        }
+      }
+    };
+    stdErrThread.setDaemon(true);
+    stdErrThread.start();
   }
 
   private void syncRun(final Process process) throws InterruptedException {
@@ -218,5 +197,4 @@ public class DefaultProcessRunner implements ProcessRunner {
     }
     return osCommand;
   }
-
 }
