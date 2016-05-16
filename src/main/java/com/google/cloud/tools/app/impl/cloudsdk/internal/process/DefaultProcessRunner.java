@@ -117,27 +117,15 @@ public class DefaultProcessRunner implements ProcessRunner {
     return this.process;
   }
 
-  private void handleErrOut(final Process process) {
-    final Scanner stdErr = new Scanner(process.getErrorStream());
-    Thread stdErrThread = new Thread("standard-err") {
-      public void run() {
-        while (stdErr.hasNextLine() && !Thread.interrupted()) {
-          String line = stdErr.nextLine();
-          consumeLine(line, true);
-        }
-      }
-    };
-    stdErrThread.setDaemon(true);
-    stdErrThread.start();
-  }
-
   private void handleStdOut(final Process process) {
     final Scanner stdOut = new Scanner(process.getInputStream());
     Thread stdOutThread = new Thread("standard-out") {
       public void run() {
         while (stdOut.hasNextLine() && !Thread.interrupted()) {
           String line = stdOut.nextLine();
-          consumeLine(line, false);
+          for (ProcessOutputLineListener stdOutLineListener : stdOutLineListeners) {
+            stdOutLineListener.outputLine(line);
+          }
         }
       }
     };
@@ -145,17 +133,20 @@ public class DefaultProcessRunner implements ProcessRunner {
     stdOutThread.start();
   }
 
-
-  private void consumeLine(String line, boolean errorStream) {
-    if (errorStream) {
-      for (ProcessOutputLineListener stdErrLineListener : stdErrLineListeners) {
-        stdErrLineListener.outputLine(line);
+  private void handleErrOut(final Process process) {
+    final Scanner stdErr = new Scanner(process.getErrorStream());
+    Thread stdErrThread = new Thread("standard-err") {
+      public void run() {
+        while (stdErr.hasNextLine() && !Thread.interrupted()) {
+          String line = stdErr.nextLine();
+          for (ProcessOutputLineListener stdErrLineListener : stdErrLineListeners) {
+            stdErrLineListener.outputLine(line);
+          }
+        }
       }
-    } else {
-      for (ProcessOutputLineListener stdOutLineListener : stdOutLineListeners) {
-        stdOutLineListener.outputLine(line);
-      }
-    }
+    };
+    stdErrThread.setDaemon(true);
+    stdErrThread.start();
   }
 
   private void syncRun(final Process process) throws InterruptedException {
