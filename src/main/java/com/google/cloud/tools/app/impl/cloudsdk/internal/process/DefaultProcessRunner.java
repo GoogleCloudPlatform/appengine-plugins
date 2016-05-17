@@ -32,8 +32,7 @@ public class DefaultProcessRunner implements ProcessRunner {
   private final List<ProcessOutputLineListener> stdOutLineListeners;
   private final List<ProcessOutputLineListener> stdErrLineListeners;
   private final ProcessExitListener exitListener;
-
-  private Process process;
+  private final ProcessStartListener startListener;
 
   private Map<String, String> environment;
 
@@ -47,11 +46,13 @@ public class DefaultProcessRunner implements ProcessRunner {
    */
   public DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
                               List<ProcessOutputLineListener> stdErrLineListeners,
-                              ProcessExitListener exitListener) {
+                              ProcessExitListener exitListener,
+                              ProcessStartListener startListener) {
     this.async = async;
     this.stdOutLineListeners = stdOutLineListeners;
     this.stdErrLineListeners = stdErrLineListeners;
     this.exitListener = exitListener;
+    this.startListener = startListener;
   }
 
   /**
@@ -77,18 +78,14 @@ public class DefaultProcessRunner implements ProcessRunner {
       }
       processBuilder.command(makeOsSpecific(command));
 
-      synchronized (this) {
-        // check if the previous process is still executing
-        if (process != null) {
-          // will throw IllegalThreadStateException, if process is still running
-          process.exitValue();
-        }
-
-        process = processBuilder.start();
-      }
+      Process process = processBuilder.start();
 
       handleStdOut(process);
       handleErrOut(process);
+
+      if (startListener != null) {
+        startListener.start(process);
+      }
 
       if (async) {
         asyncRun(process);
@@ -107,14 +104,6 @@ public class DefaultProcessRunner implements ProcessRunner {
    */
   public void setEnvironment(Map<String, String> environment) {
     this.environment = environment;
-  }
-
-  /**
-   * The process that is currently executing or was the last one to be started using the run
-   * method.
-   */
-  public Process getProcess() {
-    return this.process;
   }
 
   private void handleStdOut(final Process process) {

@@ -21,6 +21,7 @@ import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessExitList
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessStartListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.WaitingProcessOutputLineListener;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -63,7 +64,7 @@ public class CloudSdk {
                    File appCommandCredentialFile, String appCommandOutputFormat, boolean async,
                    List<ProcessOutputLineListener> stdOutLineListeners,
                    List<ProcessOutputLineListener> stdErrLineListeners,
-                   ProcessExitListener exitListener,
+                   ProcessExitListener exitListener, ProcessStartListener startListener,
                    int runDevAppServerWaitSeconds) {
     this.sdkPath = sdkPath;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
@@ -87,7 +88,7 @@ public class CloudSdk {
 
     // create process runner
     this.processRunner = new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
-        exitListener);
+        exitListener, startListener);
 
   }
 
@@ -232,6 +233,7 @@ public class CloudSdk {
     private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
     private List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
     private ProcessExitListener exitListener;
+    private ProcessStartListener startListener;
     private int runDevAppServerWaitSeconds;
 
     /**
@@ -322,6 +324,14 @@ public class CloudSdk {
     }
 
     /**
+     * The client listener of the process start. Allows access to the underlying process.
+     */
+    public Builder startListener(ProcessStartListener startListener) {
+      this.startListener = startListener;
+      return this;
+    }
+
+    /**
      * When run asynchronously, configure the Dev App Server command to wait for successful start of
      * the server. Setting this will force process output not to be inherited by the caller.
      *
@@ -350,7 +360,7 @@ public class CloudSdk {
       return new CloudSdk(sdkPath, appCommandMetricsEnvironment,
           appCommandMetricsEnvironmentVersion, appCommandGsUtil, appCommandCredentialFile,
           appCommandOutputFormat, async, stdOutLineListeners, stdErrLineListeners, exitListener,
-          runDevAppServerWaitSeconds);
+          startListener, runDevAppServerWaitSeconds);
     }
 
   }
