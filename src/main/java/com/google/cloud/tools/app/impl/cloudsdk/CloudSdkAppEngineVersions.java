@@ -20,9 +20,9 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.versions.AppEngineVersions;
 import com.google.cloud.tools.app.api.versions.VersionsListConfiguration;
 import com.google.cloud.tools.app.api.versions.VersionsSelectionConfiguration;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     arguments.add("versions");
     arguments.add("start");
     arguments.addAll(configuration.getVersions());
-    arguments.addAll(Args.string("service", configuration.getService()));
+    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
 
     execute(arguments);
   }
@@ -81,7 +81,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     arguments.add("versions");
     arguments.add("stop");
     arguments.addAll(configuration.getVersions());
-    arguments.addAll(Args.string("service", configuration.getService()));
+    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
 
     execute(arguments);
   }
@@ -99,7 +99,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     arguments.add("versions");
     arguments.add("delete");
     arguments.addAll(configuration.getVersions());
-    arguments.addAll(Args.string("service", configuration.getService()));
+    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
 
     execute(arguments);
   }
@@ -115,8 +115,8 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     List<String> arguments = new ArrayList<>();
     arguments.add("versions");
     arguments.add("list");
-    arguments.addAll(Args.string("service", configuration.getService()));
-    arguments.addAll(Args.bool("hide-no-traffic", configuration.getHideNoTraffic()));
+    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
+    arguments.addAll(GcloudArgs.get("hide-no-traffic", configuration.getHideNoTraffic()));
 
     execute(arguments);
   }

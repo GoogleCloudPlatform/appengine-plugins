@@ -19,9 +19,9 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.app.api.deploy.StageStandardConfiguration;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.args.AppCfgArgs;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -53,14 +53,14 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
 
     List<String> arguments = new ArrayList<>();
 
-    arguments.addAll(Args.bool("enable_quickstart", config.getEnableQuickstart()));
-    arguments.addAll(Args.bool("disable_update_check", config.getDisableUpdateCheck()));
-    arguments.addAll(Args.bool("enable_jar_splitting", config.getEnableJarSplitting()));
-    arguments.addAll(Args.stringEq("jar_splitting_excludes", config.getJarSplittingExcludes()));
-    arguments.addAll(Args.stringEq("compile_encoding", config.getCompileEncoding()));
-    arguments.addAll(Args.bool("delete_jsps", config.getDeleteJsps()));
-    arguments.addAll(Args.bool("enable_jar_classes", config.getEnableJarClasses()));
-    arguments.addAll(Args.bool("disable_jar_jsps", config.getDisableJarJsps()));
+    arguments.addAll(AppCfgArgs.get("enable_quickstart", config.getEnableQuickstart()));
+    arguments.addAll(AppCfgArgs.get("disable_update_check", config.getDisableUpdateCheck()));
+    arguments.addAll(AppCfgArgs.get("enable_jar_splitting", config.getEnableJarSplitting()));
+    arguments.addAll(AppCfgArgs.get("jar_splitting_excludes", config.getJarSplittingExcludes()));
+    arguments.addAll(AppCfgArgs.get("compile_encoding", config.getCompileEncoding()));
+    arguments.addAll(AppCfgArgs.get("delete_jsps", config.getDeleteJsps()));
+    arguments.addAll(AppCfgArgs.get("enable_jar_classes", config.getEnableJarClasses()));
+    arguments.addAll(AppCfgArgs.get("disable_jar_jsps", config.getDisableJarJsps()));
 
     arguments.add("stage");
     arguments.add(config.getSourceDirectory().toPath().toString());

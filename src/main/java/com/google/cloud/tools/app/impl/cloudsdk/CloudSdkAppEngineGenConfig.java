@@ -17,9 +17,9 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.genconfig.GenConfigParams;
 import com.google.cloud.tools.app.api.genconfig.GenConfigUtility;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -61,9 +61,9 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
       arguments.add(config.getSourceDirectory().toPath().toString());
     }
 
-    arguments.addAll(Args.string("config", config.getConfig()));
-    arguments.addAll(Args.boolWithNo("custom", config.getCustom()));
-    arguments.addAll(Args.string("runtime", config.getRuntime()));
+    arguments.addAll(GcloudArgs.get("config", config.getConfig()));
+    arguments.addAll(GcloudArgs.get("custom", config.getCustom()));
+    arguments.addAll(GcloudArgs.get("runtime", config.getRuntime()));
 
     try {
       sdk.runAppCommand(arguments);

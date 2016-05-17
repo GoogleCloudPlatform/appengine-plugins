@@ -19,9 +19,9 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.logs.AppEngineLogs;
 import com.google.cloud.tools.app.api.logs.LogsConfiguration;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -58,10 +58,10 @@ public class CloudSdkAppEngineLogs implements AppEngineLogs {
     List<String> arguments = new ArrayList<>();
     arguments.add("logs");
     arguments.add("read");
-    arguments.addAll(Args.string("level", configuration.getLevel()));
-    arguments.addAll(Args.string("version", configuration.getVersion()));
-    arguments.addAll(Args.string("service", configuration.getService()));
-    arguments.addAll(Args.integer("limit", configuration.getLimit()));
+    arguments.addAll(GcloudArgs.get("level", configuration.getLevel()));
+    arguments.addAll(GcloudArgs.get("version", configuration.getVersion()));
+    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
+    arguments.addAll(GcloudArgs.get("limit", configuration.getLimit()));
 
     execute(arguments);
   }

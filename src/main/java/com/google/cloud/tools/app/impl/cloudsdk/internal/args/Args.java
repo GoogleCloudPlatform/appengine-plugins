@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.impl.cloudsdk.util;
+package com.google.cloud.tools.app.impl.cloudsdk.internal.args;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
@@ -29,12 +29,12 @@ import java.util.Map;
 /**
  * Command Line argument helper.
  */
-public class Args {
+class Args {
 
   /**
    * @return [--name, value] or [] if value=null.
    */
-  public static List<String> string(String name, String value) {
+  static List<String> string(String name, String value) {
     if (!Strings.isNullOrEmpty(value)) {
       return Arrays.asList("--" + name, value);
     }
@@ -44,7 +44,7 @@ public class Args {
   /**
    * @return [--name=value] or [] if value=null.
    */
-  public static List<String> stringEq(String name, String value) {
+  static List<String> stringEq(String name, String value) {
     if (!Strings.isNullOrEmpty(value)) {
       return Collections.singletonList("--" + name + "=" + value);
     }
@@ -54,7 +54,7 @@ public class Args {
   /**
    * @return [--name, value1, --name, value2, ...] or [] if value=null.
    */
-  public static List<String> strings(String name, List<String> values) {
+  static List<String> strings(String name, List<String> values) {
     List<String> result = Lists.newArrayList();
     if (values != null) {
       for (String value : values) {
@@ -68,7 +68,7 @@ public class Args {
   /**
    * @return [--name, value] or [] if value=null.
    */
-  public static List<String> integer(String name, Integer value) {
+  static List<String> integer(String name, Integer value) {
     if (value != null) {
       return Arrays.asList("--" + name, value.toString());
     }
@@ -78,7 +78,7 @@ public class Args {
   /**
    * @return [--name] if value=true, [--no-name] if value=false, [] if value=null.
    */
-  public static List<String> boolWithNo(String name, Boolean value) {
+  static List<String> boolWithNo(String name, Boolean value) {
     if (value != null) {
       if (value) {
         return Collections.singletonList("--" + name);
@@ -91,9 +91,19 @@ public class Args {
   /**
    * @return [--name] if value=true, [] if value=false/null.
    */
-  public static List<String> bool(String name, Boolean value) {
+  static List<String> bool(String name, Boolean value) {
     if (Boolean.TRUE.equals(value)) {
       return Collections.singletonList("--" + name);
+    }
+    return Collections.emptyList();
+  }
+
+  /**
+   * @return [--name, file.getAbsolutePath()] or [] if file=null.
+   */
+  static List<String> filePath(String name, File file) {
+    if (file != null && !Strings.isNullOrEmpty(file.getAbsolutePath())) {
+      return Arrays.asList("--" + name, file.getAbsolutePath());
     }
     return Collections.emptyList();
   }
@@ -111,16 +121,6 @@ public class Args {
       return Collections.singletonList(joiner.join(result));
     }
 
-    return Collections.emptyList();
-  }
-
-  /**
-   * @return [--name, file.getAbsolutePath()] or [] if file=null.
-   */
-  public static List<String> filePath(String name, File file) {
-    if (file != null && !Strings.isNullOrEmpty(file.getAbsolutePath())) {
-      return Arrays.asList("--" + name, file.getAbsolutePath());
-    }
     return Collections.emptyList();
   }
 }

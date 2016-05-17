@@ -19,9 +19,9 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.instances.AppEngineInstances;
 import com.google.cloud.tools.app.api.instances.InstancesSelectionConfiguration;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -78,8 +78,8 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
     } else {
       arguments.add("disable-debug");
     }
-    arguments.addAll(Args.string("version", configuration.getVersion()));
-    arguments.addAll(Args.string("service", configuration.getService()));
+    arguments.addAll(GcloudArgs.get("version", configuration.getVersion()));
+    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
 
     execute(arguments);
   }

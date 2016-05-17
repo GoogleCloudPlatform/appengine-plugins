@@ -17,9 +17,9 @@ package com.google.cloud.tools.app.impl.cloudsdk;
 import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.app.api.deploy.DeployConfiguration;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
 import java.io.File;
@@ -55,16 +55,15 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
       arguments.add(deployable.toPath().toString());
     }
 
-    arguments.addAll(Args.string("bucket", config.getBucket()));
-    arguments.addAll(Args.string("docker-build", config.getDockerBuild()));
-    arguments.addAll(Args.boolWithNo("force", config.getForce()));
-    arguments.addAll(Args.string("image-url", config.getImageUrl()));
-    arguments.addAll(Args.string("project", config.getProject()));
-    arguments.addAll(Args.boolWithNo("promote", config.getPromote()));
-    arguments.addAll(Args.string("server", config.getServer()));
-    arguments
-        .addAll(Args.boolWithNo("stop-previous-version", config.getStopPreviousVersion()));
-    arguments.addAll(Args.string("version", config.getVersion()));
+    arguments.addAll(GcloudArgs.get("bucket", config.getBucket()));
+    arguments.addAll(GcloudArgs.get("docker-build", config.getDockerBuild()));
+    arguments.addAll(GcloudArgs.get("force", config.getForce()));
+    arguments.addAll(GcloudArgs.get("image-url", config.getImageUrl()));
+    arguments.addAll(GcloudArgs.get("project", config.getProject()));
+    arguments.addAll(GcloudArgs.get("promote", config.getPromote()));
+    arguments.addAll(GcloudArgs.get("server", config.getServer()));
+    arguments.addAll(GcloudArgs.get("stop-previous-version", config.getStopPreviousVersion()));
+    arguments.addAll(GcloudArgs.get("version", config.getVersion()));
 
     try {
       sdk.runAppCommand(arguments);

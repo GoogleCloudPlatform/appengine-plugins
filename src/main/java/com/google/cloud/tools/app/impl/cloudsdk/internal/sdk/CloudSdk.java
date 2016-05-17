@@ -15,13 +15,13 @@
 package com.google.cloud.tools.app.impl.cloudsdk.internal.sdk;
 
 import com.google.cloud.tools.app.api.AppEngineException;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.DefaultProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessExitListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessOutputLineListener;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.WaitingProcessOutputLineListener;
-import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 
@@ -41,11 +41,11 @@ public class CloudSdk {
   private static final Logger log = Logger.getLogger(CloudSdk.class.toString());
 
   // TODO : does this continue to work on windows?
-  static final String GCLOUD = "bin/gcloud";
-  static final String DEV_APPSERVER_PY = "bin/dev_appserver.py";
-  static final String JAVA_APPENGINE_SDK_PATH =
+  private static final String GCLOUD = "bin/gcloud";
+  private static final String DEV_APPSERVER_PY = "bin/dev_appserver.py";
+  private static final String JAVA_APPENGINE_SDK_PATH =
       "platform/google_appengine/google/appengine/tools/java/lib";
-  static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
+  private static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
 
   private final Path sdkPath;
   private final ProcessRunner processRunner;
@@ -104,8 +104,8 @@ public class CloudSdk {
     command.addAll(args);
 
     command.add("--quiet");
-    command.addAll(Args.filePath("credential-file-override", appCommandCredentialFile));
-    command.addAll(Args.string("format", appCommandOutputFormat));
+    command.addAll(GcloudArgs.get("credential-file-override", appCommandCredentialFile));
+    command.addAll(GcloudArgs.get("format", appCommandOutputFormat));
 
     outputCommand(command);
 

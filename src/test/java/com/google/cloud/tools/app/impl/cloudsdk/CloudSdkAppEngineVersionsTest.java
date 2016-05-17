@@ -76,7 +76,8 @@ public class CloudSdkAppEngineVersionsTest {
     CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.list(getListConfig(true));
 
-    List<String> args = Arrays.asList("versions", "list", "--service", "myService", "--hide-no-traffic");
+    List<String> args = Arrays
+        .asList("versions", "list", "--service", "myService", "--hide-no-traffic");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }
@@ -86,7 +87,8 @@ public class CloudSdkAppEngineVersionsTest {
     CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.list(getListConfig(false));
 
-    List<String> args = Arrays.asList("versions", "list", "--service", "myService");
+    List<String> args = Arrays
+        .asList("versions", "list", "--service", "myService", "--no-hide-no-traffic");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }

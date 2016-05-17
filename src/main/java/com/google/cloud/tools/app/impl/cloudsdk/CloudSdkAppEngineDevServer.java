@@ -18,9 +18,9 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.app.api.devserver.RunConfiguration;
 import com.google.cloud.tools.app.api.devserver.StopConfiguration;
+import com.google.cloud.tools.app.impl.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.app.impl.cloudsdk.internal.sdk.CloudSdk;
-import com.google.cloud.tools.app.impl.cloudsdk.util.Args;
 import com.google.common.base.Preconditions;
 
 import java.io.File;
@@ -60,27 +60,31 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
       arguments.add(appYaml.toPath().toString());
     }
 
-    arguments.addAll(Args.string("host", config.getHost()));
-    arguments.addAll(Args.integer("port", config.getPort()));
-    arguments.addAll(Args.string("admin_host", config.getAdminHost()));
-    arguments.addAll(Args.integer("admin_port", config.getAdminPort()));
-    arguments.addAll(Args.string("auth_domain", config.getAuthDomain()));
-    arguments.addAll(Args.string("storage_path", config.getStoragePath()));
-    arguments.addAll(Args.string("log_level", config.getLogLevel()));
-    arguments.addAll(Args.integer("max_module_instances", config.getMaxModuleInstances()));
-    arguments.addAll(Args.bool("use_mtime_file_watcher", config.getUseMtimeFileWatcher()));
-    arguments.addAll(Args.string("threadsafe_override", config.getThreadsafeOverride()));
-    arguments.addAll(Args.string("python_startup_script", config.getPythonStartupScript()));
-    arguments.addAll(Args.string("python_startup_args", config.getPythonStartupArgs()));
-    arguments.addAll(Args.strings("jvm_flag", config.getJvmFlags()));
-    arguments.addAll(Args.string("custom_entrypoint", config.getCustomEntrypoint()));
-    arguments.addAll(Args.string("runtime", config.getRuntime()));
-    arguments.addAll(Args.bool("allow_skipped_files", config.getAllowSkippedFiles()));
-    arguments.addAll(Args.integer("api_port", config.getApiPort()));
-    arguments.addAll(Args.bool("automatic_restart", config.getAutomaticRestart()));
-    arguments.addAll(Args.string("dev_appserver_log_level", config.getDevAppserverLogLevel()));
-    arguments.addAll(Args.bool("skip_sdk_update_check", config.getSkipSdkUpdateCheck()));
-    arguments.addAll(Args.string("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
+    arguments.addAll(DevAppServerArgs.get("host", config.getHost()));
+    arguments.addAll(DevAppServerArgs.get("port", config.getPort()));
+    arguments.addAll(DevAppServerArgs.get("admin_host", config.getAdminHost()));
+    arguments.addAll(DevAppServerArgs.get("admin_port", config.getAdminPort()));
+    arguments.addAll(DevAppServerArgs.get("auth_domain", config.getAuthDomain()));
+    arguments.addAll(DevAppServerArgs.get("storage_path", config.getStoragePath()));
+    arguments.addAll(DevAppServerArgs.get("log_level", config.getLogLevel()));
+    arguments.addAll(DevAppServerArgs.get("max_module_instances", config.getMaxModuleInstances()));
+    arguments
+        .addAll(DevAppServerArgs.get("use_mtime_file_watcher", config.getUseMtimeFileWatcher()));
+    arguments.addAll(DevAppServerArgs.get("threadsafe_override", config.getThreadsafeOverride()));
+    arguments
+        .addAll(DevAppServerArgs.get("python_startup_script", config.getPythonStartupScript()));
+    arguments.addAll(DevAppServerArgs.get("python_startup_args", config.getPythonStartupArgs()));
+    arguments.addAll(DevAppServerArgs.get("jvm_flag", config.getJvmFlags()));
+    arguments.addAll(DevAppServerArgs.get("custom_entrypoint", config.getCustomEntrypoint()));
+    arguments.addAll(DevAppServerArgs.get("runtime", config.getRuntime()));
+    arguments.addAll(DevAppServerArgs.get("allow_skipped_files", config.getAllowSkippedFiles()));
+    arguments.addAll(DevAppServerArgs.get("api_port", config.getApiPort()));
+    arguments.addAll(DevAppServerArgs.get("automatic_restart", config.getAutomaticRestart()));
+    arguments
+        .addAll(DevAppServerArgs.get("dev_appserver_log_level", config.getDevAppserverLogLevel()));
+    arguments.addAll(DevAppServerArgs.get("skip_sdk_update_check", config.getSkipSdkUpdateCheck()));
+    arguments
+        .addAll(DevAppServerArgs.get("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
 
     try {
       sdk.runDevAppServerCommand(arguments);
