@@ -66,7 +66,7 @@ public enum PathResolver {
           path = path.substring(0, path.length() - 1);
         }
         if (path.endsWith("google-cloud-sdk" + File.separator + "bin")) {
-          possiblePaths.add(path);
+          possiblePaths.add(path.substring(0, path.length() - 4));
         }
       }
     }
