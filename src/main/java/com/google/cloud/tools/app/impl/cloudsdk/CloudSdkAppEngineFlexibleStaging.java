@@ -44,11 +44,11 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
 
     if (!config.getStagingDirectory().exists()) {
       throw new AppEngineException("Staging directory does not exist. Location: "
-          + config.getStagingDirectory().toPath().toString());
+          + config.getStagingDirectory().toPath());
     }
     if (!config.getStagingDirectory().isDirectory()) {
       throw new AppEngineException("Staging location is not a directory. Location: "
-          + config.getStagingDirectory().toPath().toString());
+          + config.getStagingDirectory().toPath());
     }
 
     try {

@@ -50,7 +50,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     for (File deployable : config.getDeployables()) {
       if (!deployable.exists()) {
         throw new IllegalArgumentException(
-            "Deployable " + deployable.toPath().toString() + " does not exist.");
+            "Deployable " + deployable.toPath() + " does not exist.");
       }
       arguments.add(deployable.toPath().toString());
     }
