@@ -133,20 +133,13 @@ public class DeploymentBuilder {
   }
 
   /**
-   * Adds a client consumer of process standard output. If none, output will be inherited by parent
-   * process.
-   */
-  public DeploymentBuilder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
-    cloudSdkBuilder.addStdOutLineListener(stdOutLineListener);
-    return this;
-  }
-
-  /**
    * Adds a client consumer of process error output. If none, output will be inherited by parent
    * process.
    */
-  public DeploymentBuilder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
-    cloudSdkBuilder.addStdErrLineListener(stdErrLineListener);
+  public DeploymentBuilder statusLineListener(ProcessOutputLineListener... statusLineListener) {
+    for (ProcessOutputLineListener listener : statusLineListener) {
+      cloudSdkBuilder.addStdErrLineListener(listener);
+    }
     return this;
   }
 
