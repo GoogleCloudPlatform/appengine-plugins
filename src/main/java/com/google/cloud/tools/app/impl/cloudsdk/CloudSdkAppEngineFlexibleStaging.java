@@ -20,9 +20,13 @@ import com.google.cloud.tools.app.api.AppEngineException;
 import com.google.cloud.tools.app.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.app.api.deploy.StageFlexibleConfiguration;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Set;
 
 /**
  * Cloud SDK based implementation of {@link AppEngineFlexibleStaging}.
@@ -73,10 +77,20 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       // TODO : earlier ones should warn?
       // Copy the JAR/WAR file to staging.
       if (config.getArtifact() != null && config.getArtifact().exists()) {
-        Files.copy(config.getArtifact().toPath(),
-            config.getStagingDirectory().toPath()
-                .resolve(config.getArtifact().toPath().getFileName()),
-            REPLACE_EXISTING);
+        Path destination = config.getStagingDirectory().toPath()
+            .resolve(config.getArtifact().toPath().getFileName());
+        Files.copy(config.getArtifact().toPath(), destination, REPLACE_EXISTING);
+
+        // Update artifact permissions so docker can read it when deployed
+        if (!System.getProperty("os.name").contains("Windows")) {
+          Set<PosixFilePermission> permissions = Sets.newHashSet();
+          permissions.add(PosixFilePermission.OWNER_READ);
+          permissions.add(PosixFilePermission.OWNER_WRITE);
+          permissions.add(PosixFilePermission.GROUP_READ);
+          permissions.add(PosixFilePermission.OTHERS_READ);
+
+          Files.setPosixFilePermissions(destination, permissions);
+        }
       }
     } catch (IOException e) {
       throw new AppEngineException(e);
