@@ -54,11 +54,13 @@ public class CloudSdkAppEngineServicesTest {
 
     configuration.setServices(Collections.singletonList("myService"));
     configuration.setVersionToTrafficSplit(versionToSplitMap);
+    configuration.setProject("myProject");
 
     appEngineService.setTraffic(configuration);
 
     List<String> args =
-        Arrays.asList("services", "set-traffic", "myService", "--splits", "v1=0.3,v2=0.7");
+        Arrays.asList("services", "set-traffic", "myService", "--splits", "v1=0.3,v2=0.7",
+            "--project", "myProject");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }

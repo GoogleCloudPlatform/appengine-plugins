@@ -44,7 +44,7 @@ public class DefaultProcessRunner implements ProcessRunner {
    *                            be inherited by parent process.
    * @param stdErrLineListeners Client consumers of process error output. If empty, output will be
    *                            inherited by parent process.
-   * @param exitListener        Client consumer of process exit event.
+   * @param exitListener        Client consumer of process onExit event.
    */
   public DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
                               List<ProcessOutputLineListener> stdErrLineListeners,
@@ -86,7 +86,7 @@ public class DefaultProcessRunner implements ProcessRunner {
       handleErrOut(process);
 
       if (startListener != null) {
-        startListener.start(process);
+        startListener.onStart(process);
       }
 
       if (async) {
@@ -115,7 +115,7 @@ public class DefaultProcessRunner implements ProcessRunner {
         while (stdOut.hasNextLine() && !Thread.interrupted()) {
           String line = stdOut.nextLine();
           for (ProcessOutputLineListener stdOutLineListener : stdOutLineListeners) {
-            stdOutLineListener.outputLine(line);
+            stdOutLineListener.onOutputLine(line);
           }
         }
       }
@@ -131,7 +131,7 @@ public class DefaultProcessRunner implements ProcessRunner {
         while (stdErr.hasNextLine() && !Thread.interrupted()) {
           String line = stdErr.nextLine();
           for (ProcessOutputLineListener stdErrLineListener : stdErrLineListeners) {
-            stdErrLineListener.outputLine(line);
+            stdErrLineListener.onOutputLine(line);
           }
         }
       }
@@ -143,7 +143,7 @@ public class DefaultProcessRunner implements ProcessRunner {
   private void syncRun(final Process process) throws InterruptedException {
     int exitCode = process.waitFor();
     if (exitListener != null) {
-      exitListener.exit(exitCode);
+      exitListener.onExit(exitCode);
     }
   }
 
@@ -157,7 +157,7 @@ public class DefaultProcessRunner implements ProcessRunner {
           } catch (InterruptedException e) {
             e.printStackTrace();
           } finally {
-            exitListener.exit(process.exitValue());
+            exitListener.onExit(process.exitValue());
           }
         }
       };

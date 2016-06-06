@@ -22,14 +22,15 @@ import java.util.List;
 /**
  * Plain Java bean implementation of {@link DeployConfiguration}.
  */
-public class DefaultDeployConfiguration implements DeployConfiguration {
+public class DefaultDeployConfiguration
+    extends DefaultConfiguration
+    implements DeployConfiguration {
 
   private List<File> deployables;
   private String bucket;
   private String dockerBuild;
   private Boolean force;
   private String imageUrl;
-  private String project;
   private Boolean promote;
   private String server;
   private Boolean stopPreviousVersion;
@@ -78,15 +79,6 @@ public class DefaultDeployConfiguration implements DeployConfiguration {
 
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
-  }
-
-  @Override
-  public String getProject() {
-    return project;
-  }
-
-  public void setProject(String project) {
-    this.project = project;
   }
 
   @Override

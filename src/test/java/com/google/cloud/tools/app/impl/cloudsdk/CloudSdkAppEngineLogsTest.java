@@ -48,12 +48,13 @@ public class CloudSdkAppEngineLogsTest {
     configuration.setVersion("v1");
     configuration.setService("myService");
     configuration.setLimit(10);
+    configuration.setProject("myProject");
 
     appEngineLogs.read(configuration);
 
     List<String> args =
         Arrays.asList("logs", "read", "--level", "warning", "--version", "v1", "--service",
-            "myService", "--limit", "10");
+            "myService", "--limit", "10", "--project", "myProject");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }

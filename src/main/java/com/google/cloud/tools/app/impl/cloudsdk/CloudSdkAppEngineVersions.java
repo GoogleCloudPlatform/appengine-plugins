@@ -61,8 +61,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     List<String> arguments = new ArrayList<>();
     arguments.add("versions");
     arguments.add("start");
-    arguments.addAll(configuration.getVersions());
-    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
+    arguments.addAll(commonVersionSelectionArgs(configuration));
 
     execute(arguments);
   }
@@ -80,8 +79,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     List<String> arguments = new ArrayList<>();
     arguments.add("versions");
     arguments.add("stop");
-    arguments.addAll(configuration.getVersions());
-    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
+    arguments.addAll(commonVersionSelectionArgs(configuration));
 
     execute(arguments);
   }
@@ -98,8 +96,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     List<String> arguments = new ArrayList<>();
     arguments.add("versions");
     arguments.add("delete");
-    arguments.addAll(configuration.getVersions());
-    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
+    arguments.addAll(commonVersionSelectionArgs(configuration));
 
     execute(arguments);
   }
@@ -117,7 +114,17 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     arguments.add("list");
     arguments.addAll(GcloudArgs.get("service", configuration.getService()));
     arguments.addAll(GcloudArgs.get("hide-no-traffic", configuration.getHideNoTraffic()));
+    arguments.addAll(GcloudArgs.get(configuration));
 
     execute(arguments);
+  }
+
+  private List<String> commonVersionSelectionArgs(VersionsSelectionConfiguration configuration) {
+    List<String> arguments = new ArrayList<>();
+    arguments.addAll(configuration.getVersions());
+    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
+    arguments.addAll(GcloudArgs.get(configuration));
+
+    return arguments;
   }
 }

@@ -47,7 +47,8 @@ public class CloudSdkAppEngineInstancesTest {
     appEngineInstances.enableDebug(getConfig());
 
     List<String> args =
-        Arrays.asList("instances", "enable-debug", "--version", "v1", "--service", "myService");
+        Arrays.asList("instances", "enable-debug", "--version", "v1", "--service", "myService",
+            "--project", "myProject");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }
@@ -59,7 +60,8 @@ public class CloudSdkAppEngineInstancesTest {
     appEngineInstances.disableDebug(getConfig());
 
     List<String> args =
-        Arrays.asList("instances", "disable-debug", "--version", "v1", "--service", "myService");
+        Arrays.asList("instances", "disable-debug", "--version", "v1", "--service", "myService",
+            "--project", "myProject");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }
@@ -68,6 +70,7 @@ public class CloudSdkAppEngineInstancesTest {
     DefaultInstancesSelectionConfiguration configuration = new DefaultInstancesSelectionConfiguration();
     configuration.setVersion("v1");
     configuration.setService("myService");
+    configuration.setProject("myProject");
 
     return configuration;
   }

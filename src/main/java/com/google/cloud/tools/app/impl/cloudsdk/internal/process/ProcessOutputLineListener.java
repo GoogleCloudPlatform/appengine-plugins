@@ -17,9 +17,12 @@
 package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
 
 /**
- * Process listener that can be used with {@link DefaultProcessRunner} to read the process std or
- * error output line by line.
+ * Line output listener for {@link DefaultProcessRunner}.
  */
 public interface ProcessOutputLineListener {
-  void outputLine(String line);
+
+  /**
+   * Called once per output line.
+   */
+  void onOutputLine(String line);
 }

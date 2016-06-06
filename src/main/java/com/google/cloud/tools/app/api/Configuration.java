@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.logs;
-
-import com.google.cloud.tools.app.api.Configuration;
+package com.google.cloud.tools.app.api;
 
 /**
- * Identifies an application for use in {@link AppEngineLogs}.
+ * Common configuration elements.
  */
-public interface LogsConfiguration extends Configuration {
+public interface Configuration {
 
-  String getLevel();
-
-  String getVersion();
-
-  String getService();
-
-  Integer getLimit();
-
+  String getProject();
 }

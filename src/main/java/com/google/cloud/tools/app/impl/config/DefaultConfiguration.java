@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.app.api.logs;
+package com.google.cloud.tools.app.impl.config;
 
 import com.google.cloud.tools.app.api.Configuration;
 
 /**
- * Identifies an application for use in {@link AppEngineLogs}.
+ * Base implementation for common configuration elements.
  */
-public interface LogsConfiguration extends Configuration {
+public abstract class DefaultConfiguration implements Configuration {
 
-  String getLevel();
+  private String project;
 
-  String getVersion();
+  @Override
+  public String getProject() {
+    return project;
+  }
 
-  String getService();
-
-  Integer getLimit();
-
+  public void setProject(String project) {
+    this.project = project;
+  }
 }

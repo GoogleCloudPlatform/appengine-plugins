@@ -16,12 +16,14 @@
 
 package com.google.cloud.tools.app.api.versions;
 
+import com.google.cloud.tools.app.api.Configuration;
+
 import java.util.Collection;
 
 /**
  * Identifies a version or a set of versions for use in {@link AppEngineVersions}.
  */
-public interface VersionsSelectionConfiguration {
+public interface VersionsSelectionConfiguration extends Configuration {
 
   Collection<String> getVersions();
 

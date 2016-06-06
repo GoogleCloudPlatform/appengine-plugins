@@ -16,13 +16,10 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.internal.args;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
+import com.google.cloud.tools.app.api.Configuration;
 import com.google.common.collect.Lists;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -64,5 +61,14 @@ public class GcloudArgs {
    */
   public static List<String> get(Map<?, ?> keyValueMapping) {
     return Args.keyValues(keyValueMapping);
+  }
+
+  /**
+   * @return list of args for the common arguments in {@link Configuration}.
+   */
+  public static List<String> get(Configuration configuration) {
+    List<String> result = Lists.newArrayList();
+    result.addAll(get("project", configuration.getProject()));
+    return result;
   }
 }

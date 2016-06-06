@@ -24,7 +24,9 @@ import java.util.Collection;
 /**
  * Plain Java bean implementation of {@link VersionsSelectionConfiguration}.
  */
-public class DefaultVersionsSelectionConfiguration implements VersionsSelectionConfiguration {
+public class DefaultVersionsSelectionConfiguration
+    extends DefaultConfiguration
+    implements VersionsSelectionConfiguration {
 
   private Collection<String> versions;
   private String service;

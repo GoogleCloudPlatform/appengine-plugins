@@ -80,6 +80,7 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
     }
     arguments.addAll(GcloudArgs.get("version", configuration.getVersion()));
     arguments.addAll(GcloudArgs.get("service", configuration.getService()));
+    arguments.addAll(GcloudArgs.get(configuration));
 
     execute(arguments);
   }

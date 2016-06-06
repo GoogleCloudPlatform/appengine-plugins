@@ -51,7 +51,7 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
 
   /**
    * Blocks the executing thread until the specified message is seen through {@link
-   * #outputLine(String)}. If the message is not seen within the specified timeout, {@link
+   * #onOutputLine(String)}. If the message is not seen within the specified timeout, {@link
    * ProcessRunnerException} will be thrown.
    */
   public void await() throws ProcessRunnerException {
@@ -72,7 +72,7 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
    * Monitors the output of the process to check whether the wait condition is satisfied.
    */
   @Override
-  public void outputLine(String line) {
+  public void onOutputLine(String line) {
     if (waitLatch.getCount() > 0 && message != null && line.contains(message)) {
       waitLatch.countDown();
     }

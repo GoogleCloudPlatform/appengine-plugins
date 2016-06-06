@@ -24,7 +24,9 @@ import java.util.Map;
 /**
  * Plain Java bean implementation of {@link TrafficSplitConfiguration}.
  */
-public class DefaultTrafficSplitConfiguration implements TrafficSplitConfiguration {
+public class DefaultTrafficSplitConfiguration
+    extends DefaultConfiguration
+    implements TrafficSplitConfiguration {
 
   private Collection<String> services;
   private Map<String, Double> versionToTrafficSplit;

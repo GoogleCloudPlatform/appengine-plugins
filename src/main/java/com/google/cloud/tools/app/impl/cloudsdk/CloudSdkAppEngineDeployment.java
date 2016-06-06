@@ -59,11 +59,11 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.addAll(GcloudArgs.get("docker-build", config.getDockerBuild()));
     arguments.addAll(GcloudArgs.get("force", config.getForce()));
     arguments.addAll(GcloudArgs.get("image-url", config.getImageUrl()));
-    arguments.addAll(GcloudArgs.get("project", config.getProject()));
     arguments.addAll(GcloudArgs.get("promote", config.getPromote()));
     arguments.addAll(GcloudArgs.get("server", config.getServer()));
     arguments.addAll(GcloudArgs.get("stop-previous-version", config.getStopPreviousVersion()));
     arguments.addAll(GcloudArgs.get("version", config.getVersion()));
+    arguments.addAll(GcloudArgs.get(config));
 
     try {
       sdk.runAppCommand(arguments);

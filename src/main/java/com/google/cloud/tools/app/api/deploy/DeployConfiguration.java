@@ -14,13 +14,15 @@
 
 package com.google.cloud.tools.app.api.deploy;
 
+import com.google.cloud.tools.app.api.Configuration;
+
 import java.io.File;
 import java.util.List;
 
 /**
  * Configuration for {@link AppEngineDeployment#deploy(DeployConfiguration)}.
  */
-public interface DeployConfiguration {
+public interface DeployConfiguration extends Configuration {
 
   List<File> getDeployables();
 
@@ -31,8 +33,6 @@ public interface DeployConfiguration {
   Boolean getForce();
 
   String getImageUrl();
-
-  String getProject();
 
   Boolean getPromote();
 

@@ -21,7 +21,9 @@ import com.google.cloud.tools.app.api.instances.InstancesSelectionConfiguration;
 /**
  * Plain Java bean implementation of {@link InstancesSelectionConfiguration}.
  */
-public class DefaultInstancesSelectionConfiguration implements InstancesSelectionConfiguration {
+public class DefaultInstancesSelectionConfiguration
+    extends DefaultConfiguration
+    implements InstancesSelectionConfiguration {
 
   private String service;
 

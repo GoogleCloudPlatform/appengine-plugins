@@ -21,7 +21,7 @@ import com.google.cloud.tools.app.api.logs.LogsConfiguration;
 /**
  * Plain Java bean implementation of {@link LogsConfiguration}.
  */
-public class DefaultLogsConfiguration implements LogsConfiguration {
+public class DefaultLogsConfiguration extends DefaultConfiguration implements LogsConfiguration {
 
   private String level;
 

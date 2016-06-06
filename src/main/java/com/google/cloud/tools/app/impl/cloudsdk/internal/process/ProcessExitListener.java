@@ -21,5 +21,11 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
  * code after it terminates.
  */
 public interface ProcessExitListener {
-  void exit(int exitCode);
+
+  /**
+   * This hook will be called immediately <em>after</em> the process has completed execution.
+   *
+   * @param exitCode the process exit code returned at the end of execution
+   */
+  void onExit(int exitCode);
 }

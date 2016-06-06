@@ -21,7 +21,9 @@ import com.google.cloud.tools.app.api.versions.VersionsListConfiguration;
 /**
  * Plain Java bean implementation of {@link VersionsListConfiguration}.
  */
-public class DefaultVersionsListConfiguration implements VersionsListConfiguration {
+public class DefaultVersionsListConfiguration
+    extends DefaultConfiguration
+    implements VersionsListConfiguration {
 
   private String service;
   private Boolean hideNoTraffic;

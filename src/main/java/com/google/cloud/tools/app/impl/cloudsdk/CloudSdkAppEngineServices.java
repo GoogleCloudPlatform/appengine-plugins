@@ -65,6 +65,7 @@ public class CloudSdkAppEngineServices implements AppEngineServices {
     arguments.addAll(configuration.getServices());
     arguments.add("--splits");
     arguments.addAll(GcloudArgs.get(configuration.getVersionToTrafficSplit()));
+    arguments.addAll(GcloudArgs.get(configuration));
 
     execute(arguments);
   }

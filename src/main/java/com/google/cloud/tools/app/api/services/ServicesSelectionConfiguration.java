@@ -16,12 +16,14 @@
 
 package com.google.cloud.tools.app.api.services;
 
+import com.google.cloud.tools.app.api.Configuration;
+
 import java.util.Collection;
 
 /**
  * Identifies a service or a set of services for use in {@link AppEngineServices}.
  */
-public interface ServicesSelectionConfiguration {
+public interface ServicesSelectionConfiguration extends Configuration {
 
   Collection<String> getServices();
 }

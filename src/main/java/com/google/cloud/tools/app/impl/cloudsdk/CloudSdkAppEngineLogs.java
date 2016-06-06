@@ -62,6 +62,7 @@ public class CloudSdkAppEngineLogs implements AppEngineLogs {
     arguments.addAll(GcloudArgs.get("version", configuration.getVersion()));
     arguments.addAll(GcloudArgs.get("service", configuration.getService()));
     arguments.addAll(GcloudArgs.get("limit", configuration.getLimit()));
+    arguments.addAll(GcloudArgs.get(configuration));
 
     execute(arguments);
   }

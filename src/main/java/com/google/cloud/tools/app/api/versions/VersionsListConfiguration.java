@@ -16,10 +16,12 @@
 
 package com.google.cloud.tools.app.api.versions;
 
+import com.google.cloud.tools.app.api.Configuration;
+
 /**
  * Configuration for {@link AppEngineVersions#list(VersionsListConfiguration)}.
  */
-public interface VersionsListConfiguration {
+public interface VersionsListConfiguration extends Configuration {
 
   String getService();
 

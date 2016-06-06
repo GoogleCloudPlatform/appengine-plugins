@@ -81,9 +81,8 @@ public class CloudSdkAppEngineDeploymentTest {
 
     List<String> expectedCommand = ImmutableList
         .of("deploy", appYaml1.toString(), "--bucket", "gs://a-bucket", "--docker-build", "cloud",
-            "--force", "--image-url", "imageUrl", "--project", "project", "--promote",
-            "--server", "appengine.google.com", "--stop-previous-version",
-            "--version", "v1");
+            "--force", "--image-url", "imageUrl", "--promote", "--server", "appengine.google.com",
+            "--stop-previous-version", "--version", "v1", "--project", "project");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }

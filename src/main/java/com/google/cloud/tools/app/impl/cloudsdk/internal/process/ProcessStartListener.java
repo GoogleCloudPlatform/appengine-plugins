@@ -21,5 +21,11 @@ package com.google.cloud.tools.app.impl.cloudsdk.internal.process;
  * it's created and started.
  */
 public interface ProcessStartListener {
-  void start(Process process);
+
+  /**
+   * This hook Will be called immediately <em>after</em> the process has been started.
+   *
+   * @param process the process that has just been started
+   */
+  void onStart(Process process);
 }

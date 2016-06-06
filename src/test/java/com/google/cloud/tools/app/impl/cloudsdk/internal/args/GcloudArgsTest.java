@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.app.impl.cloudsdk.internal.args;
 
+import com.google.cloud.tools.app.impl.config.DefaultConfiguration;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -36,23 +38,23 @@ public class GcloudArgsTest {
 
   @Test
   public void testGet_string() {
-    assertEquals(GcloudArgs.get("name1", "value1"), Arrays.asList("--name1", "value1"));
-    assertEquals(GcloudArgs.get("name2", "value2"), Arrays.asList("--name2", "value2"));
+    assertEquals(Arrays.asList("--name1", "value1"), GcloudArgs.get("name1", "value1"));
+    assertEquals(Arrays.asList("--name2", "value2"), GcloudArgs.get("name2", "value2"));
   }
 
   @Test
   public void testGet_boolean() {
-    assertEquals(GcloudArgs.get("name1", true), Collections.singletonList("--name1"));
-    assertEquals(GcloudArgs.get("name2", true), Collections.singletonList("--name2"));
+    assertEquals(Collections.singletonList("--name1"), GcloudArgs.get("name1", true));
+    assertEquals(Collections.singletonList("--name2"), GcloudArgs.get("name2", true));
 
-    assertEquals(GcloudArgs.get("name1", false), Collections.singletonList("--no-name1"));
-    assertEquals(GcloudArgs.get("name2", false), Collections.singletonList("--no-name2"));
+    assertEquals(Collections.singletonList("--no-name1"), GcloudArgs.get("name1", false));
+    assertEquals(Collections.singletonList("--no-name2"), GcloudArgs.get("name2", false));
   }
 
   @Test
   public void testGet_integer() {
-    assertEquals(GcloudArgs.get("name1", 1), Arrays.asList("--name1", "1"));
-    assertEquals(GcloudArgs.get("name2", 2), Arrays.asList("--name2", "2"));
+    assertEquals(Arrays.asList("--name1", "1"), GcloudArgs.get("name1", 1));
+    assertEquals(Arrays.asList("--name2", "2"), GcloudArgs.get("name2", 2));
   }
 
   @Rule
@@ -62,8 +64,8 @@ public class GcloudArgsTest {
   public void testGet_file() throws IOException {
     File file1 = tmpDir.newFile("file1");
     File file2 = tmpDir.newFile("file2");
-    assertEquals(GcloudArgs.get("name1", file1), Arrays.asList("--name1", file1.getAbsolutePath()));
-    assertEquals(GcloudArgs.get("name2", file2), Arrays.asList("--name2", file2.getAbsolutePath()));
+    assertEquals(Arrays.asList("--name1", file1.getAbsolutePath()), GcloudArgs.get("name1", file1));
+    assertEquals(Arrays.asList("--name2", file2.getAbsolutePath()), GcloudArgs.get("name2", file2));
   }
 
   @Test
@@ -77,6 +79,18 @@ public class GcloudArgsTest {
     assertEquals(Collections.singletonList("v1=0.2,v2=0.3,v3=0.5"),
         GcloudArgs.get(versionToTrafficSplitMapping));
 
-    assertEquals(Collections.emptyList(), GcloudArgs.get(null));
+    assertEquals(Collections.emptyList(), GcloudArgs.get(Collections.emptyMap()));
+  }
+
+  @Test
+  public void testCommonConfig() {
+    DefaultConfiguration config = new DefaultConfiguration() {
+      @Override
+      public String getProject() {
+        return "myProject";
+      }
+    };
+
+    assertEquals(Arrays.asList("--project", "myProject"),  GcloudArgs.get(config));
   }
 }

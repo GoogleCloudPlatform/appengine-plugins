@@ -23,7 +23,9 @@ import java.util.Collection;
 /**
  * Plain Java bean implementation of {@link ServicesSelectionConfiguration}.
  */
-public class DefaultServicesSelectionConfiguration implements ServicesSelectionConfiguration {
+public class DefaultServicesSelectionConfiguration
+    extends DefaultConfiguration
+    implements ServicesSelectionConfiguration {
 
   private Collection<String> services;
 
