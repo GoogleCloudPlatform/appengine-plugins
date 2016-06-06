@@ -33,11 +33,11 @@ Build the library using the "mvn clean install" command at the repository root d
 To deploy a new version, a client calls the library in the following way:
 
 ```java
-// Create a Cloud SDK
-CloudSdk cloudSdk = new CloudSdk.Builder().build();
+// Create a Cloud SDK App Engine factory
+CloudSdkAppEngineFactory factory = new CloudSdkAppEngineFactory.Builder().build();
 
 // Create a deployment
-AppEngineDeployment deployment = new CloudSdkAppEngineDeployment(cloudSdk);
+AppEngineDeployment deployment = factory.deployment();
 
 // Configure deployment
 DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
