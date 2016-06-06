@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal;
+package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.versions.AppEngineVersions;
@@ -22,7 +22,6 @@ import com.google.cloud.tools.appengine.api.versions.VersionsListConfiguration;
 import com.google.cloud.tools.appengine.api.versions.VersionsSelectionConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;

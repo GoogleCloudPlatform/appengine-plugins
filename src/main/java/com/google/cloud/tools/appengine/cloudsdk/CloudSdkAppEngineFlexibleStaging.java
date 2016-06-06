@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal;
+package com.google.cloud.tools.appengine.cloudsdk;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 

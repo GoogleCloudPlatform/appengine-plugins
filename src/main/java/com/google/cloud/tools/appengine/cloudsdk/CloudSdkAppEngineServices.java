@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal;
+package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.logs.AppEngineLogs;
-import com.google.cloud.tools.appengine.api.logs.LogsConfiguration;
+import com.google.cloud.tools.appengine.api.services.AppEngineServices;
+import com.google.cloud.tools.appengine.api.services.TrafficSplitConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.internal.sdk.CloudSdk;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Cloud SDK based implementation of {@link AppEngineLogs}.
+ * Cloud SDK based implementation of {@link AppEngineServices}.
  */
-public class CloudSdkAppEngineLogs implements AppEngineLogs {
+public class CloudSdkAppEngineServices implements AppEngineServices {
 
   private CloudSdk sdk;
 
-  public CloudSdkAppEngineLogs(
+  public CloudSdkAppEngineServices(
       CloudSdk sdk) {
     this.sdk = sdk;
   }
@@ -48,20 +47,23 @@ public class CloudSdkAppEngineLogs implements AppEngineLogs {
   }
 
   /**
-   * Read log entries.
+   * Set the traffic splitting.
    */
   @Override
-  public void read(LogsConfiguration configuration) {
+  public void setTraffic(TrafficSplitConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
+    Preconditions.checkNotNull(configuration.getServices());
+    Preconditions.checkArgument(configuration.getServices().size() > 0);
+    Preconditions.checkNotNull(configuration.getVersionToTrafficSplit());
+    Preconditions.checkArgument(configuration.getVersionToTrafficSplit().size() > 0);
     Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
-    arguments.add("logs");
-    arguments.add("read");
-    arguments.addAll(GcloudArgs.get("level", configuration.getLevel()));
-    arguments.addAll(GcloudArgs.get("version", configuration.getVersion()));
-    arguments.addAll(GcloudArgs.get("service", configuration.getService()));
-    arguments.addAll(GcloudArgs.get("limit", configuration.getLimit()));
+    arguments.add("services");
+    arguments.add("set-traffic");
+    arguments.addAll(configuration.getServices());
+    arguments.add("--splits");
+    arguments.addAll(GcloudArgs.get(configuration.getVersionToTrafficSplit()));
     arguments.addAll(GcloudArgs.get(configuration));
 
     execute(arguments);

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal;
+package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.genconfig.DefaultGenConfigParams;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineGenConfig;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.internal.sdk.CloudSdk;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Before;

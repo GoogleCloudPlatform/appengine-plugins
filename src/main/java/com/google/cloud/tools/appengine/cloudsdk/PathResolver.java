@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal.sdk;
+package com.google.cloud.tools.appengine.cloudsdk;
 
 import java.io.File;
 import java.nio.file.Path;

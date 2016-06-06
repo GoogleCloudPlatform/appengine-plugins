@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal;
+package com.google.cloud.tools.appengine.cloudsdk;
 
-import com.google.cloud.tools.appengine.api.services.DefaultTrafficSplitConfiguration;
+import com.google.cloud.tools.appengine.api.logs.DefaultLogsConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineLogs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.internal.sdk.CloudSdk;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,42 +27,36 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit tests for {@link CloudSdkAppEngineServices}
+ * Unit tests for {@link CloudSdkAppEngineLogs}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineServicesTest {
+public class CloudSdkAppEngineLogsTest {
 
   @Mock
   private CloudSdk sdk;
 
   @Test
-  public void setTrafficTest() throws ProcessRunnerException {
-    CloudSdkAppEngineServices appEngineService = new CloudSdkAppEngineServices(sdk);
-
-    DefaultTrafficSplitConfiguration configuration = new DefaultTrafficSplitConfiguration();
-    Map<String, Double> versionToSplitMap = new LinkedHashMap<>();
-    versionToSplitMap.put("v1", 0.3);
-    versionToSplitMap.put("v2", 0.7);
-
-    configuration.setServices(Collections.singletonList("myService"));
-    configuration.setVersionToTrafficSplit(versionToSplitMap);
+  public void readTest() throws ProcessRunnerException {
+    CloudSdkAppEngineLogs appEngineLogs = new CloudSdkAppEngineLogs(sdk);
+    DefaultLogsConfiguration configuration = new DefaultLogsConfiguration();
+    configuration.setLevel("warning");
+    configuration.setVersion("v1");
+    configuration.setService("myService");
+    configuration.setLimit(10);
     configuration.setProject("myProject");
 
-    appEngineService.setTraffic(configuration);
+    appEngineLogs.read(configuration);
 
     List<String> args =
-        Arrays.asList("services", "set-traffic", "myService", "--splits", "v1=0.3,v2=0.7",
-            "--project", "myProject");
+        Arrays.asList("logs", "read", "--level", "warning", "--version", "v1", "--service",
+            "myService", "--limit", "10", "--project", "myProject");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }

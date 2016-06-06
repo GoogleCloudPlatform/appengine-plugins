@@ -1,18 +1,20 @@
-/**
- * Copyright 2015 Google Inc. All Rights Reserved.
+/*
+ * Copyright 2016 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal.sdk;
+package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
@@ -189,37 +191,6 @@ public class CloudSdk {
 
   private Path getJavaToolsJar() {
     return getJavaAppEngineSdkPath().resolve(JAVA_TOOLS_JAR);
-  }
-
-
-  /**
-   * For validation purposes, though should not be in use.
-   */
-  public void validate() throws CloudSdkConfigurationException {
-    if (sdkPath == null) {
-      throw new CloudSdkConfigurationException("Validation Error : Sdk path is null");
-    }
-    if (sdkPath.toFile().isDirectory()) {
-      throw new CloudSdkConfigurationException(
-          "Validation Error : Sdk directory '" + sdkPath + "' is not valid");
-    }
-    if (getGCloudPath().toFile().isFile()) {
-      throw new CloudSdkConfigurationException(
-          "Validation Error : gcloud path '" + getGCloudPath() + "' is not valid");
-    }
-    if (getDevAppServerPath().toFile().isFile()) {
-      throw new CloudSdkConfigurationException(
-          "Validation Error : dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
-    }
-    if (getJavaAppEngineSdkPath().toFile().isFile()) {
-      throw new CloudSdkConfigurationException(
-          "Validation Error : Java App Engine SDK path '" + getJavaAppEngineSdkPath()
-              + "' is not valid");
-    }
-    if (getJavaToolsJar().toFile().isFile()) {
-      throw new CloudSdkConfigurationException(
-          "Validation Error : Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
-    }
   }
 
   public static class Builder {
