@@ -211,7 +211,7 @@ public class CloudSdk {
      * The home directory of Google Cloud SDK. If not set, will attempt to look for the SDK in known
      * install locations.
      */
-    public CloudSdk.Builder sdkPath(File sdkPathFile) {
+    public Builder sdkPath(File sdkPathFile) {
       if (sdkPathFile != null) {
         this.sdkPath = sdkPathFile.toPath();
       }
@@ -221,7 +221,7 @@ public class CloudSdk {
     /**
      * The metrics environment.
      */
-    public CloudSdk.Builder appCommandMetricsEnvironment(String appCommandMetricsEnvironment) {
+    public Builder appCommandMetricsEnvironment(String appCommandMetricsEnvironment) {
       this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
       return this;
     }
@@ -229,7 +229,7 @@ public class CloudSdk {
     /**
      * The metrics environment version.
      */
-    public CloudSdk.Builder appCommandMetricsEnvironmentVersion(
+    public Builder appCommandMetricsEnvironmentVersion(
         String appCommandMetricsEnvironmentVersion) {
       this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
       return this;
@@ -238,7 +238,7 @@ public class CloudSdk {
     /**
      * Configures usage of gsutil.
      */
-    public CloudSdk.Builder appCommandGsUtil(Integer appCommandGsUtil) {
+    public Builder appCommandGsUtil(Integer appCommandGsUtil) {
       this.appCommandGsUtil = appCommandGsUtil;
       return this;
     }
@@ -246,7 +246,7 @@ public class CloudSdk {
     /**
      * Sets the path the credential override file.
      */
-    public CloudSdk.Builder appCommandCredentialFile(File appCommandCredentialFile) {
+    public Builder appCommandCredentialFile(File appCommandCredentialFile) {
       this.appCommandCredentialFile = appCommandCredentialFile;
       return this;
     }
@@ -256,7 +256,7 @@ public class CloudSdk {
      * human-friendly output format. The supported formats are: csv, default, flattened, json, list,
      * multi, none, table, text, value, yaml. For more details run $ gcloud topic formats.
      */
-    public CloudSdk.Builder appCommandOutputFormat(String appCommandOutputFormat) {
+    public Builder appCommandOutputFormat(String appCommandOutputFormat) {
       this.appCommandOutputFormat = appCommandOutputFormat;
       return this;
     }
@@ -264,7 +264,7 @@ public class CloudSdk {
     /**
      * Whether to run commands asynchronously.
      */
-    public CloudSdk.Builder async(boolean async) {
+    public Builder async(boolean async) {
       this.async = async;
       return this;
     }
@@ -273,7 +273,7 @@ public class CloudSdk {
      * Adds a client consumer of process standard output. If none, output will be inherited by
      * parent process.
      */
-    public CloudSdk.Builder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
+    public Builder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
       this.stdOutLineListeners.add(stdOutLineListener);
       return this;
     }
@@ -282,7 +282,7 @@ public class CloudSdk {
      * Adds a client consumer of process error output. If none, output will be inherited by parent
      * process.
      */
-    public CloudSdk.Builder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
+    public Builder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
       this.stdErrLineListeners.add(stdErrLineListener);
       return this;
     }
@@ -290,7 +290,7 @@ public class CloudSdk {
     /**
      * The client listener of the process exit with code.
      */
-    public CloudSdk.Builder exitListener(ProcessExitListener exitListener) {
+    public Builder exitListener(ProcessExitListener exitListener) {
       this.exitListener = exitListener;
       return this;
     }
@@ -298,7 +298,7 @@ public class CloudSdk {
     /**
      * The client listener of the process start. Allows access to the underlying process.
      */
-    public CloudSdk.Builder startListener(ProcessStartListener startListener) {
+    public Builder startListener(ProcessStartListener startListener) {
       this.startListener = startListener;
       return this;
     }
@@ -309,7 +309,7 @@ public class CloudSdk {
      *
      * @param runDevAppServerWaitSeconds Number of seconds to wait > 0.
      */
-    public CloudSdk.Builder runDevAppServerWait(int runDevAppServerWaitSeconds) {
+    public Builder runDevAppServerWait(int runDevAppServerWaitSeconds) {
       this.runDevAppServerWaitSeconds = runDevAppServerWaitSeconds;
       return this;
     }
