@@ -108,6 +108,10 @@
           <instructions>
             <Bundle-SymbolicName>com.google.cloud.tools.app.lib</Bundle-SymbolicName>
             <Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
+            <Export-Package>
+              com.google.cloud.tools.app.impl.*;x-internal:=true;-noimport:=true,
+              com.google.cloud.tools.app.*
+            </Export-Package>
           </instructions>
         </configuration>
         <executions>
