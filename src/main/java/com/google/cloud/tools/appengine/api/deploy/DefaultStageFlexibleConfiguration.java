@@ -24,7 +24,7 @@ import java.io.File;
 public class DefaultStageFlexibleConfiguration implements StageFlexibleConfiguration {
 
   private File appYaml;
-  private File dockerfile;
+  private File dockerDirectory;
   private File artifact;
   private File stagingDirectory;
 
@@ -38,12 +38,12 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   }
 
   @Override
-  public File getDockerfile() {
-    return dockerfile;
+  public File getDockerDirectory() {
+    return dockerDirectory;
   }
 
-  public void setDockerfile(File dockerfile) {
-    this.dockerfile = dockerfile;
+  public void setDockerDirectory(File dockerDirectory) {
+    this.dockerDirectory = dockerDirectory;
   }
 
   @Override

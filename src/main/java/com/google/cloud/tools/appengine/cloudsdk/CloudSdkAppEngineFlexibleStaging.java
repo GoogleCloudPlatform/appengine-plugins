@@ -21,6 +21,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.internal.FileUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
@@ -50,28 +51,30 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
 
     if (!config.getStagingDirectory().exists()) {
       throw new AppEngineException("Staging directory does not exist. Location: "
-          + config.getStagingDirectory().toPath().toString());
+          + config.getStagingDirectory().toPath());
     }
     if (!config.getStagingDirectory().isDirectory()) {
       throw new AppEngineException("Staging location is not a directory. Location: "
-          + config.getStagingDirectory().toPath().toString());
+          + config.getStagingDirectory().toPath());
     }
 
     try {
+
+      // Copy docker context to staging
+      if (config.getDockerDirectory() != null && config.getDockerDirectory().exists()) {
+        if (!Files.isRegularFile(config.getDockerDirectory().toPath().resolve("Dockerfile"))) {
+          throw new AppEngineException("Docker directory " + config.getDockerDirectory().toPath()
+              + " does not contain Dockerfile");
+        }
+        FileUtil.copyDirectory(config.getDockerDirectory().toPath(),
+            config.getStagingDirectory().toPath());
+      }
 
       // Copy app.yaml to staging.
       if (config.getAppYaml() != null && config.getAppYaml().exists()) {
         Files.copy(config.getAppYaml().toPath(),
             config.getStagingDirectory().toPath()
                 .resolve(config.getAppYaml().toPath().getFileName()),
-            REPLACE_EXISTING);
-      }
-
-      // Copy Dockerfile to staging.
-      if (config.getDockerfile() != null && config.getDockerfile().exists()) {
-        Files.copy(config.getDockerfile().toPath(),
-            config.getStagingDirectory().toPath()
-                .resolve(config.getDockerfile().toPath().getFileName()),
             REPLACE_EXISTING);
       }
 

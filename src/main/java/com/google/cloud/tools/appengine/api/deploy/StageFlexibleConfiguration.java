@@ -23,7 +23,7 @@ public interface StageFlexibleConfiguration {
 
   File getAppYaml();
 
-  File getDockerfile();
+  File getDockerDirectory();
 
   File getArtifact();
 
