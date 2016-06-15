@@ -21,6 +21,7 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListen
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -179,13 +180,14 @@ public class DefaultProcessRunner implements ProcessRunner {
     });
   }
 
-  private String[] makeOsSpecific(String[] command) {
+  protected String[] makeOsSpecific(String[] command) {
     String[] osCommand = command;
 
     if (System.getProperty("os.name").startsWith("Windows")) {
-      List<String> windowsCommand = Arrays.asList(command);
-      windowsCommand.add(0, "cmd.exe");
-      windowsCommand.add(1, "/c");
+      List<String> windowsCommand = new ArrayList<>();
+      windowsCommand.add("cmd.exe");
+      windowsCommand.add("/c");
+      windowsCommand.addAll(Arrays.asList(command));
       osCommand = windowsCommand.toArray(new String[windowsCommand.size()]);
     }
     return osCommand;
