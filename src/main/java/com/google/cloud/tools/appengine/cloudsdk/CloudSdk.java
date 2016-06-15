@@ -202,24 +202,24 @@ public class CloudSdk {
     if (sdkPath == null) {
       throw new AppEngineException("Validation Error: SDK path is null");
     }
-    if (sdkPath.toFile().isDirectory()) {
+    if (!sdkPath.toFile().isDirectory()) {
       throw new AppEngineException(
           "Validation Error: SDK directory '" + sdkPath + "' is not valid");
     }
-    if (getGCloudPath().toFile().isFile()) {
+    if (!getGCloudPath().toFile().isFile()) {
       throw new AppEngineException(
           "Validation Error: gcloud path '" + getGCloudPath() + "' is not valid");
     }
-    if (getDevAppServerPath().toFile().isFile()) {
+    if (!getDevAppServerPath().toFile().isFile()) {
       throw new AppEngineException(
           "Validation Error: dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
     }
-    if (getJavaAppEngineSdkPath().toFile().isFile()) {
+    if (!getJavaAppEngineSdkPath().toFile().isDirectory()) {
       throw new AppEngineException(
           "Validation Error: Java App Engine SDK path '" + getJavaAppEngineSdkPath()
               + "' is not valid");
     }
-    if (getJavaToolsJar().toFile().isFile()) {
+    if (!getJavaToolsJar().toFile().isFile()) {
       throw new AppEngineException(
           "Validation Error: Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
     }
