@@ -29,16 +29,16 @@ public class AppCfgArgsTest {
 
   @Test
   public void testGet_string() {
-    assertEquals(AppCfgArgs.get("name1", "value1"), Collections.singletonList("--name1=value1"));
-    assertEquals(AppCfgArgs.get("name2", "value2"), Collections.singletonList("--name2=value2"));
+    assertEquals(Collections.singletonList("--name1=value1"), AppCfgArgs.get("name1", "value1"));
+    assertEquals(Collections.singletonList("--name2=value2"), AppCfgArgs.get("name2", "value2"));
   }
 
   @Test
   public void testGet_boolean() {
-    assertEquals(AppCfgArgs.get("name1", true), Collections.singletonList("--name1"));
-    assertEquals(AppCfgArgs.get("name2", true), Collections.singletonList("--name2"));
+    assertEquals(Collections.singletonList("--name1"), AppCfgArgs.get("name1", true));
+    assertEquals(Collections.singletonList("--name2"), AppCfgArgs.get("name2", true));
 
-    assertEquals(AppCfgArgs.get("name", false), Collections.emptyList());
-    assertEquals(AppCfgArgs.get("name", (Boolean) null), Collections.emptyList());
+    assertEquals(Collections.emptyList(), AppCfgArgs.get("name", false));
+    assertEquals(Collections.emptyList(), AppCfgArgs.get("name", (Boolean) null));
   }
 }

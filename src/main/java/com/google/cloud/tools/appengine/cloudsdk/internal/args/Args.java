@@ -44,7 +44,7 @@ class Args {
   /**
    * @return [--name=value] or [] if value=null.
    */
-  static List<String> stringEq(String name, String value) {
+  static List<String> stringWithEq(String name, String value) {
     if (!Strings.isNullOrEmpty(value)) {
       return Collections.singletonList("--" + name + "=" + value);
     }
@@ -52,14 +52,13 @@ class Args {
   }
 
   /**
-   * @return [--name, value1, --name, value2, ...] or [] if value=null.
+   * @return [--name=value1, --name=value2, ...] or [] if value=null.
    */
-  static List<String> strings(String name, List<String> values) {
+  static List<String> stringsWithEq(String name, List<String> values) {
     List<String> result = Lists.newArrayList();
     if (values != null) {
       for (String value : values) {
-        result.add("--" + name);
-        result.add(value);
+        result.addAll(stringWithEq(name, value));
       }
     }
     return result;
@@ -71,6 +70,16 @@ class Args {
   static List<String> integer(String name, Integer value) {
     if (value != null) {
       return Arrays.asList("--" + name, value.toString());
+    }
+    return Collections.emptyList();
+  }
+
+  /**
+   * @return [--name=value] or [] if value=null.
+   */
+  static List<String> integerWithEq(String name, Integer value) {
+    if (value != null) {
+      return Arrays.asList("--" + name + "=" + value.toString());
     }
     return Collections.emptyList();
   }

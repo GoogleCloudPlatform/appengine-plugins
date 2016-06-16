@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Before;
@@ -69,7 +67,7 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setThreadsafeOverride("default:False,backend:True");
     configuration.setPythonStartupScript("script.py");
     configuration.setPythonStartupArgs("arguments");
-    configuration.setJvmFlags(ImmutableList.of("-Dtomato", "-Dpotato"));
+    configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
     configuration.setCustomEntrypoint("entrypoint");
     configuration.setRuntime("java");
     configuration.setAllowSkippedFiles(true);
@@ -80,15 +78,14 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setDefaultGcsBucketName("buckets");
 
     List<String> expected = ImmutableList
-        .of("app.yaml", "--host", "host", "--port", "8090", "--admin_host", "adminHost",
-            "--admin_port", "8000", "--auth_domain", "example.com", "--storage_path",
-            "storage/path", "--log_level", "debug", "--max_module_instances", "3",
-            "--use_mtime_file_watcher", "--threadsafe_override", "default:False,backend:True",
-            "--python_startup_script", "script.py", "--python_startup_args", "arguments",
-            "--jvm_flag", "-Dtomato", "--jvm_flag", "-Dpotato", "--custom_entrypoint", "entrypoint",
-            "--runtime", "java", "--allow_skipped_files", "--api_port", "8091",
-            "--automatic_restart", "--dev_appserver_log_level", "info",
-            "--skip_sdk_update_check", "--default_gcs_bucket_name", "buckets");
+        .of("app.yaml", "--host=host", "--port=8090", "--admin_host=adminHost",
+            "--admin_port=8000", "--auth_domain=example.com", "--storage_path=storage/path",
+            "--log_level=debug", "--max_module_instances=3", "--use_mtime_file_watcher",
+            "--threadsafe_override=default:False,backend:True", "--python_startup_script=script.py",
+            "--python_startup_args=arguments", "--jvm_flag=-Dflag1", "--jvm_flag=-Dflag2",
+            "--custom_entrypoint=entrypoint", "--runtime=java", "--allow_skipped_files",
+            "--api_port=8091", "--automatic_restart", "--dev_appserver_log_level=info",
+            "--skip_sdk_update_check", "--default_gcs_bucket_name=buckets");
 
     devServer.run(configuration);
 

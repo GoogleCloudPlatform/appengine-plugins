@@ -27,7 +27,7 @@ public class AppCfgArgs {
    * @return [--name=value] or [] if value=null.
    */
   public static List<String> get(String name, String value) {
-    return Args.stringEq(name, value);
+    return Args.stringWithEq(name, value);
   }
 
   /**

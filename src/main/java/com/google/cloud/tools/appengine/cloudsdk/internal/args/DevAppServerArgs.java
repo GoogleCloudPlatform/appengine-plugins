@@ -16,7 +16,10 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
+import com.google.common.collect.ImmutableSet;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * Command Line argument helper for dev_appserver based command.
@@ -24,24 +27,24 @@ import java.util.List;
 public class DevAppServerArgs {
 
   /**
-   * @return [--name, value] or [] if value=null.
+   * @return [--name=value] or [] if value=null.
    */
   public static List<String> get(String name, String value) {
-    return Args.string(name, value);
+    return Args.stringWithEq(name, value);
   }
 
   /**
-   * @return [--name, value1, --name, value2, ...] or [] if value=null.
+   * @return [--name=value1, --name=value2, ...] or [] if value=null.
    */
   public static List<String> get(String name, List<String> values) {
-    return Args.strings(name, values);
+    return Args.stringsWithEq(name, values);
   }
 
   /**
-   * @return [--name, value] or [] if value=null.
+   * @return [--name=value] or [] if value=null.
    */
   public static List<String> get(String name, Integer value) {
-    return Args.integer(name, value);
+    return Args.integerWithEq(name, value);
   }
 
   /**
