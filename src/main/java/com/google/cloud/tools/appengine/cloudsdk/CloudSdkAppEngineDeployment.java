@@ -54,9 +54,10 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
     // If we get a single directory, then look in it for yamls
-    if (config.getDeployables().size() == 1 && config.getDeployables().get(0).isDirectory()) {
+    File deployableDirectory = config.getDeployables().get(0);
+    if (config.getDeployables().size() == 1 && deployableDirectory.isDirectory()) {
       for (String filename : yamlFilenames) {
-        File yamlFile = new File(config.getDeployables().get(0), filename);
+        File yamlFile = new File(deployableDirectory, filename);
         if (yamlFile.exists() && yamlFile.isFile()) {
           arguments.add(yamlFile.toPath().toString());
         }
