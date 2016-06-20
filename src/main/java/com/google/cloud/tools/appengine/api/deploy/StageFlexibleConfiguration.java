@@ -21,7 +21,7 @@ import java.io.File;
  */
 public interface StageFlexibleConfiguration {
 
-  File getAppYaml();
+  File getAppEngineDirectory();
 
   File getDockerDirectory();
 
