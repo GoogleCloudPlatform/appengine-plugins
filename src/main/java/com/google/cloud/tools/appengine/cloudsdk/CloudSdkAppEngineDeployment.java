@@ -22,9 +22,10 @@ import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,16 +54,19 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
-    // If we get a single directory, then look in it for yamls
-    File deployableDirectory = config.getDeployables().get(0);
-    if (config.getDeployables().size() == 1 && deployableDirectory.isDirectory()) {
+
+    // If we get a single directory, then assume it is a deployable directory
+    // and look in it for yaml files to deploy
+    if (config.getDeployables().size() == 1 && config.getDeployables().get(0).isDirectory()) {
+      Path deployableDirectory = config.getDeployables().get(0).toPath();
       for (String filename : yamlFilenames) {
-        File yamlFile = new File(deployableDirectory, filename);
-        if (yamlFile.exists() && yamlFile.isFile()) {
-          arguments.add(yamlFile.toPath().toString());
+        Path yamlFile = deployableDirectory.resolve(filename);
+        if (Files.isRegularFile(yamlFile)) {
+          arguments.add(yamlFile.toString());
         }
       }
     } else {
+      // otherwise deployables are the yamls the user provides
       for (File deployable : config.getDeployables()) {
         if (!deployable.exists()) {
           throw new IllegalArgumentException(

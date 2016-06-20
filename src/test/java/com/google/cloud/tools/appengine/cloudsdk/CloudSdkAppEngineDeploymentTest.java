@@ -121,6 +121,22 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
+  public void testNewDeployAction_multipleDeployables()
+      throws AppEngineException, ProcessRunnerException {
+
+    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+    configuration.setDeployables(Arrays.asList(appYaml1, appYaml2));
+
+    deployment.deploy(configuration);
+
+    List<String> expectedCommand = ImmutableList
+        .of("deploy", appYaml1.toString(), appYaml2.toString());
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+
+  }
+
+  @Test
   public void testNewDeployAction_deployableDirectory()
       throws AppEngineException, ProcessRunnerException, IOException {
 
@@ -153,19 +169,20 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_multipleDeployables()
-      throws AppEngineException, ProcessRunnerException {
+  public void testNewDeployAction_deployableDirectorySingleYaml()
+      throws AppEngineException, ProcessRunnerException, IOException {
+
+    File projectDir = tmpDir.newFolder();
+    File appYaml = new File(projectDir, "app.yaml");
+    appYaml.createNewFile();
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
-    configuration.setDeployables(Arrays.asList(appYaml1, appYaml2));
+    configuration.setDeployables(Collections.singletonList(projectDir));
 
     deployment.deploy(configuration);
 
-    List<String> expectedCommand = ImmutableList
-        .of("deploy", appYaml1.toString(), appYaml2.toString());
+    List<String> expectedCommand = ImmutableList.of("deploy", appYaml.toString());
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
-
   }
-
 }
