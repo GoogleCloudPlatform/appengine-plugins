@@ -23,6 +23,7 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.FileUtil;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import java.io.IOException;
@@ -35,6 +36,9 @@ import java.util.Set;
  * Cloud SDK based implementation of {@link AppEngineFlexibleStaging}.
  */
 public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStaging {
+  protected static final Set<String> APP_ENGINE_CONFIG_FILES_WHITELIST = ImmutableSet.of("app.yaml",
+      "cron.yaml", "queue.yaml", "dispatch.yaml", "index.yaml", "dos.yaml", "swagger.json",
+      "swagger.yaml");
 
   /**
    * Stages a Java JAR/WAR Managed VMs application to be deployed.
@@ -70,12 +74,22 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
             config.getStagingDirectory().toPath());
       }
 
-      // Copy app.yaml to staging.
-      if (config.getAppYaml() != null && config.getAppYaml().exists()) {
-        Files.copy(config.getAppYaml().toPath(),
-            config.getStagingDirectory().toPath()
-                .resolve(config.getAppYaml().toPath().getFileName()),
-            REPLACE_EXISTING);
+      // Copy app.yaml and other App Engine config files to staging
+      String[] appEngineConfigFiles = config.getAppEngineDirectory().list();
+      if (appEngineConfigFiles != null) {
+        for (String configFile : appEngineConfigFiles) {
+          if (APP_ENGINE_CONFIG_FILES_WHITELIST.contains(configFile)) {
+            Files.copy(config.getAppEngineDirectory().toPath().resolve(configFile),
+                config.getStagingDirectory().toPath().resolve(configFile),
+                REPLACE_EXISTING);
+          } else if (configFile.equals("Dockerfile")) {
+            throw new AppEngineException("Found 'Dockerfile' in the App Engine directory."
+                + " Please move it to the Docker directory.");
+          } else {
+            throw new AppEngineException("Found an unexpected '" + configFile
+                + "' file in the App Engine directory.");
+          }
+        }
       }
 
       // TODO : looks like this section should error on no artifacts found? and maybe the

@@ -29,7 +29,7 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   private File stagingDirectory;
 
   @Override
-  public File getAppYaml() {
+  public File getAppEngineDirectory() {
     return appYaml;
   }
 
