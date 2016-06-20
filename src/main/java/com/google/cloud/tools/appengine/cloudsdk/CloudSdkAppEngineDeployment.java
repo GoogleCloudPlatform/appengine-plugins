@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
-  private static final List<String> yamlFilenames = Arrays
+  private static final List<String> APPENGINE_YAML_FILES = Arrays
       .asList("app.yaml", "cron.yaml", "queue.yaml", "dispatch.yaml", "index.yaml", "dos.yaml");
 
   private CloudSdk sdk;
@@ -59,7 +59,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     // and look in it for yaml files to deploy
     if (config.getDeployables().size() == 1 && config.getDeployables().get(0).isDirectory()) {
       Path deployableDirectory = config.getDeployables().get(0).toPath();
-      for (String filename : yamlFilenames) {
+      for (String filename : APPENGINE_YAML_FILES) {
         Path yamlFile = deployableDirectory.resolve(filename);
         if (Files.isRegularFile(yamlFile)) {
           arguments.add(yamlFile.toString());
