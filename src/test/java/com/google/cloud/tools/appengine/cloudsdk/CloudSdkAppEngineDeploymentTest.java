@@ -34,6 +34,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Matchers.eq;
@@ -117,6 +118,38 @@ public class CloudSdkAppEngineDeploymentTest {
     deployment.deploy(configuration);
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+  }
+
+  @Test
+  public void testNewDeployAction_deployableDirectory()
+      throws AppEngineException, ProcessRunnerException, IOException {
+
+    File projectDir = tmpDir.newFolder();
+    File appYaml = new File(projectDir, "app.yaml");
+    File cronYaml = new File(projectDir, "cron.yaml");
+    File queueYaml = new File(projectDir, "queue.yaml");
+    File dispatchYaml = new File(projectDir, "dispatch.yaml");
+    File indexYaml = new File(projectDir, "index.yaml");
+    File dosYaml = new File(projectDir, "dos.yaml");
+    appYaml.createNewFile();
+    cronYaml.createNewFile();
+    queueYaml.createNewFile();
+    dispatchYaml.createNewFile();
+    indexYaml.createNewFile();
+    dosYaml.createNewFile();
+    new File(projectDir, "somejunk.yaml").createNewFile();
+
+    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+    configuration.setDeployables(Collections.singletonList(projectDir));
+
+    deployment.deploy(configuration);
+
+    List<String> expectedCommand = ImmutableList
+        .of("deploy", appYaml.toString(), cronYaml.toString(), queueYaml.toString(),
+            dispatchYaml.toString(), indexYaml.toString(), dosYaml.toString());
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+
   }
 
   @Test

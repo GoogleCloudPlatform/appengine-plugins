@@ -22,15 +22,20 @@ import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Cloud SDK based implementation of {@link AppEngineDeployment}.
  */
 public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
+
+  private static final List<String> yamlFilenames = Arrays
+      .asList("app.yaml", "cron.yaml", "queue.yaml", "dispatch.yaml", "index.yaml", "dos.yaml");
 
   private CloudSdk sdk;
 
@@ -48,12 +53,23 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
-    for (File deployable : config.getDeployables()) {
-      if (!deployable.exists()) {
-        throw new IllegalArgumentException(
-            "Deployable " + deployable.toPath().toString() + " does not exist.");
+    // If we get a single directory, then look in it for yamls
+    if (config.getDeployables().size() == 1 && config.getDeployables().get(0).isDirectory()) {
+      for (String filename : yamlFilenames) {
+        File yamlFile = new File(config.getDeployables().get(0), filename);
+        if (yamlFile.exists() && yamlFile.isFile()) {
+          arguments.add(yamlFile.toPath().toString());
+        }
       }
-      arguments.add(deployable.toPath().toString());
+    }
+    else {
+      for (File deployable : config.getDeployables()) {
+        if (!deployable.exists()) {
+          throw new IllegalArgumentException(
+              "Deployable " + deployable.toPath().toString() + " does not exist.");
+        }
+        arguments.add(deployable.toPath().toString());
+      }
     }
 
     arguments.addAll(GcloudArgs.get("bucket", config.getBucket()));
@@ -71,7 +87,6 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
-
   }
 
 }
