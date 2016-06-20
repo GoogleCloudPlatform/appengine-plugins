@@ -61,8 +61,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
           arguments.add(yamlFile.toPath().toString());
         }
       }
-    }
-    else {
+    } else {
       for (File deployable : config.getDeployables()) {
         if (!deployable.exists()) {
           throw new IllegalArgumentException(
