@@ -82,6 +82,8 @@ public class DefaultProcessRunner implements ProcessRunner {
         processBuilder.environment().putAll(environment);
       }
 
+      processBuilder.command(command);
+
       Process process = processBuilder.start();
 
       handleStdOut(process);
