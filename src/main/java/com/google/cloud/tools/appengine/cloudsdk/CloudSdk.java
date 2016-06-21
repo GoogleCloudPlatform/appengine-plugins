@@ -52,7 +52,7 @@ public class CloudSdk {
   private static final String JAVA_APPENGINE_SDK_PATH =
       "platform/google_appengine/google/appengine/tools/java/lib";
   private static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
-  private static final String WINDOWS_BUNDLED_PYTHON = "/platform/bundledpython/python.exe";
+  private static final String WINDOWS_BUNDLED_PYTHON = "platform/bundledpython/python.exe";
 
   private final Path sdkPath;
   private final ProcessRunner processRunner;
