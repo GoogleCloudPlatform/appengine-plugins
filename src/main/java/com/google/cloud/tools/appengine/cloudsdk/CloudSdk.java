@@ -52,6 +52,7 @@ public class CloudSdk {
   private static final String JAVA_APPENGINE_SDK_PATH =
       "platform/google_appengine/google/appengine/tools/java/lib";
   private static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
+  private static final String WINDOWS_BUNDLED_PYTHON = "/platform/bundledpython/python.exe";
 
   private final Path sdkPath;
   private final ProcessRunner processRunner;
@@ -134,6 +135,11 @@ public class CloudSdk {
    */
   public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
     List<String> command = new ArrayList<>();
+
+    if (System.getProperty("os.name").contains("Windows")) {
+      command.add(getWindowsPythonPath().toString());
+    }
+
     command.add(getDevAppServerPath().toString());
     command.addAll(args);
 
@@ -176,19 +182,23 @@ public class CloudSdk {
   }
 
   private Path getGCloudPath() {
-    return sdkPath.resolve(GCLOUD);
+    return getSdkPath().resolve(GCLOUD);
   }
 
   private Path getDevAppServerPath() {
-    return sdkPath.resolve(DEV_APPSERVER_PY);
+    return getSdkPath().resolve(DEV_APPSERVER_PY);
   }
 
   private Path getJavaAppEngineSdkPath() {
-    return sdkPath.resolve(JAVA_APPENGINE_SDK_PATH);
+    return getSdkPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
   private Path getJavaToolsJar() {
     return getJavaAppEngineSdkPath().resolve(JAVA_TOOLS_JAR);
+  }
+
+  private Path getWindowsPythonPath() {
+    return getSdkPath().resolve(WINDOWS_BUNDLED_PYTHON);
   }
 
   /**
