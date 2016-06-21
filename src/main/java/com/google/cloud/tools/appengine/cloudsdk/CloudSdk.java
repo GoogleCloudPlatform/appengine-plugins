@@ -42,11 +42,10 @@ import javax.annotation.Nullable;
  * Cloud SDK CLI wrapper.
  */
 public class CloudSdk {
-
   private static final Logger logger = Logger.getLogger(CloudSdk.class.toString());
   private static final Joiner WHITESPACE_JOINER = Joiner.on(" ");
 
-  // TODO : does this continue to work on windows?
+  private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
   private static final String GCLOUD = "bin/gcloud";
   private static final String DEV_APPSERVER_PY = "bin/dev_appserver.py";
   private static final String JAVA_APPENGINE_SDK_PATH =
@@ -58,7 +57,8 @@ public class CloudSdk {
   private final ProcessRunner processRunner;
   private final String appCommandMetricsEnvironment;
   private final String appCommandMetricsEnvironmentVersion;
-  @Nullable private final File appCommandCredentialFile;
+  @Nullable
+  private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
   private final int runDevAppServerWaitSeconds;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
@@ -136,7 +136,7 @@ public class CloudSdk {
   public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
     List<String> command = new ArrayList<>();
 
-    if (System.getProperty("os.name").contains("Windows")) {
+    if (IS_WINDOWS) {
       command.add(getWindowsPythonPath().toString());
     }
 
@@ -182,7 +182,11 @@ public class CloudSdk {
   }
 
   private Path getGCloudPath() {
-    return getSdkPath().resolve(GCLOUD);
+    String gcloud = GCLOUD;
+    if (IS_WINDOWS) {
+      gcloud += ".cmd";
+    }
+    return getSdkPath().resolve(gcloud);
   }
 
   private Path getDevAppServerPath() {
@@ -237,7 +241,8 @@ public class CloudSdk {
     private Path sdkPath;
     private String appCommandMetricsEnvironment;
     private String appCommandMetricsEnvironmentVersion;
-    @Nullable private File appCommandCredentialFile;
+    @Nullable
+    private File appCommandCredentialFile;
     private String appCommandOutputFormat;
     private boolean async = false;
     private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
