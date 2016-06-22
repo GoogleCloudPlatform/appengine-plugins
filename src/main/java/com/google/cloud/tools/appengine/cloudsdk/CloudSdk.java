@@ -110,6 +110,7 @@ public class CloudSdk {
     command.addAll(args);
 
     command.add("--quiet");
+    command.addAll(GcloudArgs.get("format", appCommandOutputFormat));
 
     Map<String, String> environment = Maps.newHashMap();
     if (appCommandCredentialFile != null) {
