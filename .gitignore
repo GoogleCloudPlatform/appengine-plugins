@@ -8,3 +8,6 @@ target/
 .idea/encodings.xml
 .idea/libraries/
 .idea/workspace.xml
+.classpath
+.project
+.settings/*

@@ -63,7 +63,6 @@ public class CloudSdk {
   private final int runDevAppServerWaitSeconds;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
-
   private CloudSdk(Path sdkPath, String appCommandMetricsEnvironment,
                    String appCommandMetricsEnvironmentVersion,
                    @Nullable File appCommandCredentialFile, String appCommandOutputFormat,
@@ -193,7 +192,7 @@ public class CloudSdk {
     return getSdkPath().resolve(DEV_APPSERVER_PY);
   }
 
-  private Path getJavaAppEngineSdkPath() {
+  public Path getJavaAppEngineSdkPath() {
     return getSdkPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
