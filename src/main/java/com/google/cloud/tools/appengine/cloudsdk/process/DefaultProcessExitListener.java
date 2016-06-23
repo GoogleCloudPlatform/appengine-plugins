@@ -22,7 +22,7 @@ import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
  * Default process exit listener that simply captures the exit code and makes it available with a
  * getter. Before the process exit code is captured, it's initialized to -1.
  *
- * <p>When used with {@link CloudSdk.Builder}, this
+ * <p>When used with {@link com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder}, this
  * allows checking of the success or failure of an action execution.
  */
 public class DefaultProcessExitListener implements ProcessExitListener {
