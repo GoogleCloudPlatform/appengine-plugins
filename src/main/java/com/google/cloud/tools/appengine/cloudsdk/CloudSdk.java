@@ -60,7 +60,6 @@ public class CloudSdk {
   @Nullable
   private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
-  private final int runDevAppServerWaitSeconds;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
   private CloudSdk(Path sdkPath, String appCommandMetricsEnvironment,
@@ -79,14 +78,12 @@ public class CloudSdk {
 
     // configure listeners for async dev app server start with waiting
     if (async && runDevAppServerWaitSeconds > 0) {
-      this.runDevAppServerWaitSeconds = runDevAppServerWaitSeconds;
       this.runDevAppServerWaitListener = new WaitingProcessOutputLineListener(
           "Dev App Server is now running", runDevAppServerWaitSeconds);
 
       stdOutLineListeners.add(runDevAppServerWaitListener);
       stdErrLineListeners.add(runDevAppServerWaitListener);
     } else {
-      this.runDevAppServerWaitSeconds = 0;
       this.runDevAppServerWaitListener = null;
     }
 
