@@ -70,8 +70,8 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
     try {
 
       if (dockerfile != null && dockerfile.toFile().exists()) {
-        Files.copy(dockerfile, config.getSourceDirectory().toPath(),
-            StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(dockerfile, config.getSourceDirectory().toPath()
+            .resolve(dockerfile.getFileName()), StandardCopyOption.REPLACE_EXISTING);
       }
 
       cloudSdk.runAppCfgCommand(arguments);

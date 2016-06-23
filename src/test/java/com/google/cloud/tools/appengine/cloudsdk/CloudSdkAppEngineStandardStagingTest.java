@@ -65,7 +65,7 @@ public class CloudSdkAppEngineStandardStagingTest {
 
   @Before
   public void setUp() throws IOException {
-    source = tmpDir.newFile("app1.yaml");
+    source = tmpDir.newFolder("source");
     destination = tmpDir.newFolder("destination");
     dockerfile = tmpDir.newFile("dockerfile");
 
