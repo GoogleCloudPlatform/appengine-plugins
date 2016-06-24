@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Resolve paths with CloudSdk and Python defaults.
  */
-public enum PathResolver {
+public enum PathResolver implements IPathResolver {
 
   INSTANCE;
 
@@ -33,6 +33,7 @@ public enum PathResolver {
    *
    * @return Path to Google Cloud SDK or null
    */
+  @Override
   public Path getCloudSdkPath() {
     List<String> possiblePaths = new ArrayList<>();
 
