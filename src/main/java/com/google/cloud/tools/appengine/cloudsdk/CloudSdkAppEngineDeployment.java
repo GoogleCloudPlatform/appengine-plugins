@@ -24,19 +24,13 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.common.base.Preconditions;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Cloud SDK based implementation of {@link AppEngineDeployment}.
  */
 public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
-
-  private static final List<String> APPENGINE_YAML_FILES = Arrays
-      .asList("app.yaml", "cron.yaml", "queue.yaml", "dispatch.yaml", "index.yaml", "dos.yaml");
 
   private CloudSdk sdk;
 
@@ -54,26 +48,12 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
-
-    // If we get a single directory, then assume it is a deployable directory
-    // and look in it for yaml files to deploy
-    if (config.getDeployables().size() == 1 && config.getDeployables().get(0).isDirectory()) {
-      Path deployableDirectory = config.getDeployables().get(0).toPath();
-      for (String filename : APPENGINE_YAML_FILES) {
-        Path yamlFile = deployableDirectory.resolve(filename);
-        if (Files.isRegularFile(yamlFile)) {
-          arguments.add(yamlFile.toString());
-        }
+    for (File deployable : config.getDeployables()) {
+      if (!deployable.exists()) {
+        throw new IllegalArgumentException(
+            "Deployable " + deployable.toPath().toString() + " does not exist.");
       }
-    } else {
-      // otherwise deployables are the yamls the user provides
-      for (File deployable : config.getDeployables()) {
-        if (!deployable.exists()) {
-          throw new IllegalArgumentException(
-              "Deployable " + deployable.toPath().toString() + " does not exist.");
-        }
-        arguments.add(deployable.toPath().toString());
-      }
+      arguments.add(deployable.toPath().toString());
     }
 
     arguments.addAll(GcloudArgs.get("bucket", config.getBucket()));
@@ -91,6 +71,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
+
   }
 
 }
