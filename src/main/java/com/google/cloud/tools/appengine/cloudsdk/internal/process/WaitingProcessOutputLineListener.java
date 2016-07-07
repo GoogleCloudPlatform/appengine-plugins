@@ -21,8 +21,6 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListen
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Provides a mechanism to wait for a successful start of a process by monitoring the process output
@@ -33,6 +31,7 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
   private final String message;
   private final int timeoutSeconds;
   private CountDownLatch waitLatch;
+  private volatile boolean exited;
 
   /**
    * @param message        The message to look for in the output of the process to consider it to be
@@ -67,6 +66,9 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
         throw new ProcessRunnerException("Timed out waiting for the success message: '"
             + message + "'");
       }
+      if (exited) {
+        throw new ProcessRunnerException("Process exited before success message");
+      }
     } catch (InterruptedException e) {
       throw new ProcessRunnerException(e);
     } finally {
@@ -86,8 +88,7 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
 
   @Override
   public void onExit(int exitCode) {
-    Logger.getLogger(WaitingProcessOutputLineListener.class.getName())
-        .log(Level.INFO, "Process exited before wait condition");
+    this.exited = true;
     waitLatch.countDown();
   }
 }
