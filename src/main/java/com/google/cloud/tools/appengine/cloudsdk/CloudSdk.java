@@ -101,7 +101,7 @@ public class CloudSdk {
   public void runAppCommand(List<String> args) throws ProcessRunnerException {
     List<String> command = new ArrayList<>();
     command.add(getGCloudPath().toString());
-    command.add("preview");
+    command.add("beta");
     command.add("app");
     command.addAll(args);
 
