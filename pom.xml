@@ -2,16 +2,64 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google.cloud.tools</groupId>
-  <artifactId>app-tools-lib-for-java</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <artifactId>appengine-plugins-core</artifactId>
+  <version>0.1.2-SNAPSHOT</version>
 
-  <name>Google Cloud Java management client library</name>
+  <name>App Engine Plugins Core Library</name>
+  <description>
+    A common library for building App Engine plugins.
+  </description>
+  <url>https://github.com/GoogleCloudPlatform/app-tools-lib-for-java</url>
+
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>joaomartins</id>
+      <name>João Martins</name>
+      <email>joaomartins@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+    </developer>
+    <developer>
+      <id>appu</id>
+      <name>Appu Goundan</name>
+      <email>appu@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+    </developer>
+    <developer>
+      <id>meltsufin</id>
+      <name>Mike Eltsufin</name>
+      <email>meltsufin@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/GoogleCloudPlatform/app-tools-lib-for-java.git
+    </connection>
+    <developerConnection>scm:git:https://github.com/GoogleCloudPlatform/app-tools-lib-for-java.git
+    </developerConnection>
+    <url>https://github.com/GoogleCloudPlatform/app-tools-lib-for-java</url>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <distributionManagement>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Sonatype Nexus Staging</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
     <snapshotRepository>
       <id>sonatype-nexus-snapshots</id>
       <name>Sonatype Nexus Snapshots</name>
@@ -125,6 +173,7 @@
           <instructions>
             <Bundle-SymbolicName>com.google.cloud.tools.app.lib</Bundle-SymbolicName>
             <Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
+            <Import-Package>!javax.annotation,*</Import-Package>
           </instructions>
         </configuration>
         <executions>
@@ -139,4 +188,45 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.3</version>
+            <configuration>
+              <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
