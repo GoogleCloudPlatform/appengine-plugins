@@ -43,5 +43,5 @@ public interface StageStandardConfiguration {
 
   Boolean getDisableJarJsps();
 
-  Boolean getUseRuntimeJava();
+  String getRuntime();
 }

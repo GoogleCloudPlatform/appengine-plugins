@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultStageStandardConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineStandardStaging;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Before;
@@ -88,7 +86,7 @@ public class CloudSdkAppEngineStandardStagingTest {
     configuration.setDeleteJsps(true);
     configuration.setEnableJarClasses(true);
     configuration.setDisableJarJsps(true);
-    configuration.setUseRuntimeJava(true);
+    configuration.setRuntime("java");
 
     List<String> expected = ImmutableList
         .of("--enable_quickstart", "--disable_update_check", "--enable_jar_splitting",

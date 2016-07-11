@@ -60,11 +60,11 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
     arguments.addAll(AppCfgArgs.get("delete_jsps", config.getDeleteJsps()));
     arguments.addAll(AppCfgArgs.get("enable_jar_classes", config.getEnableJarClasses()));
     arguments.addAll(AppCfgArgs.get("disable_jar_jsps", config.getDisableJarJsps()));
-    // special handling for java-compat-runtime -R -r java
-    arguments.addAll(AppCfgArgs.get("allow_any_runtime", config.getUseRuntimeJava()));
-    arguments.addAll(AppCfgArgs.get("runtime",
-        Boolean.TRUE.equals(config.getUseRuntimeJava()) ? "java" : null));
-
+    if (config.getRuntime() != null) {
+      // currently only java7 is allowed without --allow_any_runtime
+      arguments.addAll(AppCfgArgs.get("allow_any_runtime", true));
+      arguments.addAll(AppCfgArgs.get("runtime", config.getRuntime()));
+    }
     arguments.add("stage");
     arguments.add(config.getSourceDirectory().toPath().toString());
     arguments.add(config.getStagingDirectory().toPath().toString());
