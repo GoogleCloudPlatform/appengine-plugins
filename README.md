@@ -16,7 +16,7 @@ After installing Cloud SDK, you have to login and configure it:
 
 You must also install the app-engine-java component:
 
-    gcloud components update app-engine-java
+    gcloud components install app-engine-java
 
 # Supported operations
 

@@ -48,11 +48,11 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
 
     if (!config.getSourceDirectory().exists()) {
       throw new AppEngineException("Source directory does not exist. Location: "
-          + config.getSourceDirectory().toPath().toString());
+          + config.getSourceDirectory().toPath());
     }
     if (!config.getSourceDirectory().isDirectory()) {
       throw new AppEngineException("Source location is not a directory. Location: "
-          + config.getSourceDirectory().toPath().toString());
+          + config.getSourceDirectory().toPath());
     }
 
     List<String> arguments = new ArrayList<>();
