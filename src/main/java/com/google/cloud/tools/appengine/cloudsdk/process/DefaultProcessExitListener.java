@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
-
 /**
  * Default process exit listener that simply captures the exit code and makes it available with a
  * getter. Before the process exit code is captured, it's initialized to -1.

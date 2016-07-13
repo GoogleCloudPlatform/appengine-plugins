@@ -123,6 +123,7 @@ public class DefaultProcessRunner implements ProcessRunner {
             stdOutLineListener.onOutputLine(line);
           }
         }
+        stdOut.close();
       }
     };
     stdOutThread.setDaemon(true);
@@ -139,6 +140,7 @@ public class DefaultProcessRunner implements ProcessRunner {
             stdErrLineListener.onOutputLine(line);
           }
         }
+        stdErr.close();
       }
     };
     stdErrThread.setDaemon(true);
@@ -164,7 +166,7 @@ public class DefaultProcessRunner implements ProcessRunner {
           } finally {
             int exitCode = process.exitValue();
             for (ProcessExitListener exitListener : exitListeners) {
-              exitListener.onExit(process.exitValue());
+              exitListener.onExit(exitCode);
             }
           }
         }
