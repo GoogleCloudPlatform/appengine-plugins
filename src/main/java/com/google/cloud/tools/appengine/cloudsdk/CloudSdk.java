@@ -357,7 +357,7 @@ public class CloudSdk {
 
       // Default SDK path
       if (sdkPath == null) {
-        Path discoveredSdkPath = PathResolver.INSTANCE.getCloudSdkPath();
+        Path discoveredSdkPath = new DefaultPathResolver().getCloudSdkPath();
         if (discoveredSdkPath == null) {
           throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
               + " found in any known install locations.");
