@@ -251,10 +251,12 @@ public class CloudSdk {
 
     /**
      * The home directory of Google Cloud SDK.
+     *
+     * @param sdkPath the root path for the Cloud SDK
      */
-    public Builder sdkPath(Path sdkPathFile) {
-      if (sdkPathFile != null) {
-        this.sdkPath = sdkPathFile;
+    public Builder sdkPath(Path sdkPath) {
+      if (sdkPath != null) {
+        this.sdkPath = sdkPath;
       }
       return this;
     }
@@ -352,7 +354,7 @@ public class CloudSdk {
     /**
      * Create a new instance of {@link CloudSdk}.
      *
-     * If {@code sdKPath} is not set, this method will attempt to look for the SDK in known install
+     * <p>If {@code sdKPath} is not set, this method will look for the SDK in known install
      * locations.
      */
     public CloudSdk build() {
