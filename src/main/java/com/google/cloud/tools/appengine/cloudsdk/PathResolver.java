@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Resolve paths with CloudSdk and Python defaults.
  */
-public class PathResolver {
+public class PathResolver implements CloudSdkResolver {
 
   /**
    * Attempts to find the path to Google Cloud SDK.

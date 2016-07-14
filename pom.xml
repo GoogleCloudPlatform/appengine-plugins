@@ -174,10 +174,15 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <version>3.0.1</version>
         <configuration>
+          <!--
+             Register as an Eclipse Buddy to allow discovery of CloudSdkResolver
+             instances from other bundles.
+          -->
           <instructions>
             <Bundle-SymbolicName>com.google.cloud.tools.app.lib</Bundle-SymbolicName>
             <Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
             <Import-Package>!javax.annotation,*</Import-Package>
+            <Eclipse-BuddyPolicy>registered</Eclipse-BuddyPolicy>
           </instructions>
         </configuration>
         <executions>
