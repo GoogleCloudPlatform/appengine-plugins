@@ -25,7 +25,6 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.WaitingProcess
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 
@@ -176,7 +175,7 @@ public class CloudSdk {
     logger.info("submitting command: " + WHITESPACE_JOINER.join(command));
   }
 
-  @VisibleForTesting public Path getSdkPath() {
+  public Path getSdkPath() {
     return sdkPath;
   }
 
@@ -251,8 +250,7 @@ public class CloudSdk {
     private int runDevAppServerWaitSeconds;
 
     /**
-     * The home directory of Google Cloud SDK. If not set, will attempt to look for the SDK in known
-     * install locations.
+     * The home directory of Google Cloud SDK.
      */
     public Builder sdkPath(Path sdkPathFile) {
       if (sdkPathFile != null) {
@@ -353,6 +351,9 @@ public class CloudSdk {
 
     /**
      * Create a new instance of {@link CloudSdk}.
+     *
+     * If {@code sdKPath} is not set, this method will attempt to look for the SDK in known install
+     * locations.
      */
     public CloudSdk build() {
 
