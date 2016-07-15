@@ -29,9 +29,11 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -52,6 +54,7 @@ public class CloudSdk {
       "platform/google_appengine/google/appengine/tools/java/lib";
   private static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
   private static final String WINDOWS_BUNDLED_PYTHON = "platform/bundledpython/python.exe";
+  private static final Map<String, Path> JAR_LOCATIONS = new HashMap<>();
 
   private final Path sdkPath;
   private final ProcessRunner processRunner;
@@ -93,6 +96,14 @@ public class CloudSdk {
     this.processRunner = new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
         exitListeners, startListeners);
 
+    // Populate jar locations.
+    // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
+    // SDK does.
+    JAR_LOCATIONS.put("servlet-api.jar",
+            getJavaAppEngineSdkPath().resolve("shared/servlet-api.jar"));
+    JAR_LOCATIONS.put("jsp-api.jar", getJavaAppEngineSdkPath().resolve("shared/jsp-api.jar"));
+    JAR_LOCATIONS.put(JAVA_TOOLS_JAR,
+        sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
   }
 
   /**
@@ -162,7 +173,7 @@ public class CloudSdk {
     command.add(
         Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
     command.add("-cp");
-    command.add(getJavaToolsJar().toAbsolutePath().toString());
+    command.add(JAR_LOCATIONS.get(JAVA_TOOLS_JAR).toString());
     command.add("com.google.appengine.tools.admin.AppCfg");
     command.addAll(args);
 
@@ -175,7 +186,7 @@ public class CloudSdk {
     logger.info("submitting command: " + WHITESPACE_JOINER.join(command));
   }
 
-  private Path getSdkPath() {
+  public Path getSdkPath() {
     return sdkPath;
   }
 
@@ -195,12 +206,18 @@ public class CloudSdk {
     return getSdkPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
-  private Path getJavaToolsJar() {
-    return getJavaAppEngineSdkPath().resolve(JAVA_TOOLS_JAR);
-  }
-
   private Path getWindowsPythonPath() {
     return getSdkPath().resolve(WINDOWS_BUNDLED_PYTHON);
+  }
+
+  /**
+   * Gets the file system location for an SDK jar.
+   *
+   * @param jarName the jar file name. For example, "servlet-api.jar"
+   * @return the path in the file system
+     */
+  public Path getJarPath(String jarName) {
+    return JAR_LOCATIONS.get(jarName);
   }
 
   /**
@@ -212,26 +229,28 @@ public class CloudSdk {
     if (sdkPath == null) {
       throw new AppEngineException("Validation Error: SDK path is null");
     }
-    if (!sdkPath.toFile().isDirectory()) {
+    if (!Files.isDirectory(sdkPath)) {
       throw new AppEngineException(
-          "Validation Error: SDK directory '" + sdkPath + "' is not valid");
+          "Validation Error: SDK location '" + sdkPath + "' is not a directory.");
     }
-    if (!getGCloudPath().toFile().isFile()) {
+    if (!Files.isRegularFile(getGCloudPath())) {
       throw new AppEngineException(
-          "Validation Error: gcloud path '" + getGCloudPath() + "' is not valid");
+          "Validation Error: gcloud location '" + getGCloudPath() + "' is not a file.");
     }
-    if (!getDevAppServerPath().toFile().isFile()) {
+    if (!Files.isRegularFile(getDevAppServerPath())) {
       throw new AppEngineException(
-          "Validation Error: dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
+          "Validation Error: dev_appserver.py location '"
+              + getDevAppServerPath() + "' is not a file.");
     }
-    if (!getJavaAppEngineSdkPath().toFile().isDirectory()) {
+    if (!Files.isDirectory(getJavaAppEngineSdkPath())) {
       throw new AppEngineException(
-          "Validation Error: Java App Engine SDK path '" + getJavaAppEngineSdkPath()
-              + "' is not valid");
+          "Validation Error: Java App Engine SDK location '"
+              + getJavaAppEngineSdkPath() + "' is not a directory.");
     }
-    if (!getJavaToolsJar().toFile().isFile()) {
+    if (!Files.isRegularFile(JAR_LOCATIONS.get(JAVA_TOOLS_JAR))) {
       throw new AppEngineException(
-          "Validation Error: Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
+          "Validation Error: Java Tools jar location '"
+                  + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not a file.");
     }
   }
 
@@ -250,12 +269,13 @@ public class CloudSdk {
     private int runDevAppServerWaitSeconds;
 
     /**
-     * The home directory of Google Cloud SDK. If not set, will attempt to look for the SDK in known
-     * install locations.
+     * The home directory of Google Cloud SDK.
+     *
+     * @param sdkPath the root path for the Cloud SDK
      */
-    public Builder sdkPath(File sdkPathFile) {
-      if (sdkPathFile != null) {
-        this.sdkPath = sdkPathFile.toPath();
+    public Builder sdkPath(Path sdkPath) {
+      if (sdkPath != null) {
+        this.sdkPath = sdkPath;
       }
       return this;
     }
@@ -352,12 +372,15 @@ public class CloudSdk {
 
     /**
      * Create a new instance of {@link CloudSdk}.
+     *
+     * <p>If {@code sdkPath} is not set, this method will look for the SDK in known install
+     * locations.
      */
     public CloudSdk build() {
 
       // Default SDK path
       if (sdkPath == null) {
-        Path discoveredSdkPath = PathResolver.INSTANCE.getCloudSdkPath();
+        Path discoveredSdkPath = new PathResolver().getCloudSdkPath();
         if (discoveredSdkPath == null) {
           throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
               + " found in any known install locations.");
