@@ -29,6 +29,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -96,6 +97,8 @@ public class CloudSdk {
         exitListeners, startListeners);
 
     // Populate jar locations.
+    // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
+    // SDK does.
     JAR_LOCATIONS.put("servlet-api.jar",
             getJavaAppEngineSdkPath().resolve("shared/servlet-api.jar"));
     JAR_LOCATIONS.put("jsp-api.jar", getJavaAppEngineSdkPath().resolve("shared/jsp-api.jar"));
@@ -226,27 +229,28 @@ public class CloudSdk {
     if (sdkPath == null) {
       throw new AppEngineException("Validation Error: SDK path is null");
     }
-    if (!sdkPath.toFile().isDirectory()) {
+    if (!Files.isDirectory(sdkPath)) {
       throw new AppEngineException(
-          "Validation Error: SDK directory '" + sdkPath + "' is not valid");
+          "Validation Error: SDK location '" + sdkPath + "' is a directory.");
     }
-    if (!getGCloudPath().toFile().isFile()) {
+    if (!Files.isRegularFile(getGCloudPath())) {
       throw new AppEngineException(
-          "Validation Error: gcloud path '" + getGCloudPath() + "' is not valid");
+          "Validation Error: gcloud location '" + getGCloudPath() + "' is not a file.");
     }
-    if (!getDevAppServerPath().toFile().isFile()) {
+    if (!Files.isRegularFile(getDevAppServerPath())) {
       throw new AppEngineException(
-          "Validation Error: dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
+          "Validation Error: dev_appserver.py location '"
+              + getDevAppServerPath() + "' is not a file.");
     }
-    if (!getJavaAppEngineSdkPath().toFile().isDirectory()) {
+    if (!Files.isDirectory(getJavaAppEngineSdkPath())) {
       throw new AppEngineException(
-          "Validation Error: Java App Engine SDK path '" + getJavaAppEngineSdkPath()
-              + "' is not valid");
+          "Validation Error: Java App Engine SDK location '"
+              + getJavaAppEngineSdkPath() + "' is not a directory.");
     }
-    if (!JAR_LOCATIONS.get(JAVA_TOOLS_JAR).toFile().isFile()) {
+    if (!Files.isRegularFile(JAR_LOCATIONS.get(JAVA_TOOLS_JAR))) {
       throw new AppEngineException(
-          "Validation Error: Java Tools jar path '"
-                  + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not valid");
+          "Validation Error: Java Tools jar location '"
+                  + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not a file.");
     }
   }
 
