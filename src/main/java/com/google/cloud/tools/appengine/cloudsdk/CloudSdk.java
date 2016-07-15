@@ -32,6 +32,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -52,6 +53,7 @@ public class CloudSdk {
       "platform/google_appengine/google/appengine/tools/java/lib";
   private static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
   private static final String WINDOWS_BUNDLED_PYTHON = "platform/bundledpython/python.exe";
+  private static final Map<String, Path> JAR_LOCATIONS = new HashMap<>();
 
   private final Path sdkPath;
   private final ProcessRunner processRunner;
@@ -93,6 +95,12 @@ public class CloudSdk {
     this.processRunner = new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
         exitListeners, startListeners);
 
+    // Populate jar locations.
+    JAR_LOCATIONS.put("servlet-api.jar",
+            getJavaAppEngineSdkPath().resolve("shared/servlet-api.jar"));
+    JAR_LOCATIONS.put("jsp-api.jar", getJavaAppEngineSdkPath().resolve("shared/jsp-api.jar"));
+    JAR_LOCATIONS.put(JAVA_TOOLS_JAR,
+        sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
   }
 
   /**
@@ -162,7 +170,7 @@ public class CloudSdk {
     command.add(
         Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
     command.add("-cp");
-    command.add(getJavaToolsJar().toAbsolutePath().toString());
+    command.add(JAR_LOCATIONS.get(JAVA_TOOLS_JAR).toString());
     command.add("com.google.appengine.tools.admin.AppCfg");
     command.addAll(args);
 
@@ -195,12 +203,18 @@ public class CloudSdk {
     return getSdkPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
-  public Path getJavaToolsJar() {
-    return getJavaAppEngineSdkPath().resolve(JAVA_TOOLS_JAR);
-  }
-
   private Path getWindowsPythonPath() {
     return getSdkPath().resolve(WINDOWS_BUNDLED_PYTHON);
+  }
+
+  /**
+   * Gets the file system location for an SDK jar.
+   *
+   * @param jarName the jar file name. For example, "servlet-api.jar"
+   * @return the path in the file system
+     */
+  public Path getJarPath(String jarName) {
+    return JAR_LOCATIONS.get(jarName);
   }
 
   /**
@@ -229,9 +243,10 @@ public class CloudSdk {
           "Validation Error: Java App Engine SDK path '" + getJavaAppEngineSdkPath()
               + "' is not valid");
     }
-    if (!getJavaToolsJar().toFile().isFile()) {
+    if (!JAR_LOCATIONS.get(JAVA_TOOLS_JAR).toFile().isFile()) {
       throw new AppEngineException(
-          "Validation Error: Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
+          "Validation Error: Java Tools jar path '"
+                  + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not valid");
     }
   }
 
