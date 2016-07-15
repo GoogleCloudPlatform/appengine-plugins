@@ -231,7 +231,7 @@ public class CloudSdk {
     }
     if (!Files.isDirectory(sdkPath)) {
       throw new AppEngineException(
-          "Validation Error: SDK location '" + sdkPath + "' is a directory.");
+          "Validation Error: SDK location '" + sdkPath + "' is not a directory.");
     }
     if (!Files.isRegularFile(getGCloudPath())) {
       throw new AppEngineException(
@@ -373,7 +373,7 @@ public class CloudSdk {
     /**
      * Create a new instance of {@link CloudSdk}.
      *
-     * <p>If {@code sdKPath} is not set, this method will look for the SDK in known install
+     * <p>If {@code sdkPath} is not set, this method will look for the SDK in known install
      * locations.
      */
     public CloudSdk build() {
