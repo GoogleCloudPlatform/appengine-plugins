@@ -12,7 +12,8 @@ import java.util.Set;
  * 
  * All classes that are not bundled into the JDK are whitelisted. 
  * 
- * @see <a href="https://cloud.google.com/appengine/docs/java/jrewhitelist">The JRE Class Whitelist</a>
+ * @see <a href="https://cloud.google.com/appengine/docs/java/jrewhitelist">The 
+ *     JRE Class Whitelist</a>
  */
 public class AppEngineJreWhitelist {
 
@@ -1873,18 +1874,26 @@ public class AppEngineJreWhitelist {
               "com.sun.org.apache.xml.internal.resolver.CatalogManager",
               "com.sun.org.apache.xml.internal.resolver.tools.CatalogResolver",
               "com.sun.org.apache.xml.internal.security.transforms.TransformSpi",
-              "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformBase64Decode",
+              "com.sun.org.apache.xml.internal.security.transforms.implementations"
+                  + ".TransformBase64Decode",
               "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformC14N",
-              "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformC14NWithComments",
+              "com.sun.org.apache.xml.internal.security.transforms.implementations"
+                  + ".TransformC14NWithComments",
               "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformC14NExclusive",
-              "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformC14NExclusiveWithComments",
-              "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformC14N11",
-              "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformC14N11_WithComments",
-              "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformEnvelopedSignature",
+              "com.sun.org.apache.xml.internal.security.transforms.implementations"
+                  + ".TransformC14NExclusiveWithComments",
+              "com.sun.org.apache.xml.internal.security.transforms.implementations"
+                  + ".TransformC14N11",
+              "com.sun.org.apache.xml.internal.security.transforms.implementations"
+                  + ".TransformC14N11_WithComments",
+              "com.sun.org.apache.xml.internal.security.transforms.implementations"
+                  + ".TransformEnvelopedSignature",
               "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformXPath",
               "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformXSLT",
-              "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformXPath2Filter",
-              "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformXPath2Filter",
+              "com.sun.org.apache.xml.internal.security.transforms.implementations"
+                  + ".TransformXPath2Filter",
+              "com.sun.org.apache.xml.internal.security.transforms.implementations"
+                  + ".TransformXPath2Filter",
               "com.sun.org.apache.xpath.internal.jaxp.XPathFactoryImpl",
               "com.sun.org.apache.xerces.internal.jaxp.validation.XMLSchemaFactory",
               "java.net.URLClassLoader",
@@ -1909,14 +1918,13 @@ public class AppEngineJreWhitelist {
               "javax.naming.ldap.LdapName",
               "javax.naming.ldap.Rdn"
               ));
-  
-  
+
   /**
    * @param className fully package qualified class name
    * @return true if this class is allowed in Java 7 on App Engine Standard, false otherwise
    */
   public static boolean contains(String className) {
-    if (className.startsWith("javax.") ){
+    if (className.startsWith("javax.") ) {
       return !isBundledInJre(className) || WHITELIST.contains(className);
     } else if (className.startsWith("java.") 
         || className.startsWith("sun.util.") 
@@ -1976,4 +1984,3 @@ public class AppEngineJreWhitelist {
   }
   
 }
-
