@@ -1879,7 +1879,8 @@ public class AppEngineJreWhitelist {
               "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformC14N",
               "com.sun.org.apache.xml.internal.security.transforms.implementations"
                   + ".TransformC14NWithComments",
-              "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformC14NExclusive",
+              "com.sun.org.apache.xml.internal.security.transforms.implementations"
+                  + ".TransformC14NExclusive",
               "com.sun.org.apache.xml.internal.security.transforms.implementations"
                   + ".TransformC14NExclusiveWithComments",
               "com.sun.org.apache.xml.internal.security.transforms.implementations"
@@ -1920,6 +1921,8 @@ public class AppEngineJreWhitelist {
               ));
 
   /**
+   * Determine whether class is allowed in App Engine Standard.
+   * 
    * @param className fully package qualified class name
    * @return true if this class is allowed in Java 7 on App Engine Standard, false otherwise
    */
