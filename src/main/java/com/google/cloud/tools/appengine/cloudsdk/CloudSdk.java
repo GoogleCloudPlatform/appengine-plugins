@@ -35,6 +35,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -410,6 +412,7 @@ public class CloudSdk {
             return discoveredSdkPath;
           }
         } catch (Exception ex) {
+          // prevent interference from exceptions in other resolvers
           logger.log(Level.SEVERE, resolver.getClass().getName()
               + ": exception thrown when searching for Google Cloud SDK", ex);
         }
@@ -423,16 +426,18 @@ public class CloudSdk {
      */
     @VisibleForTesting
     public List<CloudSdkResolver> getResolvers() {
+      List<CloudSdkResolver> resolvers;
       if (this.resolvers != null) {
-        return resolvers;
+        resolvers = new ArrayList<>(this.resolvers);
+      } else {
+        // Explicitly specify classloader rather than use the Thread Context Class Loader (TCCL)
+        ServiceLoader<CloudSdkResolver> services =
+            ServiceLoader.load(CloudSdkResolver.class, getClass().getClassLoader());
+        resolvers = Lists.newArrayList(services);
+        // Explicitly add the PATH-based resolver
+        resolvers.add(new PathResolver());
       }
-      // Explicitly specify classloader rather than use the TCCL
-      ServiceLoader<CloudSdkResolver> services =
-          ServiceLoader.load(CloudSdkResolver.class, getClass().getClassLoader());
-      List<CloudSdkResolver> resolvers = Lists.newArrayList(services);
-      // Explicitly add the PATH-based resolver last as ServiceLoader
-      // does not provide any ordering
-      resolvers.add(new PathResolver());
+      Collections.sort(resolvers, new ResolverComparator());
       return resolvers;
     }
 
@@ -447,4 +452,14 @@ public class CloudSdk {
     }
   }
 
+  /**
+   * Compare two {@link CloudSdkResolver} instances by their rank
+   */
+  private static class ResolverComparator implements Comparator<CloudSdkResolver> {
+    @Override
+    public int compare(CloudSdkResolver o1, CloudSdkResolver o2) {
+      return o1.getRank() - o2.getRank();
+    }
+
+  }
 }

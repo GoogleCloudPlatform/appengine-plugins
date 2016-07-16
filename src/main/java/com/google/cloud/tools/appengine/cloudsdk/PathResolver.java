@@ -93,4 +93,11 @@ public class PathResolver implements CloudSdkResolver {
     }
     return null;
   }
+
+  @Override
+  public int getRank() {
+    // Should be near-last but allow option for last-ditch resolvers that may choose
+    // to prompt the user for a location
+    return Integer.MAX_VALUE / 2;
+  }
 }

@@ -19,7 +19,7 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import java.nio.file.Path;
 
 /**
- * Resolve paths with CloudSdk and Python defaults.
+ * Resolve paths find the CloudSdk.
  */
 public interface CloudSdkResolver {
 
@@ -28,5 +28,10 @@ public interface CloudSdkResolver {
    *
    * @return Path to Google Cloud SDK or null
    */
-  public Path getCloudSdkPath();
+  Path getCloudSdkPath();
+
+  /**
+   * Provides a rank for ordering a set of {@link CloudSdkResolver}s.
+   */
+  int getRank();
 }
