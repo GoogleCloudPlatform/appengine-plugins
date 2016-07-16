@@ -453,7 +453,7 @@ public class CloudSdk {
   }
 
   /**
-   * Compare two {@link CloudSdkResolver} instances by their rank
+   * Compare two {@link CloudSdkResolver} instances by their rank.
    */
   private static class ResolverComparator implements Comparator<CloudSdkResolver> {
     @Override
