@@ -31,6 +31,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.io.File;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -455,11 +456,12 @@ public class CloudSdk {
   /**
    * Compare two {@link CloudSdkResolver} instances by their rank.
    */
-  private static class ResolverComparator implements Comparator<CloudSdkResolver> {
+  private static class ResolverComparator implements Comparator<CloudSdkResolver>, Serializable {
+    private static final long serialVersionUID = -4414214946468755954L;
+
     @Override
     public int compare(CloudSdkResolver o1, CloudSdkResolver o2) {
       return o1.getRank() - o2.getRank();
     }
-
   }
 }
