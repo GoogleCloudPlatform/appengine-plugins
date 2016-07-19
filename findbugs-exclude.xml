@@ -18,6 +18,7 @@
   <Match>
     <Or>
       <Bug pattern="DM_STRING_CTOR"/>
+      <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
     </Or>
   </Match>
 </FindBugsFilter>
