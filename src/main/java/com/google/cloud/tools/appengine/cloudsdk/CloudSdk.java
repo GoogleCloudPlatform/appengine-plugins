@@ -90,7 +90,8 @@ public class CloudSdk {
     // configure listeners for async dev app server start with waiting
     if (async && runDevAppServerWaitSeconds > 0) {
       this.runDevAppServerWaitListener = new WaitingProcessOutputLineListener(
-          "Dev App Server is now running", runDevAppServerWaitSeconds);
+          ".*(Dev App Server is now running|INFO:oejs\\.Server:main: Started).*",
+          runDevAppServerWaitSeconds);
 
       stdOutLineListeners.add(runDevAppServerWaitListener);
       stdErrLineListeners.add(runDevAppServerWaitListener);
@@ -222,7 +223,7 @@ public class CloudSdk {
    *
    * @param jarName the jar file name. For example, "servlet-api.jar"
    * @return the path in the file system
-     */
+   */
   public Path getJarPath(String jarName) {
     return JAR_LOCATIONS.get(jarName);
   }
@@ -257,7 +258,7 @@ public class CloudSdk {
     if (!Files.isRegularFile(JAR_LOCATIONS.get(JAVA_TOOLS_JAR))) {
       throw new AppEngineException(
           "Validation Error: Java Tools jar location '"
-                  + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not a file.");
+              + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not a file.");
     }
   }
 
@@ -399,7 +400,7 @@ public class CloudSdk {
 
     /**
      * Attempt to find the Google Cloud SDK in various places.
-     * 
+     *
      * @return the path to the root of the Google Cloud SDK
      * @throws AppEngineException if not found
      */

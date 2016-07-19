@@ -36,7 +36,8 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
   /**
    * @param message        The message to look for in the output of the process to consider it to be
    *                       successfully started. If the message is not seen within the specified
-   *                       timeout, a {@link ProcessRunnerException} will be thrown.
+   *                       timeout, a {@link ProcessRunnerException} will be thrown. The message is
+   *                       assumed to be a regular expression.
    * @param timeoutSeconds The maximum number of seconds to wait for the message to be seen until
    *                       giving up. If set to 0, will skip waiting.
    */
@@ -81,7 +82,7 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
    */
   @Override
   public void onOutputLine(String line) {
-    if (waitLatch.getCount() > 0 && message != null && line.contains(message)) {
+    if (waitLatch.getCount() > 0 && message != null && line.matches(message)) {
       waitLatch.countDown();
     }
   }
