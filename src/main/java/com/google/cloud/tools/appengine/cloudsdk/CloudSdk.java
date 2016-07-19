@@ -412,7 +412,7 @@ public class CloudSdk {
           if (discoveredSdkPath != null) {
             return discoveredSdkPath;
           }
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
           // prevent interference from exceptions in other resolvers
           logger.log(Level.SEVERE, resolver.getClass().getName()
               + ": exception thrown when searching for Google Cloud SDK", ex);
