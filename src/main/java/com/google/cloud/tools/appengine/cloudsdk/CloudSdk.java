@@ -108,7 +108,7 @@ public class CloudSdk {
     // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
     // SDK does.
     JAR_LOCATIONS.put("servlet-api.jar",
-            getJavaAppEngineSdkPath().resolve("shared/servlet-api.jar"));
+        getJavaAppEngineSdkPath().resolve("shared/servlet-api.jar"));
     JAR_LOCATIONS.put("jsp-api.jar", getJavaAppEngineSdkPath().resolve("shared/jsp-api.jar"));
     JAR_LOCATIONS.put(JAVA_TOOLS_JAR,
         sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
