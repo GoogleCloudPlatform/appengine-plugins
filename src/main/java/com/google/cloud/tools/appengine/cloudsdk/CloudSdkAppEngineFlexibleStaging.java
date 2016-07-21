@@ -32,6 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
+
 /**
  * Cloud SDK based implementation of {@link AppEngineFlexibleStaging}.
  */
@@ -92,8 +93,6 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
         }
       }
 
-      // TODO : looks like this section should error on no artifacts found? and maybe the
-      // TODO : earlier ones should warn?
       // Copy the JAR/WAR file to staging.
       if (config.getArtifact() != null && config.getArtifact().exists()) {
         Path destination = config.getStagingDirectory().toPath()
@@ -110,6 +109,9 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
 
           Files.setPosixFilePermissions(destination, permissions);
         }
+      } else {
+        throw new AppEngineException("Artifact doesn't exist at '" + config.getArtifact().getPath()
+            + "'");
       }
     } catch (IOException e) {
       throw new AppEngineException(e);
