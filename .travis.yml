@@ -8,7 +8,7 @@ cache:
 
 script:
   - |
-    if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'autodeploy' ]; then
+    if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
       mvn clean deploy --settings .travis/settings.xml -B -U
     else
       mvn clean install -B -U
