@@ -95,10 +95,10 @@ public class DefaultProcessRunner implements ProcessRunner {
 
       // Only handle stdout or stderr if there are no listeners or if output wasn't redirected,
       // which causes process.getInputStream()/process.getErrorStream() to return NullInputStream.
-      if (!(stdOutLineListeners.isEmpty() || inheritProcessOutput)) {
+      if (!stdOutLineListeners.isEmpty()) {
         handleStdOut(process);
       }
-      if (!(stdErrLineListeners.isEmpty() || inheritProcessOutput)) {
+      if (!stdErrLineListeners.isEmpty()) {
         handleErrOut(process);
       }
 
