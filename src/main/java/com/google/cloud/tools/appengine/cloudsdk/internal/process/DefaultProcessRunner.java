@@ -14,19 +14,17 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
-import static java.lang.ProcessBuilder.Redirect;
-
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
-
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import static java.lang.ProcessBuilder.Redirect;
 
 
 /**
@@ -77,7 +75,7 @@ public class DefaultProcessRunner implements ProcessRunner {
   public void run(String[] command) throws ProcessRunnerException {
     try {
       // Configure process builder.
-      ProcessBuilder processBuilder = new ProcessBuilder();
+      final ProcessBuilder processBuilder = new ProcessBuilder();
 
       // If there are no listeners, we might still want to redirect stdout and stderr to the parent
       // process, or not.
