@@ -20,6 +20,7 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 
 import java.io.IOException;
@@ -38,6 +39,7 @@ public class DefaultProcessRunner implements ProcessRunner {
   private final List<ProcessOutputLineListener> stdErrLineListeners;
   private final List<ProcessExitListener> exitListeners;
   private final List<ProcessStartListener> startListeners;
+  private final boolean inheritStdOutErr;
 
   private Map<String, String> environment;
 
@@ -49,16 +51,19 @@ public class DefaultProcessRunner implements ProcessRunner {
    *                            inherited by parent process.
    * @param exitListeners       Client consumers of process onExit event.
    * @param startListeners      Client consumers of process onStart event.
+   * @param inheritStdOutErr    If true, redirects stdout and stderr to the parent process.
    */
   public DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
                               List<ProcessOutputLineListener> stdErrLineListeners,
                               List<ProcessExitListener> exitListeners,
-                              List<ProcessStartListener> startListeners) {
+                              List<ProcessStartListener> startListeners,
+                              boolean inheritStdOutErr) {
     this.async = async;
     this.stdOutLineListeners = stdOutLineListeners;
     this.stdErrLineListeners = stdErrLineListeners;
     this.exitListeners = exitListeners;
     this.startListeners = startListeners;
+    this.inheritStdOutErr = inheritStdOutErr;
   }
 
   /**
@@ -71,12 +76,15 @@ public class DefaultProcessRunner implements ProcessRunner {
    */
   public void run(String[] command) throws ProcessRunnerException {
     try {
-      // configure process builder
-      final ProcessBuilder processBuilder = new ProcessBuilder();
-      if (stdOutLineListeners.isEmpty()) {
+      // Configure process builder.
+      ProcessBuilder processBuilder = new ProcessBuilder();
+
+      // If there are no listeners, we might still want to redirect stdout and stderr to the parent
+      // process, or not.
+      if (stdOutLineListeners.isEmpty() && inheritStdOutErr) {
         processBuilder.redirectOutput(Redirect.INHERIT);
       }
-      if (stdErrLineListeners.isEmpty()) {
+      if (stdErrLineListeners.isEmpty() && inheritStdOutErr) {
         processBuilder.redirectError(Redirect.INHERIT);
       }
       if (environment != null) {
@@ -87,8 +95,14 @@ public class DefaultProcessRunner implements ProcessRunner {
 
       Process process = processBuilder.start();
 
-      handleStdOut(process);
-      handleErrOut(process);
+      // Only handle stdout or stderr if there are no listeners or if output wasn't redirected,
+      // which causes process.getInputStream()/process.getErrorStream() to return NullInputStream.
+      if (!(stdOutLineListeners.isEmpty() || inheritStdOutErr)) {
+        handleStdOut(process);
+      }
+      if (!(stdErrLineListeners.isEmpty() || inheritStdOutErr)) {
+        handleErrOut(process);
+      }
 
       for (ProcessStartListener startListener : startListeners) {
         startListener.onStart(process);

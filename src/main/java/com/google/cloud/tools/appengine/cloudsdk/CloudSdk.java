@@ -71,16 +71,19 @@ public class CloudSdk {
   private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
+  private final boolean inheritStdOutErr;
 
   private CloudSdk(Path sdkPath, String appCommandMetricsEnvironment,
                    String appCommandMetricsEnvironmentVersion,
-                   @Nullable File appCommandCredentialFile, String appCommandOutputFormat,
+                   @Nullable File appCommandCredentialFile,
+                   String appCommandOutputFormat,
                    boolean async,
                    List<ProcessOutputLineListener> stdOutLineListeners,
                    List<ProcessOutputLineListener> stdErrLineListeners,
                    List<ProcessExitListener> exitListeners,
                    List<ProcessStartListener> startListeners,
-                   int runDevAppServerWaitSeconds) {
+                   int runDevAppServerWaitSeconds,
+                   boolean inheritStdOutErr) {
     this.sdkPath = sdkPath;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
@@ -102,7 +105,7 @@ public class CloudSdk {
 
     // create process runner
     this.processRunner = new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
-        exitListeners, startListeners);
+        exitListeners, startListeners, inheritStdOutErr);
 
     // Populate jar locations.
     // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
@@ -112,6 +115,8 @@ public class CloudSdk {
     JAR_LOCATIONS.put("jsp-api.jar", getJavaAppEngineSdkPath().resolve("shared/jsp-api.jar"));
     JAR_LOCATIONS.put(JAVA_TOOLS_JAR,
         sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
+
+    this.inheritStdOutErr = inheritStdOutErr;
   }
 
   /**
@@ -276,6 +281,7 @@ public class CloudSdk {
     private List<ProcessStartListener> startListeners = new ArrayList<>();
     private List<CloudSdkResolver> resolvers;
     private int runDevAppServerWaitSeconds;
+    private boolean inheritStdOutErr;
 
     /**
      * The home directory of Google Cloud SDK.
@@ -380,6 +386,16 @@ public class CloudSdk {
     }
 
     /**
+     * Causes the generated gcloud subprocess to inherit the calling process's stdout and stderr.
+     *
+     * @param inheritStdOutErr If true, stdout and stderr are redirected to the parent process
+     */
+    public Builder inheritStdOutErr(boolean inheritStdOutErr) {
+      this.inheritStdOutErr = inheritStdOutErr;
+      return this;
+    }
+
+    /**
      * Create a new instance of {@link CloudSdk}.
      *
      * <p>If {@code sdkPath} is not set, this method will look for the SDK in known install
@@ -395,7 +411,7 @@ public class CloudSdk {
       return new CloudSdk(sdkPath, appCommandMetricsEnvironment,
           appCommandMetricsEnvironmentVersion, appCommandCredentialFile,
           appCommandOutputFormat, async, stdOutLineListeners, stdErrLineListeners, exitListeners,
-          startListeners, runDevAppServerWaitSeconds);
+          startListeners, runDevAppServerWaitSeconds, inheritStdOutErr);
     }
 
     /**
