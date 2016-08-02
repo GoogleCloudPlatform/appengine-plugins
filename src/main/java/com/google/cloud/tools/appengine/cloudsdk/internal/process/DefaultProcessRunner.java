@@ -37,31 +37,31 @@ public class DefaultProcessRunner implements ProcessRunner {
   private final List<ProcessOutputLineListener> stdErrLineListeners;
   private final List<ProcessExitListener> exitListeners;
   private final List<ProcessStartListener> startListeners;
-  private final boolean inheritStdOutErr;
+  private final boolean inheritProcessOutput;
 
   private Map<String, String> environment;
 
   /**
-   * @param async               Whether to run commands asynchronously
-   * @param stdOutLineListeners Client consumers of process standard output. If empty, output will
-   *                            be inherited by parent process.
-   * @param stdErrLineListeners Client consumers of process error output. If empty, output will be
-   *                            inherited by parent process.
-   * @param exitListeners       Client consumers of process onExit event.
-   * @param startListeners      Client consumers of process onStart event.
-   * @param inheritStdOutErr    If true, redirects stdout and stderr to the parent process.
+   * @param async                Whether to run commands asynchronously
+   * @param stdOutLineListeners  Client consumers of process standard output. If empty, output will
+   *                             be inherited by parent process.
+   * @param stdErrLineListeners  Client consumers of process error output. If empty, output will be
+   *                             inherited by parent process.
+   * @param exitListeners        Client consumers of process onExit event.
+   * @param startListeners       Client consumers of process onStart event.
+   * @param inheritProcessOutput If true, redirects stdout and stderr to the parent process.
    */
   public DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
                               List<ProcessOutputLineListener> stdErrLineListeners,
                               List<ProcessExitListener> exitListeners,
                               List<ProcessStartListener> startListeners,
-                              boolean inheritStdOutErr) {
+                              boolean inheritProcessOutput) {
     this.async = async;
     this.stdOutLineListeners = stdOutLineListeners;
     this.stdErrLineListeners = stdErrLineListeners;
     this.exitListeners = exitListeners;
     this.startListeners = startListeners;
-    this.inheritStdOutErr = inheritStdOutErr;
+    this.inheritProcessOutput = inheritProcessOutput;
   }
 
   /**
@@ -79,10 +79,10 @@ public class DefaultProcessRunner implements ProcessRunner {
 
       // If there are no listeners, we might still want to redirect stdout and stderr to the parent
       // process, or not.
-      if (stdOutLineListeners.isEmpty() && inheritStdOutErr) {
+      if (stdOutLineListeners.isEmpty() && inheritProcessOutput) {
         processBuilder.redirectOutput(Redirect.INHERIT);
       }
-      if (stdErrLineListeners.isEmpty() && inheritStdOutErr) {
+      if (stdErrLineListeners.isEmpty() && inheritProcessOutput) {
         processBuilder.redirectError(Redirect.INHERIT);
       }
       if (environment != null) {
@@ -95,10 +95,10 @@ public class DefaultProcessRunner implements ProcessRunner {
 
       // Only handle stdout or stderr if there are no listeners or if output wasn't redirected,
       // which causes process.getInputStream()/process.getErrorStream() to return NullInputStream.
-      if (!(stdOutLineListeners.isEmpty() || inheritStdOutErr)) {
+      if (!(stdOutLineListeners.isEmpty() || inheritProcessOutput)) {
         handleStdOut(process);
       }
-      if (!(stdErrLineListeners.isEmpty() || inheritStdOutErr)) {
+      if (!(stdErrLineListeners.isEmpty() || inheritProcessOutput)) {
         handleErrOut(process);
       }
 

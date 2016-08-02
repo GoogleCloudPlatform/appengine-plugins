@@ -71,7 +71,6 @@ public class CloudSdk {
   private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
-  private final boolean inheritStdOutErr;
 
   private CloudSdk(Path sdkPath, String appCommandMetricsEnvironment,
                    String appCommandMetricsEnvironmentVersion,
@@ -83,7 +82,7 @@ public class CloudSdk {
                    List<ProcessExitListener> exitListeners,
                    List<ProcessStartListener> startListeners,
                    int runDevAppServerWaitSeconds,
-                   boolean inheritStdOutErr) {
+                   boolean inheritProcessOutput) {
     this.sdkPath = sdkPath;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
@@ -105,7 +104,7 @@ public class CloudSdk {
 
     // create process runner
     this.processRunner = new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
-        exitListeners, startListeners, inheritStdOutErr);
+        exitListeners, startListeners, inheritProcessOutput);
 
     // Populate jar locations.
     // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
@@ -115,8 +114,6 @@ public class CloudSdk {
     JAR_LOCATIONS.put("jsp-api.jar", getJavaAppEngineSdkPath().resolve("shared/jsp-api.jar"));
     JAR_LOCATIONS.put(JAVA_TOOLS_JAR,
         sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
-
-    this.inheritStdOutErr = inheritStdOutErr;
   }
 
   /**
@@ -281,7 +278,7 @@ public class CloudSdk {
     private List<ProcessStartListener> startListeners = new ArrayList<>();
     private List<CloudSdkResolver> resolvers;
     private int runDevAppServerWaitSeconds;
-    private boolean inheritStdOutErr;
+    private boolean inheritProcessOutput;
 
     /**
      * The home directory of Google Cloud SDK.
@@ -391,7 +388,7 @@ public class CloudSdk {
      * @param inheritStdOutErr If true, stdout and stderr are redirected to the parent process
      */
     public Builder inheritStdOutErr(boolean inheritStdOutErr) {
-      this.inheritStdOutErr = inheritStdOutErr;
+      this.inheritProcessOutput = inheritStdOutErr;
       return this;
     }
 
@@ -411,7 +408,7 @@ public class CloudSdk {
       return new CloudSdk(sdkPath, appCommandMetricsEnvironment,
           appCommandMetricsEnvironmentVersion, appCommandCredentialFile,
           appCommandOutputFormat, async, stdOutLineListeners, stdErrLineListeners, exitListeners,
-          startListeners, runDevAppServerWaitSeconds, inheritStdOutErr);
+          startListeners, runDevAppServerWaitSeconds, inheritProcessOutput);
     }
 
     /**
