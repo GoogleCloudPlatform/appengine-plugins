@@ -383,7 +383,10 @@ public class CloudSdk {
     }
 
     /**
-     * Causes the generated gcloud subprocess to inherit the calling process's stdout and stderr.
+     * Causes the generated gcloud or devappserver subprocess to inherit the calling process's
+     * stdout and stderr.
+     *
+     * <p>If this is set to {@code true}, no stdout and stderr listeners can be specified.
      *
      * @param inheritStdOutErr If true, stdout and stderr are redirected to the parent process
      */
