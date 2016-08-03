@@ -410,10 +410,10 @@ public class CloudSdk {
 
       // Verify there aren't listeners if subprocess inherits output.
       // If output is inherited, then listeners won't receive anything.
-      if (inheritProcessOutput &&
-          (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0)) {
-        throw new AppEngineException("You cannot specify subprocess output inheritance and" +
-            " output listeners.");
+      if (inheritProcessOutput
+          && (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0)) {
+        throw new AppEngineException("You cannot specify subprocess output inheritance and"
+            + " output listeners.");
       }
 
       return new CloudSdk(sdkPath, appCommandMetricsEnvironment,
