@@ -1,9 +1,5 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import org.junit.Test;
@@ -13,6 +9,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link CloudSdk}.

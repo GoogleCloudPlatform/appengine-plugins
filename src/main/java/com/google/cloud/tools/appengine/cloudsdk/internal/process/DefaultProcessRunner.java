@@ -33,12 +33,12 @@ import static java.lang.ProcessBuilder.Redirect;
  * monitoring output and checking the exit code of the child process.
  */
 public class DefaultProcessRunner implements ProcessRunner {
-  private boolean async;
-  private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
-  private List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
-  private List<ProcessExitListener> exitListeners;
-  private List<ProcessStartListener> startListeners;
-  private boolean inheritProcessOutput;
+  private final boolean async;
+  private final List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
+  private final List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
+  private final List<ProcessExitListener> exitListeners;
+  private final List<ProcessStartListener> startListeners;
+  private final boolean inheritProcessOutput;
 
   private Map<String, String> environment;
 
@@ -77,8 +77,8 @@ public class DefaultProcessRunner implements ProcessRunner {
                               List<ProcessOutputLineListener> stdOutLineListeners,
                               List<ProcessOutputLineListener> stdErrLineListeners) {
     this(async, exitListeners, startListeners, false /* inheritProcessOutput */);
-    this.stdOutLineListeners = stdOutLineListeners;
-    this.stdErrLineListeners = stdErrLineListeners;
+    this.stdOutLineListeners.addAll(stdOutLineListeners);
+    this.stdErrLineListeners.addAll(stdErrLineListeners);
   }
 
   /**
