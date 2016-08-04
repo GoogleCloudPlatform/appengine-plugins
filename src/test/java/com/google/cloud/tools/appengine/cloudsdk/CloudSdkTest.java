@@ -48,8 +48,8 @@ public class CloudSdkTest {
 
   @Test
   public void testNewCloudSdk_nullWaitingOutputListener() {
-    CloudSdk sdk = new CloudSdk.Builder().addStdOutLineListener(outputListener)
-        .runDevAppServerWait(10).async(false).build();
+    CloudSdk sdk = new CloudSdk.Builder().sdkPath(Paths.get("/"))
+        .addStdOutLineListener(outputListener).runDevAppServerWait(10).async(false).build();
 
     assertNull(sdk.getRunDevAppServerWaitListener());
 
@@ -61,8 +61,8 @@ public class CloudSdkTest {
 
   @Test
   public void testNewCloudSdk_outListener() {
-    CloudSdk.Builder sdkBuilder = new CloudSdk.Builder().addStdOutLineListener(outputListener)
-        .runDevAppServerWait(10).async(true);
+    CloudSdk.Builder sdkBuilder = new CloudSdk.Builder().sdkPath(Paths.get("/"))
+        .addStdOutLineListener(outputListener).runDevAppServerWait(10).async(true);
 
     CloudSdk sdk = sdkBuilder.build();
 
@@ -74,8 +74,8 @@ public class CloudSdkTest {
 
   @Test
   public void testNewCloudSdk_errListener() {
-    CloudSdk.Builder sdkBuilder = new CloudSdk.Builder().addStdErrLineListener(outputListener)
-        .runDevAppServerWait(10).async(true);
+    CloudSdk.Builder sdkBuilder = new CloudSdk.Builder().sdkPath(Paths.get("/"))
+        .addStdErrLineListener(outputListener).runDevAppServerWait(10).async(true);
 
     CloudSdk sdk = sdkBuilder.build();
 
@@ -87,11 +87,13 @@ public class CloudSdkTest {
 
   @Test(expected = AppEngineException.class)
   public void testNewCloudSdk_inheritOutputAndOutListener() {
-    new CloudSdk.Builder().inheritProcessOutput(true).addStdOutLineListener(outputListener).build();
+    new CloudSdk.Builder().sdkPath(Paths.get("/"))
+        .inheritProcessOutput(true).addStdOutLineListener(outputListener).build();
   }
 
   @Test(expected = AppEngineException.class)
   public void testNewCloudSdk_inheritOutputAndErrListener() {
-    new CloudSdk.Builder().inheritProcessOutput(true).addStdErrLineListener(outputListener).build();
+    new CloudSdk.Builder().sdkPath(Paths.get("/"))
+        .inheritProcessOutput(true).addStdErrLineListener(outputListener).build();
   }
 }
