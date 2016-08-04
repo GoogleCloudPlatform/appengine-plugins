@@ -53,7 +53,7 @@ public class CloudSdkTest {
 
     assertNull(sdk.getRunDevAppServerWaitListener());
 
-    sdk = new CloudSdk.Builder().addStdOutLineListener(outputListener)
+    sdk = new CloudSdk.Builder().sdkPath(Paths.get("/")).addStdOutLineListener(outputListener)
         .runDevAppServerWait(0).async(true).build();
 
     assertNull(sdk.getRunDevAppServerWaitListener());
