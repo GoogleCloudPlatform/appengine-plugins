@@ -14,6 +14,8 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
+import static java.lang.ProcessBuilder.Redirect;
+
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
@@ -24,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
-import static java.lang.ProcessBuilder.Redirect;
 
 
 /**
