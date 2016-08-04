@@ -405,9 +405,6 @@ public class CloudSdk {
       ProcessRunner processRunner;
       WaitingProcessOutputLineListener runDevAppServerWaitListener = null;
       if (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0) {
-        processRunner = new DefaultProcessRunner(async, exitListeners, startListeners,
-            stdOutLineListeners, stdErrLineListeners);
-
         // Configure listeners for async dev app server start with waiting.
         if (async && runDevAppServerWaitSeconds > 0) {
           runDevAppServerWaitListener = new WaitingProcessOutputLineListener(
@@ -418,6 +415,9 @@ public class CloudSdk {
           stdErrLineListeners.add(runDevAppServerWaitListener);
           exitListeners.add(0, runDevAppServerWaitListener);
         }
+
+        processRunner = new DefaultProcessRunner(async, exitListeners, startListeners,
+            stdOutLineListeners, stdErrLineListeners);
       } else {
         processRunner = new DefaultProcessRunner(async, exitListeners, startListeners,
             inheritProcessOutput);
