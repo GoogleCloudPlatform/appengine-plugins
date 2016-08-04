@@ -14,17 +14,18 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
-import static java.lang.ProcessBuilder.Redirect;
-
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
 import com.google.common.base.Charsets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import static java.lang.ProcessBuilder.Redirect;
 
 
 /**
@@ -32,36 +33,52 @@ import java.util.Scanner;
  * monitoring output and checking the exit code of the child process.
  */
 public class DefaultProcessRunner implements ProcessRunner {
-  private final boolean async;
-  private final List<ProcessOutputLineListener> stdOutLineListeners;
-  private final List<ProcessOutputLineListener> stdErrLineListeners;
-  private final List<ProcessExitListener> exitListeners;
-  private final List<ProcessStartListener> startListeners;
-  private final boolean inheritProcessOutput;
+  private boolean async;
+  private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
+  private List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
+  private List<ProcessExitListener> exitListeners;
+  private List<ProcessStartListener> startListeners;
+  private boolean inheritProcessOutput;
 
   private Map<String, String> environment;
 
   /**
-   * @param async                Whether to run commands asynchronously
-   * @param stdOutLineListeners  Client consumers of process standard output. If empty, output will
-   *                             be inherited by parent process.
-   * @param stdErrLineListeners  Client consumers of process error output. If empty, output will be
-   *                             inherited by parent process.
-   * @param exitListeners        Client consumers of process onExit event.
-   * @param startListeners       Client consumers of process onStart event.
-   * @param inheritProcessOutput If true, redirects stdout and stderr to the parent process.
+   * Base constructor.
+   *
+   * @param async           whether to run commands asynchronously
+   * @param exitListeners   client consumers of process onExit event
+   * @param startListeners  client consumers of process onStart event
    */
-  public DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
-                              List<ProcessOutputLineListener> stdErrLineListeners,
-                              List<ProcessExitListener> exitListeners,
-                              List<ProcessStartListener> startListeners,
-                              boolean inheritProcessOutput) {
+  public DefaultProcessRunner(boolean async,
+                               List<ProcessExitListener> exitListeners,
+                               List<ProcessStartListener> startListeners,
+                               boolean inheritProcessOutput) {
     this.async = async;
-    this.stdOutLineListeners = stdOutLineListeners;
-    this.stdErrLineListeners = stdErrLineListeners;
     this.exitListeners = exitListeners;
     this.startListeners = startListeners;
     this.inheritProcessOutput = inheritProcessOutput;
+  }
+
+  /**
+   * Constructor that attaches output listeners to a process. It assumes the generated subprocess
+   * does not inherit stdout/stderr.
+   *
+   * @param async                whether to run commands asynchronously
+   * @param exitListeners        client consumers of process onExit event
+   * @param startListeners       client consumers of process onStart event
+   * @param stdOutLineListeners  client consumers of process standard output. If empty, output will
+   *                             be inherited by parent process
+   * @param stdErrLineListeners  client consumers of process error output. If empty, output will be
+   *                             inherited by parent process
+   */
+  public DefaultProcessRunner(boolean async,
+                              List<ProcessExitListener> exitListeners,
+                              List<ProcessStartListener> startListeners,
+                              List<ProcessOutputLineListener> stdOutLineListeners,
+                              List<ProcessOutputLineListener> stdErrLineListeners) {
+    this(async, exitListeners, startListeners, false /* inheritProcessOutput */);
+    this.stdOutLineListeners = stdOutLineListeners;
+    this.stdErrLineListeners = stdErrLineListeners;
   }
 
   /**

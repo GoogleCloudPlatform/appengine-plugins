@@ -30,22 +30,15 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Cloud SDK CLI wrapper.
@@ -72,39 +65,20 @@ public class CloudSdk {
   private final String appCommandOutputFormat;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
-  private CloudSdk(Path sdkPath, String appCommandMetricsEnvironment,
+  private CloudSdk(Path sdkPath,
+                   String appCommandMetricsEnvironment,
                    String appCommandMetricsEnvironmentVersion,
                    @Nullable File appCommandCredentialFile,
                    String appCommandOutputFormat,
-                   boolean async,
-                   List<ProcessOutputLineListener> stdOutLineListeners,
-                   List<ProcessOutputLineListener> stdErrLineListeners,
-                   List<ProcessExitListener> exitListeners,
-                   List<ProcessStartListener> startListeners,
-                   int runDevAppServerWaitSeconds,
-                   boolean inheritProcessOutput) {
+                   ProcessRunner processRunner,
+                   WaitingProcessOutputLineListener runDevAppServerWaitListener) {
     this.sdkPath = sdkPath;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
     this.appCommandCredentialFile = appCommandCredentialFile;
     this.appCommandOutputFormat = appCommandOutputFormat;
-
-    // configure listeners for async dev app server start with waiting
-    if (async && runDevAppServerWaitSeconds > 0) {
-      this.runDevAppServerWaitListener = new WaitingProcessOutputLineListener(
-          ".*(Dev App Server is now running|INFO:oejs\\.Server:main: Started).*",
-          runDevAppServerWaitSeconds);
-
-      stdOutLineListeners.add(runDevAppServerWaitListener);
-      stdErrLineListeners.add(runDevAppServerWaitListener);
-      exitListeners.add(0, runDevAppServerWaitListener);
-    } else {
-      this.runDevAppServerWaitListener = null;
-    }
-
-    // create process runner
-    this.processRunner = new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
-        exitListeners, startListeners, inheritProcessOutput);
+    this.processRunner = processRunner;
+    this.runDevAppServerWaitListener = runDevAppServerWaitListener;
 
     // Populate jar locations.
     // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
@@ -388,10 +362,10 @@ public class CloudSdk {
      *
      * <p>If this is set to {@code true}, no stdout and stderr listeners can be specified.
      *
-     * @param inheritStdOutErr If true, stdout and stderr are redirected to the parent process
+     * @param inheritProcessOutput If true, stdout and stderr are redirected to the parent process
      */
-    public Builder inheritStdOutErr(boolean inheritStdOutErr) {
-      this.inheritProcessOutput = inheritStdOutErr;
+    public Builder inheritProcessOutput(boolean inheritProcessOutput) {
+      this.inheritProcessOutput = inheritProcessOutput;
       return this;
     }
 
@@ -416,10 +390,31 @@ public class CloudSdk {
             + " output listeners.");
       }
 
+      // Construct process runner.
+      ProcessRunner processRunner;
+      WaitingProcessOutputLineListener runDevAppServerWaitListener = null;
+      if (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0) {
+        processRunner = new DefaultProcessRunner(async, exitListeners, startListeners,
+            stdOutLineListeners, stdErrLineListeners);
+
+        // Configure listeners for async dev app server start with waiting.
+        if (async && runDevAppServerWaitSeconds > 0) {
+          runDevAppServerWaitListener = new WaitingProcessOutputLineListener(
+              ".*(Dev App Server is now running|INFO:oejs\\.Server:main: Started).*",
+              runDevAppServerWaitSeconds);
+
+          stdOutLineListeners.add(runDevAppServerWaitListener);
+          stdErrLineListeners.add(runDevAppServerWaitListener);
+          exitListeners.add(0, runDevAppServerWaitListener);
+        }
+      } else {
+        processRunner = new DefaultProcessRunner(async, exitListeners, startListeners,
+            inheritProcessOutput);
+      }
+
       return new CloudSdk(sdkPath, appCommandMetricsEnvironment,
-          appCommandMetricsEnvironmentVersion, appCommandCredentialFile,
-          appCommandOutputFormat, async, stdOutLineListeners, stdErrLineListeners, exitListeners,
-          startListeners, runDevAppServerWaitSeconds, inheritProcessOutput);
+          appCommandMetricsEnvironmentVersion, appCommandCredentialFile, appCommandOutputFormat,
+          processRunner, runDevAppServerWaitListener);
     }
 
     /**
