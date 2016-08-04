@@ -238,6 +238,11 @@ public class CloudSdk {
     }
   }
 
+  @VisibleForTesting
+  WaitingProcessOutputLineListener getRunDevAppServerWaitListener() {
+    return runDevAppServerWaitListener;
+  }
+
   public static class Builder {
     private Path sdkPath;
     private String appCommandMetricsEnvironment;
@@ -469,6 +474,21 @@ public class CloudSdk {
     public Builder resolvers(List<CloudSdkResolver> resolvers) {
       this.resolvers = resolvers;
       return this;
+    }
+
+    @VisibleForTesting
+    List<ProcessOutputLineListener> getStdOutLineListeners() {
+      return stdOutLineListeners;
+    }
+
+    @VisibleForTesting
+    List<ProcessOutputLineListener> getStdErrLineListeners() {
+      return stdErrLineListeners;
+    }
+
+    @VisibleForTesting
+    List<ProcessExitListener> getExitListeners() {
+      return exitListeners;
     }
   }
 
