@@ -32,6 +32,7 @@ import com.google.common.collect.Maps;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -43,7 +44,6 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -60,8 +60,8 @@ public class CloudSdk {
   private static final String JAVA_APPENGINE_SDK_PATH =
       "platform/google_appengine/google/appengine/tools/java/lib";
   private static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
-  private static final String WINDOWS_BUNDLED_PYTHON = "platform/bundledpython/python.exe";
   private static final Map<String, Path> JAR_LOCATIONS = new HashMap<>();
+  private static final String WINDOWS_BUNDLED_PYTHON = "platform/bundledpython/python.exe";
 
   private final Path sdkPath;
   private final ProcessRunner processRunner;
@@ -72,37 +72,20 @@ public class CloudSdk {
   private final String appCommandOutputFormat;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
-  private CloudSdk(Path sdkPath, String appCommandMetricsEnvironment,
+  private CloudSdk(Path sdkPath,
+                   String appCommandMetricsEnvironment,
                    String appCommandMetricsEnvironmentVersion,
-                   @Nullable File appCommandCredentialFile, String appCommandOutputFormat,
-                   boolean async,
-                   List<ProcessOutputLineListener> stdOutLineListeners,
-                   List<ProcessOutputLineListener> stdErrLineListeners,
-                   List<ProcessExitListener> exitListeners,
-                   List<ProcessStartListener> startListeners,
-                   int runDevAppServerWaitSeconds) {
+                   @Nullable File appCommandCredentialFile,
+                   String appCommandOutputFormat,
+                   ProcessRunner processRunner,
+                   WaitingProcessOutputLineListener runDevAppServerWaitListener) {
     this.sdkPath = sdkPath;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
     this.appCommandCredentialFile = appCommandCredentialFile;
     this.appCommandOutputFormat = appCommandOutputFormat;
-
-    // configure listeners for async dev app server start with waiting
-    if (async && runDevAppServerWaitSeconds > 0) {
-      this.runDevAppServerWaitListener = new WaitingProcessOutputLineListener(
-          ".*(Dev App Server is now running|INFO:oejs\\.Server:main: Started).*",
-          runDevAppServerWaitSeconds);
-
-      stdOutLineListeners.add(runDevAppServerWaitListener);
-      stdErrLineListeners.add(runDevAppServerWaitListener);
-      exitListeners.add(0, runDevAppServerWaitListener);
-    } else {
-      this.runDevAppServerWaitListener = null;
-    }
-
-    // create process runner
-    this.processRunner = new DefaultProcessRunner(async, stdOutLineListeners, stdErrLineListeners,
-        exitListeners, startListeners);
+    this.processRunner = processRunner;
+    this.runDevAppServerWaitListener = runDevAppServerWaitListener;
 
     // Populate jar locations.
     // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
@@ -147,8 +130,9 @@ public class CloudSdk {
   /**
    * Uses the process runner to execute a dev_appserver.py command.
    *
-   * @param args The arguments to pass to dev_appserver.py.
-   * @throws ProcessRunnerException When process runner encounters an error.
+   * @param args the arguments to pass to dev_appserver.py
+   * @throws InvalidPathException when Python can't be located
+   * @throws ProcessRunnerException when process runner encounters an error
    */
   public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
     List<String> command = new ArrayList<>();
@@ -214,8 +198,26 @@ public class CloudSdk {
     return getSdkPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
-  private Path getWindowsPythonPath() {
-    return getSdkPath().resolve(WINDOWS_BUNDLED_PYTHON);
+  // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/189
+  @VisibleForTesting
+  Path getWindowsPythonPath() {
+    String cloudSdkPython = System.getenv("CLOUDSDK_PYTHON");
+    if (cloudSdkPython != null) {
+      Path cloudSdkPythonPath = Paths.get(cloudSdkPython);
+      if (Files.exists(cloudSdkPythonPath)) {
+        return cloudSdkPythonPath;
+      } else {
+        throw new InvalidPathException(cloudSdkPython, "python binary not in specified location");
+      }
+    }
+    
+    Path pythonPath = getSdkPath().resolve(WINDOWS_BUNDLED_PYTHON);
+    if (Files.exists(pythonPath)) {
+      return pythonPath;
+    } else {
+      return Paths.get("python");
+    } 
+
   }
 
   /**
@@ -262,6 +264,11 @@ public class CloudSdk {
     }
   }
 
+  @VisibleForTesting
+  WaitingProcessOutputLineListener getRunDevAppServerWaitListener() {
+    return runDevAppServerWaitListener;
+  }
+
   public static class Builder {
     private Path sdkPath;
     private String appCommandMetricsEnvironment;
@@ -276,6 +283,7 @@ public class CloudSdk {
     private List<ProcessStartListener> startListeners = new ArrayList<>();
     private List<CloudSdkResolver> resolvers;
     private int runDevAppServerWaitSeconds;
+    private boolean inheritProcessOutput;
 
     /**
      * The home directory of Google Cloud SDK.
@@ -380,6 +388,19 @@ public class CloudSdk {
     }
 
     /**
+     * Causes the generated gcloud or devappserver subprocess to inherit the calling process's
+     * stdout and stderr.
+     *
+     * <p>If this is set to {@code true}, no stdout and stderr listeners can be specified.
+     *
+     * @param inheritProcessOutput If true, stdout and stderr are redirected to the parent process
+     */
+    public Builder inheritProcessOutput(boolean inheritProcessOutput) {
+      this.inheritProcessOutput = inheritProcessOutput;
+      return this;
+    }
+
+    /**
      * Create a new instance of {@link CloudSdk}.
      *
      * <p>If {@code sdkPath} is not set, this method will look for the SDK in known install
@@ -392,10 +413,39 @@ public class CloudSdk {
         sdkPath = discoverSdkPath();
       }
 
+      // Verify there aren't listeners if subprocess inherits output.
+      // If output is inherited, then listeners won't receive anything.
+      if (inheritProcessOutput
+          && (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0)) {
+        throw new AppEngineException("You cannot specify subprocess output inheritance and"
+            + " output listeners.");
+      }
+
+      // Construct process runner.
+      ProcessRunner processRunner;
+      WaitingProcessOutputLineListener runDevAppServerWaitListener = null;
+      if (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0) {
+        // Configure listeners for async dev app server start with waiting.
+        if (async && runDevAppServerWaitSeconds > 0) {
+          runDevAppServerWaitListener = new WaitingProcessOutputLineListener(
+              ".*(Dev App Server is now running|INFO:oejs\\.Server:main: Started).*",
+              runDevAppServerWaitSeconds);
+
+          stdOutLineListeners.add(runDevAppServerWaitListener);
+          stdErrLineListeners.add(runDevAppServerWaitListener);
+          exitListeners.add(0, runDevAppServerWaitListener);
+        }
+
+        processRunner = new DefaultProcessRunner(async, exitListeners, startListeners,
+            stdOutLineListeners, stdErrLineListeners);
+      } else {
+        processRunner = new DefaultProcessRunner(async, exitListeners, startListeners,
+            inheritProcessOutput);
+      }
+
       return new CloudSdk(sdkPath, appCommandMetricsEnvironment,
-          appCommandMetricsEnvironmentVersion, appCommandCredentialFile,
-          appCommandOutputFormat, async, stdOutLineListeners, stdErrLineListeners, exitListeners,
-          startListeners, runDevAppServerWaitSeconds);
+          appCommandMetricsEnvironmentVersion, appCommandCredentialFile, appCommandOutputFormat,
+          processRunner, runDevAppServerWaitListener);
     }
 
     /**
@@ -431,7 +481,7 @@ public class CloudSdk {
       if (this.resolvers != null) {
         resolvers = new ArrayList<>(this.resolvers);
       } else {
-        // Explicitly specify classloader rather than use the Thread Context Class Loader (TCCL)
+        // Explicitly specify classloader rather than use the Thread Context Class Loader
         ServiceLoader<CloudSdkResolver> services =
             ServiceLoader.load(CloudSdkResolver.class, getClass().getClassLoader());
         resolvers = Lists.newArrayList(services);
@@ -450,6 +500,21 @@ public class CloudSdk {
     public Builder resolvers(List<CloudSdkResolver> resolvers) {
       this.resolvers = resolvers;
       return this;
+    }
+
+    @VisibleForTesting
+    List<ProcessOutputLineListener> getStdOutLineListeners() {
+      return stdOutLineListeners;
+    }
+
+    @VisibleForTesting
+    List<ProcessOutputLineListener> getStdErrLineListeners() {
+      return stdErrLineListeners;
+    }
+
+    @VisibleForTesting
+    List<ProcessExitListener> getExitListeners() {
+      return exitListeners;
     }
   }
 

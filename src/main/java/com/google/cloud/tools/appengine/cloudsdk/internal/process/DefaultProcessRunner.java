@@ -19,10 +19,10 @@ import static java.lang.ProcessBuilder.Redirect;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
-
 import com.google.common.base.Charsets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -34,31 +34,49 @@ import java.util.Scanner;
  */
 public class DefaultProcessRunner implements ProcessRunner {
   private final boolean async;
-  private final List<ProcessOutputLineListener> stdOutLineListeners;
-  private final List<ProcessOutputLineListener> stdErrLineListeners;
+  private final List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
+  private final List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
   private final List<ProcessExitListener> exitListeners;
   private final List<ProcessStartListener> startListeners;
+  private final boolean inheritProcessOutput;
 
   private Map<String, String> environment;
 
   /**
-   * @param async               Whether to run commands asynchronously
-   * @param stdOutLineListeners Client consumers of process standard output. If empty, output will
-   *                            be inherited by parent process.
-   * @param stdErrLineListeners Client consumers of process error output. If empty, output will be
-   *                            inherited by parent process.
-   * @param exitListeners       Client consumers of process onExit event.
-   * @param startListeners      Client consumers of process onStart event.
+   * Base constructor.
+   *
+   * @param async           whether to run commands asynchronously
+   * @param exitListeners   client consumers of process onExit event
+   * @param startListeners  client consumers of process onStart event
    */
-  public DefaultProcessRunner(boolean async, List<ProcessOutputLineListener> stdOutLineListeners,
-                              List<ProcessOutputLineListener> stdErrLineListeners,
-                              List<ProcessExitListener> exitListeners,
-                              List<ProcessStartListener> startListeners) {
+  public DefaultProcessRunner(boolean async,
+                               List<ProcessExitListener> exitListeners,
+                               List<ProcessStartListener> startListeners,
+                               boolean inheritProcessOutput) {
     this.async = async;
-    this.stdOutLineListeners = stdOutLineListeners;
-    this.stdErrLineListeners = stdErrLineListeners;
     this.exitListeners = exitListeners;
     this.startListeners = startListeners;
+    this.inheritProcessOutput = inheritProcessOutput;
+  }
+
+  /**
+   * Constructor that attaches output listeners to a process. It assumes the generated subprocess
+   * does not inherit stdout/stderr.
+   *
+   * @param async                whether to run commands asynchronously
+   * @param exitListeners        client consumers of process onExit event
+   * @param startListeners       client consumers of process onStart event
+   * @param stdOutLineListeners  client consumers of process standard output
+   * @param stdErrLineListeners  client consumers of process error output
+   */
+  public DefaultProcessRunner(boolean async,
+                              List<ProcessExitListener> exitListeners,
+                              List<ProcessStartListener> startListeners,
+                              List<ProcessOutputLineListener> stdOutLineListeners,
+                              List<ProcessOutputLineListener> stdErrLineListeners) {
+    this(async, exitListeners, startListeners, false /* inheritProcessOutput */);
+    this.stdOutLineListeners.addAll(stdOutLineListeners);
+    this.stdErrLineListeners.addAll(stdErrLineListeners);
   }
 
   /**
@@ -71,12 +89,15 @@ public class DefaultProcessRunner implements ProcessRunner {
    */
   public void run(String[] command) throws ProcessRunnerException {
     try {
-      // configure process builder
+      // Configure process builder.
       final ProcessBuilder processBuilder = new ProcessBuilder();
-      if (stdOutLineListeners.isEmpty()) {
+
+      // If there are no listeners, we might still want to redirect stdout and stderr to the parent
+      // process, or not.
+      if (stdOutLineListeners.isEmpty() && inheritProcessOutput) {
         processBuilder.redirectOutput(Redirect.INHERIT);
       }
-      if (stdErrLineListeners.isEmpty()) {
+      if (stdErrLineListeners.isEmpty() && inheritProcessOutput) {
         processBuilder.redirectError(Redirect.INHERIT);
       }
       if (environment != null) {
@@ -87,8 +108,13 @@ public class DefaultProcessRunner implements ProcessRunner {
 
       Process process = processBuilder.start();
 
-      handleStdOut(process);
-      handleErrOut(process);
+      // Only handle stdout or stderr if there are listeners.
+      if (!stdOutLineListeners.isEmpty()) {
+        handleStdOut(process);
+      }
+      if (!stdErrLineListeners.isEmpty()) {
+        handleErrOut(process);
+      }
 
       for (ProcessStartListener startListener : startListeners) {
         startListener.onStart(process);

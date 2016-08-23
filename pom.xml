@@ -7,13 +7,13 @@
 
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-plugins-core</artifactId>
-  <version>0.1.5-SNAPSHOT</version>
+  <version>0.1.6-SNAPSHOT</version>
 
   <name>App Engine Plugins Core Library</name>
   <description>
-    A common library for building App Engine plugins.
+    A library for client side software that manages App Engine programs.
   </description>
-  <url>https://github.com/GoogleCloudPlatform/app-tools-lib-for-java</url>
+  <url>https://github.com/GoogleCloudPlatform/appengine-plugins-core/</url>
 
   <licenses>
     <license>
