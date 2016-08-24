@@ -28,7 +28,7 @@ The library implements the following operations:
 
 # How to use
 
-Build the library using the "mvn clean install" command at the repository root directory, where the pom.xml file is located. This produces the appengine-plugins-core-0.1.3-SNAPSHOT.jar file in the "target" directory that you can import to your application's class path.
+Build the library using the "mvn clean install" command at the repository root directory, where the pom.xml file is located. This produces the appengine-plugins-core-*version*-SNAPSHOT.jar file in the "target" directory that you can add to your application's class path.
 
 To deploy a new version, a client calls the library in the following way:
 
