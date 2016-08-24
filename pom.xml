@@ -47,11 +47,11 @@
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/GoogleCloudPlatform/app-tools-lib-for-java.git
+    <connection>scm:git:https://github.com/GoogleCloudPlatform/appengine-plugins-core.git
     </connection>
-    <developerConnection>scm:git:https://github.com/GoogleCloudPlatform/app-tools-lib-for-java.git
+    <developerConnection>scm:git:https://github.com/GoogleCloudPlatform/appengine-plugins-core.git
     </developerConnection>
-    <url>https://github.com/GoogleCloudPlatform/app-tools-lib-for-java</url>
+    <url>https://github.com/GoogleCloudPlatform/appengine-plugins-core</url>
   </scm>
 
   <properties>
