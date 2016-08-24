@@ -30,8 +30,6 @@ public class DefaultDeployConfiguration
 
   private List<File> deployables;
   private String bucket;
-  private String dockerBuild;
-  private Boolean force;
   private String imageUrl;
   private Boolean promote;
   private String server;
@@ -54,24 +52,6 @@ public class DefaultDeployConfiguration
 
   public void setBucket(String bucket) {
     this.bucket = bucket;
-  }
-
-  @Override
-  public String getDockerBuild() {
-    return dockerBuild;
-  }
-
-  public void setDockerBuild(String dockerBuild) {
-    this.dockerBuild = dockerBuild;
-  }
-
-  @Override
-  public Boolean getForce() {
-    return force;
-  }
-
-  public void setForce(Boolean force) {
-    this.force = force;
   }
 
   @Override

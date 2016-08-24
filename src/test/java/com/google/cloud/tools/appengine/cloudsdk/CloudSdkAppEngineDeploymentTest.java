@@ -70,8 +70,6 @@ public class CloudSdkAppEngineDeploymentTest {
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1));
     configuration.setBucket("gs://a-bucket");
-    configuration.setDockerBuild("cloud");
-    configuration.setForce(true);
     configuration.setImageUrl("imageUrl");
     configuration.setProject("project");
     configuration.setPromote(true);
@@ -82,9 +80,9 @@ public class CloudSdkAppEngineDeploymentTest {
     deployment.deploy(configuration);
 
     List<String> expectedCommand = ImmutableList
-        .of("deploy", appYaml1.toString(), "--bucket", "gs://a-bucket", "--docker-build", "cloud",
-            "--force", "--image-url", "imageUrl", "--promote", "--server", "appengine.google.com",
-            "--stop-previous-version", "--version", "v1", "--project", "project");
+        .of("deploy", appYaml1.toString(), "--bucket", "gs://a-bucket", "--image-url", "imageUrl",
+            "--promote", "--server", "appengine.google.com", "--stop-previous-version", "--version",
+            "v1", "--project", "project");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
@@ -93,15 +91,13 @@ public class CloudSdkAppEngineDeploymentTest {
   public void testNewDeployAction_booleanFlags() throws AppEngineException, ProcessRunnerException {
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1));
-    configuration.setForce(false);
     configuration.setPromote(false);
     configuration.setStopPreviousVersion(false);
 
     deployment.deploy(configuration);
 
     List<String> expectedCommand = ImmutableList
-        .of("deploy", appYaml1.toString(), "--no-force", "--no-promote",
-            "--no-stop-previous-version");
+        .of("deploy", appYaml1.toString(), "--no-promote", "--no-stop-previous-version");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }

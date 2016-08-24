@@ -28,10 +28,6 @@ public interface DeployConfiguration extends Configuration {
 
   String getBucket();
 
-  String getDockerBuild();
-
-  Boolean getForce();
-
   String getImageUrl();
 
   Boolean getPromote();

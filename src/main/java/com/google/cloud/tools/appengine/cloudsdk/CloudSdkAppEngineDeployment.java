@@ -57,8 +57,6 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     }
 
     arguments.addAll(GcloudArgs.get("bucket", config.getBucket()));
-    arguments.addAll(GcloudArgs.get("docker-build", config.getDockerBuild()));
-    arguments.addAll(GcloudArgs.get("force", config.getForce()));
     arguments.addAll(GcloudArgs.get("image-url", config.getImageUrl()));
     arguments.addAll(GcloudArgs.get("promote", config.getPromote()));
     arguments.addAll(GcloudArgs.get("server", config.getServer()));
