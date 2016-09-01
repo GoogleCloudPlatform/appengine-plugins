@@ -53,5 +53,5 @@ configuration.setStopPreviousVersion(true);
 configuration.setVersion("v1");
 
 // deploy
-deploy.deploy(deployConfiguration);
+deployment.deploy(deployConfiguration);
 ```
