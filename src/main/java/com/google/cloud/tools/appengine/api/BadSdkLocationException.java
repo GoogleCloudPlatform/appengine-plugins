@@ -17,22 +17,10 @@
 package com.google.cloud.tools.appengine.api;
 
 /**
- * API-level runtime exception for wrapping any failures in performing library operations.
+ * Signals an SDK location isn't a directory.
  */
-public class AppEngineException extends RuntimeException {
-
-  public AppEngineException() {
-  }
-
-  public AppEngineException(String message) {
+public class BadSdkLocationException extends AppEngineException {
+  public BadSdkLocationException(String message) {
     super(message);
-  }
-
-  public AppEngineException(Throwable cause) {
-    super(cause);
-  }
-
-  public AppEngineException(String message, Throwable cause) {
-    super(message, cause);
   }
 }

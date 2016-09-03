@@ -17,22 +17,10 @@
 package com.google.cloud.tools.appengine.api;
 
 /**
- * API-level runtime exception for wrapping any failures in performing library operations.
+ * Signals a given location isn't, or doesn't contain a file.
  */
-public class AppEngineException extends RuntimeException {
-
-  public AppEngineException() {
-  }
-
-  public AppEngineException(String message) {
+public class NotAFileException extends AppEngineException {
+  public NotAFileException(String message) {
     super(message);
-  }
-
-  public AppEngineException(Throwable cause) {
-    super(cause);
-  }
-
-  public AppEngineException(String message, Throwable cause) {
-    super(message, cause);
   }
 }

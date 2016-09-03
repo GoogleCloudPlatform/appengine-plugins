@@ -17,6 +17,8 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.cloud.tools.appengine.api.BadSdkLocationException;
+import com.google.cloud.tools.appengine.api.NotAFileException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.DefaultProcessRunner;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunner;
@@ -237,30 +239,27 @@ public class CloudSdk {
    */
   public void validate() throws AppEngineException {
     if (sdkPath == null) {
-      throw new AppEngineException("Validation Error: SDK path is null");
+      throw new NullPointerException("Validation Error: SDK path is null");
     }
     if (!Files.isDirectory(sdkPath)) {
-      throw new AppEngineException(
+      throw new BadSdkLocationException(
           "Validation Error: SDK location '" + sdkPath + "' is not a directory.");
     }
     if (!Files.isRegularFile(getGCloudPath())) {
-      throw new AppEngineException(
+      throw new NotAFileException(
           "Validation Error: gcloud location '" + getGCloudPath() + "' is not a file.");
     }
     if (!Files.isRegularFile(getDevAppServerPath())) {
-      throw new AppEngineException(
-          "Validation Error: dev_appserver.py location '"
-              + getDevAppServerPath() + "' is not a file.");
+      throw new NotAFileException("Validation Error: dev_appserver.py location '"
+          + getDevAppServerPath() + "' is not a file.");
     }
     if (!Files.isDirectory(getJavaAppEngineSdkPath())) {
-      throw new AppEngineException(
-          "Validation Error: Java App Engine SDK location '"
-              + getJavaAppEngineSdkPath() + "' is not a directory.");
+      throw new BadSdkLocationException("Validation Error: Java App Engine SDK location '"
+          + getJavaAppEngineSdkPath() + "' is not a directory.");
     }
     if (!Files.isRegularFile(JAR_LOCATIONS.get(JAVA_TOOLS_JAR))) {
-      throw new AppEngineException(
-          "Validation Error: Java Tools jar location '"
-              + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not a file.");
+      throw new NotAFileException("Validation Error: Java Tools jar location '"
+          + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not a file.");
     }
   }
 
