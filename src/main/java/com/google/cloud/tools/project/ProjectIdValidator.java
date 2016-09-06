@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 /**
  * Check if a string is a legal <a href='https://support.google.com/cloud/answer/6158840?hl=en'>Google 
- * Cloud Platform Project ID</a>. Source: com.google.apphosting.base.AppId
+ * Cloud Platform Project ID</a>. Source: com.google.apphosting.base.AppId<p>
  * 
  * <pre>
  * app-id ::= [(domain):](display-app-id)
@@ -22,8 +22,6 @@ public class ProjectIdValidator {
   public static boolean validate(String id) {
     if (id == null) {
       return false;
-    } else if (id.isEmpty()) {
-      return true;
     }
     Matcher matcher = PATTERN.matcher(id);
     return matcher.matches();

@@ -23,7 +23,8 @@ public class ProjectIdValidatorTest {
   @Test
   public void testLongWord() {
     boolean validate = ProjectIdValidator.validate(
-        "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
+        "012345678901234567890123456789012345678901234567890123456789"
+        + "012345678901234567890123456789012345678901234567890");
     Assert.assertFalse(validate);
   }
   
@@ -34,7 +35,7 @@ public class ProjectIdValidatorTest {
 
   @Test
   public void testEmptyString() {
-    Assert.assertTrue(ProjectIdValidator.validate(""));
+    Assert.assertFalse(ProjectIdValidator.validate(""));
   }
   
   @Test
