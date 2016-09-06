@@ -19,6 +19,14 @@ public class ProjectIdValidator {
 
   private static final Pattern PATTERN = Pattern.compile("([a-z\\d\\-\\.]{1,100}:)?[a-z\\d\\-\\.]{1,100}");
   
+  /**
+   * Check whether a string is a syntactically correct project ID.
+   * This method only checks syntax. It does not check that the ID
+   * actually identifies a project in the Google Cloud Platform. 
+   * 
+   * @param id the 
+   * @return true if it's correct
+   */
   public static boolean validate(String id) {
     if (id == null) {
       return false;
