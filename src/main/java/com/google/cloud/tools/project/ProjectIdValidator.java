@@ -41,8 +41,8 @@ public class ProjectIdValidator {
    * This method only checks syntax. It does not check that the ID
    * actually identifies a project in the Google Cloud Platform. 
    * 
-   * @param id the 
-   * @return true if it's correct
+   * @param id the alleged project ID
+   * @return true if it's correct, false otherwise
    */
   public static boolean validate(String id) {
     if (id == null) {
