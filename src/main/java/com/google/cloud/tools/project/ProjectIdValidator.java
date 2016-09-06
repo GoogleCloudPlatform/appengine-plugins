@@ -17,7 +17,8 @@ import java.util.regex.Pattern;
  */
 public class ProjectIdValidator {
 
-  private static final Pattern PATTERN = Pattern.compile("([a-z\\d\\-\\.]{1,100}:)?[a-z\\d\\-\\.]{1,100}");
+  private static final Pattern PATTERN = Pattern.compile(
+      "([a-z\\d\\-\\.]{1,100}:)?[a-z\\d\\-\\.]{1,100}");
   
   /**
    * Check whether a string is a syntactically correct project ID.
