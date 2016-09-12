@@ -23,7 +23,7 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
  */
 public class AppEngineJavaComponentsNotInstalledException extends AppEngineException {
 
-  AppEngineJavaComponentsNotInstalledException(String message) {
+  public AppEngineJavaComponentsNotInstalledException(String message) {
     super(message);
   }
 

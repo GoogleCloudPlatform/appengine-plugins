@@ -23,7 +23,7 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
  */
 public class CloudSdkNotFoundException extends AppEngineException {
 
-  CloudSdkNotFoundException(String message) {
+  public CloudSdkNotFoundException(String message) {
     super(message);
   }
 
