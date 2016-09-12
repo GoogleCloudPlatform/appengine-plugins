@@ -231,9 +231,12 @@ public class CloudSdk {
   }
 
   /**
-   * Checks whether the configured Cloud SDK Path is valid.
+   * Checks whether the Cloud SDK Path with necessary components is installed in
+   * the expected location.
    *
-   * @throws AppEngineException when there is a validation error.
+   * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java 
+   *     components are not installed in the Cloud SDK
+   * @throws AppEngineException when the Cloud SDK is not installed where expected
    */
   public void validate() throws AppEngineException {
     if (sdkPath == null) {
@@ -253,9 +256,8 @@ public class CloudSdk {
               + getDevAppServerPath() + "' is not a file.");
     }
     if (!Files.isDirectory(getJavaAppEngineSdkPath())) {
-      throw new AppEngineException(
-          "Validation Error: Java App Engine SDK location '"
-              + getJavaAppEngineSdkPath() + "' is not a directory.");
+      throw new AppEngineJavaComponentsNotInstalledException(
+          "Validation Error: Java App Engine components not installed");
     }
     if (!Files.isRegularFile(JAR_LOCATIONS.get(JAVA_TOOLS_JAR))) {
       throw new AppEngineException(
