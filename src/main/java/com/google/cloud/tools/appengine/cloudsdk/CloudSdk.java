@@ -101,8 +101,11 @@ public class CloudSdk {
    * Uses the process runner to execute the gcloud app command with the provided arguments.
    *
    * @param args The arguments to pass to "gcloud app" command.
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    */
   public void runAppCommand(List<String> args) throws ProcessRunnerException {
+    validateCloudSdk();
+
     List<String> command = new ArrayList<>();
     command.add(getGCloudPath().toString());
     command.add("app");
@@ -131,10 +134,19 @@ public class CloudSdk {
    * Uses the process runner to execute a dev_appserver.py command.
    *
    * @param args the arguments to pass to dev_appserver.py
-   * @throws InvalidPathException when Python can't be located
-   * @throws ProcessRunnerException when process runner encounters an error
+   * @throws InvalidPathException      when Python can't be located
+   * @throws ProcessRunnerException    when process runner encounters an error
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws AppEngineException        when dev_appserver.py cannot be found
    */
   public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
+    validateCloudSdk();
+    if (!Files.isRegularFile(getDevAppServerPath())) {
+      throw new AppEngineException(
+          "Validation Error: dev_appserver.py location '"
+              + getDevAppServerPath() + "' is not a file.");
+    }
+
     List<String> command = new ArrayList<>();
 
     if (IS_WINDOWS) {
@@ -156,8 +168,13 @@ public class CloudSdk {
 
   /**
    * Executes an App Engine SDK CLI command.
+   *
+   * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java components are
+   *                                                      not installed in the Cloud SDK
    */
   public void runAppCfgCommand(List<String> args) throws ProcessRunnerException {
+    validateAppEngineJavaComponents();
+
     // AppEngineSdk requires this system property to be set.
     System.setProperty("appengine.sdk.root", getJavaAppEngineSdkPath().toString());
 
@@ -210,13 +227,13 @@ public class CloudSdk {
         throw new InvalidPathException(cloudSdkPython, "python binary not in specified location");
       }
     }
-    
+
     Path pythonPath = getSdkPath().resolve(WINDOWS_BUNDLED_PYTHON);
     if (Files.exists(pythonPath)) {
       return pythonPath;
     } else {
       return Paths.get("python");
-    } 
+    }
 
   }
 
@@ -231,36 +248,39 @@ public class CloudSdk {
   }
 
   /**
-   * Checks whether the Cloud SDK Path with necessary components is installed in
-   * the expected location.
+   * Checks whether the Cloud SDK Path with is valid.
    *
-   * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java 
-   *     components are not installed in the Cloud SDK
-   * @throws AppEngineException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    */
-  public void validate() throws AppEngineException {
+  public void validateCloudSdk() throws CloudSdkNotFoundException {
     if (sdkPath == null) {
-      throw new AppEngineException("Validation Error: SDK path is null");
+      throw new CloudSdkNotFoundException("Validation Error: SDK path is null");
     }
     if (!Files.isDirectory(sdkPath)) {
-      throw new AppEngineException(
+      throw new CloudSdkNotFoundException(
           "Validation Error: SDK location '" + sdkPath + "' is not a directory.");
     }
     if (!Files.isRegularFile(getGCloudPath())) {
-      throw new AppEngineException(
+      throw new CloudSdkNotFoundException(
           "Validation Error: gcloud location '" + getGCloudPath() + "' is not a file.");
     }
-    if (!Files.isRegularFile(getDevAppServerPath())) {
-      throw new AppEngineException(
-          "Validation Error: dev_appserver.py location '"
-              + getDevAppServerPath() + "' is not a file.");
-    }
+  }
+
+  /**
+   * Checks whether the App Engine Java components are installed in the expected location in the
+   * Cloud SDK.
+   *
+   * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java components are
+   *                                                      not installed in the Cloud SDK
+   */
+  public void validateAppEngineJavaComponents()
+      throws AppEngineJavaComponentsNotInstalledException {
     if (!Files.isDirectory(getJavaAppEngineSdkPath())) {
       throw new AppEngineJavaComponentsNotInstalledException(
           "Validation Error: Java App Engine components not installed");
     }
     if (!Files.isRegularFile(JAR_LOCATIONS.get(JAVA_TOOLS_JAR))) {
-      throw new AppEngineException(
+      throw new AppEngineJavaComponentsNotInstalledException(
           "Validation Error: Java Tools jar location '"
               + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not a file.");
     }
