@@ -141,11 +141,8 @@ public class CloudSdk {
    */
   public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
     validateCloudSdk();
-    if (!Files.isRegularFile(getDevAppServerPath())) {
-      throw new AppEngineException(
-          "Validation Error: dev_appserver.py location '"
-              + getDevAppServerPath() + "' is not a file.");
-    }
+    // TODO: remove this check when the auto-install for Java is fixed in dev_appserver.py
+    validateAppEngineJavaComponents();
 
     List<String> command = new ArrayList<>();
 
@@ -263,6 +260,11 @@ public class CloudSdk {
     if (!Files.isRegularFile(getGCloudPath())) {
       throw new CloudSdkNotFoundException(
           "Validation Error: gcloud location '" + getGCloudPath() + "' is not a file.");
+    }
+    if (!Files.isRegularFile(getDevAppServerPath())) {
+      throw new CloudSdkNotFoundException(
+          "Validation Error: dev_appserver.py location '"
+              + getDevAppServerPath() + "' is not a file.");
     }
   }
 
