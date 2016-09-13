@@ -251,7 +251,7 @@ public class CloudSdk {
    */
   public void validateCloudSdk() throws CloudSdkNotFoundException {
     if (sdkPath == null) {
-      throw new CloudSdkNotFoundException("Validation Error: SDK path is null");
+      throw new CloudSdkNotFoundException("Validation Error: Cloud SDK path is null");
     }
     if (!Files.isDirectory(sdkPath)) {
       throw new CloudSdkNotFoundException(
@@ -279,7 +279,8 @@ public class CloudSdk {
       throws AppEngineJavaComponentsNotInstalledException {
     if (!Files.isDirectory(getJavaAppEngineSdkPath())) {
       throw new AppEngineJavaComponentsNotInstalledException(
-          "Validation Error: Java App Engine components not installed");
+          "Validation Error: Java App Engine components not installed."
+              + " Fix by running 'gcloud components install app-engine-java' on command-line.");
     }
     if (!Files.isRegularFile(JAR_LOCATIONS.get(JAVA_TOOLS_JAR))) {
       throw new AppEngineJavaComponentsNotInstalledException(
