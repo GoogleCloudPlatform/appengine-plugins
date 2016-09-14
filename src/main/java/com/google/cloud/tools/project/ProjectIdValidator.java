@@ -41,10 +41,9 @@ public class ProjectIdValidator {
       Pattern.compile("([a-z\\d\\-\\.]{1," + MAX_LENGTH + "})?\\:", Pattern.CASE_INSENSITIVE);
   private static final Pattern PARTITION_REGEX =
       Pattern.compile("([a-z\\d\\-]{1," + MAX_LENGTH + "})?\\~", Pattern.CASE_INSENSITIVE);
-  private static final Pattern PROJECT_ID_REGEX =
-      Pattern.compile(
-          "(?:" + PARTITION_REGEX + ")?((?:" + DOMAIN_REGEX + ")?(" + DISPLAY_PROJECT_ID_REGEX + "))",
-          Pattern.CASE_INSENSITIVE);  
+  private static final Pattern PROJECT_ID_REGEX = Pattern.compile(
+      "(?:" + PARTITION_REGEX + ")?((?:" + DOMAIN_REGEX + ")?(" + DISPLAY_PROJECT_ID_REGEX + "))",
+      Pattern.CASE_INSENSITIVE);  
   
   /**
    * Check whether a string is a syntactically correct project ID.
