@@ -24,9 +24,10 @@ import java.util.regex.Pattern;
  * Cloud Platform Project ID</a>. Source: com.google.apphosting.base.AppId<p>
  * 
  * <pre>
- * app-id ::= [(domain):](display-app-id)
+ * project-id ::= [(partition)~][(domain):](display-project-id)
+ * partition ::= [a-z\d\-\.]{1,100}
  * domain ::= r'(?!-)[a-z\d\-\.]{1,100}'
- * display-app-id ::= r'(?!-)[a-z\d\-]{1,100}'
+ * display-project-id ::= r'(?!-)[a-z\d\-]{1,100}'
  * </pre>
  * 
  * Note that in some older documentation this is referred to as an "application ID."

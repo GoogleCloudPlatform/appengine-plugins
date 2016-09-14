@@ -27,7 +27,7 @@ public class ProjectIdValidatorTest {
   }
 
   @Test
-  public void testPrefix() {
+  public void testPartition() {
     Assert.assertTrue(ProjectIdValidator.validate("s~google.com:mystore"));
   }
 
