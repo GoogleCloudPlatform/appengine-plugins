@@ -33,8 +33,17 @@ import java.util.regex.Pattern;
  */
 public class ProjectIdValidator {
 
-  private static final Pattern PATTERN = Pattern.compile(
-      "([a-z\\d\\-\\.]{1,100}:)?[a-z\\d\\-\\.]{1,100}");
+  private static final int MAX_LENGTH = 100;
+  private static final Pattern DISPLAY_PROJECT_ID_REGEX =
+      Pattern.compile("[a-z\\d\\-]{1," + MAX_LENGTH + "}", Pattern.CASE_INSENSITIVE);
+  private static final Pattern DOMAIN_REGEX =
+      Pattern.compile("([a-z\\d\\-\\.]{1," + MAX_LENGTH + "})?\\:", Pattern.CASE_INSENSITIVE);
+  private static final Pattern PARTITION_REGEX =
+      Pattern.compile("([a-z\\d\\-]{1," + MAX_LENGTH + "})?\\~", Pattern.CASE_INSENSITIVE);
+  private static final Pattern PROJECT_ID_REGEX =
+      Pattern.compile(
+          "(?:" + PARTITION_REGEX + ")?((?:" + DOMAIN_REGEX + ")?(" + DISPLAY_PROJECT_ID_REGEX + "))",
+          Pattern.CASE_INSENSITIVE);  
   
   /**
    * Check whether a string is a syntactically correct project ID.
@@ -48,7 +57,7 @@ public class ProjectIdValidator {
     if (id == null) {
       return false;
     }
-    Matcher matcher = PATTERN.matcher(id);
+    Matcher matcher = PROJECT_ID_REGEX.matcher(id);
     return matcher.matches();
   }
 

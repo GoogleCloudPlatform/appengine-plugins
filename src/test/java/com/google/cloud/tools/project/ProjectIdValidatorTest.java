@@ -27,13 +27,18 @@ public class ProjectIdValidatorTest {
   }
 
   @Test
+  public void testPrefix() {
+    Assert.assertTrue(ProjectIdValidator.validate("s~google.com:mystore"));
+  }
+
+  @Test
   public void testOneWord() {
     Assert.assertTrue(ProjectIdValidator.validate("word"));
   }
 
   @Test
   public void testUpperCase() {
-    Assert.assertFalse(ProjectIdValidator.validate("WORD"));
+    Assert.assertTrue(ProjectIdValidator.validate("WORD"));
   }
   
   @Test
