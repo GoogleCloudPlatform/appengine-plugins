@@ -37,6 +37,7 @@ public class DefaultVersionsListConfiguration
     this.service = service;
   }
 
+  @Override
   public Boolean getHideNoTraffic() {
     return hideNoTraffic;
   }

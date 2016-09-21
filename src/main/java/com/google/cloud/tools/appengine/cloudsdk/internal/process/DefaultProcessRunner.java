@@ -85,8 +85,9 @@ public class DefaultProcessRunner implements ProcessRunner {
    * <p>If any output listeners were configured, output will go to them only. Otherwise, process
    * output will be redirected to the caller via inheritIO.
    *
-   * @param command The shell command to execute
+   * @param command the shell command to execute
    */
+  @Override
   public void run(String[] command) throws ProcessRunnerException {
     try {
       // Configure process builder.
@@ -135,6 +136,7 @@ public class DefaultProcessRunner implements ProcessRunner {
   /**
    * Environment variables to append to the current system environment variables.
    */
+  @Override
   public void setEnvironment(Map<String, String> environment) {
     this.environment = environment;
   }
@@ -142,6 +144,7 @@ public class DefaultProcessRunner implements ProcessRunner {
   private void handleStdOut(final Process process) {
     final Scanner stdOut = new Scanner(process.getInputStream(), Charsets.UTF_8.name());
     Thread stdOutThread = new Thread("standard-out") {
+      @Override
       public void run() {
         while (stdOut.hasNextLine() && !Thread.interrupted()) {
           String line = stdOut.nextLine();
@@ -159,6 +162,7 @@ public class DefaultProcessRunner implements ProcessRunner {
   private void handleErrOut(final Process process) {
     final Scanner stdErr = new Scanner(process.getErrorStream(), Charsets.UTF_8.name());
     Thread stdErrThread = new Thread("standard-err") {
+      @Override
       public void run() {
         while (stdErr.hasNextLine() && !Thread.interrupted()) {
           String line = stdErr.nextLine();
