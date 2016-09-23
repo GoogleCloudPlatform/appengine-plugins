@@ -65,7 +65,8 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
     setDebug(configuration, false);
   }
 
-  private void setDebug(InstancesSelectionConfiguration configuration, boolean enable) {
+  private void setDebug(InstancesSelectionConfiguration configuration, boolean enable) 
+      throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersion());
     Preconditions.checkNotNull(sdk);

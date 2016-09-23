@@ -19,6 +19,7 @@ package com.google.cloud.tools.appengine.experimental.internal.cloudsdk;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.experimental.AppEngineRequest;
 import com.google.cloud.tools.appengine.experimental.OutputHandler;
 import com.google.cloud.tools.appengine.experimental.internal.process.CliProcessManagerProvider;
@@ -62,7 +63,7 @@ public class CloudSdkRequestTest {
   }
 
   @Test
-  public void testExecute_success() throws IOException {
+  public void testExecute_success() throws IOException, AppEngineException {
     AppEngineRequest<String> request = new CloudSdkRequest<String>(processFactory,
         processManagerProvider, resultConverter);
     request.outputHandler(outputHandler);
@@ -72,7 +73,7 @@ public class CloudSdkRequestTest {
   }
 
   @Test
-  public void testExecute_configureAfterExecute() {
+  public void testExecute_configureAfterExecute() throws AppEngineException {
     AppEngineRequest<String> request = new CloudSdkRequest<String>(processFactory,
         processManagerProvider, resultConverter);
     request.execute();

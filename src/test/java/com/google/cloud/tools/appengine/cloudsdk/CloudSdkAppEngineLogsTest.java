@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.logs.DefaultLogsConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineLogs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
@@ -43,7 +44,7 @@ public class CloudSdkAppEngineLogsTest {
   private CloudSdk sdk;
 
   @Test
-  public void readTest() throws ProcessRunnerException {
+  public void readTest() throws ProcessRunnerException, AppEngineException {
     CloudSdkAppEngineLogs appEngineLogs = new CloudSdkAppEngineLogs(sdk);
     DefaultLogsConfiguration configuration = new DefaultLogsConfiguration();
     configuration.setLevel("warning");

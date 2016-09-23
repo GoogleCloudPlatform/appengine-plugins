@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.experimental.deploy;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.PathResolver;
 import com.google.cloud.tools.appengine.experimental.AppEngineRequestFactory;
@@ -31,15 +32,17 @@ public class DeployExample {
 
   /**
    * Example usage.
+   * 
+   * @throws AppEngineException error communicating with App Engine.
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws AppEngineException {
 
     // perhaps we should be using builders for execute configurations
     DefaultDeployConfiguration config = new DefaultDeployConfiguration();
     config.setDeployables(Collections.singletonList(new File("/tmp/app.yaml")));
 
-    // the current implementation doesn't have a good hook in to the autodetection of the
-    // cloud sdk.
+    // The current implementation doesn't have a good hook into the autodetection of the
+    // cloud SDK.
     AppEngineRequestFactory requestFactory = AppEngineRequests.newRequestFactoryBuilder()
         //.cloudSdk(Paths.get("/path/to/cloudsk"))
         // or explicitly tell it to look for it
@@ -67,8 +70,8 @@ public class DeployExample {
 
       // or whatever, I don't know, anything a future can do
 
-    } catch (InterruptedException | ExecutionException e) {
-      e.printStackTrace();
+    } catch (InterruptedException | ExecutionException ex) {
+      ex.printStackTrace();
     }
   }
 }

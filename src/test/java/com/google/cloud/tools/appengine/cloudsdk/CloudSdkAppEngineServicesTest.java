@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.services.DefaultTrafficSplitConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineServices;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
@@ -46,7 +47,7 @@ public class CloudSdkAppEngineServicesTest {
   private CloudSdk sdk;
 
   @Test
-  public void setTrafficTest() throws ProcessRunnerException {
+  public void setTrafficTest() throws ProcessRunnerException, AppEngineException {
     CloudSdkAppEngineServices appEngineService = new CloudSdkAppEngineServices(sdk);
 
     DefaultTrafficSplitConfiguration configuration = new DefaultTrafficSplitConfiguration();

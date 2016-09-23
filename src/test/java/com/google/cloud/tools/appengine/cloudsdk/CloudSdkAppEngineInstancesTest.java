@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.instances.DefaultInstancesSelectionConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 
@@ -41,7 +42,7 @@ public class CloudSdkAppEngineInstancesTest {
   private CloudSdk sdk;
 
   @Test
-  public void enableDebugTest() throws ProcessRunnerException {
+  public void enableDebugTest() throws ProcessRunnerException, AppEngineException {
     CloudSdkAppEngineInstances appEngineInstances = new CloudSdkAppEngineInstances(sdk);
 
     appEngineInstances.enableDebug(getConfig());
@@ -54,7 +55,7 @@ public class CloudSdkAppEngineInstancesTest {
   }
 
   @Test
-  public void disableDebugTest() throws ProcessRunnerException {
+  public void disableDebugTest() throws ProcessRunnerException, AppEngineException {
     CloudSdkAppEngineInstances appEngineInstances = new CloudSdkAppEngineInstances(sdk);
 
     appEngineInstances.disableDebug(getConfig());

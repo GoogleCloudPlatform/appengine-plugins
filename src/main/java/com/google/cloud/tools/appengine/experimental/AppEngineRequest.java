@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.appengine.experimental;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
+
 import java.util.concurrent.Future;
 
 /**
@@ -26,5 +28,5 @@ public interface AppEngineRequest<T> {
 
   AppEngineRequest<T> outputHandler(OutputHandler outputHandler);
 
-  Future<T> execute();
+  Future<T> execute() throws AppEngineException;
 }

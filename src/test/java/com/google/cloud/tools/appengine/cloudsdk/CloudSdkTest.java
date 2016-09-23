@@ -33,30 +33,30 @@ public class CloudSdkTest {
   private ProcessOutputLineListener outputListener;
 
   @Test
-  public void testGetSdkPath() {
+  public void testGetSdkPath() throws AppEngineException {
     assertEquals(root, builder.build().getSdkPath());
   }
   
   @Test
-  public void testGetWindowsPythonPath() {
+  public void testGetWindowsPythonPath() throws AppEngineException {
     assertEquals("python", builder.build().getWindowsPythonPath().toString());
   }
 
   @Test
-  public void testGetJavaAppEngineSdkPath() {
+  public void testGetJavaAppEngineSdkPath() throws AppEngineException {
     assertEquals(root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
         builder.build().getJavaAppEngineSdkPath());
   }
 
   @Test
-  public void testGetJarPathJavaTools() {
+  public void testGetJarPathJavaTools() throws AppEngineException {
     assertEquals(Paths.get("/platform/google_appengine/google/appengine"
         + "/tools/java/lib/appengine-tools-api.jar"),
         builder.build().getJarPath("appengine-tools-api.jar"));
   }
 
   @Test
-  public void testNewCloudSdk_nullWaitingOutputListener() {
+  public void testNewCloudSdk_nullWaitingOutputListener() throws AppEngineException {
     CloudSdk sdk = builder
         .addStdOutLineListener(outputListener).runDevAppServerWait(10).async(false).build();
 
@@ -69,7 +69,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testNewCloudSdk_outListener() {
+  public void testNewCloudSdk_outListener() throws AppEngineException {
     builder.addStdOutLineListener(outputListener).runDevAppServerWait(10).async(true);
 
     CloudSdk sdk = builder.build();
@@ -81,7 +81,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testNewCloudSdk_errListener() {
+  public void testNewCloudSdk_errListener() throws AppEngineException {
     builder.addStdErrLineListener(outputListener).runDevAppServerWait(10).async(true);
     CloudSdk sdk = builder.build();
 
@@ -91,18 +91,18 @@ public class CloudSdkTest {
     assertEquals(1, builder.getExitListeners().size());
   }
 
-  @Test(expected = AppEngineException.class)
-  public void testNewCloudSdk_inheritOutputAndOutListener() {
+  @Test(expected = IllegalArgumentException.class)
+  public void testNewCloudSdk_inheritOutputAndOutListener() throws AppEngineException {
     builder.inheritProcessOutput(true).addStdOutLineListener(outputListener).build();
   }
 
-  @Test(expected = AppEngineException.class)
-  public void testNewCloudSdk_inheritOutputAndErrListener() {
+  @Test(expected = IllegalArgumentException.class)
+  public void testNewCloudSdk_inheritOutputAndErrListener() throws AppEngineException {
     builder.inheritProcessOutput(true).addStdErrLineListener(outputListener).build();
   }
 
   @Test
-  public void testResolversOrdering() {
+  public void testResolversOrdering() throws AppEngineException {
     CloudSdkResolver r1 = Mockito.mock(CloudSdkResolver.class, "r1");
     when(r1.getRank()).thenReturn(0);
     when(r1.getCloudSdkPath()).thenReturn(Paths.get("/r1"));
@@ -124,7 +124,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testResolverCascading() {
+  public void testResolverCascading() throws AppEngineException {
     CloudSdkResolver r1 = Mockito.mock(CloudSdkResolver.class, "r1");
     when(r1.getRank()).thenReturn(0);
     when(r1.getCloudSdkPath()).thenReturn(null);

@@ -100,10 +100,11 @@ public class CloudSdk {
   /**
    * Uses the process runner to execute the gcloud app command with the provided arguments.
    *
-   * @param args The arguments to pass to "gcloud app" command.
+   * @param args command-line arguments to pass to "gcloud app" command.
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    */
-  public void runAppCommand(List<String> args) throws ProcessRunnerException {
+  public void runAppCommand(List<String> args) 
+      throws ProcessRunnerException, CloudSdkNotFoundException {
     validateCloudSdk();
 
     List<String> command = new ArrayList<>();
@@ -133,13 +134,16 @@ public class CloudSdk {
   /**
    * Uses the process runner to execute a dev_appserver.py command.
    *
-   * @param args the arguments to pass to dev_appserver.py
+   * @param args command-line arguments to pass to dev_appserver.py
    * @throws InvalidPathException      when Python can't be located
    * @throws ProcessRunnerException    when process runner encounters an error
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws AppEngineJavaComponentsNotInstalledException java parts not installed in Cloud SDK
    * @throws AppEngineException        when dev_appserver.py cannot be found
    */
-  public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
+  public void runDevAppServerCommand(List<String> args) 
+      throws ProcessRunnerException, CloudSdkNotFoundException, 
+             AppEngineJavaComponentsNotInstalledException {
     validateCloudSdk();
     // TODO: remove this check when the auto-install for Java is fixed in dev_appserver.py
     validateAppEngineJavaComponents();
@@ -169,7 +173,8 @@ public class CloudSdk {
    * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java components are
    *                                                      not installed in the Cloud SDK
    */
-  public void runAppCfgCommand(List<String> args) throws ProcessRunnerException {
+  public void runAppCfgCommand(List<String> args) 
+      throws ProcessRunnerException, AppEngineJavaComponentsNotInstalledException {
     validateAppEngineJavaComponents();
 
     // AppEngineSdk requires this system property to be set.
@@ -430,8 +435,9 @@ public class CloudSdk {
      *
      * <p>If {@code sdkPath} is not set, this method will look for the SDK in known install
      * locations.
+     * @throws AppEngineException if the Cloud SDK is not installed where expected
      */
-    public CloudSdk build() {
+    public CloudSdk build() throws AppEngineException {
 
       // Default SDK path
       if (sdkPath == null) {
@@ -442,7 +448,7 @@ public class CloudSdk {
       // If output is inherited, then listeners won't receive anything.
       if (inheritProcessOutput
           && (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0)) {
-        throw new AppEngineException("You cannot specify subprocess output inheritance and"
+        throw new IllegalArgumentException("You cannot specify subprocess output inheritance and"
             + " output listeners.");
       }
 
@@ -480,7 +486,7 @@ public class CloudSdk {
      * @throws AppEngineException if not found
      */
     @Nonnull
-    private Path discoverSdkPath() {
+    private Path discoverSdkPath() throws AppEngineException {
       for (CloudSdkResolver resolver : getResolvers()) {
         try {
           Path discoveredSdkPath = resolver.getCloudSdkPath();

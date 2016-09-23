@@ -53,15 +53,13 @@ public class CloudSdkRequest<R> implements AppEngineRequest<R> {
   }
 
   @Override
-  public Future<R> execute() {
+  public Future<R> execute() throws AppEngineException {
     mutable = false;
     try {
       return processManagerProvider
           .manage(processFactory.newProcess(), resultConverter, outputHandler);
-    } catch (IOException e) {
-      // maybe this should be checked, we designed with runtime exceptions with
-      // build tools in mind, but presumably, IDEs would want to check them.
-      throw new AppEngineException("Error executing request", e);
+    } catch (IOException ex) {
+      throw new AppEngineException("Error executing request", ex);
     }
   }
 
