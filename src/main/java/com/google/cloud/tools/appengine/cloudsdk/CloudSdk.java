@@ -141,8 +141,6 @@ public class CloudSdk {
    */
   public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
     validateCloudSdk();
-    // TODO: remove this check when the auto-install for Java is fixed in dev_appserver.py
-    validateAppEngineJavaComponents();
 
     List<String> command = new ArrayList<>();
 
