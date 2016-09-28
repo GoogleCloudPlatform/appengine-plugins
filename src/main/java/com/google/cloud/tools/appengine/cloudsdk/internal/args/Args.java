@@ -21,6 +21,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -111,8 +112,18 @@ class Args {
    * @return [--name, file.getAbsolutePath()] or [] if file=null.
    */
   static List<String> filePath(String name, File file) {
-    if (file != null && !Strings.isNullOrEmpty(file.getAbsolutePath())) {
-      return Arrays.asList("--" + name, file.getAbsolutePath());
+    if (file != null) {
+      return path(name, file.toPath());
+    }
+    return Collections.emptyList();
+  }
+
+  /**
+   * @return [--name, path.toString()] or [] if path is null or not set.
+   */
+  static List<String> path(String name, Path path) {
+    if (path != null && !path.toString().isEmpty()) {
+      return Arrays.asList("--" + name, path.toString());
     }
     return Collections.emptyList();
   }

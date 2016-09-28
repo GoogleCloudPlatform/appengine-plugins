@@ -20,6 +20,7 @@ import com.google.cloud.tools.appengine.api.Configuration;
 import com.google.common.collect.Lists;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +55,13 @@ public class GcloudArgs {
    */
   public static List<String> get(String name, File file) {
     return Args.filePath(name, file);
+  }
+
+  /**
+   * @return [--name, path.toString()] or [] if path is null, or its representation is empty.
+   */
+  public static List<String> get(String name, Path path) {
+    return Args.path(name, path);
   }
 
   /**
