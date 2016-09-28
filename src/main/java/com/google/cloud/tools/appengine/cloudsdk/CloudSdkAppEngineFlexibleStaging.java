@@ -98,17 +98,6 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
         Path destination = config.getStagingDirectory().toPath()
             .resolve(config.getArtifact().toPath().getFileName());
         Files.copy(config.getArtifact().toPath(), destination, REPLACE_EXISTING);
-
-        // Update artifact permissions so docker can read it when deployed
-        if (!System.getProperty("os.name").contains("Windows")) {
-          Set<PosixFilePermission> permissions = Sets.newHashSet();
-          permissions.add(PosixFilePermission.OWNER_READ);
-          permissions.add(PosixFilePermission.OWNER_WRITE);
-          permissions.add(PosixFilePermission.GROUP_READ);
-          permissions.add(PosixFilePermission.OTHERS_READ);
-
-          Files.setPosixFilePermissions(destination, permissions);
-        }
       } else {
         throw new AppEngineException("Artifact doesn't exist at '" + config.getArtifact().getPath()
             + "'");
