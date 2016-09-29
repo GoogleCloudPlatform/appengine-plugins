@@ -30,42 +30,44 @@ import java.util.Map;
 public class GcloudArgs {
 
   /**
-   * @return [--name, value] or [] if value=null.
+   * @return {@code [--name, value]} or {@code []} if value is null.
    */
   public static List<String> get(String name, String value) {
     return Args.string(name, value);
   }
 
   /**
-   * @return [--name, value] or [] if value=null.
+   * @return {@code [--name, value]} or {@code []} if value is null.
    */
   public static List<String> get(String name, Integer value) {
     return Args.integer(name, value);
   }
 
   /**
-   * @return [--name] if value=true, [--no-name] if value=false, [] if value=null.
+   * @return {@code [--name]} if value is true, {@code [--no-name]} if value is false,
+   * {@code []} if value is null.
    */
   public static List<String> get(String name, Boolean value) {
     return Args.boolWithNo(name, value);
   }
 
   /**
-   * @return [--name, file.getAbsolutePath()] or [] if file=null.
+   * @return {@code [--name, file.toPath().toString()]} or {@code []} if file is null.
    */
   public static List<String> get(String name, File file) {
     return Args.filePath(name, file);
   }
 
   /**
-   * @return [--name, path.toString()] or [] if path is null, or its representation is empty.
+   * @return {@code [--name, path.toString()]} or {@code []} if path is null, or its representation
+   * is empty.
    */
   public static List<String> get(String name, Path path) {
     return Args.path(name, path);
   }
 
   /**
-   * @return [key1=value1,key2=value2,...], [] if keyValueMapping=empty/null
+   * @return {@code [key1=value1,key2=value2,...]}, {@code []} if keyValueMapping=empty/null
    */
   public static List<String> get(Map<?, ?> keyValueMapping) {
     return Args.keyValues(keyValueMapping);
