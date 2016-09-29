@@ -20,15 +20,19 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -76,6 +80,7 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setDevAppserverLogLevel("info");
     configuration.setSkipSdkUpdateCheck(true);
     configuration.setDefaultGcsBucketName("buckets");
+    configuration.setJavaHomeDir("/usr/lib/jvm/default-java");
 
     List<String> expected = ImmutableList
         .of("app.yaml", "--host=host", "--port=8090", "--admin_host=adminHost",
@@ -87,9 +92,11 @@ public class CloudSdkAppEngineDevServerTest {
             "--api_port=8091", "--automatic_restart", "--dev_appserver_log_level=info",
             "--skip_sdk_update_check", "--default_gcs_bucket_name=buckets");
 
+    Map<String,String> expectedEnv = ImmutableMap.of("JAVA_HOME", "/usr/lib/jvm/default-java");
+
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
   }
 
   public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
@@ -115,10 +122,11 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
 
     List<String> expected = ImmutableList.of("app.yaml");
+    Map<String,String> expectedEnv = ImmutableMap.of();
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
   }
 
 }

@@ -23,6 +23,8 @@ import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Cloud SDK based implementation of {@link AppEngineDevServer}.
@@ -61,6 +64,11 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
       arguments.add(appYaml.toPath().toString());
     }
 
+    Map<String,String> env = Maps.newHashMap();
+    if (!Strings.isNullOrEmpty(config.getJavaHomeDir())) {
+      env.put("JAVA_HOME", config.getJavaHomeDir());
+    }
+
     arguments.addAll(DevAppServerArgs.get("host", config.getHost()));
     arguments.addAll(DevAppServerArgs.get("port", config.getPort()));
     arguments.addAll(DevAppServerArgs.get("admin_host", config.getAdminHost()));
@@ -88,7 +96,7 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
         .addAll(DevAppServerArgs.get("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
 
     try {
-      sdk.runDevAppServerCommand(arguments);
+      sdk.runDevAppServerCommand(arguments, env);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
