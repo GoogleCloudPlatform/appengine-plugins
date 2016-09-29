@@ -16,16 +16,14 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import java.nio.file.Path;
+import java.io.File;
 
 /**
  * Configuration for {@link GenRepoInfoFile#generate(GenRepoInfoFileConfiguration)}.
  */
 public interface GenRepoInfoFileConfiguration {
 
-  Path getOutputDirectory();
+  File getOutputDirectory();
 
-  Path getOutputFile();
-
-  Path getSourceDirectory();
+  File getSourceDirectory();
 }

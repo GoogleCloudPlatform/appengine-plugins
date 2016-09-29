@@ -101,15 +101,37 @@ public class CloudSdk {
   /**
    * Uses the process runner to execute the gcloud app command with the provided arguments.
    *
-   * @param args The arguments to pass to "gcloud app" command.
-   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @param args The arguments to pass to gcloud command
+   * @throws ProcessRunnerException when there is an issue running the gcloud process
    */
   public void runAppCommand(List<String> args) throws ProcessRunnerException {
+    runGcloudCommand(args, "app");
+  }
+
+  /**
+   * Runs a source command, i.e., gcloud beta debug source ...
+   *
+   * @param args The command arguments, including the main command and flags. For example,
+   *             gen-repo-info-file --output_directory [OUTPUT_DIRECTORY] etc.
+   * @throws ProcessRunnerException
+   */
+  public void runSourceCommand(List<String> args) throws ProcessRunnerException {
+    runDebugCommand(args, "source");
+  }
+
+  private void runDebugCommand(List<String> args, String group) throws ProcessRunnerException {
+    runGcloudCommand(args, "beta", "debug", group);
+  }
+
+  private void runGcloudCommand(List<String> args, String... topLevelCommand)
+      throws ProcessRunnerException {
     validateCloudSdk();
 
     List<String> command = new ArrayList<>();
     command.add(getGCloudPath().toString());
-    command.add("app");
+    for (String commandToken : topLevelCommand) {
+      command.add(commandToken);
+    }
     command.addAll(args);
 
     command.add("--quiet");

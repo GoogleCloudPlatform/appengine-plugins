@@ -36,17 +36,26 @@ public class CloudSdkGenRepoInfoFile implements GenRepoInfoFile {
     this.sdk = sdk;
   }
 
+  /**
+   * Generates source context files.
+   *
+   * <p>It is possible for the process to return an error code. In that case, no
+   * {@link ProcessRunnerException} is thrown, but the code must be caught with a
+   * {@link com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener} attached to the
+   * {@link CloudSdk} object used to run the command.
+   *
+   * @param configuration Contains the source and output directories
+   */
   @Override
   public void generate(GenRepoInfoFileConfiguration configuration) {
     List<String> arguments = new ArrayList<>();
 
     arguments.add("gen-repo-info-file");
     arguments.addAll(GcloudArgs.get("output-directory", configuration.getOutputDirectory()));
-    arguments.addAll(GcloudArgs.get("output-file", configuration.getOutputFile()));
     arguments.addAll(GcloudArgs.get("source-directory", configuration.getSourceDirectory()));
 
     try {
-      sdk.runAppCommand(arguments);
+      sdk.runSourceCommand(arguments);
     } catch (ProcessRunnerException pre) {
       throw new AppEngineException(pre);
     }

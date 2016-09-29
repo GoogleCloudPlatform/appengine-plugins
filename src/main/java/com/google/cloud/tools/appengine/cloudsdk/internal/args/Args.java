@@ -33,7 +33,9 @@ import java.util.Map;
 class Args {
 
   /**
-   * @return [--name, value] or [] if value=null.
+   * Produces the flag form of a string value.
+   *
+   * @return {@code [--name, value]} or {@code []} if value is null.
    */
   static List<String> string(String name, String value) {
     if (!Strings.isNullOrEmpty(value)) {
@@ -43,7 +45,9 @@ class Args {
   }
 
   /**
-   * @return [--name=value] or [] if value=null.
+   * Produces the flag form of a string value, separated with an equals character.
+   *
+   * @return {@code [--name=value]} or {@code []} if value is null.
    */
   static List<String> stringWithEq(String name, String value) {
     if (!Strings.isNullOrEmpty(value)) {
@@ -53,7 +57,9 @@ class Args {
   }
 
   /**
-   * @return [--name=value1, --name=value2, ...] or [] if value=null.
+   * Produces the flag form of a repeated string, separated with an equals character.
+   *
+   * @return {@code [--name=value1, --name=value2, ...]} or {@code []} if value is null.
    */
   static List<String> stringsWithEq(String name, List<String> values) {
     List<String> result = Lists.newArrayList();
@@ -66,7 +72,9 @@ class Args {
   }
 
   /**
-   * @return [--name, value] or [] if value=null.
+   * Produces the flag form of an integer value using {@link Integer#toString()}.
+   *
+   * @return {@code [--name, value]} or {@code []} if value is null.
    */
   static List<String> integer(String name, Integer value) {
     if (value != null) {
@@ -76,7 +84,10 @@ class Args {
   }
 
   /**
-   * @return [--name=value] or [] if value=null.
+   * Produces the flag form of an integer using {@link Integer#toString()}, separated by an equals
+   * character.
+   *
+   * @return {@code [--name=value]} or {@code []} if value is null.
    */
   static List<String> integerWithEq(String name, Integer value) {
     if (value != null) {
@@ -86,7 +97,10 @@ class Args {
   }
 
   /**
-   * @return [--name] if value=true, [--no-name] if value=false, [] if value=null.
+   * Produces the flag form of a boolean value.
+   *
+   * @return {@code [--name]} if value is {@code true}, {@code [--no-name]} if value is
+   * {@code false}, {@code []} if value is {@code null}.
    */
   static List<String> boolWithNo(String name, Boolean value) {
     if (value != null) {
@@ -99,7 +113,10 @@ class Args {
   }
 
   /**
-   * @return [--name] if value=true, [] if value=false/null.
+   * Produces the flag form of a boolean value.
+   *
+   * @return {@code [--name]} if value is {@code true}, {@code []} if value is {@code false} or
+   * {@code null}.
    */
   static List<String> bool(String name, Boolean value) {
     if (Boolean.TRUE.equals(value)) {
@@ -109,7 +126,9 @@ class Args {
   }
 
   /**
-   * @return [--name, file.getAbsolutePath()] or [] if file=null.
+   * Produces the flag form of a file object, using {@link File#toPath()}.
+   *
+   * @return {@code [--name, file.toPath().toString()]} or {@code []} if file is null.
    */
   static List<String> filePath(String name, File file) {
     if (file != null) {
@@ -119,7 +138,9 @@ class Args {
   }
 
   /**
-   * @return [--name, path.toString()] or [] if path is null or not set.
+   * Produces the flag form of a path object, using {@link Path#toString()}.
+   *
+   * @return {@code [--name, path.toString()]} or {@code []} if path is null or not set.
    */
   static List<String> path(String name, Path path) {
     if (path != null && !path.toString().isEmpty()) {
@@ -129,6 +150,8 @@ class Args {
   }
 
   /**
+   * Produces a key/value pair list from a {@link Map}.
+   *
    * @return [key1=value1,key2=value2,...], [] if keyValueMapping=empty/null
    */
   public static List<String> keyValues(Map<?, ?> keyValueMapping) {

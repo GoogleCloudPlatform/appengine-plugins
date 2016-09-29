@@ -16,40 +16,34 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import java.nio.file.Path;
+import java.io.File;
+
+import javax.annotation.Nullable;
 
 /**
  * Plain Java bean implementation of {@link GenRepoInfoFileConfiguration}.
  */
 public class DefaultGenRepoInfoFileConfiguration implements GenRepoInfoFileConfiguration {
-  private Path outputDirectory;
-  private Path outputFile;
-  private Path sourceDirectory;
+  private File outputDirectory;
+  private File sourceDirectory;
 
   @Override
-  public Path getOutputDirectory() {
+  @Nullable
+  public File getOutputDirectory() {
     return outputDirectory;
   }
 
-  public void setOutputDirectory(Path outputDirectory) {
+  public void setOutputDirectory(File outputDirectory) {
     this.outputDirectory = outputDirectory;
   }
 
   @Override
-  public Path getOutputFile() {
-    return outputFile;
-  }
-
-  public void setOutputFile(Path outputFile) {
-    this.outputFile = outputFile;
-  }
-
-  @Override
-  public Path getSourceDirectory() {
+  @Nullable
+  public File getSourceDirectory() {
     return sourceDirectory;
   }
 
-  public void setSourceDirectory(Path sourceDirectory) {
+  public void setSourceDirectory(File sourceDirectory) {
     this.sourceDirectory = sourceDirectory;
   }
 }
