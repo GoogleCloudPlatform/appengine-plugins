@@ -60,7 +60,7 @@ public class GcloudArgs {
 
   /**
    * @return {@code [--name, path.toString()]} or {@code []} if path is null, or its representation
-   * is empty.
+   *     is empty.
    */
   public static List<String> get(String name, Path path) {
     return Args.path(name, path);
