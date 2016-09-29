@@ -113,7 +113,7 @@ public class CloudSdk {
    *
    * @param args The command arguments, including the main command and flags. For example,
    *             gen-repo-info-file --output_directory [OUTPUT_DIRECTORY] etc.
-   * @throws ProcessRunnerException
+   * @throws ProcessRunnerException when there is an issue running the gcloud process
    */
   public void runSourceCommand(List<String> args) throws ProcessRunnerException {
     runDebugCommand(args, "source");
