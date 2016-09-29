@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.api.deploy;
+package com.google.cloud.tools.appengine.api.debug;
 
 /**
  * Main interface for generating source context files, needed by the Cloud Debugger.

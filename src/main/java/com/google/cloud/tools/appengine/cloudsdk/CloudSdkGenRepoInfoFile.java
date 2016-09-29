@@ -17,8 +17,8 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.GenRepoInfoFile;
-import com.google.cloud.tools.appengine.api.deploy.GenRepoInfoFileConfiguration;
+import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFile;
+import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFileConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 

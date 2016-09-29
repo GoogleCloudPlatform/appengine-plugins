@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.api.deploy;
+package com.google.cloud.tools.appengine.api.debug;
 
 import java.io.File;
 
