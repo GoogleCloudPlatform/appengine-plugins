@@ -27,6 +27,7 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListen
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -140,6 +141,22 @@ public class CloudSdk {
    * @throws AppEngineException        when dev_appserver.py cannot be found
    */
   public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
+    runDevAppServerCommand(args, new HashMap<String, String>());
+  }
+
+  /**
+   * Uses the process runner to execute a dev_appserver.py command.
+   *
+   * @param args the arguments to pass to dev_appserver.py
+   * @param environment map of environment variables to set for the dev_appserver process
+   * @throws InvalidPathException      when Python can't be located
+   * @throws ProcessRunnerException    when process runner encounters an error
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws AppEngineException        when dev_appserver.py cannot be found
+   */
+  public void runDevAppServerCommand(List<String> args, Map<String,String> environment)
+      throws ProcessRunnerException {
+    Preconditions.checkNotNull(environment);
     validateCloudSdk();
 
     List<String> command = new ArrayList<>();
@@ -154,10 +171,9 @@ public class CloudSdk {
     logCommand(command);
 
     // set quiet mode and consequently auto-install of app-engine-java component
-    Map<String, String> environment = Maps.newHashMap();
     environment.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
-    processRunner.setEnvironment(environment);
 
+    processRunner.setEnvironment(environment);
     processRunner.run(command.toArray(new String[command.size()]));
 
     // wait for start if configured

@@ -68,4 +68,6 @@ public interface RunConfiguration {
   Boolean getSkipSdkUpdateCheck();
 
   String getDefaultGcsBucketName();
+
+  String getJavaHomeDir();
 }
