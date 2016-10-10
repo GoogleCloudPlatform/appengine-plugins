@@ -46,7 +46,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
    *
    * <p></p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
    *
-   * <p>If app.yaml or Dockerfile do not exist, gcloud cloud will create them.
+   * <p>If app.yaml or Dockerfile do not exist, gcloud cloud will create them during deployment.
    */
   @Override
   public void stageFlexible(StageFlexibleConfiguration config) throws AppEngineException {
