@@ -148,6 +148,12 @@ public class CloudSdk {
     if (appCommandMetricsEnvironmentVersion != null) {
       environment.put("CLOUDSDK_METRICS_ENVIRONMENT_VERSION", appCommandMetricsEnvironmentVersion);
     }
+    // This is to ensure IDE credentials get correctly passed to the gcloud commands, in Windows.
+    // It's a temporary workaround until a fix is released in b/31683722.
+    // https://github.com/GoogleCloudPlatform/google-cloud-intellij/issues/985
+    if (System.getProperty("os.name").contains("Windows")) {
+      environment.put("CLOUDSDK_APP_NUM_FILE_UPLOAD_PROCESSES", "1");
+    }
     logCommand(command);
     processRunner.setEnvironment(environment);
     processRunner.run(command.toArray(new String[command.size()]));
