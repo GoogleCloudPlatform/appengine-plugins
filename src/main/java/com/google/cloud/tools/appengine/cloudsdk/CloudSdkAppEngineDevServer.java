@@ -88,7 +88,7 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("runtime", config.getRuntime()));
     arguments.addAll(DevAppServerArgs.get("allow_skipped_files", config.getAllowSkippedFiles()));
     arguments.addAll(DevAppServerArgs.get("api_port", config.getApiPort()));
-    arguments.addAll(DevAppServerArgs.get("automatic_restart", config.getAutomaticRestart()));
+    arguments.addAll(DevAppServerArgs.get("automatic_restart", config.getAutomaticRestart(), true));
     arguments
         .addAll(DevAppServerArgs.get("dev_appserver_log_level", config.getDevAppserverLogLevel()));
     arguments.addAll(DevAppServerArgs.get("skip_sdk_update_check", config.getSkipSdkUpdateCheck()));

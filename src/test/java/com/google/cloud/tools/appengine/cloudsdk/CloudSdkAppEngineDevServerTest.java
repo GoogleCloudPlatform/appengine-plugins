@@ -89,7 +89,7 @@ public class CloudSdkAppEngineDevServerTest {
             "--threadsafe_override=default:False,backend:True", "--python_startup_script=script.py",
             "--python_startup_args=arguments", "--jvm_flag=-Dflag1", "--jvm_flag=-Dflag2",
             "--custom_entrypoint=entrypoint", "--runtime=java", "--allow_skipped_files",
-            "--api_port=8091", "--automatic_restart", "--dev_appserver_log_level=info",
+            "--api_port=8091", "--automatic_restart=true", "--dev_appserver_log_level=info",
             "--skip_sdk_update_check", "--default_gcs_bucket_name=buckets");
 
     Map<String,String> expectedEnv = ImmutableMap.of("JAVA_HOME", "/usr/lib/jvm/default-java");
@@ -121,7 +121,7 @@ public class CloudSdkAppEngineDevServerTest {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
 
-    List<String> expected = ImmutableList.of("app.yaml");
+    List<String> expected = ImmutableList.of("app.yaml", "--automatic_restart=false");
     Map<String,String> expectedEnv = ImmutableMap.of();
 
     devServer.run(configuration);

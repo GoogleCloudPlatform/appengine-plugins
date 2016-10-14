@@ -112,6 +112,13 @@ class Args {
     return Collections.emptyList();
   }
 
+  static List<String> boolWithTrueFalse(String name, Boolean value) {
+    if (value == null || !value) {
+      return Arrays.asList("--" + name + "=false");
+    }
+    return Arrays.asList("--" + name + "=true");
+  }
+
   /**
    * Produces the flag form of a boolean value.
    *

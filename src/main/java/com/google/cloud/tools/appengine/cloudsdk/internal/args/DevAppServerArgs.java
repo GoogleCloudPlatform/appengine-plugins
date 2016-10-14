@@ -24,30 +24,42 @@ import java.util.List;
 public class DevAppServerArgs {
 
   /**
-   * @return [--name=value] or [] if value=null.
+   * @return {@code [--name=value]} or {@code []} if value=null.
    */
   public static List<String> get(String name, String value) {
     return Args.stringWithEq(name, value);
   }
 
   /**
-   * @return [--name=value1, --name=value2, ...] or [] if value=null.
+   * @return {@code [--name=value1, --name=value2, ...]} or {@code []} if value=null.
    */
   public static List<String> get(String name, List<String> values) {
     return Args.stringsWithEq(name, values);
   }
 
   /**
-   * @return [--name=value] or [] if value=null.
+   * @return {@code [--name=value]} or {@code []} if value=null.
    */
   public static List<String> get(String name, Integer value) {
     return Args.integerWithEq(name, value);
   }
 
   /**
-   * @return [--name] if value=true, [] if value=false/null.
+   * @return {@code [--name]} if value=true, {@code []} if value=false/null.
    */
   public static List<String> get(String name, Boolean value) {
+    return get(name, value, false);
+  }
+
+  /**
+   * @return if produceTrueFalse=true, {@code [--name=true]} if value=true, {@code [--name=false]}
+   *     if value=false/null. If produceTrueFalse=false, {@code [--name]} if value=true, {@code []}
+   *     if value=false/null.
+   */
+  public static List<String> get(String name, Boolean value, Boolean produceTrueFalse) {
+    if (produceTrueFalse) {
+      return Args.boolWithTrueFalse(name, value);
+    }
     return Args.bool(name, value);
   }
 }
