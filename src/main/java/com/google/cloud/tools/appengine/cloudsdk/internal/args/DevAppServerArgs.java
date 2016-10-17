@@ -45,21 +45,10 @@ public class DevAppServerArgs {
   }
 
   /**
-   * @return {@code [--name]} if value=true, {@code []} if value=false/null.
+   * @return {@code [--name=true]} if value=true, {@code [--name=false]} if value=false,
+   *     {@code []} if value=null.
    */
   public static List<String> get(String name, Boolean value) {
-    return get(name, value, false);
-  }
-
-  /**
-   * @return if produceTrueFalse=true, {@code [--name=true]} if value=true, {@code [--name=false]}
-   *     if value=false/null. If produceTrueFalse=false, {@code [--name]} if value=true, {@code []}
-   *     if value=false/null.
-   */
-  public static List<String> get(String name, Boolean value, Boolean produceTrueFalse) {
-    if (produceTrueFalse) {
-      return Args.boolWithTrueFalse(name, value);
-    }
-    return Args.bool(name, value);
+    return Args.boolWithTrueFalse(name, value);
   }
 }
