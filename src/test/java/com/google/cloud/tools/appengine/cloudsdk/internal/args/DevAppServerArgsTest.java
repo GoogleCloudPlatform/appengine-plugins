@@ -49,10 +49,10 @@ public class DevAppServerArgsTest {
 
   @Test
   public void testGet_boolean() {
-    assertEquals(Collections.singletonList("--name1"), DevAppServerArgs.get("name1", true));
-    assertEquals(Collections.singletonList("--name2"), DevAppServerArgs.get("name2", true));
+    assertEquals(Collections.singletonList("--name1=true"), DevAppServerArgs.get("name1", true));
+    assertEquals(Collections.singletonList("--name2=true"), DevAppServerArgs.get("name2", true));
 
-    assertEquals(Collections.emptyList(), DevAppServerArgs.get("name", false));
+    assertEquals(Collections.singletonList("--name=false"), DevAppServerArgs.get("name", false));
     assertEquals(Collections.emptyList(), DevAppServerArgs.get("name", (Boolean) null));
   }
 
