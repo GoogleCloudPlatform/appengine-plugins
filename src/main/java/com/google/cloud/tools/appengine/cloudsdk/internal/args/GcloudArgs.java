@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -45,10 +46,16 @@ public class GcloudArgs {
 
   /**
    * @return {@code [--name]} if value is true, {@code [--no-name]} if value is false,
-   * {@code []} if value is null.
+   *     {@code []} if value is null.
    */
   public static List<String> get(String name, Boolean value) {
-    return Args.boolWithNo(name, value);
+    if (value != null) {
+      if (value) {
+        return Collections.singletonList("--" + name);
+      }
+      return Collections.singletonList("--no-" + name);
+    }
+    return Collections.emptyList();
   }
 
   /**

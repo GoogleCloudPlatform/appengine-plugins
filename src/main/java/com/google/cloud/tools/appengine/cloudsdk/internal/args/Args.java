@@ -97,48 +97,6 @@ class Args {
   }
 
   /**
-   * Produces the flag form of a boolean value.
-   *
-   * @return {@code [--name]} if value is {@code true}, {@code [--no-name]} if value is
-   * {@code false}, {@code []} if value is {@code null}.
-   */
-  static List<String> boolWithNo(String name, Boolean value) {
-    if (value != null) {
-      if (value) {
-        return Collections.singletonList("--" + name);
-      }
-      return Collections.singletonList("--no-" + name);
-    }
-    return Collections.emptyList();
-  }
-
-  /**
-   * Produces the flag form of a boolean value.
-   *
-   * @return {@code [--name=true]} if value=true, {@code [--name=false]} if value=false,
-   *     {@code []} if value=null.
-   */
-  static List<String> boolWithTrueFalse(String name, Boolean value) {
-    if (value == null) {
-      return Collections.emptyList();
-    }
-    return Arrays.asList("--" + name + "=" + value.toString());
-  }
-
-  /**
-   * Produces the flag form of a boolean value.
-   *
-   * @return {@code [--name]} if value is {@code true}, {@code []} if value is {@code false} or
-   * {@code null}.
-   */
-  static List<String> bool(String name, Boolean value) {
-    if (Boolean.TRUE.equals(value)) {
-      return Collections.singletonList("--" + name);
-    }
-    return Collections.emptyList();
-  }
-
-  /**
    * Produces the flag form of a file object, using {@link File#toPath()}.
    *
    * @return {@code [--name, file.toPath().toString()]} or {@code []} if file is null.

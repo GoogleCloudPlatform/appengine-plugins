@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,6 +51,9 @@ public class DevAppServerArgs {
    *     {@code []} if value=null.
    */
   public static List<String> get(String name, Boolean value) {
-    return Args.boolWithTrueFalse(name, value);
+    if (value == null) {
+      return Collections.emptyList();
+    }
+    return Arrays.asList("--" + name + "=" + value.toString());
   }
 }

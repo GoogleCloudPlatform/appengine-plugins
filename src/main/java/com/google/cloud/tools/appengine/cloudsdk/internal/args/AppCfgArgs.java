@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,6 +35,9 @@ public class AppCfgArgs {
    * @return [--name] if value=true, [] if value=false/null.
    */
   public static List<String> get(String name, Boolean value) {
-    return Args.bool(name, value);
+    if (Boolean.TRUE.equals(value)) {
+      return Collections.singletonList("--" + name);
+    }
+    return Collections.emptyList();
   }
 }
