@@ -20,7 +20,7 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 /**
  * A ProcessRunner that runs synchronous processes and makes their stderr and stdout streams
@@ -34,14 +34,14 @@ public class SynchronousOutputProcessRunner extends DefaultProcessRunner impleme
 
   @VisibleForTesting
   SynchronousOutputProcessRunner(StringBuilderProcessOutputLineListener stdOutListener,
-                                         StringBuilderProcessOutputLineListener stdErrListener,
-                                         ExitCodeRecorderProcessExitListener exitListener) {
+                                 StringBuilderProcessOutputLineListener stdErrListener,
+                                 ExitCodeRecorderProcessExitListener exitListener) {
     super(
-        false                                                         /* async */,
-        Lists.<ProcessExitListener>newArrayList(exitListener)         /* exitListeners */,
-        Lists.<ProcessStartListener>newArrayList()                    /* startListeners */,
-        Lists.<ProcessOutputLineListener>newArrayList(stdOutListener) /* stdOutLineListeners */,
-        Lists.<ProcessOutputLineListener>newArrayList(stdErrListener) /* stdErrLineListeners */);
+        false                                                       /* async */,
+        ImmutableList.<ProcessExitListener>of(exitListener)         /* exitListeners */,
+        ImmutableList.<ProcessStartListener>of()                    /* startListeners */,
+        ImmutableList.<ProcessOutputLineListener>of(stdOutListener) /* stdOutLineListeners */,
+        ImmutableList.<ProcessOutputLineListener>of(stdErrListener) /* stdErrLineListeners */);
 
     this.exitListener = exitListener;
     this.stdOutListener = stdOutListener;
