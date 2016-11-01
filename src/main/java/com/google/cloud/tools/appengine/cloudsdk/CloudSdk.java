@@ -19,9 +19,10 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.DefaultProcessRunner;
+import com.google.cloud.tools.appengine.cloudsdk.internal.process.ExitCodeRecorderProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.SynchronousOutputProcessRunner;
+import com.google.cloud.tools.appengine.cloudsdk.internal.process.StringBuilderProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.WaitingProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
@@ -173,8 +174,17 @@ public class CloudSdk {
       throws ProcessRunnerException {
     validateCloudSdk();
 
+    StringBuilderProcessOutputLineListener stdOutListener =
+        new StringBuilderProcessOutputLineListener();
+    ExitCodeRecorderProcessExitListener exitListener = new ExitCodeRecorderProcessExitListener();
+
     // instantiate a separate synchronous process runner
-    SynchronousOutputProcessRunner runner = new SynchronousOutputProcessRunner.Builder().build();
+    ProcessRunner runner = new DefaultProcessRunner(
+        false,                                                       /* async */
+        ImmutableList.<ProcessExitListener>of(exitListener),         /* exitListeners */
+        ImmutableList.<ProcessStartListener>of(),                    /* startListeners */
+        ImmutableList.<ProcessOutputLineListener>of(stdOutListener), /* stdOutLineListeners */
+        ImmutableList.<ProcessOutputLineListener>of());              /* stdErrLineListeners */
 
     // build and run the command
     List<String> command = new ImmutableList.Builder<String>()
@@ -184,11 +194,12 @@ public class CloudSdk {
 
     runner.run(command.toArray(new String[command.size()]));
 
-    if (!runner.hasProcessExitedSuccessfully()) {
+    if (exitListener.getMostRecentExitCode() != null
+        && !exitListener.getMostRecentExitCode().equals(0)) {
       throw new ProcessRunnerException("Process exited unsuccessfully");
     }
 
-    return runner.getProcessStdOut();
+    return stdOutListener.toString();
   }
 
   /**
