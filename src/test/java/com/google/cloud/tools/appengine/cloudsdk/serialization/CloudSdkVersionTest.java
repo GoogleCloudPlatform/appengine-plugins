@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
+import com.google.common.collect.ImmutableList;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -42,8 +44,22 @@ public class CloudSdkVersionTest {
     new CloudSdkVersion("");
   }
 
-  @Test(expected = NumberFormatException.class)
-  public void testConstructor_nonNumeric() {
+  @Test
+  public void testConstructor_invalid() {
+    List<String> invalids = ImmutableList.of("v1beta3-1.0.0", "132.alpha-1.0", "132alpha-1.0");
+    int thrown = 0;
+    for (String invalid : invalids) {
+      try {
+        new CloudSdkVersion(invalid);
+      } catch (IllegalArgumentException exception) {
+        thrown++;
+      }
+    }
+    assertEquals(invalids.size(), thrown);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructor_() {
     new CloudSdkVersion("v1beta3-1.0.0");
   }
 

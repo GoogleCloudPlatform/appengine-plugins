@@ -45,9 +45,9 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
   /**
    * Constructs a CloudSdkVersion from a version string.
    * @param version a non-null, nonempty string of the form "\d+(\.\d+)*[+-].*".
-   * @throws NumberFormatException if the string cannot be parsed
+   * @throws IllegalArgumentException if the string cannot be parsed
    */
-  public CloudSdkVersion(String version) throws NumberFormatException {
+  public CloudSdkVersion(String version) throws IllegalArgumentException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(version));
 
     this.version = version;
@@ -117,7 +117,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
   private List<Integer> parseVersionComponents(String version) throws NumberFormatException {
     // just strip out any suffixes
-    version = removeSuffix(version);
+    version = ignoreBuildOrPrereleaseSuffix(version);
 
     String[] components = version.split("\\.");
     ImmutableList.Builder builder = ImmutableList.builder();
@@ -127,7 +127,10 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     return builder.build();
   }
 
-  private String removeSuffix(String version) {
+  // Returns the version string without its prerelease and/or build suffix. Any characters following
+  // (and including) the first occurrence of either the BUILD_SEPARATOR or the PRERELEASE_SEPARATOR
+  // will be ignored
+  private String ignoreBuildOrPrereleaseSuffix(String version) {
     List<Character> separators = ImmutableList.of(BUILD_SEPARATOR, PRERELEASE_SEPARATOR);
     for (int i = 0; i < version.length(); i++) {
       if (separators.contains(version.charAt(i))) {
