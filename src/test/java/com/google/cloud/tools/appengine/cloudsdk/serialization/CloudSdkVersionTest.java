@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,6 +57,18 @@ public class CloudSdkVersionTest {
   public void testEquals_differentSizes() {
     assertTrue(new CloudSdkVersion("0.1.0").equals(new CloudSdkVersion("0.1")));
     assertTrue(new CloudSdkVersion("0").equals(new CloudSdkVersion("0.0.0.0")));
+    assertFalse(new CloudSdkVersion("1.1").equals(new CloudSdkVersion("1.10")));
+  }
+
+  @Test
+  public void testEquals_preRelease() {
+    // TODO(alexsloan): implement and assert true semver comparisons, such that prerelease suffixes
+    // are compared according to the semver spec (semver.org)
+    assertEquals(new CloudSdkVersion("0.1.0-rc.1"), new CloudSdkVersion("0.1.0-rc.1"));
+    assertEquals(new CloudSdkVersion("0.1.0-rc.1"),
+        new CloudSdkVersion("0.1.0-release-anystring.x.y.z"));
+    assertEquals(new CloudSdkVersion("0.1.0+12345678-beta.1"),
+        new CloudSdkVersion("0.1.0-something"));
   }
 
   @Test
@@ -94,6 +107,13 @@ public class CloudSdkVersionTest {
     assertEquals(0, first.compareTo(second));
     assertEquals(firstVersion, first.toString());
     assertEquals(secondVersion, second.toString());
+  }
 
+  @Test
+  public void testCompareTo_preRelease() {
+    assertEquals(-1, new CloudSdkVersion("1.1.0-alpha-01")
+        .compareTo(new CloudSdkVersion("2.1.0-beta2+123456")));
+    assertEquals(-1, new CloudSdkVersion("1.1.0-01-asdf-beta")
+        .compareTo(new CloudSdkVersion("2.1.0-beta2+123456")));
   }
 }

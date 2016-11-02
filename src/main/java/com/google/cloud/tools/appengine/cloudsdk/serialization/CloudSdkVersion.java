@@ -24,27 +24,36 @@ import com.google.common.collect.Iterables;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
- * Represents the version of the Cloud SDK. Expects a version to be a series of integers separated
- * by the '.' character. This class does not handle versions strings that are intended to be
- * human-readable, i.e 'v1beta3-1.0.0'.
+ * Represents the version of the Cloud SDK. Loosely follows the semantic versioning spec
+ * (semver.org) with a few exceptions to make it more flexible:
+ *
+ * <ul>
+ *   <li>Versions can have one or more numeric version components, instead of MAJOR.MINOR.PATCH.
+ *   These numeric version components are compared for ordering and equality testing.</li>
+ *   <li>Any pre-release or build numbers are ignored for ordering and equality testing.</li>
+ * </ul>
  */
 public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
+
+  private static final char BUILD_SEPARATOR = '+';
+  private static final char PRERELEASE_SEPARATOR = '-';
 
   private final List<Integer> versionComponents;
   private final String version;
 
   /**
    * Constructs a CloudSdkVersion from a version string.
-   * @param version a non-null, nonempty string of the form 130.0.0
+   * @param version a non-null, nonempty string of the form "\d+(\.\d+)*[+-].*".
    * @throws NumberFormatException if the string cannot be parsed
    */
   public CloudSdkVersion(String version) throws NumberFormatException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(version));
 
     this.version = version;
-    this.versionComponents = buildVersionComponents(version);
+    this.versionComponents = parseVersionComponents(version);
   }
 
   @Override
@@ -108,7 +117,10 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     }
   }
 
-  private List<Integer> buildVersionComponents(String version) throws NumberFormatException {
+  private List<Integer> parseVersionComponents(String version) throws NumberFormatException {
+    // just strip out any suffixes
+    version = removeSuffix(version);
+
     String[] components = version.split("\\.");
     ImmutableList.Builder builder = ImmutableList.builder();
     for (String num : components) {
@@ -116,4 +128,15 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     }
     return builder.build();
   }
+
+  private String removeSuffix(String version) {
+    List<Character> separators = ImmutableList.of(BUILD_SEPARATOR, PRERELEASE_SEPARATOR);
+    for (int i = 0; i < version.length(); i++) {
+      if (separators.contains(version.charAt(i))) {
+        return version.substring(0, i);
+      }
+    }
+    return version;
+  }
+
 }
