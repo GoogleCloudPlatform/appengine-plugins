@@ -19,12 +19,10 @@ package com.google.cloud.tools.appengine.cloudsdk.serialization;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 /**
  * Represents the version of the Cloud SDK. Loosely follows the semantic versioning spec
