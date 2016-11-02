@@ -58,11 +58,6 @@ public class CloudSdkVersionTest {
     assertEquals(invalids.size(), thrown);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testConstructor_() {
-    new CloudSdkVersion("v1beta3-1.0.0");
-  }
-
   @Test
   public void testToString() {
     String version = "0.1.0.22";
