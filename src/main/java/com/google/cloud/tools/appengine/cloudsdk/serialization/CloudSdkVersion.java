@@ -115,12 +115,14 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     }
   }
 
+  // TODO(alexsloan): implement and assert true semver comparisons, such that prerelease suffixes
+  // are compared according to the semver spec (semver.org)
   private List<Integer> parseVersionComponents(String version) throws NumberFormatException {
     // just strip out any suffixes
     version = ignoreBuildOrPrereleaseSuffix(version);
 
     String[] components = version.split("\\.");
-    ImmutableList.Builder builder = ImmutableList.builder();
+    ImmutableList.Builder<Integer> builder = ImmutableList.builder();
     for (String num : components) {
       builder.add(Integer.parseInt(num));
     }
