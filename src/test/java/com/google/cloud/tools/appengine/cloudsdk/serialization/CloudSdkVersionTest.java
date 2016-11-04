@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
-import com.google.common.collect.ImmutableList;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -44,23 +42,20 @@ public class CloudSdkVersionTest {
     new CloudSdkVersion("");
   }
 
-  @Test
-  public void testConstructor_invalid() {
-    List<String> invalids = ImmutableList.of("v1beta3-1.0.0", "132.alpha-1.0", "132alpha-1.0");
-    int thrown = 0;
-    for (String invalid : invalids) {
-      try {
-        new CloudSdkVersion(invalid);
-      } catch (IllegalArgumentException exception) {
-        thrown++;
-      }
-    }
-    assertEquals(invalids.size(), thrown);
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructor_preReleaseAsPrefix() {
+    new CloudSdkVersion("beta.1-1.0.0");
   }
 
   @Test
   public void testToString() {
     String version = "0.1.0.22";
+    assertEquals(version, new CloudSdkVersion(version).toString());
+  }
+
+  @Test
+  public void testToString_withPreRelease() {
+    String version = "0.1.0.22-beta.1";
     assertEquals(version, new CloudSdkVersion(version).toString());
   }
 
@@ -72,14 +67,9 @@ public class CloudSdkVersionTest {
   }
 
   @Test
-  public void testEquals_preRelease() {
-    // TODO(alexsloan): implement and assert true semver comparisons, such that prerelease suffixes
-    // are compared according to the semver spec (semver.org)
-    assertEquals(new CloudSdkVersion("0.1.0-rc.1"), new CloudSdkVersion("0.1.0-rc.1"));
+  public void testEquals_ignorePreRelease() {
     assertEquals(new CloudSdkVersion("0.1.0-rc.1"),
         new CloudSdkVersion("0.1.0-release-anystring.x.y.z"));
-    assertEquals(new CloudSdkVersion("0.1.0+12345678-beta.1"),
-        new CloudSdkVersion("0.1.0-something"));
   }
 
   @Test
@@ -121,10 +111,13 @@ public class CloudSdkVersionTest {
   }
 
   @Test
-  public void testCompareTo_preRelease() {
-    assertEquals(-1, new CloudSdkVersion("1.1.0-alpha-01")
+  public void testCompareTo_ignorePreRelease() {
+    assertEquals(-1, new CloudSdkVersion("1.1.0-alpha.01")
         .compareTo(new CloudSdkVersion("2.1.0-beta2+123456")));
-    assertEquals(-1, new CloudSdkVersion("1.1.0-01-asdf-beta")
-        .compareTo(new CloudSdkVersion("2.1.0-beta2+123456")));
+    assertEquals(1, new CloudSdkVersion("2.1.0-beta2+123456")
+        .compareTo(new CloudSdkVersion("1.1.0-01-asdf-beta")));
+    assertEquals(0, new CloudSdkVersion("1.1.0-alpha.01")
+        .compareTo(new CloudSdkVersion("1.1.0-alpha.02")));
   }
+
 }
