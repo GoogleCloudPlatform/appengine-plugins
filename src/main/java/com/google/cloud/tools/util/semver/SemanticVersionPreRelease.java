@@ -19,11 +19,28 @@ package com.google.cloud.tools.util.semver;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Represents the pre-release field in a Semantic Version.
+ */
 public class SemanticVersionPreRelease implements Comparable<SemanticVersionPreRelease> {
+
+  private List<PreReleaseSegment> segments;
+  private final String preRelease;
 
   public SemanticVersionPreRelease(String preRelease) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(preRelease));
-    String[] split = preRelease.split("\\.");
+
+    this.segments = new ArrayList<>();
+    this.preRelease = preRelease;
+
+    String[] segmentParts = preRelease.split("\\.");
+    for (String segment : segmentParts) {
+      segments.add(new PreReleaseSegment(segment));
+    }
   }
 
   /**
@@ -37,24 +54,103 @@ public class SemanticVersionPreRelease implements Comparable<SemanticVersionPreR
    */
   @Override
   public int compareTo(SemanticVersionPreRelease other) {
-    if (other == null) {
-      return -1;
+    Preconditions.checkNotNull(other);
+
+    // Compare segments from left to right. A smaller number of pre-release segments comes before a
+    // higher number, if all preceding segments are equal.
+    int index = 0;
+    while (index < this.segments.size() && index < other.segments.size()) {
+      int result = this.segments.get(index).compareTo(other.segments.get(index));
+      if (result != 0) {
+        return result;
+      }
+      index++;
     }
 
-
-
+    // If we've reached this point, the smaller list comes first.
+    if (this.segments.size() < other.segments.size()) {
+      return -1;
+    } else if (this.segments.size() > other.segments.size()) {
+      return 1;
+    }
     return 0;
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj == this) {
+      return true;
+    }
+    if (this.getClass() != obj.getClass()) {
+      return false;
+    }
+    SemanticVersionPreRelease other = (SemanticVersionPreRelease) obj;
+    return this.preRelease.equals(other.preRelease);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(preRelease);
+  }
+
+  @Override
+  public String toString() {
+    return preRelease;
+  }
+
   /**
-   * Helper class that represents a component of the pre-release.
+   * Represents a dot-separated segment of the pre-release string.
    */
-  private static class PreReleaseComponent implements Comparable<PreReleaseComponent> {
+  private static class PreReleaseSegment implements Comparable<PreReleaseSegment> {
+
+    private final String segment;
+    private final boolean isNumericOnly;
+
+    public PreReleaseSegment(String segment) {
+      this.segment = segment;
+      this.isNumericOnly = isNumericOnly(segment);
+    }
 
     @Override
-    public int compareTo(PreReleaseComponent other) {
-      // TODO
-      return 0;
+    public int compareTo(PreReleaseSegment other) {
+      Preconditions.checkNotNull(other);
+
+      if (this.isNumericOnly) {
+        if (other.isNumericOnly) {
+          return compareNumericOnly(this, other);
+        } else {
+          return -1;
+        }
+      } else {
+        if (!other.isNumericOnly) {
+          return compareAlphaNumeric(this, other);
+        } else {
+          return 1;
+        }
+      }
     }
+
+    @Override
+    public String toString() {
+      return segment;
+    }
+
+    private static int compareAlphaNumeric(PreReleaseSegment first, PreReleaseSegment second) {
+      return first.segment.compareTo(second.segment);
+    }
+
+    private static int compareNumericOnly(PreReleaseSegment first, PreReleaseSegment second) {
+      int firstInt = Integer.parseInt(first.segment);
+      int secondInt = Integer.parseInt(second.segment);
+      return new Integer(firstInt).compareTo(new Integer(secondInt));
+    }
+
+    private boolean isNumericOnly(String num) {
+      return num.matches("[0-9]+");
+    }
+
   }
 }

@@ -30,28 +30,34 @@ import java.util.List;
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SemanticVersionTest {
 
-  @Test
-  public void testConstructor_invalid() {
-    List<String> invalids = Arrays.asList(null, "", "v1beta3-1.0.0", "132.alpha-1.0",
-        "132alpha-1.0", "1.0", "0.1.0-beta.2+build");
-    int thrown = 0;
-    for (String invalid : invalids) {
-      try {
-        new SemanticVersion(invalid);
-      } catch (IllegalArgumentException exception) {
-        thrown++;
-      }
-    }
-    assertEquals(invalids.size(), thrown);
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructor_null() {
+    new SemanticVersion(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructor_emptyString() {
+    new SemanticVersion("");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructor_preReleaseBeforeNumber() {
+    new SemanticVersion("v1.beta.3-1.0.0");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructor_missingRequiredNumbers() {
+    new SemanticVersion("1.0");
   }
 
   @Test
-  public void testConstructor_simple() {
+  public void testConstructor_requiredNumbersOnly() {
     SemanticVersion version = new SemanticVersion("0.1.0");
     assertEquals(0, version.getMajorVersion());
     assertEquals(1, version.getMinorVerion());
@@ -67,13 +73,6 @@ public class SemanticVersionTest {
     assertEquals(1, version.getMinorVerion());
     assertEquals(0, version.getPatchVersion());
     assertEquals(new SemanticVersionPreRelease("beta"), version.getPreRelease());
-    assertNull(version.getBuild());
-
-    SemanticVersion version2 = new SemanticVersion("0.1.0-beta2.alpha.1");
-    assertEquals(0, version2.getMajorVersion());
-    assertEquals(1, version2.getMinorVerion());
-    assertEquals(0, version2.getPatchVersion());
-    assertEquals(new SemanticVersionPreRelease("beta2.alpha.1"), version2.getPreRelease());
     assertNull(version.getBuild());
   }
 
@@ -94,7 +93,17 @@ public class SemanticVersionTest {
     assertEquals(1, version.getMinorVerion());
     assertEquals(0, version.getPatchVersion());
     assertEquals("22xyz331", version.getBuild());
-    assertEquals("beta.1.0", version.getPreRelease());
+    assertEquals("beta.1.0", version.getPreRelease().toString());
+  }
+
+  @Test
+  public void testConstructor_buildBeforePreRelease() {
+    SemanticVersion version = new SemanticVersion("0.1.0+v01234-beta.1");
+    assertEquals(0, version.getMajorVersion());
+    assertEquals(1, version.getMinorVerion());
+    assertEquals(0, version.getPatchVersion());
+    assertEquals("v01234-beta.1", version.getBuild());
+    assertNull(version.getPreRelease());
   }
 
   @Test
@@ -106,68 +115,65 @@ public class SemanticVersionTest {
   }
 
   @Test
-  public void testEquals_differentSizes() {
-    assertTrue(new SemanticVersion("0.1.0").equals(new SemanticVersion("0.1")));
-    assertTrue(new SemanticVersion("0").equals(new SemanticVersion("0.0.0.0")));
-    assertFalse(new SemanticVersion("1.1").equals(new SemanticVersion("1.10")));
-  }
-
-  @Test
-  public void testEquals_preRelease() {
-    // TODO(alexsloan): implement and assert true semver comparisons, such that prerelease suffixes
-    // are compared according to the semver spec (semver.org)
-    assertEquals(new SemanticVersion("0.1.0-rc.1"), new SemanticVersion("0.1.0-rc.1"));
-    assertEquals(new SemanticVersion("0.1.0-rc.1"),
-        new SemanticVersion("0.1.0-release-anystring.x.y.z"));
-    assertEquals(new SemanticVersion("0.1.0+12345678-beta.1"),
-        new SemanticVersion("0.1.0-something"));
-  }
-
-  @Test
-  public void testEquals_same() {
+  public void testEquals_requiredOnly() {
     assertTrue(new SemanticVersion("0.1.0").equals(new SemanticVersion("0.1.0")));
   }
 
   @Test
+  public void testEquals_preRelease() {
+    assertEquals(new SemanticVersion("0.1.0-rc.1"), new SemanticVersion("0.1.0-rc.1"));
+    assertNotEquals(new SemanticVersion("0.1.0-rc.1"), new SemanticVersion("0.1.0-rc.2"));
+  }
+
+  @Test
+  public void testEquals_buildNumbers() {
+    assertEquals(new SemanticVersion("0.1.0-rc.1+123"), new SemanticVersion("0.1.0-rc.1+123"));
+    assertEquals(new SemanticVersion("0.1.0-rc.1+123"), new SemanticVersion("0.1.0-rc.1+456"));
+  }
+
+  @Test
   public void testEquals_refEqual() {
-    SemanticVersion v1 = new SemanticVersion("1");
+    SemanticVersion v1 = new SemanticVersion("1.0.0");
     SemanticVersion v2 = v1;
     assertTrue(v1.equals(v2));
   }
 
   @Test
-  public void testCompareTo_sort() {
-    List<SemanticVersion> ordered = Arrays.asList(new SemanticVersion("1.0.0-alpha"),
-        new SemanticVersion("1.0.0-alpha.1"), new SemanticVersion("1.0.0-alpha.beta"),
-        new SemanticVersion("1.0.0-beta"), new SemanticVersion("1.0.0-beta.2"),
-        new SemanticVersion("1.0.0-beta.11"), new SemanticVersion("1.0.0-rc.1"),
-        new SemanticVersion("1.0.0"));
-    List<SemanticVersion> copy = new ArrayList<>(ordered);
-    Collections.shuffle(copy);
-    Collections.sort(copy);
-
-    assertEquals(ordered, copy);
+  public void testCompareTo_simple() {
+    assertTrue(new SemanticVersion("0.1.0").compareTo(new SemanticVersion("1.1.0")) < 0);
   }
 
   @Test
-  public void testCompareTo_equal() {
-    String firstVersion = "0.1";
-    String secondVersion = "0.1.0";
-    SemanticVersion first = new SemanticVersion(firstVersion);
-    SemanticVersion second = new SemanticVersion(secondVersion);
+  public void testCompareTo_preReleaseNumeric() {
+    assertTrue(new SemanticVersion("1.0.0-1")
+        .compareTo(new SemanticVersion("1.0.0-2")) < 0);
+  }
 
-    // make sure that objects with different lengths can be compared, and that toString returns the
-    // original version String passed to the object's constructor
+  @Test
+  public void testCompareTo_preReleaseAlphaNumeric() {
+    assertTrue(new SemanticVersion("1.0.0-a")
+        .compareTo(new SemanticVersion("1.0.0-b")) < 0);
+  }
+
+  @Test
+  public void testCompareTo_preReleaseNumericVsAlpha() {
+    assertTrue(new SemanticVersion("1.0.0-alpha.2")
+        .compareTo(new SemanticVersion("1.0.0-alpha.1-beta")) < 0);
+  }
+
+  @Test
+  public void testCompareTo_differentBuildNumbers() {
+    SemanticVersion first = new SemanticVersion("0.1.0+v1");
+    SemanticVersion second = new SemanticVersion("0.1.0+v2");
     assertEquals(0, first.compareTo(second));
-    assertEquals(firstVersion, first.toString());
-    assertEquals(secondVersion, second.toString());
+    assertEquals(0, second.compareTo(first));
   }
 
   @Test
-  public void testCompareTo_preRelease() {
-    assertEquals(-1, new SemanticVersion("1.1.0-alpha-01")
-        .compareTo(new SemanticVersion("2.1.0-beta2+123456")));
-    assertEquals(-1, new SemanticVersion("1.1.0-01-asdf-beta")
-        .compareTo(new SemanticVersion("2.1.0-beta2+123456")));
+  public void testCompareTo_preReleaseWithDifferentNumberOfFields() {
+    assertTrue(new SemanticVersion("0.1.0-alpha")
+        .compareTo(new SemanticVersion("0.1.0-alpha.0")) < 0);
+    assertTrue(new SemanticVersion("0.1.0-alpha.1.0.1")
+        .compareTo(new SemanticVersion("0.1.0-omega")) < 0);
   }
 }

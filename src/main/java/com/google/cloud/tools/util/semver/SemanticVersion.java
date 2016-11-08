@@ -25,6 +25,11 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Represents a Semantic Version string, as described in the Semantic Version 2.0.0 spec. See
+ * <a href="http://semver.org/spec/v2.0.0.html">http://semver.org/spec/v2.0.0.html</a> for more
+ * detail.
+ */
 public class SemanticVersion implements Comparable<SemanticVersion> {
 
   private static final Pattern SEMVER_PATTERN = Pattern.compile(getSemVerRegex());
@@ -37,6 +42,12 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
   private final SemanticVersionPreRelease preRelease;
   private final String build;
 
+  /**
+   * Constructs a new SemanticVersion.
+   *
+   * @param version the semantic version string
+   * @throws IllegalArgumentException if the argument cannot be parsed
+   */
   public SemanticVersion(String version) throws IllegalArgumentException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(version));
 
@@ -51,8 +62,8 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     majorVersion = Integer.parseInt(matcher.group("major"));
     minorVerion = Integer.parseInt(matcher.group("minor"));
     patchVersion = Integer.parseInt(matcher.group("patch"));
-    preRelease = matcher.group("prerelease") != null ?
-        new SemanticVersionPreRelease(matcher.group("prerelease")) : null;
+    preRelease = matcher.group("prerelease") != null
+        ? new SemanticVersionPreRelease(matcher.group("prerelease")) : null;
     build = matcher.group("build");
 
     this.version = version;
@@ -71,7 +82,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     String preRelease = "(?:" + preReleaseIdentifier + "(?:\\." + preReleaseIdentifier + ")*)";
     String build = "(?:" + alphaNum + "(?:\\." + alphaNum + ")*)";
 
-    return "^(?<major>"+ digits +")\\.(?<minor>" + digits + ")\\.(?<patch>" + digits + ")"
+    return "^(?<major>" + digits + ")\\.(?<minor>" + digits + ")\\.(?<patch>" + digits + ")"
         + "(?:\\-(?<prerelease>" + preRelease + "))?(?:\\+(?<build>" + build + "))?$";
   }
 
@@ -80,8 +91,14 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     return version;
   }
 
+  /**
+   * Compares this to another SemanticVersion, per the Semantic Versioning 2.0.0 specification. Note
+   * that the build identifier field is excluded for comparison.
+   */
   @Override
   public int compareTo(SemanticVersion other) {
+    Preconditions.checkNotNull(other);
+
     // First, compare required fields
     List<Integer> mine = ImmutableList.of(majorVersion, minorVerion, patchVersion);
     List<Integer> others = ImmutableList.of(other.getMajorVersion(), other.getMinorVerion(),
@@ -94,15 +111,16 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
       }
     }
 
-    // If required components are equal, compare prerelease strings. Note that build numbers are
-    // never included in comparison.
-
-    // A SemVer with a pre-release version has lower precedence than a normal version.
-    if (preRelease == null) {
-      if (other.getPreRelease() == null) {
-        return 0;
-      }
+    // If required components are equal, compare pre-release strings. A SemVer with a pre-release
+    // string has lower precedence than one without.
+    if (preRelease == null && other.getPreRelease() == null) {
+      return 0;
+    }
+    if (preRelease == null && other.getPreRelease() != null) {
       return 1;
+    }
+    if (preRelease != null && other.getPreRelease() == null) {
+      return -1;
     }
 
     return preRelease.compareTo(other.getPreRelease());
@@ -110,10 +128,13 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
 
   @Override
   public int hashCode() {
-    // Purposely exclude the build identifier as it is not used for determining equality.
     return Objects.hash(majorVersion, minorVerion, patchVersion, preRelease);
   }
 
+  /**
+   * Compares this to another SemanticVersion for equality. Note that the build identifier field is
+   * excluded for comparison.
+   */
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
