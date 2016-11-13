@@ -21,12 +21,14 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.google.common.annotations.Beta;
+
 /**
  * Non-IDE specific utility methods for working with file systems.
  * We hope to migrate these into Guava. Clients should beware that these methods are
  * not yet stable and may change without notice. 
  */
-// todo Beta annotation
+@Beta
 public class FilePermissions {
 
   /**
