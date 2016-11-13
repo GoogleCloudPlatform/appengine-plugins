@@ -16,12 +16,11 @@
 
 package com.google.cloud.tools.io;
 
+import com.google.common.annotations.Beta;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import com.google.common.annotations.Beta;
 
 /**
  * Non-IDE specific utility methods for working with file systems.
