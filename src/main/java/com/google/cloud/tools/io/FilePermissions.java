@@ -45,7 +45,7 @@ public class FilePermissions {
     // Can't create a directory if a non-directory file already exists with that name
     // somewhere in the path. 
     for (Path segment = path; segment != null; segment = segment.getParent()) {
-      if (Files.isRegularFile(segment)) {
+      if (Files.exists(segment) && !Files.isDirectory(segment)) {
         throw new FileAlreadyExistsException(segment + " is a file");
       }
     }

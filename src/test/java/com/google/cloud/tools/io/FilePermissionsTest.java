@@ -45,6 +45,16 @@ public class FilePermissionsTest {
   }
   
   @Test
+  public void testSubDirectoryCannotBeCreatedInDevNull()  {
+    try {
+      FilePermissions.verifyDirectoryCreatable(Paths.get("/dev/null/foo/bar"));
+      Assert.fail("Can create directory in /dev/null");
+    } catch (IOException ex) {
+      Assert.assertTrue(ex.getMessage(), ex.getMessage().contains("/dev/null"));
+    }
+  }
+  
+  @Test
   public void testDirectoryCannotBeCreatedDueToPreexistingFile() throws IOException {
     Path file = Files.createTempFile(parent, "prefix", "suffix");
     try {
@@ -84,7 +94,7 @@ public class FilePermissionsTest {
       FilePermissions.verifyDirectoryCreatable(Paths.get("/bar"));
       Assert.fail("Can create directory in root");
     } catch (IOException ex) {
-      Assert.assertTrue(ex.getMessage().contains("/bar"));
+      Assert.assertEquals("/ is not writable", ex.getMessage());
     }
   }
 
