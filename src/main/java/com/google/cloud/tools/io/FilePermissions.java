@@ -55,7 +55,7 @@ public class FilePermissions {
     for (Path segment = path; segment != null; segment = segment.getParent()) {
       if (Files.isDirectory(segment)) {
         if (!Files.isWritable(segment)) {
-          throw new IOException(path + " is not writable");
+          throw new IOException(segment + " is not writable");
         }
         break;
       }
