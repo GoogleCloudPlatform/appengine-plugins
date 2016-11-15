@@ -42,20 +42,18 @@ public class FilePermissions {
    */
   public static void verifyDirectoryCreatable(Path path) throws IOException {
     
-    // Can't create a directory if a non-directory file already exists with that name
-    // somewhere in the path. 
     for (Path segment = path; segment != null; segment = segment.getParent()) {
-      if (Files.exists(segment) && !Files.isDirectory(segment)) {
-        throw new FileAlreadyExistsException(segment + " is a file");
-      }
-    }
-    
-    // Can't create a directory if the bottom most currently existing directory in
-    // the path is not writable. 
-    for (Path segment = path; segment != null; segment = segment.getParent()) {
-      if (Files.isDirectory(segment)) {
-        if (!Files.isWritable(segment)) {
-          throw new IOException(segment + " is not writable");
+      if (Files.exists(segment)) {
+        if (Files.isDirectory(segment)) {
+          // Can't create a directory if the bottom most currently existing directory in
+          // the path is not writable. 
+          if (!Files.isWritable(segment)) {
+            throw new IOException(segment + " is not writable");
+          }
+        } else { 
+          // Can't create a directory if a non-directory file already exists with that name
+          // somewhere in the path. 
+          throw new FileAlreadyExistsException(segment + " is a file");  
         }
         break;
       }

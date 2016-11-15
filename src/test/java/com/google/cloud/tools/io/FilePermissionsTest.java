@@ -17,6 +17,7 @@
 package com.google.cloud.tools.io;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.IOException;
@@ -44,8 +45,9 @@ public class FilePermissionsTest {
     FilePermissions.verifyDirectoryCreatable(Paths.get(parent.toString(), "bar", "baz"));
   }
   
-  @Test
+  @Test // Unix only
   public void testSubDirectoryCannotBeCreatedInDevNull()  {
+    Assume.assumeTrue(!System.getProperty("os.name").startsWith( "Windows"));
     try {
       FilePermissions.verifyDirectoryCreatable(Paths.get("/dev/null/foo/bar"));
       Assert.fail("Can create directory in /dev/null");
