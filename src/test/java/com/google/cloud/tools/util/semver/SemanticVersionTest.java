@@ -102,6 +102,7 @@ public class SemanticVersionTest {
     assertEquals(0, version.getMajorVersion());
     assertEquals(1, version.getMinorVerion());
     assertEquals(0, version.getPatchVersion());
+    // the build identifier should match greedily
     assertEquals("v01234-beta.1", version.getBuild());
     assertNull(version.getPreRelease());
   }
@@ -128,6 +129,7 @@ public class SemanticVersionTest {
   @Test
   public void testEquals_buildNumbers() {
     assertEquals(new SemanticVersion("0.1.0-rc.1+123"), new SemanticVersion("0.1.0-rc.1+123"));
+    // build numbers are not considered for comparison purposes
     assertEquals(new SemanticVersion("0.1.0-rc.1+123"), new SemanticVersion("0.1.0-rc.1+456"));
   }
 
