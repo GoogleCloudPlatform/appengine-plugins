@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.util.semver;
+package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -26,11 +26,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents a Semantic Version, as described in the Semantic Version 2.0.0 spec. See
+ * Represents a Version of the Cloud SDK, which follows the Semantic Version 2.0.0 spec. See
  * <a href="http://semver.org/spec/v2.0.0.html">http://semver.org/spec/v2.0.0.html</a> for more
  * detail.
  */
-public class SemanticVersion implements Comparable<SemanticVersion> {
+public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
   private static final Pattern SEMVER_PATTERN = Pattern.compile(getSemVerRegex());
 
@@ -39,22 +39,22 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
   private final int majorVersion;
   private final int minorVerion;
   private final int patchVersion;
-  private final SemanticVersionPreRelease preRelease;
+  private final CloudSdkVersionPreRelease preRelease;
   private final String build;
 
   /**
-   * Constructs a new SemanticVersion.
+   * Constructs a new CloudSdkVersion.
    *
    * @param version the semantic version string
    * @throws IllegalArgumentException if the argument is not a valid semantic version string
    */
-  public SemanticVersion(String version) throws IllegalArgumentException {
+  public CloudSdkVersion(String version) throws IllegalArgumentException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(version));
 
     Matcher matcher = SEMVER_PATTERN.matcher(version);
     if (!matcher.matches()) {
       throw new IllegalArgumentException(
-          String.format("Pattern \"%s\" is not a valid SemanticVersion.", version));
+          String.format("Pattern \"%s\" is not a valid CloudSdkVersion.", version));
     }
 
     majorVersion = Integer.parseInt(matcher.group("major"));
@@ -62,7 +62,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     patchVersion = Integer.parseInt(matcher.group("patch"));
 
     preRelease = matcher.group("prerelease") != null
-        ? new SemanticVersionPreRelease(matcher.group("prerelease")) : null;
+        ? new CloudSdkVersionPreRelease(matcher.group("prerelease")) : null;
     build = matcher.group("build");
 
     this.version = version;
@@ -91,11 +91,11 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
   }
 
   /**
-   * Compares this to another SemanticVersion, per the Semantic Versioning 2.0.0 specification. Note
+   * Compares this to another CloudSdkVersion, per the Semantic Versioning 2.0.0 specification. Note
    * that the build identifier field is excluded for comparison.
    */
   @Override
-  public int compareTo(SemanticVersion other) {
+  public int compareTo(CloudSdkVersion other) {
     Preconditions.checkNotNull(other);
 
     // First, compare required fields
@@ -131,7 +131,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
   }
 
   /**
-   * Compares this to another SemanticVersion for equality. Note that the build identifier field is
+   * Compares this to another CloudSdkVersion for equality. Note that the build identifier field is
    * excluded for comparison.
    */
   @Override
@@ -145,7 +145,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     if (this.getClass() != obj.getClass()) {
       return false;
     }
-    SemanticVersion otherVersion = (SemanticVersion) obj;
+    CloudSdkVersion otherVersion = (CloudSdkVersion) obj;
 
     return this.compareTo(otherVersion) == 0;
   }
@@ -162,7 +162,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     return patchVersion;
   }
 
-  protected SemanticVersionPreRelease getPreRelease() {
+  protected CloudSdkVersionPreRelease getPreRelease() {
     return preRelease;
   }
 

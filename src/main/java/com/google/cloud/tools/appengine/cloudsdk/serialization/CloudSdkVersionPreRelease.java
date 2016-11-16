@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.util.semver;
+package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -24,19 +24,19 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents the pre-release field in a Semantic Version. The pre-release field is comprised of one
- * or more dot-separated segments, which are can be treated as either numeric-only, or alphanumeric,
- * depending on their contents.
+ * Represents the pre-release field in a Cloud SDK Version. The pre-release field is comprised of
+ * one or more dot-separated segments, which are can be treated as either numeric-only, or
+ * alphanumeric, depending on their contents.
  */
-public class SemanticVersionPreRelease implements Comparable<SemanticVersionPreRelease> {
+class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRelease> {
 
   private List<PreReleaseSegment> segments;
   private final String preRelease;
 
   /**
-   * Constructs a new SemanticVersionPreRelease from a string representation.
+   * Constructs a new CloudSdkVersionPreRelease from a string representation.
    */
-  public SemanticVersionPreRelease(String preRelease) {
+  public CloudSdkVersionPreRelease(String preRelease) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(preRelease));
 
     this.segments = new ArrayList<>();
@@ -49,16 +49,16 @@ public class SemanticVersionPreRelease implements Comparable<SemanticVersionPreR
   }
 
   /**
-   * Compares this to another SemanticVersionPreRelease.
+   * Compares this to another CloudSdkVersionPreRelease.
    *
-   * <p>Precedence for two pre-release versions with the same major, minor, and patch version MUST
-   * be determined by comparing each dot separated identifier from left to right until a difference
-   * is found as follows: identifiers consisting of only digits are compared numerically and
-   * identifiers with letters or hyphens are compared lexically in ASCII sort order. Numeric
-   * identifiers always have lower precedence than non-numeric identifiers.</p>
+   * <p>Precedence for two pre-release versions MUST be determined by comparing each dot separated
+   * identifier from left to right until a difference  is found as follows: identifiers consisting
+   * of only digits are compared numerically and identifiers with letters or hyphens are compared
+   * lexically in ASCII sort order. Numeric identifiers always have lower precedence than
+   * non-numeric identifiers.</p>
    */
   @Override
-  public int compareTo(SemanticVersionPreRelease other) {
+  public int compareTo(CloudSdkVersionPreRelease other) {
     Preconditions.checkNotNull(other);
 
     // Compare segments from left to right. A smaller number of pre-release segments comes before a
@@ -92,7 +92,7 @@ public class SemanticVersionPreRelease implements Comparable<SemanticVersionPreR
     if (this.getClass() != obj.getClass()) {
       return false;
     }
-    SemanticVersionPreRelease other = (SemanticVersionPreRelease) obj;
+    CloudSdkVersionPreRelease other = (CloudSdkVersionPreRelease) obj;
     return this.preRelease.equals(other.preRelease);
   }
 
