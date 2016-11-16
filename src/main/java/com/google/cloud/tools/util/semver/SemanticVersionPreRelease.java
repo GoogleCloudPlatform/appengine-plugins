@@ -24,13 +24,18 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents the pre-release field in a Semantic Version.
+ * Represents the pre-release field in a Semantic Version. The pre-release field is comprised of one
+ * or more dot-separated segments, which are can be treated as either numeric-only, or alphanumeric,
+ * depending on their contents.
  */
 public class SemanticVersionPreRelease implements Comparable<SemanticVersionPreRelease> {
 
   private List<PreReleaseSegment> segments;
   private final String preRelease;
 
+  /**
+   * Constructs a new SemanticVersionPreRelease from a string representation.
+   */
   public SemanticVersionPreRelease(String preRelease) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(preRelease));
 
@@ -134,6 +139,26 @@ public class SemanticVersionPreRelease implements Comparable<SemanticVersionPreR
     }
 
     @Override
+    public boolean equals(Object obj) {
+      if (obj == null) {
+        return false;
+      }
+      if (obj == this) {
+        return true;
+      }
+      if (this.getClass() != obj.getClass()) {
+        return false;
+      }
+      PreReleaseSegment other = (PreReleaseSegment) obj;
+      return this.segment.equals(other.segment);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(segment);
+    }
+
+    @Override
     public String toString() {
       return segment;
     }
@@ -143,9 +168,9 @@ public class SemanticVersionPreRelease implements Comparable<SemanticVersionPreR
     }
 
     private static int compareNumericOnly(PreReleaseSegment first, PreReleaseSegment second) {
-      int firstInt = Integer.parseInt(first.segment);
-      int secondInt = Integer.parseInt(second.segment);
-      return new Integer(firstInt).compareTo(new Integer(secondInt));
+      Integer firstInt = Integer.parseInt(first.segment);
+      Integer secondInt = Integer.parseInt(second.segment);
+      return firstInt.compareTo(secondInt);
     }
 
     private boolean isNumericOnly(String num) {

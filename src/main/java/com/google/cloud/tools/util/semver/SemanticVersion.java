@@ -26,7 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents a Semantic Version string, as described in the Semantic Version 2.0.0 spec. See
+ * Represents a Semantic Version, as described in the Semantic Version 2.0.0 spec. See
  * <a href="http://semver.org/spec/v2.0.0.html">http://semver.org/spec/v2.0.0.html</a> for more
  * detail.
  */
@@ -46,7 +46,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
    * Constructs a new SemanticVersion.
    *
    * @param version the semantic version string
-   * @throws IllegalArgumentException if the argument cannot be parsed
+   * @throws IllegalArgumentException if the argument is not a valid semantic version string
    */
   public SemanticVersion(String version) throws IllegalArgumentException {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(version));
@@ -54,14 +54,13 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     Matcher matcher = SEMVER_PATTERN.matcher(version);
     if (!matcher.matches()) {
       throw new IllegalArgumentException(
-          String.format("Pattern \"%s\" is not a valid SemanticVersion.",version));
+          String.format("Pattern \"%s\" is not a valid SemanticVersion.", version));
     }
 
-    // TODO catch and rethrow as a IllegalArgument exception? or at least give a better message?
-    // TODO assertNotNull for any of these?
     majorVersion = Integer.parseInt(matcher.group("major"));
     minorVerion = Integer.parseInt(matcher.group("minor"));
     patchVersion = Integer.parseInt(matcher.group("patch"));
+
     preRelease = matcher.group("prerelease") != null
         ? new SemanticVersionPreRelease(matcher.group("prerelease")) : null;
     build = matcher.group("build");
@@ -103,7 +102,6 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
     List<Integer> mine = ImmutableList.of(majorVersion, minorVerion, patchVersion);
     List<Integer> others = ImmutableList.of(other.getMajorVersion(), other.getMinorVerion(),
         other.getPatchVersion());
-
     for (int i = 0; i < mine.size(); i++) {
       int result = mine.get(i).compareTo(others.get(i));
       if (result != 0) {
@@ -111,11 +109,12 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
       }
     }
 
-    // If required components are equal, compare pre-release strings. A SemVer with a pre-release
-    // string has lower precedence than one without.
-    if (preRelease == null && other.getPreRelease() == null) {
-      return 0;
+    // Compare pre-release components
+    if (preRelease != null && other.getPreRelease() != null) {
+      return preRelease.compareTo(other.getPreRelease());
     }
+
+    // A SemVer with a pre-release string has lower precedence than one without.
     if (preRelease == null && other.getPreRelease() != null) {
       return 1;
     }
@@ -123,7 +122,7 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
       return -1;
     }
 
-    return preRelease.compareTo(other.getPreRelease());
+    return 0;
   }
 
   @Override
