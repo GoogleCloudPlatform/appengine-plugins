@@ -58,7 +58,7 @@ public class CloudSdkVersionTest {
     assertEquals(0, version.getMajorVersion());
     assertEquals(1, version.getMinorVerion());
     assertEquals(0, version.getPatchVersion());
-    assertNull(version.getBuild());
+    assertNull(version.getBuildIdentifier());
     assertNull(version.getPreRelease());
   }
 
@@ -69,7 +69,7 @@ public class CloudSdkVersionTest {
     assertEquals(1, version.getMinorVerion());
     assertEquals(0, version.getPatchVersion());
     assertEquals(new CloudSdkVersionPreRelease("beta"), version.getPreRelease());
-    assertNull(version.getBuild());
+    assertNull(version.getBuildIdentifier());
   }
 
   @Test
@@ -78,7 +78,7 @@ public class CloudSdkVersionTest {
     assertEquals(0, version.getMajorVersion());
     assertEquals(1, version.getMinorVerion());
     assertEquals(0, version.getPatchVersion());
-    assertEquals("12345v0", version.getBuild());
+    assertEquals("12345v0", version.getBuildIdentifier());
     assertNull(version.getPreRelease());
   }
 
@@ -88,7 +88,7 @@ public class CloudSdkVersionTest {
     assertEquals(0, version.getMajorVersion());
     assertEquals(1, version.getMinorVerion());
     assertEquals(0, version.getPatchVersion());
-    assertEquals("22xyz331", version.getBuild());
+    assertEquals("22xyz331", version.getBuildIdentifier());
     assertEquals("beta.1.0", version.getPreRelease().toString());
   }
 
@@ -99,7 +99,7 @@ public class CloudSdkVersionTest {
     assertEquals(1, version.getMinorVerion());
     assertEquals(0, version.getPatchVersion());
     // the build identifier should match greedily
-    assertEquals("v01234-beta.1", version.getBuild());
+    assertEquals("v01234-beta.1", version.getBuildIdentifier());
     assertNull(version.getPreRelease());
   }
 

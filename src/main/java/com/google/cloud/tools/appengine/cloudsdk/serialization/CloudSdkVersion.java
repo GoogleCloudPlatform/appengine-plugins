@@ -39,8 +39,8 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
   private final int majorVersion;
   private final int minorVerion;
   private final int patchVersion;
-  private final CloudSdkVersionPreRelease preRelease;
-  private final String build;
+  private final CloudSdkVersionPreRelease preRelease; // optional pre-release component of version
+  private final String buildIdentifier; // optional build ID component of version string
 
   /**
    * Constructs a new CloudSdkVersion.
@@ -63,7 +63,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
     preRelease = matcher.group("prerelease") != null
         ? new CloudSdkVersionPreRelease(matcher.group("prerelease")) : null;
-    build = matcher.group("build");
+    buildIdentifier = matcher.group("build");
 
     this.version = version;
   }
@@ -92,7 +92,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
   /**
    * Compares this to another CloudSdkVersion, per the Semantic Versioning 2.0.0 specification. Note
-   * that the build identifier field is excluded for comparison.
+   * that the buildIdentifier identifier field is excluded for comparison.
    */
   @Override
   public int compareTo(CloudSdkVersion other) {
@@ -166,8 +166,13 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     return preRelease;
   }
 
-  public String getBuild() {
-    return build;
+  /**
+   * Returns the version's build identifier - an optional component of the semantic version which
+   * signifies a specific build release. Note that the build identifier is never considered for
+   * comparison or equality testing.
+   */
+  public String getBuildIdentifier() {
+    return buildIdentifier;
   }
 
 }
