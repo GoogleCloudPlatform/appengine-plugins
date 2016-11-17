@@ -27,6 +27,9 @@ import java.util.Objects;
  * Represents the pre-release field in a Cloud SDK Version. The pre-release field is comprised of
  * one or more dot-separated segments, which are can be treated as either numeric-only, or
  * alphanumeric, depending on their contents.
+ *
+ * <p>For example, in a Cloud SDK Version like <code>"0.1.0-beta.1"</code>, the pre-release field is
+ * <code>"beta.1"</code>.
  */
 class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRelease> {
 
