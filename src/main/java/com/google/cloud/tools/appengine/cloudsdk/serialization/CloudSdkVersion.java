@@ -91,8 +91,11 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
   }
 
   /**
-   * Compares this to another CloudSdkVersion, per the Semantic Versioning 2.0.0 specification. Note
-   * that the buildIdentifier identifier field is excluded for comparison.
+   * Compares this to another CloudSdkVersion, per the Semantic Versioning 2.0.0 specification.
+   *
+   * <p>Note that the build identifier field is excluded for comparison. Thus,
+   * <code>new CloudSdkVersion("0.0.1+v1").compareTo(new CloudSdkVersion("0.0.1+v2")) == 0</code>
+   * </p>
    */
   @Override
   public int compareTo(CloudSdkVersion other) {
@@ -127,12 +130,13 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(majorVersion, minorVerion, patchVersion, preRelease);
+    return Objects.hash(majorVersion, minorVerion, patchVersion, preRelease, buildIdentifier);
   }
 
   /**
-   * Compares this to another CloudSdkVersion for equality. Note that the build identifier field is
-   * excluded for comparison.
+   * Compares this to another CloudSdkVersion for equality. Unlike compareTo, this method considers
+   * two CloudSdkVersions to be equal if all of their components are identical, including their
+   * build identifiers. Thus, "0.0.1+v1" is not equal to "0.0.1+v2".
    */
   @Override
   public boolean equals(Object obj) {
@@ -147,7 +151,11 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     }
     CloudSdkVersion otherVersion = (CloudSdkVersion) obj;
 
-    return this.compareTo(otherVersion) == 0;
+    return Objects.equals(majorVersion, otherVersion.majorVersion)
+        && Objects.equals(minorVerion, otherVersion.minorVerion)
+        && Objects.equals(patchVersion, otherVersion.patchVersion)
+        && Objects.equals(preRelease, otherVersion.preRelease)
+        && Objects.equals(buildIdentifier, otherVersion.buildIdentifier);
   }
 
   public int getMajorVersion() {

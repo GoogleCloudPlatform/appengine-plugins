@@ -125,8 +125,7 @@ public class CloudSdkVersionTest {
   @Test
   public void testEquals_buildNumbers() {
     assertEquals(new CloudSdkVersion("0.1.0-rc.1+123"), new CloudSdkVersion("0.1.0-rc.1+123"));
-    // build numbers are not considered for comparison purposes
-    assertEquals(new CloudSdkVersion("0.1.0-rc.1+123"), new CloudSdkVersion("0.1.0-rc.1+456"));
+    assertNotEquals(new CloudSdkVersion("0.1.0-rc.1+123"), new CloudSdkVersion("0.1.0-rc.1+456"));
   }
 
   @Test
