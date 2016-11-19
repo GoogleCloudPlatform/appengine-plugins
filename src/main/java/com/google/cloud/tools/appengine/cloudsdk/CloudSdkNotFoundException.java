@@ -26,5 +26,9 @@ public class CloudSdkNotFoundException extends AppEngineException {
   public CloudSdkNotFoundException(String message) {
     super(message);
   }
+  
+  public CloudSdkNotFoundException(Throwable cause) {
+    super(cause);
+  }
 
 }
