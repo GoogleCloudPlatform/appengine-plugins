@@ -17,7 +17,9 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +45,8 @@ public class PathResolver implements CloudSdkResolver {
 
     // search program files
     if (System.getProperty("os.name").contains("Windows")) {
-      possiblePaths.add(getProgramFilesLocation());
+        possiblePaths.add(getLocalAppDataLocation());
+        possiblePaths.add(getProgramFilesLocation());
     } else {
       // home dir
       possiblePaths.add(System.getProperty("user.home") + "/google-cloud-sdk");
@@ -56,7 +59,16 @@ public class PathResolver implements CloudSdkResolver {
     return searchPaths(possiblePaths);
   }
 
-  private void getLocationsFromPath(List<String> possiblePaths) {
+  private static String getLocalAppDataLocation() {
+    String localAppData = System.getenv("LOCALAPPDATA");
+    if (localAppData != null) {
+      return localAppData + "\\Google\\Cloud SDK\\google-cloud-sdk";
+    } else {
+      return null;
+    }
+  }
+
+  private static void getLocationsFromPath(List<String> possiblePaths) {
     String pathEnv = System.getenv("PATH");
     if (pathEnv != null) {
       for (String path : pathEnv.split(File.pathSeparator)) {
@@ -71,7 +83,7 @@ public class PathResolver implements CloudSdkResolver {
     }
   }
 
-  private String getProgramFilesLocation() {
+  private static String getProgramFilesLocation() {
     String programFiles = System.getenv("ProgramFiles");
     if (programFiles == null) {
       programFiles = System.getenv("ProgramFiles(x86)");
@@ -83,12 +95,12 @@ public class PathResolver implements CloudSdkResolver {
     }
   }
 
-  private Path searchPaths(List<String> possiblePaths) {
+  private static Path searchPaths(List<String> possiblePaths) {
     for (String pathString : possiblePaths) {
       if (pathString != null) {
-        File file = new File(pathString);
-        if (file.exists()) {
-          return file.toPath();
+        Path path = Paths.get(pathString);
+        if (Files.exists(path)) {
+          return path;
         }
       }
     }
