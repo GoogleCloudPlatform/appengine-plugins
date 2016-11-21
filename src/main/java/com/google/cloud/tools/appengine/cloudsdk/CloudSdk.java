@@ -258,7 +258,7 @@ public class CloudSdk {
    * Executes an App Engine SDK CLI command.
    *
    * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java components are
-   *                                                      not installed in the Cloud SDK
+   *     not installed in the Cloud SDK
    */
   public void runAppCfgCommand(List<String> args) throws ProcessRunnerException {
     validateAppEngineJavaComponents();
@@ -380,7 +380,7 @@ public class CloudSdk {
    *
    * @throws CloudSdkNotFoundException when an up-to-date Cloud SDK is not installed where expected
    */
-  public void validateCloudSdk() {
+  public void validateCloudSdk() throws CloudSdkNotFoundException {
     validateCloudSdkLocation();
     validateCloudSdkVersion();
   }
@@ -389,8 +389,8 @@ public class CloudSdk {
     try {
       CloudSdkVersion version = getVersion();
       if (version.getMajorVersion() < MINIMUM_VERSION) {
-        throw new CloudSdkOutOfDateException(
-            "Cloud SDK version " + version + " is too old. Please update.");        
+        throw new CloudSdkOutOfDateException("Cloud SDK version " + version
+            + " is too old. Please update to at least " + MINIMUM_VERSION);
       }
     } catch (ProcessRunnerException ex) {
       throw new CloudSdkNotFoundException(ex);              
