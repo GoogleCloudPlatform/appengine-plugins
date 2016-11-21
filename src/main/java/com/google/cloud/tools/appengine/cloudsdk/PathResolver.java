@@ -45,8 +45,8 @@ public class PathResolver implements CloudSdkResolver {
 
     // search program files
     if (System.getProperty("os.name").contains("Windows")) {
-        possiblePaths.add(getLocalAppDataLocation());
-        possiblePaths.add(getProgramFilesLocation());
+      possiblePaths.add(getLocalAppDataLocation());
+      possiblePaths.add(getProgramFilesLocation());
     } else {
       // home dir
       possiblePaths.add(System.getProperty("user.home") + "/google-cloud-sdk");
