@@ -10,9 +10,9 @@ install:
   - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-135.0.0-linux-x86_64.tar.gz
   - tar -xzf google-cloud-sdk-135.0.0-linux-x86_64.tar.gz
   # update all Cloud SDK components
-  - gcloud components update --quiet
+  - ./google-cloud-sdk/bin/gcloud components update --quiet
   # add App Engine component to Cloud SDK
-  - gcloud components install app-engine-java --quiet
+  - ./google-cloud-sdk/bin/gcloud components install app-engine-java --quiet
 env:
   global:
     - PATH=$PWD/google-cloud-sdk/bin:$PATH
