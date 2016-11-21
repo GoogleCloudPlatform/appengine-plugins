@@ -13,6 +13,10 @@ install:
   - gcloud components update --quiet
   # add App Engine component to Cloud SDK
   - gcloud components install app-engine-java --quiet
+env:
+  global:
+    - PATH=$PWD/google-cloud-sdk/bin:$PATH
+    - CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
 script:
   - |
     if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
