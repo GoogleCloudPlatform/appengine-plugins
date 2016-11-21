@@ -59,6 +59,9 @@ public class PathResolver implements CloudSdkResolver {
     return searchPaths(possiblePaths);
   }
 
+  /** 
+   * The default location for a single-user install of Cloud SDK on Windows.
+   */
   private static String getLocalAppDataLocation() {
     String localAppData = System.getenv("LOCALAPPDATA");
     if (localAppData != null) {
