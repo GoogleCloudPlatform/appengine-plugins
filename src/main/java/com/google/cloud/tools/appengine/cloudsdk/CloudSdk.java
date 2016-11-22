@@ -659,6 +659,7 @@ public class CloudSdk {
             ServiceLoader.load(CloudSdkResolver.class, getClass().getClassLoader());
         resolvers = Lists.newArrayList(services);
         // Explicitly add the PATH-based resolver
+        System.err.println("adding PathResolver...");
         resolvers.add(new PathResolver());
       }
       Collections.sort(resolvers, new ResolverComparator());

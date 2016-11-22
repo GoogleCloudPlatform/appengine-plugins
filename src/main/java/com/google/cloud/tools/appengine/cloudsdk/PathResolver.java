@@ -86,8 +86,10 @@ public class PathResolver implements CloudSdkResolver {
   private Path searchPaths(List<String> possiblePaths) {
     for (String pathString : possiblePaths) {
       if (pathString != null) {
+        System.err.println("Searching path string " + pathString);
         File file = new File(pathString);
         if (file.exists()) {
+          System.err.println("Returning path string " + pathString);
           return file.toPath();
         }
       }
