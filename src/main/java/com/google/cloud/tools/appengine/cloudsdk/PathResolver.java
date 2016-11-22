@@ -58,7 +58,6 @@ public class PathResolver implements CloudSdkResolver {
 
   private static void getLocationsFromPath(List<String> possiblePaths) {
     String pathEnv = System.getenv("PATH");
-    System.err.println("PATH " + pathEnv);
 
     if (pathEnv != null) {
       for (String path : pathEnv.split(File.pathSeparator)) {
@@ -88,10 +87,8 @@ public class PathResolver implements CloudSdkResolver {
   private static Path searchPaths(List<String> possiblePaths) {
     for (String pathString : possiblePaths) {
       if (pathString != null) {
-        System.err.println("Searching path string " + pathString);
         File file = new File(pathString);
         if (file.exists()) {
-          System.err.println("Returning path string " + pathString);
           return file.toPath();
         }
       }
