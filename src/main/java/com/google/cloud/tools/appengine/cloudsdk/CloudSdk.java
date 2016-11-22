@@ -59,6 +59,7 @@ import javax.annotation.Nullable;
  * Cloud SDK CLI wrapper.
  */
 public class CloudSdk {
+  private static final int MINIMUM_VERSION = 131;
   private static final Logger logger = Logger.getLogger(CloudSdk.class.toString());
   private static final Joiner WHITESPACE_JOINER = Joiner.on(" ");
 
@@ -172,8 +173,8 @@ public class CloudSdk {
   // class's main configured ProcessRunner should be used.
   private String runSynchronousGcloudCommand(List<String> args)
       throws ProcessRunnerException {
-    validateCloudSdk();
-
+    validateCloudSdkLocation();
+    
     StringBuilderProcessOutputLineListener stdOutListener =
         new StringBuilderProcessOutputLineListener();
     ExitCodeRecorderProcessExitListener exitListener = new ExitCodeRecorderProcessExitListener();
@@ -257,7 +258,7 @@ public class CloudSdk {
    * Executes an App Engine SDK CLI command.
    *
    * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java components are
-   *                                                      not installed in the Cloud SDK
+   *     not installed in the Cloud SDK
    */
   public void runAppCfgCommand(List<String> args) throws ProcessRunnerException {
     validateAppEngineJavaComponents();
@@ -286,8 +287,6 @@ public class CloudSdk {
    * @throws ProcessRunnerException when process runner encounters an error
    */
   public CloudSdkVersion getVersion() throws ProcessRunnerException {
-    validateCloudSdk();
-
     // gcloud info --format="value(basic.version)"
     List<String> command = new ImmutableList.Builder<String>()
         .add("info")
@@ -377,11 +376,28 @@ public class CloudSdk {
   }
 
   /**
-   * Checks whether the Cloud SDK Path with is valid.
+   * Checks whether the Cloud SDK path and version are valid.
    *
-   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkNotFoundException when an up-to-date Cloud SDK is not installed where expected
    */
   public void validateCloudSdk() throws CloudSdkNotFoundException {
+    validateCloudSdkLocation();
+    validateCloudSdkVersion();
+  }
+
+  private void validateCloudSdkVersion() {
+    try {
+      CloudSdkVersion version = getVersion();
+      if (version.getMajorVersion() < MINIMUM_VERSION) {
+        throw new CloudSdkOutOfDateException("Cloud SDK version " + version
+            + " is too old. Please update to at least " + MINIMUM_VERSION);
+      }
+    } catch (ProcessRunnerException ex) {
+      throw new CloudSdkNotFoundException(ex);              
+    }
+  }
+
+  private void validateCloudSdkLocation() {
     if (sdkPath == null) {
       throw new CloudSdkNotFoundException("Validation Error: Cloud SDK path is null");
     }
@@ -643,6 +659,7 @@ public class CloudSdk {
             ServiceLoader.load(CloudSdkResolver.class, getClass().getClassLoader());
         resolvers = Lists.newArrayList(services);
         // Explicitly add the PATH-based resolver
+        System.err.println("adding PathResolver...");
         resolvers.add(new PathResolver());
       }
       Collections.sort(resolvers, new ResolverComparator());

@@ -38,6 +38,16 @@ public class CloudSdkTest {
   }
   
   @Test
+  public void testValidateCloudSdk() {
+    new CloudSdk.Builder().build().validateCloudSdk();
+  }
+  
+  @Test
+  public void testValidateAppEngineJavaComponents() {
+    new CloudSdk.Builder().build().validateAppEngineJavaComponents();;
+  }
+  
+  @Test
   public void testGetWindowsPythonPath() {
     assertEquals("python", builder.build().getWindowsPythonPath().toString());
   }

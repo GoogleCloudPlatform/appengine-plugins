@@ -16,19 +16,13 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-
 /**
- * The Cloud SDK could not be found in any of the expected locations.
+ * The Cloud SDK that was found is too old (generally before 131.0).
  */
-public class CloudSdkNotFoundException extends AppEngineException {
+public class CloudSdkOutOfDateException extends CloudSdkNotFoundException {
 
-  public CloudSdkNotFoundException(String message) {
+  public CloudSdkOutOfDateException(String message) {
     super(message);
-  }
-  
-  public CloudSdkNotFoundException(Throwable cause) {
-    super(cause);
   }
 
 }

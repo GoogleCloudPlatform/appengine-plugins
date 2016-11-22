@@ -48,7 +48,7 @@ public class PathResolver implements CloudSdkResolver {
       possiblePaths.add(getLocalAppDataLocation());
       possiblePaths.add(getProgramFilesLocation());
     } else {
-      // home dir
+      // home directory
       possiblePaths.add(System.getProperty("user.home") + "/google-cloud-sdk");
       // try devshell VM
       possiblePaths.add("/google/google-cloud-sdk");
@@ -73,6 +73,7 @@ public class PathResolver implements CloudSdkResolver {
 
   private static void getLocationsFromPath(List<String> possiblePaths) {
     String pathEnv = System.getenv("PATH");
+
     if (pathEnv != null) {
       for (String path : pathEnv.split(File.pathSeparator)) {
         // strip out trailing path separator
