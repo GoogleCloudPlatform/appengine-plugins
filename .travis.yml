@@ -17,6 +17,7 @@ env:
   global:
     - PATH=$PWD/google-cloud-sdk/bin:$PATH
     - CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
+    - GOOGLE_CLOUD_SDK_HOME=./google-cloud-sdk
 script:
   - |
     if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
