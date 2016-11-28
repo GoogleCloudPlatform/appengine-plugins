@@ -641,7 +641,7 @@ public class CloudSdk {
               + ": exception thrown when searching for Google Cloud SDK", ex);
         }
       }
-      throw new CloudSdkNotFoundException("The Google Cloud SDK could not be found in the default"
+      throw new CloudSdkNotFoundException("The Google Cloud SDK could not be found in the customary"
           + " locations and no path was provided.");
     }
 
