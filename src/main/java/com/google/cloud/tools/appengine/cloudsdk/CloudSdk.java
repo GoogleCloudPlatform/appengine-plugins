@@ -132,12 +132,12 @@ public class CloudSdk {
 
     List<String> command = new ArrayList<>();
     command.add(getGCloudPath().toString());
+    command.add("--quiet");
+
     for (String commandToken : topLevelCommand) {
       command.add(commandToken);
     }
     command.addAll(args);
-
-    command.add("--quiet");
     command.addAll(GcloudArgs.get("format", appCommandOutputFormat));
 
     Map<String, String> environment = Maps.newHashMap();
