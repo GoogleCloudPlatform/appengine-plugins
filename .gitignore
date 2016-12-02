@@ -11,3 +11,5 @@ target/
 .classpath
 .project
 .settings/*
+.metadata/*
+.DS_Store

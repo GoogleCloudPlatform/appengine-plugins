@@ -612,7 +612,7 @@ public class CloudSdk {
      * Attempt to find the Google Cloud SDK in various places.
      *
      * @return the path to the root of the Google Cloud SDK
-     * @throws AppEngineException if not found
+     * @throws CloudSdkNotFoundException if not found
      */
     @Nonnull
     private Path discoverSdkPath() {
@@ -628,8 +628,8 @@ public class CloudSdk {
               + ": exception thrown when searching for Google Cloud SDK", ex);
         }
       }
-      throw new AppEngineException("Google Cloud SDK path was not provided and could not be"
-          + " found in any known install locations.");
+      throw new CloudSdkNotFoundException("The Google Cloud SDK could not be found in the customary"
+          + " locations and no path was provided.");
     }
 
     /**
