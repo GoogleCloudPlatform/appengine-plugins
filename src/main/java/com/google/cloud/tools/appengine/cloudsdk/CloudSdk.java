@@ -574,7 +574,7 @@ public class CloudSdk {
       if (inheritProcessOutput
           && (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0)) {
         throw new AppEngineException(
-            "You cannot specify subprocess output inheritance and" + " output listeners.");
+            "You cannot specify subprocess output inheritance and output listeners.");
       }
 
       // Construct process runner.
