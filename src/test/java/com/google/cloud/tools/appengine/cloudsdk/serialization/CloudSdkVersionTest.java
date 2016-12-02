@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkVersionTest {
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void testConstructor_null() {
     new CloudSdkVersion(null);
   }

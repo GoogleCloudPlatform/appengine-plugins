@@ -50,7 +50,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
    */
   public CloudSdkVersion(String version) throws IllegalArgumentException {
     Preconditions.checkNotNull(version);
-    Preconditions.checkArgument(version.isEmpty(), "empty version");
+    Preconditions.checkArgument(!version.isEmpty(), "empty version");
 
     Matcher matcher = SEMVER_PATTERN.matcher(version);
     if (!matcher.matches()) {
