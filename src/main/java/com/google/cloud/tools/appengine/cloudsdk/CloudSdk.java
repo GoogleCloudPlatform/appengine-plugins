@@ -539,7 +539,7 @@ public class CloudSdk {
      * When run asynchronously, configure the Dev App Server command to wait for successful start of
      * the server. Setting this will force process output not to be inherited by the caller.
      *
-     * @param runDevAppServerWaitSeconds Number of seconds to wait > 0.
+     * @param runDevAppServerWaitSeconds Number of seconds to wait > 0
      */
     public Builder runDevAppServerWait(int runDevAppServerWaitSeconds) {
       this.runDevAppServerWaitSeconds = runDevAppServerWaitSeconds;
@@ -549,11 +549,9 @@ public class CloudSdk {
     /**
      * Causes the generated gcloud or devappserver subprocess to inherit the calling process's
      * stdout and stderr.
-     *
-     * <p>
      * If this is set to {@code true}, no stdout and stderr listeners can be specified.
      *
-     * @param inheritProcessOutput If true, stdout and stderr are redirected to the parent process
+     * @param inheritProcessOutput if true, stdout and stderr are redirected to the parent process
      */
     public Builder inheritProcessOutput(boolean inheritProcessOutput) {
       this.inheritProcessOutput = inheritProcessOutput;
@@ -562,9 +560,7 @@ public class CloudSdk {
 
     /**
      * Create a new instance of {@link CloudSdk}.
-     *
-     * <p>
-     * If {@code sdkPath} is not set, this method will look for the SDK in known install locations.
+     * If {@code sdkPath} is not set, this method looks for the SDK in known install locations.
      */
     public CloudSdk build() {
 
@@ -686,6 +682,6 @@ public class CloudSdk {
     public int compare(CloudSdkResolver o1, CloudSdkResolver o2) {
       return o1.getRank() - o2.getRank();
     }
-
   }
+
 }
