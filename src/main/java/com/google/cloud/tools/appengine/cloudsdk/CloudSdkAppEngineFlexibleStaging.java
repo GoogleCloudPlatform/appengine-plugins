@@ -24,14 +24,11 @@ import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.FileUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
-
 
 /**
  * Cloud SDK based implementation of {@link AppEngineFlexibleStaging}.
@@ -44,7 +41,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   /**
    * Stages a Java JAR/WAR Managed VMs application to be deployed.
    *
-   * <p></p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
+   * <p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
    *
    * <p>If app.yaml or Dockerfile do not exist, gcloud cloud will create them during deployment.
    */
