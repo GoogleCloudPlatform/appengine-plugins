@@ -49,7 +49,8 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
    * @throws IllegalArgumentException if the argument is not a valid semantic version string
    */
   public CloudSdkVersion(String version) throws IllegalArgumentException {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(version));
+    Preconditions.checkNotNull(version);
+    Preconditions.checkArgument(version.isEmpty(), "empty version");
 
     Matcher matcher = SEMVER_PATTERN.matcher(version);
     if (!matcher.matches()) {
