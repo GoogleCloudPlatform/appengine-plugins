@@ -12,3 +12,5 @@ target/
 .project
 .settings/*
 .metadata/*
+.DS_Store
+
