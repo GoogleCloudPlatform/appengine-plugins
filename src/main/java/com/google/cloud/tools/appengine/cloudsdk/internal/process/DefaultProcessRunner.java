@@ -124,7 +124,7 @@ public class DefaultProcessRunner implements ProcessRunner {
       }
 
       if (async) {
-        asyncRun(process);
+        asyncRun(process, stdOutHandler, stdErrHandler);
       } else {
         shutdownProcessHook(process);
         syncRun(process, stdOutHandler, stdErrHandler);
@@ -190,26 +190,24 @@ public class DefaultProcessRunner implements ProcessRunner {
     if (stdErrThread != null) {
       stdErrThread.join();
     }
+
     int exitCode = process.waitFor();
     for (ProcessExitListener exitListener : exitListeners) {
       exitListener.onExit(exitCode);
     }
   }
 
-  private void asyncRun(final Process process) throws InterruptedException {
-    if (exitListeners.size() > 0) {
-      Thread exitThread = new Thread("wait-for-exit") {
+  private void asyncRun(final Process process,
+      final Thread stdOutHandler, final Thread stdErrHandler) throws InterruptedException {
+    if (!exitListeners.isEmpty()
+        || !stdOutLineListeners.isEmpty() || !stdErrLineListeners.isEmpty()) {
+      Thread exitThread = new Thread("wait-for-process-exit-and-output-handlers") {
         @Override
         public void run() {
           try {
-            process.waitFor();
+            syncRun(process, stdOutHandler, stdErrHandler);
           } catch (InterruptedException e) {
             e.printStackTrace();
-          } finally {
-            int exitCode = process.exitValue();
-            for (ProcessExitListener exitListener : exitListeners) {
-              exitListener.onExit(exitCode);
-            }
           }
         }
       };
