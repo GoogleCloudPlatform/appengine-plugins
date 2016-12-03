@@ -177,7 +177,7 @@ public class DefaultProcessRunner implements ProcessRunner {
     stdErrThread.start();
   }
 
-  private void syncRun(final Process process) throws InterruptedException {
+  private void syncRun(Process process) throws InterruptedException {
     int exitCode = process.waitFor();
     for (ProcessExitListener exitListener : exitListeners) {
       exitListener.onExit(exitCode);
