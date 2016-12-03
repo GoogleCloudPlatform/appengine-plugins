@@ -106,9 +106,9 @@ public class DefaultProcessRunner implements ProcessRunner {
       }
 
       processBuilder.command(command);
-
+      
       Process process = processBuilder.start();
-
+      
       // Only handle stdout or stderr if there are listeners.
       if (!stdOutLineListeners.isEmpty()) {
         handleStdOut(process);
