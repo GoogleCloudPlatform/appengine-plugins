@@ -198,7 +198,7 @@ public class DefaultProcessRunner implements ProcessRunner {
   }
 
   private void asyncRun(final Process process,
-      final Thread stdOutHandler, final Thread stdErrHandler) throws InterruptedException {
+      final Thread stdOutHandler, final Thread stdErrHandler) {
     if (!exitListeners.isEmpty()
         || !stdOutLineListeners.isEmpty() || !stdErrLineListeners.isEmpty()) {
       Thread exitThread = new Thread("wait-for-process-exit-and-output-handlers") {
