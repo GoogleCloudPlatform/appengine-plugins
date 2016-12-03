@@ -183,6 +183,7 @@ public class DefaultProcessRunner implements ProcessRunner {
 
   private void syncRun(Process process, Thread stdOutThread, Thread stdErrThread)
       throws InterruptedException {
+    int exitCode = process.waitFor();
     // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/269
     if (stdOutThread != null) {
       stdOutThread.join();
@@ -191,7 +192,6 @@ public class DefaultProcessRunner implements ProcessRunner {
       stdErrThread.join();
     }
 
-    int exitCode = process.waitFor();
     for (ProcessExitListener exitListener : exitListeners) {
       exitListener.onExit(exitCode);
     }
