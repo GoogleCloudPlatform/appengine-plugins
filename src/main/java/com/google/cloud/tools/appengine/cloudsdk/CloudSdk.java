@@ -293,7 +293,8 @@ public class CloudSdk {
         .addAll(GcloudArgs.get("format", "value(basic.version)"))
         .build();
 
-    return new CloudSdkVersion(runSynchronousGcloudCommand(command));
+    String response = runSynchronousGcloudCommand(command);
+    return new CloudSdkVersion(response);
   }
 
   /**
@@ -659,7 +660,6 @@ public class CloudSdk {
             ServiceLoader.load(CloudSdkResolver.class, getClass().getClassLoader());
         resolvers = Lists.newArrayList(services);
         // Explicitly add the PATH-based resolver
-        System.err.println("adding PathResolver...");
         resolvers.add(new PathResolver());
       }
       Collections.sort(resolvers, new ResolverComparator());
