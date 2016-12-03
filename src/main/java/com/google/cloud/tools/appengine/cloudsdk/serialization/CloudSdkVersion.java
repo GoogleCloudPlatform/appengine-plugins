@@ -17,7 +17,6 @@
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;
@@ -26,9 +25,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents a Version of the Cloud SDK, which follows the Semantic Version 2.0.0 spec. See
- * <a href="http://semver.org/spec/v2.0.0.html">http://semver.org/spec/v2.0.0.html</a> for more
- * detail.
+ * Version of the Cloud SDK, which follows the
+ * <a href="http://semver.org/spec/v2.0.0.html">Semantic Version 2.0.0 spec</a>.
  */
 public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
@@ -49,7 +47,8 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
    * @throws IllegalArgumentException if the argument is not a valid semantic version string
    */
   public CloudSdkVersion(String version) throws IllegalArgumentException {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(version));
+    Preconditions.checkNotNull(version);
+    Preconditions.checkArgument(!version.isEmpty(), "empty version");
 
     Matcher matcher = SEMVER_PATTERN.matcher(version);
     if (!matcher.matches()) {

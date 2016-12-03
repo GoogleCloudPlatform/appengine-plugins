@@ -19,8 +19,6 @@ package com.google.cloud.tools.appengine.cloudsdk.serialization;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -29,10 +27,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(MockitoJUnitRunner.class)
 public class CloudSdkVersionTest {
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = NullPointerException.class)
   public void testConstructor_null() {
     new CloudSdkVersion(null);
   }

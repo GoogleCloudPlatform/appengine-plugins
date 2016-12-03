@@ -1,17 +1,15 @@
 /*
  * Copyright 2016 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.google.cloud.tools.appengine.cloudsdk;
@@ -81,13 +79,10 @@ public class CloudSdk {
   private final String appCommandOutputFormat;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
-  private CloudSdk(Path sdkPath,
-                   String appCommandMetricsEnvironment,
-                   String appCommandMetricsEnvironmentVersion,
-                   @Nullable File appCommandCredentialFile,
-                   String appCommandOutputFormat,
-                   ProcessRunner processRunner,
-                   WaitingProcessOutputLineListener runDevAppServerWaitListener) {
+  private CloudSdk(Path sdkPath, String appCommandMetricsEnvironment,
+      String appCommandMetricsEnvironmentVersion, @Nullable File appCommandCredentialFile,
+      String appCommandOutputFormat, ProcessRunner processRunner,
+      WaitingProcessOutputLineListener runDevAppServerWaitListener) {
     this.sdkPath = sdkPath;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
@@ -120,7 +115,7 @@ public class CloudSdk {
    * Runs a source command, i.e., gcloud beta debug source ...
    *
    * @param args The command arguments, including the main command and flags. For example,
-   *             gen-repo-info-file --output_directory [OUTPUT_DIRECTORY] etc.
+   *        gen-repo-info-file --output_directory [OUTPUT_DIRECTORY] etc.
    * @throws ProcessRunnerException when there is an issue running the gcloud process
    */
   public void runSourceCommand(List<String> args) throws ProcessRunnerException {
@@ -171,27 +166,23 @@ public class CloudSdk {
   // used for the execution of short-running gcloud commands, especially when we need to do some
   // additional processing of the gcloud command's output before returning. In all other cases, this
   // class's main configured ProcessRunner should be used.
-  private String runSynchronousGcloudCommand(List<String> args)
-      throws ProcessRunnerException {
+  private String runSynchronousGcloudCommand(List<String> args) throws ProcessRunnerException {
     validateCloudSdkLocation();
-    
+
     StringBuilderProcessOutputLineListener stdOutListener =
         new StringBuilderProcessOutputLineListener();
     ExitCodeRecorderProcessExitListener exitListener = new ExitCodeRecorderProcessExitListener();
 
     // instantiate a separate synchronous process runner
-    ProcessRunner runner = new DefaultProcessRunner(
-        false,                                                       /* async */
-        ImmutableList.<ProcessExitListener>of(exitListener),         /* exitListeners */
-        ImmutableList.<ProcessStartListener>of(),                    /* startListeners */
+    ProcessRunner runner = new DefaultProcessRunner(false, /* async */
+        ImmutableList.<ProcessExitListener>of(exitListener), /* exitListeners */
+        ImmutableList.<ProcessStartListener>of(), /* startListeners */
         ImmutableList.<ProcessOutputLineListener>of(stdOutListener), /* stdOutLineListeners */
-        ImmutableList.<ProcessOutputLineListener>of());              /* stdErrLineListeners */
+        ImmutableList.<ProcessOutputLineListener>of()); /* stdErrLineListeners */
 
     // build and run the command
-    List<String> command = new ImmutableList.Builder<String>()
-        .add(getGCloudPath().toString())
-        .addAll(args)
-        .build();
+    List<String> command =
+        new ImmutableList.Builder<String>().add(getGCloudPath().toString()).addAll(args).build();
 
     runner.run(command.toArray(new String[command.size()]));
 
@@ -207,10 +198,10 @@ public class CloudSdk {
    * Uses the process runner to execute a dev_appserver.py command.
    *
    * @param args the arguments to pass to dev_appserver.py
-   * @throws InvalidPathException      when Python can't be located
-   * @throws ProcessRunnerException    when process runner encounters an error
+   * @throws InvalidPathException when Python can't be located
+   * @throws ProcessRunnerException when process runner encounters an error
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws AppEngineException        when dev_appserver.py cannot be found
+   * @throws AppEngineException when dev_appserver.py cannot be found
    */
   public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
     runDevAppServerCommand(args, new HashMap<String, String>());
@@ -221,12 +212,12 @@ public class CloudSdk {
    *
    * @param args the arguments to pass to dev_appserver.py
    * @param environment map of environment variables to set for the dev_appserver process
-   * @throws InvalidPathException      when Python can't be located
-   * @throws ProcessRunnerException    when process runner encounters an error
+   * @throws InvalidPathException when Python can't be located
+   * @throws ProcessRunnerException when process runner encounters an error
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws AppEngineException        when dev_appserver.py cannot be found
+   * @throws AppEngineException when dev_appserver.py cannot be found
    */
-  public void runDevAppServerCommand(List<String> args, Map<String,String> environment)
+  public void runDevAppServerCommand(List<String> args, Map<String, String> environment)
       throws ProcessRunnerException {
     Preconditions.checkNotNull(environment);
     validateCloudSdk();
@@ -258,7 +249,7 @@ public class CloudSdk {
    * Executes an App Engine SDK CLI command.
    *
    * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java components are
-   *     not installed in the Cloud SDK
+   *         not installed in the Cloud SDK
    */
   public void runAppCfgCommand(List<String> args) throws ProcessRunnerException {
     validateAppEngineJavaComponents();
@@ -288,13 +279,11 @@ public class CloudSdk {
    */
   public CloudSdkVersion getVersion() throws ProcessRunnerException {
     // gcloud info --format="value(basic.version)"
-    List<String> command = new ImmutableList.Builder<String>()
-        .add("info")
-        .addAll(GcloudArgs.get("format", "value(basic.version)"))
-        .build();
+    List<String> command = new ImmutableList.Builder<String>().add("info")
+        .addAll(GcloudArgs.get("format", "value(basic.version)")).build();
 
-    String response = runSynchronousGcloudCommand(command);
-    return new CloudSdkVersion(response);
+    String output = runSynchronousGcloudCommand(command);
+    return new CloudSdkVersion(output);
   }
 
   /**
@@ -310,10 +299,8 @@ public class CloudSdk {
     validateCloudSdk();
 
     // gcloud components list --show-versions --format=json
-    List<String> command = new ImmutableList.Builder<String>()
-        .add("components", "list")
-        .addAll(GcloudArgs.get("show-versions", true))
-        .addAll(GcloudArgs.get("format", "json"))
+    List<String> command = new ImmutableList.Builder<String>().add("components", "list")
+        .addAll(GcloudArgs.get("show-versions", true)).addAll(GcloudArgs.get("format", "json"))
         .build();
 
     String componentsJson = runSynchronousGcloudCommand(command);
@@ -393,8 +380,8 @@ public class CloudSdk {
         throw new CloudSdkOutOfDateException("Cloud SDK version " + version
             + " is too old. Please update to at least " + MINIMUM_VERSION);
       }
-    } catch (ProcessRunnerException ex) {
-      throw new CloudSdkNotFoundException(ex);              
+    } catch (ProcessRunnerException | IllegalArgumentException ex) {
+      throw new CloudSdkNotFoundException("Could not determine Cloud SDK version", ex);
     }
   }
 
@@ -411,9 +398,8 @@ public class CloudSdk {
           "Validation Error: gcloud location '" + getGCloudPath() + "' is not a file.");
     }
     if (!Files.isRegularFile(getDevAppServerPath())) {
-      throw new CloudSdkNotFoundException(
-          "Validation Error: dev_appserver.py location '"
-              + getDevAppServerPath() + "' is not a file.");
+      throw new CloudSdkNotFoundException("Validation Error: dev_appserver.py location '"
+          + getDevAppServerPath() + "' is not a file.");
     }
   }
 
@@ -422,7 +408,7 @@ public class CloudSdk {
    * Cloud SDK.
    *
    * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java components are
-   *                                                      not installed in the Cloud SDK
+   *         not installed in the Cloud SDK
    */
   public void validateAppEngineJavaComponents()
       throws AppEngineJavaComponentsNotInstalledException {
@@ -433,8 +419,8 @@ public class CloudSdk {
     }
     if (!Files.isRegularFile(JAR_LOCATIONS.get(JAVA_TOOLS_JAR))) {
       throw new AppEngineJavaComponentsNotInstalledException(
-          "Validation Error: Java Tools jar location '"
-              + JAR_LOCATIONS.get(JAVA_TOOLS_JAR) + "' is not a file.");
+          "Validation Error: Java Tools jar location '" + JAR_LOCATIONS.get(JAVA_TOOLS_JAR)
+              + "' is not a file.");
     }
   }
 
@@ -482,8 +468,7 @@ public class CloudSdk {
     /**
      * The metrics environment version.
      */
-    public Builder appCommandMetricsEnvironmentVersion(
-        String appCommandMetricsEnvironmentVersion) {
+    public Builder appCommandMetricsEnvironmentVersion(String appCommandMetricsEnvironmentVersion) {
       this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
       return this;
     }
@@ -554,7 +539,7 @@ public class CloudSdk {
      * When run asynchronously, configure the Dev App Server command to wait for successful start of
      * the server. Setting this will force process output not to be inherited by the caller.
      *
-     * @param runDevAppServerWaitSeconds Number of seconds to wait > 0.
+     * @param runDevAppServerWaitSeconds Number of seconds to wait > 0
      */
     public Builder runDevAppServerWait(int runDevAppServerWaitSeconds) {
       this.runDevAppServerWaitSeconds = runDevAppServerWaitSeconds;
@@ -564,10 +549,9 @@ public class CloudSdk {
     /**
      * Causes the generated gcloud or devappserver subprocess to inherit the calling process's
      * stdout and stderr.
+     * If this is set to {@code true}, no stdout and stderr listeners can be specified.
      *
-     * <p>If this is set to {@code true}, no stdout and stderr listeners can be specified.
-     *
-     * @param inheritProcessOutput If true, stdout and stderr are redirected to the parent process
+     * @param inheritProcessOutput if true, stdout and stderr are redirected to the parent process
      */
     public Builder inheritProcessOutput(boolean inheritProcessOutput) {
       this.inheritProcessOutput = inheritProcessOutput;
@@ -576,9 +560,7 @@ public class CloudSdk {
 
     /**
      * Create a new instance of {@link CloudSdk}.
-     *
-     * <p>If {@code sdkPath} is not set, this method will look for the SDK in known install
-     * locations.
+     * If {@code sdkPath} is not set, this method looks for the SDK in known install locations.
      */
     public CloudSdk build() {
 
@@ -591,8 +573,8 @@ public class CloudSdk {
       // If output is inherited, then listeners won't receive anything.
       if (inheritProcessOutput
           && (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0)) {
-        throw new AppEngineException("You cannot specify subprocess output inheritance and"
-            + " output listeners.");
+        throw new AppEngineException(
+            "You cannot specify subprocess output inheritance and output listeners.");
       }
 
       // Construct process runner.
@@ -613,8 +595,8 @@ public class CloudSdk {
         processRunner = new DefaultProcessRunner(async, exitListeners, startListeners,
             stdOutLineListeners, stdErrLineListeners);
       } else {
-        processRunner = new DefaultProcessRunner(async, exitListeners, startListeners,
-            inheritProcessOutput);
+        processRunner =
+            new DefaultProcessRunner(async, exitListeners, startListeners, inheritProcessOutput);
       }
 
       return new CloudSdk(sdkPath, appCommandMetricsEnvironment,
@@ -700,6 +682,6 @@ public class CloudSdk {
     public int compare(CloudSdkResolver o1, CloudSdkResolver o2) {
       return o1.getRank() - o2.getRank();
     }
-
   }
+
 }
