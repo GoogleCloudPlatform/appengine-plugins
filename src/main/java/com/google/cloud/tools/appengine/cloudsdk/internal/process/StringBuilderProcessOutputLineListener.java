@@ -30,12 +30,12 @@ public class StringBuilderProcessOutputLineListener implements ProcessOutputLine
   }
 
   @Override
-  public synchronized void onOutputLine(String line) {
+  public void onOutputLine(String line) {
     buffer.append(line);
   }
 
   @Override
-  public synchronized String toString() {
+  public String toString() {
     return buffer.toString();
   }
 }
