@@ -3,12 +3,15 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
-
+import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
+import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -40,6 +43,13 @@ public class CloudSdkTest {
   @Test
   public void testValidateCloudSdk() {
     new CloudSdk.Builder().build().validateCloudSdk();
+  }
+  
+  @Test
+  public void testGetVersion() throws ProcessRunnerException {
+    CloudSdk sdk = new CloudSdk.Builder().build();
+    CloudSdkVersion version = sdk.getVersion();
+    assertTrue(version.getMajorVersion() > 130);
   }
   
   @Test

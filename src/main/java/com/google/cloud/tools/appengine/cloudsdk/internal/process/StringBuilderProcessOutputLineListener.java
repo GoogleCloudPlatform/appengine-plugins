@@ -19,23 +19,23 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 
 /**
- * A ProcessOutputLineListener that uses a StringBuilder to store the contents of all lines.
+ * A ProcessOutputLineListener that uses a StringBuffer to store the contents of all lines.
  */
 public class StringBuilderProcessOutputLineListener implements ProcessOutputLineListener {
 
-  private StringBuilder stringBuilder;
+  // This used to be a StringBuilder but that wasn't thread safe.
+  private final StringBuffer buffer = new StringBuffer();
 
   public StringBuilderProcessOutputLineListener() {
-    stringBuilder = new StringBuilder();
   }
 
   @Override
   public void onOutputLine(String line) {
-    stringBuilder.append(line);
+    buffer.append(line);
   }
 
   @Override
   public String toString() {
-    return stringBuilder.toString();
+    return buffer.toString();
   }
 }
