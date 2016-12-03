@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -57,8 +57,9 @@ public class CliProcessManagerTest {
     String result = future.get();
 
     Assert.assertEquals("stdout\n", result);
-    Assert.assertEquals(Collections.singletonList("stderr"), outputHandler.getLines());
-  }
+    List<String> lines = outputHandler.getLines();
+    Assert.assertEquals(1, lines.size());
+    Assert.assertEquals("stderr", lines.get(0));  }
 
   @Test
   public void testManage_linuxEchoFail()
@@ -73,7 +74,9 @@ public class CliProcessManagerTest {
     exception.expectMessage("Process failed with exit code : 1");
     future.get();
 
-    Assert.assertEquals(Collections.singletonList("stderr"), outputHandler.getLines());
+    List<String> lines = outputHandler.getLines();
+    Assert.assertEquals(1, lines.size());
+    Assert.assertEquals("stderr", lines.get(0));
   }
 
   @Test
