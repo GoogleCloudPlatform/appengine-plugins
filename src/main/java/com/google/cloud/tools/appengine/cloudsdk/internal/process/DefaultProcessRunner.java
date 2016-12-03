@@ -109,12 +109,14 @@ public class DefaultProcessRunner implements ProcessRunner {
 
       Process process = processBuilder.start();
 
+      Thread stdOutHandler = null;
+      Thread stdErrHandler = null;
       // Only handle stdout or stderr if there are listeners.
       if (!stdOutLineListeners.isEmpty()) {
-        handleStdOut(process);
+        stdOutHandler = handleStdOut(process);
       }
       if (!stdErrLineListeners.isEmpty()) {
-        handleErrOut(process);
+        stdErrHandler = handleErrOut(process);
       }
 
       for (ProcessStartListener startListener : startListeners) {
@@ -125,7 +127,7 @@ public class DefaultProcessRunner implements ProcessRunner {
         asyncRun(process);
       } else {
         shutdownProcessHook(process);
-        syncRun(process);
+        syncRun(process, stdOutHandler, stdErrHandler);
       }
 
     } catch (IOException | InterruptedException | IllegalThreadStateException e) {
@@ -141,7 +143,7 @@ public class DefaultProcessRunner implements ProcessRunner {
     this.environment = environment;
   }
 
-  private void handleStdOut(final Process process) {
+  private Thread handleStdOut(final Process process) {
     final Scanner stdOut = new Scanner(process.getInputStream(), Charsets.UTF_8.name());
     Thread stdOutThread = new Thread("standard-out") {
       @Override
@@ -157,9 +159,10 @@ public class DefaultProcessRunner implements ProcessRunner {
     };
     stdOutThread.setDaemon(true);
     stdOutThread.start();
+    return stdOutThread;
   }
 
-  private void handleErrOut(final Process process) {
+  private Thread handleErrOut(final Process process) {
     final Scanner stdErr = new Scanner(process.getErrorStream(), Charsets.UTF_8.name());
     Thread stdErrThread = new Thread("standard-err") {
       @Override
@@ -175,9 +178,18 @@ public class DefaultProcessRunner implements ProcessRunner {
     };
     stdErrThread.setDaemon(true);
     stdErrThread.start();
+    return stdErrThread;
   }
 
-  private void syncRun(final Process process) throws InterruptedException {
+  private void syncRun(Process process, Thread stdOutThread, Thread stdErrThread)
+      throws InterruptedException {
+    // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/269
+    if (stdOutThread != null) {
+      stdOutThread.join();
+    }
+    if (stdErrThread != null) {
+      stdErrThread.join();
+    }
     int exitCode = process.waitFor();
     for (ProcessExitListener exitListener : exitListeners) {
       exitListener.onExit(exitCode);
