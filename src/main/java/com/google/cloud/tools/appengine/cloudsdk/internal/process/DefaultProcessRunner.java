@@ -141,7 +141,7 @@ public class DefaultProcessRunner implements ProcessRunner {
     this.environment = environment;
   }
 
-  private void handleStdOut(final Process process) {
+  private void handleStdOut(Process process) {
     final Scanner stdOut = new Scanner(process.getInputStream(), Charsets.UTF_8.name());
     Thread stdOutThread = new Thread("standard-out") {
       @Override
@@ -159,7 +159,7 @@ public class DefaultProcessRunner implements ProcessRunner {
     stdOutThread.start();
   }
 
-  private void handleErrOut(final Process process) {
+  private void handleErrOut(Process process) {
     final Scanner stdErr = new Scanner(process.getErrorStream(), Charsets.UTF_8.name());
     Thread stdErrThread = new Thread("standard-err") {
       @Override
