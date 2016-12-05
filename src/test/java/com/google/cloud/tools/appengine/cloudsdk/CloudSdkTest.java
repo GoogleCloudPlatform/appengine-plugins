@@ -11,13 +11,17 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
+import com.google.common.io.Files;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -29,11 +33,21 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkTest {
   
-  private Path root = Paths.get("/");
-  private CloudSdk.Builder builder = new CloudSdk.Builder().sdkPath(root);
+  private Path root;
+  private CloudSdk.Builder builder;
 
   @Mock
   private ProcessOutputLineListener outputListener;
+
+  @Before
+  public void setup() {
+   root = Paths.get(Files.createTempDir().toString());
+   builder = new CloudSdk.Builder().sdkPath(root);
+  }
+
+  private void writeVersionFile(String contents) throws IOException {
+    Files.write(contents, root.resolve("VERSION").toFile(), Charset.defaultCharset());
+  }
 
   @Test
   public void testGetSdkPath() {
@@ -44,17 +58,28 @@ public class CloudSdkTest {
   public void testValidateCloudSdk() {
     new CloudSdk.Builder().build().validateCloudSdk();
   }
-  
-  @Test
-  public void testGetVersion() throws ProcessRunnerException {
-    CloudSdk sdk = new CloudSdk.Builder().build();
-    CloudSdkVersion version = sdk.getVersion();
-    assertTrue(version.getMajorVersion() > 130);
+
+  @Test(expected = CloudSdkOutOfDateException.class)
+  public void testGetVersion_fileNotExists() throws IOException {
+    builder.build().getVersion();
   }
-  
+
+  @Test(expected = CloudSdkOutOfDateException.class)
+  public void testGetVersion_fileContentInvalid() throws IOException {
+    writeVersionFile("invalid format");
+    builder.build().getVersion();
+  }
+
+  @Test
+  public void testGetVersion_fileContentValid() throws IOException {
+    String version = "136.0.0";
+    writeVersionFile(version);
+    assertEquals(version, builder.build().getVersion().toString());
+  }
+
   @Test
   public void testValidateAppEngineJavaComponents() {
-    new CloudSdk.Builder().build().validateAppEngineJavaComponents();;
+    new CloudSdk.Builder().build().validateAppEngineJavaComponents();
   }
   
   @Test
@@ -70,7 +95,7 @@ public class CloudSdkTest {
 
   @Test
   public void testGetJarPathJavaTools() {
-    assertEquals(Paths.get("/platform/google_appengine/google/appengine"
+    assertEquals(root.resolve("platform/google_appengine/google/appengine"
         + "/tools/java/lib/appengine-tools-api.jar"),
         builder.build().getJarPath("appengine-tools-api.jar"));
   }

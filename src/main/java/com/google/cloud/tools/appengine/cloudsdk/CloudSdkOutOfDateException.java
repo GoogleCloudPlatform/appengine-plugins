@@ -16,13 +16,23 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-/**
- * The Cloud SDK that was found is too old (generally before 131.0).
- */
-public class CloudSdkOutOfDateException extends CloudSdkNotFoundException {
+import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 
-  public CloudSdkOutOfDateException(String message) {
+/**
+ * The Cloud SDK that was found is too old (generally before 133.0.0).
+ */
+public class CloudSdkOutOfDateException extends AppEngineException {
+
+  private CloudSdkVersion requiredVersion;
+
+  public CloudSdkOutOfDateException(String message, CloudSdkVersion requiredVersion) {
     super(message);
+    this.requiredVersion = requiredVersion;
+  }
+
+  public CloudSdkVersion getRequiredVersion() {
+    return requiredVersion;
   }
 
 }
