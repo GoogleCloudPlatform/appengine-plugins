@@ -59,7 +59,9 @@ import javax.annotation.Nullable;
  * Cloud SDK CLI wrapper.
  */
 public class CloudSdk {
-  private static final CloudSdkVersion MINIMUM_VERSION = new CloudSdkVersion("133.0.0");
+
+  public static final CloudSdkVersion MINIMUM_VERSION = new CloudSdkVersion("133.0.0");
+
   private static final Logger logger = Logger.getLogger(CloudSdk.class.toString());
   private static final Joiner WHITESPACE_JOINER = Joiner.on(" ");
 
