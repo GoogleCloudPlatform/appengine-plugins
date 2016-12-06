@@ -394,7 +394,7 @@ public class CloudSdk {
   private void validateCloudSdkVersion() {
     try {
       CloudSdkVersion version = getVersion();
-      if (version.compareTo(MINIMUM_VERSION) <= 0) {
+      if (version.compareTo(MINIMUM_VERSION) < 0) {
         throw new CloudSdkOutOfDateException("Cloud SDK version " + version
             + " is too old. Please update to at least " + MINIMUM_VERSION, MINIMUM_VERSION);
       }
