@@ -34,6 +34,11 @@ public class CloudSdkOutOfDateException extends AppEngineException {
     this.requiredVersion = requiredVersion;
   }
 
+  public CloudSdkOutOfDateException(CloudSdkVersion requiredVersion, Throwable cause) {
+    super(String.format(MESSAGE, requiredVersion.toString()), cause);
+    this.requiredVersion = requiredVersion;
+  }
+
   public CloudSdkVersion getRequiredVersion() {
     return requiredVersion;
   }

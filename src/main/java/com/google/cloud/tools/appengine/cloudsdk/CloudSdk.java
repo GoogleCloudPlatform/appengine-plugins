@@ -279,9 +279,12 @@ public class CloudSdk {
   }
 
   /**
-   * Returns the version of the Cloud SDK installation.
+   * Returns the version of the Cloud SDK installation. Version is determined by reading the VERSION
+   * file located in the Cloud SDK directory.
    *
    * @throws CloudSdkOutOfDateException if the Cloud SDK is too out of date to determine its version
+   * @throws IOException if the VERSION file could not be read. This might mean the Cloud SDK
+   *                     installation is corrupted.
    */
   public CloudSdkVersion getVersion() throws IOException {
     Path versionFile = getSdkPath().resolve(VERSION_FILE);
@@ -289,14 +292,18 @@ public class CloudSdk {
     if (!Files.isRegularFile(versionFile)) {
       throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
     }
+
+    String contents = "";
     List<String> lines = Files.readAllLines(versionFile, StandardCharsets.UTF_8);
-    // expect only a single line
-    String contents = lines.get(0);
+    if (lines.size() > 0) {
+      // expect only a single line
+      contents = lines.get(0);
+    }
 
     try {
       return new CloudSdkVersion(contents);
     } catch (IllegalArgumentException e) {
-      throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
+      throw new CloudSdkOutOfDateException(MINIMUM_VERSION, e);
     }
   }
 
