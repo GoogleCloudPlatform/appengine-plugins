@@ -36,6 +36,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -72,7 +73,7 @@ public class CloudSdk {
       "platform/google_appengine/google/appengine/tools/java/lib";
   private static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
   private static final String WINDOWS_BUNDLED_PYTHON = "platform/bundledpython/python.exe";
-  private static final String VERSION_FILE = "VERSION";
+  private static final String VERSION_FILE_NAME = "VERSION";
 
   private final Map<String, Path> jarLocations = new HashMap<>();
   private final Path sdkPath;
@@ -282,28 +283,31 @@ public class CloudSdk {
    * Returns the version of the Cloud SDK installation. Version is determined by reading the VERSION
    * file located in the Cloud SDK directory.
    *
-   * @throws CloudSdkOutOfDateException if the Cloud SDK is too out of date to determine its version
-   * @throws IOException if the VERSION file could not be read. This might mean the Cloud SDK
-   *                     installation is corrupted.
+   * @throws CloudSdkVersionFileNotFoundException if the VERSION file is not present
+   * @throws RuntimeException if there was an error reading the file
+   * @throws IllegalStateException if the file content could not be parsed
    */
-  public CloudSdkVersion getVersion() throws IOException {
-    Path versionFile = getSdkPath().resolve(VERSION_FILE);
+  public CloudSdkVersion getVersion() {
+    Path versionFile = getSdkPath().resolve(VERSION_FILE_NAME);
 
     if (!Files.isRegularFile(versionFile)) {
-      throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
+      throw new CloudSdkVersionFileNotFoundException("Cloud SDK version file not found at "
+          + versionFile.toString());
     }
 
     String contents = "";
-    List<String> lines = Files.readAllLines(versionFile, StandardCharsets.UTF_8);
-    if (lines.size() > 0) {
-      // expect only a single line
-      contents = lines.get(0);
-    }
-
     try {
+      List<String> lines = Files.readAllLines(versionFile, StandardCharsets.UTF_8);
+      if (lines.size() > 0) {
+        // expect only a single line
+        contents = lines.get(0);
+      }
       return new CloudSdkVersion(contents);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     } catch (IllegalArgumentException e) {
-      throw new CloudSdkOutOfDateException(MINIMUM_VERSION, e);
+      throw new IllegalStateException(
+          "Pattern found in the Cloud SDK version file could not be parsed: " + contents, e);
     }
   }
 
@@ -401,8 +405,9 @@ public class CloudSdk {
       if (version.compareTo(MINIMUM_VERSION) < 0) {
         throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
       }
-    } catch (IllegalArgumentException | IOException ex) {
-      throw new CloudSdkNotFoundException("Could not determine Cloud SDK version", ex);
+    } catch (CloudSdkVersionFileNotFoundException ex) {
+      // this is a version of the Cloud SDK prior to when VERSION files were introduced
+      throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
     }
   }
 

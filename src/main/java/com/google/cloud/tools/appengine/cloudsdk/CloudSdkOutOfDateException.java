@@ -27,7 +27,7 @@ public class CloudSdkOutOfDateException extends AppEngineException {
   private static final String MESSAGE
       = "Cloud SDK versions below %s are not supported by this library.";
 
-  private CloudSdkVersion requiredVersion;
+  private final CloudSdkVersion requiredVersion;
 
   public CloudSdkOutOfDateException(CloudSdkVersion requiredVersion) {
     super(String.format(MESSAGE, requiredVersion.toString()));
