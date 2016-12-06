@@ -130,7 +130,7 @@ public class DefaultProcessRunner implements ProcessRunner {
         syncRun(process, stdOutHandler, stdErrHandler);
       }
 
-    } catch (IOException | InterruptedException | IllegalThreadStateException e) {
+    } catch (IOException | InterruptedException e) {
       throw new ProcessRunnerException(e);
     }
   }
