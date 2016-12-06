@@ -137,7 +137,6 @@ public class CloudSdk {
       command.add(commandToken);
     }
 
-    command.add("--quiet");
     command.addAll(args);
     command.addAll(GcloudArgs.get("format", appCommandOutputFormat));
 
