@@ -24,10 +24,13 @@ import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
  */
 public class CloudSdkOutOfDateException extends AppEngineException {
 
+  private static final String MESSAGE
+      = "Cloud SDK versions below %s are not supported by this library.";
+
   private CloudSdkVersion requiredVersion;
 
-  public CloudSdkOutOfDateException(String message, CloudSdkVersion requiredVersion) {
-    super(message);
+  public CloudSdkOutOfDateException(CloudSdkVersion requiredVersion) {
+    super(String.format(MESSAGE, requiredVersion.toString()));
     this.requiredVersion = requiredVersion;
   }
 

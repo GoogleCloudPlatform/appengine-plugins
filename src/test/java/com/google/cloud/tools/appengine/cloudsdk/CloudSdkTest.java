@@ -1,23 +1,15 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
-import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.io.Files;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
@@ -26,6 +18,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link CloudSdk}.
@@ -59,15 +57,29 @@ public class CloudSdkTest {
     new CloudSdk.Builder().build().validateCloudSdk();
   }
 
-  @Test(expected = CloudSdkOutOfDateException.class)
+  @Test
   public void testGetVersion_fileNotExists() throws IOException {
-    builder.build().getVersion();
+    try {
+      builder.build().getVersion();
+    } catch (CloudSdkOutOfDateException e) {
+      assertEquals("Cloud SDK versions below " + CloudSdk.MINIMUM_VERSION
+          + " are not supported by this library.", e.getMessage());
+      return;
+    }
+    fail();
   }
 
-  @Test(expected = CloudSdkOutOfDateException.class)
+  @Test
   public void testGetVersion_fileContentInvalid() throws IOException {
     writeVersionFile("invalid format");
-    builder.build().getVersion();
+    try {
+      builder.build().getVersion();
+    } catch (CloudSdkOutOfDateException e) {
+      assertEquals("Cloud SDK versions below " + CloudSdk.MINIMUM_VERSION
+          + " are not supported by this library.", e.getMessage());
+      return;
+    }
+    fail();
   }
 
   @Test

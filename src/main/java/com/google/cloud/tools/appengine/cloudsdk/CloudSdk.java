@@ -287,10 +287,8 @@ public class CloudSdk {
     Path versionFile = getSdkPath().resolve(VERSION_FILE);
 
     if (!Files.isRegularFile(versionFile)) {
-      throw new CloudSdkOutOfDateException("Cloud SDK version is out of date. Please update to "
-          + "at least " + MINIMUM_VERSION, MINIMUM_VERSION);
+      throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
     }
-    // TODO charset?
     List<String> lines = Files.readAllLines(versionFile, StandardCharsets.UTF_8);
     // expect only a single line
     String contents = lines.get(0);
@@ -298,8 +296,7 @@ public class CloudSdk {
     try {
       return new CloudSdkVersion(contents);
     } catch (IllegalArgumentException e) {
-      throw new CloudSdkOutOfDateException("Cloud SDK version is out of date. Please update to "
-          + "at least " + MINIMUM_VERSION, MINIMUM_VERSION);
+      throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
     }
   }
 
@@ -391,12 +388,11 @@ public class CloudSdk {
     validateCloudSdkVersion();
   }
 
-  private void validateCloudSdkVersion() {
+  private void validateCloudSdkVersion() throws CloudSdkOutOfDateException {
     try {
       CloudSdkVersion version = getVersion();
       if (version.compareTo(MINIMUM_VERSION) < 0) {
-        throw new CloudSdkOutOfDateException("Cloud SDK version " + version
-            + " is too old. Please update to at least " + MINIMUM_VERSION, MINIMUM_VERSION);
+        throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
       }
     } catch (IllegalArgumentException | IOException ex) {
       throw new CloudSdkNotFoundException("Could not determine Cloud SDK version", ex);
