@@ -71,10 +71,10 @@ public class CloudSdk {
   private static final String JAVA_APPENGINE_SDK_PATH =
       "platform/google_appengine/google/appengine/tools/java/lib";
   private static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
-  private static final Map<String, Path> JAR_LOCATIONS = new HashMap<>();
   private static final String WINDOWS_BUNDLED_PYTHON = "platform/bundledpython/python.exe";
   private static final String VERSION_FILE = "VERSION";
 
+  private final Map<String, Path> jarLocations = new HashMap<>();
   private final Path sdkPath;
   private final ProcessRunner processRunner;
   private final String appCommandMetricsEnvironment;
@@ -99,10 +99,10 @@ public class CloudSdk {
     // Populate jar locations.
     // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
     // SDK does.
-    JAR_LOCATIONS.put("servlet-api.jar",
+    jarLocations.put("servlet-api.jar",
         getJavaAppEngineSdkPath().resolve("shared/servlet-api.jar"));
-    JAR_LOCATIONS.put("jsp-api.jar", getJavaAppEngineSdkPath().resolve("shared/jsp-api.jar"));
-    JAR_LOCATIONS.put(JAVA_TOOLS_JAR,
+    jarLocations.put("jsp-api.jar", getJavaAppEngineSdkPath().resolve("shared/jsp-api.jar"));
+    jarLocations.put(JAVA_TOOLS_JAR,
         sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
   }
 
@@ -269,7 +269,7 @@ public class CloudSdk {
     command.add(
         Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
     command.add("-cp");
-    command.add(JAR_LOCATIONS.get(JAVA_TOOLS_JAR).toString());
+    command.add(jarLocations.get(JAVA_TOOLS_JAR).toString());
     command.add("com.google.appengine.tools.admin.AppCfg");
     command.addAll(args);
 
@@ -381,7 +381,7 @@ public class CloudSdk {
    * @return the path in the file system
    */
   public Path getJarPath(String jarName) {
-    return JAR_LOCATIONS.get(jarName);
+    return jarLocations.get(jarName);
   }
 
   /**
@@ -438,9 +438,9 @@ public class CloudSdk {
           "Validation Error: Java App Engine components not installed."
               + " Fix by running 'gcloud components install app-engine-java' on command-line.");
     }
-    if (!Files.isRegularFile(JAR_LOCATIONS.get(JAVA_TOOLS_JAR))) {
+    if (!Files.isRegularFile(jarLocations.get(JAVA_TOOLS_JAR))) {
       throw new AppEngineJavaComponentsNotInstalledException(
-          "Validation Error: Java Tools jar location '" + JAR_LOCATIONS.get(JAVA_TOOLS_JAR)
+          "Validation Error: Java Tools jar location '" + jarLocations.get(JAVA_TOOLS_JAR)
               + "' is not a file.");
     }
   }
