@@ -18,6 +18,7 @@ package com.google.cloud.tools.appengine.experimental.internal.process;
 
 import com.google.cloud.tools.appengine.experimental.OutputHandler;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.MoreExecutors;
 
@@ -27,6 +28,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -50,7 +52,7 @@ public class CliProcessManager<T> implements Future<T> {
   private final Process process;
   private ListenableFutureTask<CliProcessResult<T>> processMain;
   private ListenableFutureTask<String> processStdOut;
-  private Runnable processStdErr;
+  private FutureTask<Void> processStdErr;
 
   private CliProcessManager(Process process, OutputHandler outputHandler,
       StringResultConverter<T> stringResultConverter) {
@@ -80,16 +82,17 @@ public class CliProcessManager<T> implements Future<T> {
     });
 
 
-    processStdErr = new Runnable() {
+    processStdErr = new FutureTask<Void>(new Callable<Void>() {
       @Override
-      public void run() {
+      public Void call() throws Exception {
         final Scanner stdOut = new Scanner(process.getErrorStream(), "UTF-8");
         while (stdOut.hasNextLine() && !Thread.interrupted()) {
           String line = stdOut.nextLine();
           outputHandler.handleLine(line);
         }
+        return null;
       }
-    };
+    });
 
     // processMain does some special handling to get the result of the stdout and store
     // exit code and result in a single return object
@@ -98,6 +101,7 @@ public class CliProcessManager<T> implements Future<T> {
       public CliProcessResult<T> call() throws Exception {
         int exitCode = process.waitFor();
         T result = stringResultConverter.getResult(processStdOut.get());
+        processStdErr.get();
         return new CliProcessResult<T>(exitCode,result);
       }
     });

@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.experimental.process.io;
+package com.google.cloud.tools.appengine.experimental.internal.process.io;
 
-import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
+import com.google.cloud.tools.appengine.experimental.OutputHandler;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 /**
  * Created by appu on 8/22/16.
  */
-public class DumbConverter implements StringResultConverter<String> {
+public class CollectingOutputHandler implements OutputHandler {
+
+  private List<String> lines = Lists.newArrayList();
 
   @Override
-  public String getResult(String result) {
-    return result;
+  public void handleLine(String line) {
+    lines.add(line);
+  }
+
+  public List<String> getLines() {
+    return lines;
   }
 }

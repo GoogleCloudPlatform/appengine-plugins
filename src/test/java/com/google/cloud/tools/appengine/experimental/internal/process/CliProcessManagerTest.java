@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.experimental.process;
+package com.google.cloud.tools.appengine.experimental.internal.process;
 
 import static org.junit.Assume.assumeTrue;
 
 import com.google.cloud.tools.appengine.experimental.OutputHandler;
-import com.google.cloud.tools.appengine.experimental.internal.process.CliProcessManager;
-import com.google.cloud.tools.appengine.experimental.process.io.CollectingOutputHandler;
-import com.google.cloud.tools.appengine.experimental.process.io.DumbConverter;
+import com.google.cloud.tools.appengine.experimental.internal.process.io.CollectingOutputHandler;
+import com.google.cloud.tools.appengine.experimental.internal.process.io.DumbConverter;
 
 import org.junit.Assert;
 import org.junit.Rule;

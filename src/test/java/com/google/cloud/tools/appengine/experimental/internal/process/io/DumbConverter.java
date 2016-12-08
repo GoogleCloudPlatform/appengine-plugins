@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.experimental.process.io;
-
-import com.google.cloud.tools.appengine.experimental.OutputHandler;
-import com.google.common.collect.Lists;
-
-import java.util.List;
+package com.google.cloud.tools.appengine.experimental.internal.process.io;
 
 /**
  * Created by appu on 8/22/16.
  */
-public class CollectingOutputHandler implements OutputHandler {
-
-  private List<String> lines = Lists.newArrayList();
+public class DumbConverter implements StringResultConverter<String> {
 
   @Override
-  public void handleLine(String line) {
-    lines.add(line);
-  }
-
-  public List<String> getLines() {
-    return lines;
+  public String getResult(String result) {
+    return result;
   }
 }
