@@ -9,11 +9,6 @@ This library requires Java 1.7 or higher to run, and Maven to build.
 
 You must also install the Cloud SDK command line interface (CLI), if it isn't installed yet, following the [instructions](https://cloud.google.com/sdk/).
 
-After installing Cloud SDK, you have to login and configure it:
-
-    gcloud auth login
-    gcloud config set project <your project name>
-
 You must also install the app-engine-java component:
 
     gcloud components install app-engine-java
