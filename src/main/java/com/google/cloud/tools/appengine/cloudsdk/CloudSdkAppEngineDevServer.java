@@ -39,18 +39,17 @@ import java.util.Map;
  */
 public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
 
-  private CloudSdk sdk;
+  private final CloudSdk sdk;
 
   private static final String DEFAULT_ADMIN_HOST = "localhost";
   private static final int DEFAULT_ADMIN_PORT = 8000;
 
-  public CloudSdkAppEngineDevServer(
-      CloudSdk sdk) {
+  public CloudSdkAppEngineDevServer(CloudSdk sdk) {
     this.sdk = sdk;
   }
 
   /**
-   * Starts the local development server, synchronous or asynchronously.
+   * Starts the local development server, synchronously or asynchronously.
    */
   @Override
   public void run(RunConfiguration config) throws AppEngineException {
@@ -64,11 +63,13 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
       arguments.add(appYaml.toPath().toString());
     }
 
-    Map<String,String> env = Maps.newHashMap();
+    Map<String, String> environmentVariables = Maps.newHashMap();
     if (!Strings.isNullOrEmpty(config.getJavaHomeDir())) {
-      env.put("JAVA_HOME", config.getJavaHomeDir());
+      environmentVariables.put("JAVA_HOME", config.getJavaHomeDir());
     }
 
+    environmentVariables.putAll(config.getEnvironmentVariables());
+    
     arguments.addAll(DevAppServerArgs.get("host", config.getHost()));
     arguments.addAll(DevAppServerArgs.get("port", config.getPort()));
     arguments.addAll(DevAppServerArgs.get("admin_host", config.getAdminHost()));
@@ -96,7 +97,7 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
         .addAll(DevAppServerArgs.get("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
 
     try {
-      sdk.runDevAppServerCommand(arguments, env);
+      sdk.runDevAppServerCommand(arguments, environmentVariables);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

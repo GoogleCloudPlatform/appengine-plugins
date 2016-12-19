@@ -21,12 +21,10 @@ import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -72,6 +70,7 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setPythonStartupScript("script.py");
     configuration.setPythonStartupArgs("arguments");
     configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
+    configuration.setEnvironmentVariables(ImmutableMap.of("foo", "bar", "baz", "back"));
     configuration.setCustomEntrypoint("entrypoint");
     configuration.setRuntime("java");
     configuration.setAllowSkippedFiles(true);
@@ -92,7 +91,8 @@ public class CloudSdkAppEngineDevServerTest {
             "--api_port=8091", "--automatic_restart=false", "--dev_appserver_log_level=info",
             "--skip_sdk_update_check=true", "--default_gcs_bucket_name=buckets");
 
-    Map<String,String> expectedEnv = ImmutableMap.of("JAVA_HOME", "/usr/lib/jvm/default-java");
+    Map<String,String> expectedEnv = ImmutableMap.of("JAVA_HOME", "/usr/lib/jvm/default-java",
+        "foo", "bar", "baz", "back");
 
     devServer.run(configuration);
 

@@ -14,6 +14,7 @@
 
 package com.google.cloud.tools.appengine.api.devserver;
 
+import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.util.List;
 
@@ -52,6 +53,13 @@ public interface RunConfiguration {
   String getPythonStartupArgs();
 
   List<String> getJvmFlags();
+
+  /**
+   * Return an immutable map of environment variable strings.
+   * 
+   * @return the environment variables
+   */
+  ImmutableMap<String, String> getEnvironmentVariables();
 
   String getCustomEntrypoint();
 
