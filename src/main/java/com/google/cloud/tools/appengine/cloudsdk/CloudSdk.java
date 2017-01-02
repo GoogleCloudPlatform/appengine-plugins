@@ -403,7 +403,7 @@ public class CloudSdk {
     try {
       CloudSdkVersion version = getVersion();
       if (version.compareTo(MINIMUM_VERSION) < 0) {
-        throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
+        throw new CloudSdkOutOfDateException(version, MINIMUM_VERSION);
       }
     } catch (CloudSdkVersionFileNotFoundException ex) {
       // this is a version of the Cloud SDK prior to when VERSION files were introduced
