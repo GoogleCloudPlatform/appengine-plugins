@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,25 +40,28 @@ import java.util.Map;
  */
 public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
 
-  private CloudSdk sdk;
+  private final CloudSdk sdk;
 
   private static final String DEFAULT_ADMIN_HOST = "localhost";
   private static final int DEFAULT_ADMIN_PORT = 8000;
 
-  public CloudSdkAppEngineDevServer(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+  public CloudSdkAppEngineDevServer(CloudSdk sdk) {
+    this.sdk = Preconditions.checkNotNull(sdk);
   }
 
   /**
-   * Starts the local development server, synchronous or asynchronously.
+   * Starts the local development server, synchronously or asynchronously.
+   * 
+   * @throws InvalidPathException when Python can't be located
+   * @throws CloudSdkNotFoundException when Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when Cloud SDK is out of date
+   * @throws AppEngineException I/O error in the dev-appserver
    */
   @Override
   public void run(RunConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getAppYamls());
-    Preconditions.checkArgument(config.getAppYamls().size() > 0);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkArgument(config.getAppYamls().size() > 0); 
 
     List<String> arguments = new ArrayList<>();
     for (File appYaml : config.getAppYamls()) {
