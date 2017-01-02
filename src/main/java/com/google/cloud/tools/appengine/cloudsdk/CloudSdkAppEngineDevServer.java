@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,11 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
 
   /**
    * Starts the local development server, synchronously or asynchronously.
+   * 
+   * @throws InvalidPathException when Python can't be located
+   * @throws CloudSdkNotFoundException when Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when Cloud SDK is out of date
+   * @throws AppEngineException I/O error in the dev-appserver
    */
   @Override
   public void run(RunConfiguration config) throws AppEngineException {
