@@ -126,7 +126,6 @@ public class CloudSdk {
    * @throws ProcessRunnerException when there is an issue running the gcloud process
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
-
    */
   public void runSourceCommand(List<String> args) throws ProcessRunnerException {
     runDebugCommand(args, "source");
