@@ -21,12 +21,11 @@ import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -52,6 +51,15 @@ public class CloudSdkAppEngineDevServerTest {
   @Before
   public void setUp() {
     devServer = new CloudSdkAppEngineDevServer(sdk);
+  }
+  
+  @Test
+  public void tesNullSdk() {
+    try {
+      new CloudSdkAppEngineDevServer(null);
+      Assert.fail("Allowed null SDK");
+    } catch (NullPointerException expected) {
+    }
   }
 
   @Test
