@@ -39,25 +39,23 @@ import java.util.Map;
  */
 public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
 
-  private CloudSdk sdk;
+  private final CloudSdk sdk;
 
   private static final String DEFAULT_ADMIN_HOST = "localhost";
   private static final int DEFAULT_ADMIN_PORT = 8000;
 
-  public CloudSdkAppEngineDevServer(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+  public CloudSdkAppEngineDevServer(CloudSdk sdk) {
+    this.sdk = Preconditions.checkNotNull(sdk);
   }
 
   /**
-   * Starts the local development server, synchronous or asynchronously.
+   * Starts the local development server, synchronously or asynchronously.
    */
   @Override
   public void run(RunConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getAppYamls());
-    Preconditions.checkArgument(config.getAppYamls().size() > 0);
-    Preconditions.checkNotNull(sdk);
+    Preconditions.checkArgument(config.getAppYamls().size() > 0); 
 
     List<String> arguments = new ArrayList<>();
     for (File appYaml : config.getAppYamls()) {
