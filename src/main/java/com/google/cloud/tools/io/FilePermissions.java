@@ -18,9 +18,9 @@ package com.google.cloud.tools.io;
 
 import com.google.common.annotations.Beta;
 
-import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
+import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 
 /**
@@ -38,9 +38,11 @@ public class FilePermissions {
    * e.g. in a tooltip.
    * 
    * @param path tentative location for directory
-   * @throws IOException if a directory cannot be created at the specified path
+   * @throws AccessDeniedException if a directory in the path is not writable
+   * @throws NotDirectoryException if a segment of the path is a file
    */
-  public static void verifyDirectoryCreatable(Path path) throws IOException {
+  public static void verifyDirectoryCreatable(Path path)
+      throws AccessDeniedException, NotDirectoryException {
     
     for (Path segment = path; segment != null; segment = segment.getParent()) {
       if (Files.exists(segment)) {
@@ -48,12 +50,12 @@ public class FilePermissions {
           // Can't create a directory if the bottom most currently existing directory in
           // the path is not writable. 
           if (!Files.isWritable(segment)) {
-            throw new IOException(segment + " is not writable");
+            throw new AccessDeniedException(segment + " is not writable");
           }
         } else { 
           // Can't create a directory if a non-directory file already exists with that name
           // somewhere in the path. 
-          throw new FileAlreadyExistsException(segment + " is a file");  
+          throw new NotDirectoryException(segment + " is a file");  
         }
         break;
       }

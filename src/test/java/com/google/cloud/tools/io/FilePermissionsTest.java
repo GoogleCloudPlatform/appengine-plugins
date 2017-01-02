@@ -23,8 +23,9 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
+import java.nio.file.NotDirectoryException;
 
 public class FilePermissionsTest {
 
@@ -62,7 +63,7 @@ public class FilePermissionsTest {
     try {
       FilePermissions.verifyDirectoryCreatable(file);
       Assert.fail("Can create directory over file");
-    } catch (FileAlreadyExistsException ex) {
+    } catch (NotDirectoryException ex) {
       Assert.assertTrue(ex.getMessage().contains(file.getFileName().toString()));
     }
   }
@@ -73,7 +74,7 @@ public class FilePermissionsTest {
     try {
       FilePermissions.verifyDirectoryCreatable(Paths.get(file.toString(), "bar", "baz"));
       Assert.fail("Can create directory over file");
-    } catch (FileAlreadyExistsException ex) {
+    } catch (NotDirectoryException ex) {
       Assert.assertTrue(ex.getMessage().contains(file.getFileName().toString()));
     }
   }
@@ -85,7 +86,7 @@ public class FilePermissionsTest {
     try {
       FilePermissions.verifyDirectoryCreatable(Paths.get(dir.toString(), "bar"));
       Assert.fail("Can create directory in non-writable parent");
-    } catch (IOException ex) {
+    } catch (AccessDeniedException ex) {
       Assert.assertTrue(ex.getMessage().contains(dir.getFileName().toString()));
     }
   }
@@ -95,7 +96,7 @@ public class FilePermissionsTest {
     try {
       FilePermissions.verifyDirectoryCreatable(Paths.get("/bar"));
       Assert.fail("Can create directory in root");
-    } catch (IOException ex) {
+    } catch (AccessDeniedException ex) {
       Assert.assertEquals("/ is not writable", ex.getMessage());
     }
   }
