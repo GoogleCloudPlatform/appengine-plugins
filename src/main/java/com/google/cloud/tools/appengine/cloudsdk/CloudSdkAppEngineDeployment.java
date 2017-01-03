@@ -43,7 +43,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
    *
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
-   * @throws AppEngineException when there is an issue transmitting the data to the server
+   * @throws AppEngineException when there is an issue uploading project files to the cloud
    * @throws IllegalArgumentException when a local deployable referenced 
    *     by the configuration isn't found
    */  
