@@ -23,6 +23,7 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.common.collect.ImmutableList;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,7 +64,16 @@ public class CloudSdkAppEngineDeploymentTest {
     appYaml2 = tmpDir.newFile("app2.yaml");
     deployment = new CloudSdkAppEngineDeployment(sdk);
   }
-
+  
+  @Test
+  public void testNullSdk() {
+    try {
+      new CloudSdkAppEngineDeployment(null);
+      Assert.fail("allowed null SDK");
+    } catch (NullPointerException expected) {
+    }
+  }
+  
   @Test
   public void testNewDeployAction_allFlags() throws AppEngineException, ProcessRunnerException {
 

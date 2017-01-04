@@ -32,19 +32,26 @@ import java.util.List;
  */
 public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
-  private CloudSdk sdk;
+  private final CloudSdk sdk;
 
-  public CloudSdkAppEngineDeployment(
-      CloudSdk sdk) {
-    this.sdk = sdk;
+  public CloudSdkAppEngineDeployment(CloudSdk sdk) {
+    this.sdk = Preconditions.checkNotNull(sdk);
   }
 
+  /**
+   * Deploys a project to App Engine.
+   *
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
+   * @throws AppEngineException when there is an issue uploading project files to the cloud
+   * @throws IllegalArgumentException when a local deployable referenced 
+   *     by the configuration isn't found
+   */  
   @Override
   public void deploy(DeployConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDeployables());
     Preconditions.checkArgument(config.getDeployables().size() > 0);
-    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");

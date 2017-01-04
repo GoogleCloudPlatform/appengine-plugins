@@ -50,6 +50,8 @@ public class PathResolver implements CloudSdkResolver {
     } else {
       // home directory
       possiblePaths.add(System.getProperty("user.home") + "/google-cloud-sdk");
+      // usr directory
+      possiblePaths.add("/usr/lib/google-cloud-sdk");
       // try devshell VM
       possiblePaths.add("/google/google-cloud-sdk");
       // try bitnami Jenkins VM:
