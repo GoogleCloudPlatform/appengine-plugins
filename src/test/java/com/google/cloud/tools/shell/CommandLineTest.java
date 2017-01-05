@@ -41,7 +41,7 @@ public class CommandLineTest {
   @Test
   public void testSplit_null() {
     try {
-      String[] args = CommandLine.split(null);
+      CommandLine.split(null);
       Assert.fail("split null");
     } catch (NullPointerException expected) {
     }
@@ -51,6 +51,13 @@ public class CommandLineTest {
   public void testSplit_oneQuotedArg() {
     String[] args = CommandLine.split("--foo=\"bar baz\"");
     String[] expected = {"--foo=\"bar baz\""};
+    Assert.assertArrayEquals(expected, args);
+  }
+  
+  @Test
+  public void testSplit_surpriseQuotes() {
+    String[] args = CommandLine.split("java \"-vers\"\"ion\"");
+    String[] expected = {"java", "\"-vers\"\"ion\""};
     Assert.assertArrayEquals(expected, args);
   }
 
