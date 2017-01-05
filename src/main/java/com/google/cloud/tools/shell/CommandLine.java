@@ -40,8 +40,11 @@ public class CommandLine {
         if (arg == null) {
           arg = new StringBuilder();
         }
-        if (c == quote) {
-          quoted = !quoted;
+        if (!quoted && (c == '"' || c == '\'')) { // opening quote
+          quoted = true;
+          quote = c;
+        } else if (quoted && c == quote) { // closing quote
+          quoted = false;
         }
         arg.append(c);
       } else if (quoted) { // quoted whitespace

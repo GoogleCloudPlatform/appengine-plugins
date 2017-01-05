@@ -67,6 +67,14 @@ public class CommandLineTest {
     String[] expected = {"java", "'-version'"};
     Assert.assertArrayEquals(expected, args);
   }
+  
+  @Test
+  public void testSplit_singleQuotedSpaces() {
+    String[] args = CommandLine.split("echo 'foo  bar'");
+    String[] expected = {"echo", "'foo  bar'"};
+    Assert.assertArrayEquals(expected, args);
+  }
+  
   @Test
   public void testSplit_quotedArgs() {
     String[] args = CommandLine.split("  --foo=\"bar baz\" -name=value baz");
