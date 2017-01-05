@@ -24,8 +24,8 @@ import java.util.ArrayList;
 public class CommandLine {
 
   /**
-   * Split a full command line into an array of individual arguments,
-   * similar to the shlex function in Python according to POSIX rules. 
+   * Split a full command line into an array of individual arguments
+   * according to POSIX rules, similar to the shlex function in Python. 
    * All input characters are preserved except for separating whitespace. 
    * This function tokenizes the input string, but does not attempt to parse it.
    * For example, it recognizes that a space escaped with a backslash does not
@@ -33,6 +33,7 @@ public class CommandLine {
    * 
    * @param line the input line
    * @return a non-null but possibly empty array of arguments
+   * @throws NullPointerException if line is null
    */
   public static String[] split(String line) {    
     char quote = '"';
