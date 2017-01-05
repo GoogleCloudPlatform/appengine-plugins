@@ -60,7 +60,13 @@ public class CommandLineTest {
     String[] expected = {"java", "\"-vers\"\"ion\""};
     Assert.assertArrayEquals(expected, args);
   }
-
+  
+  @Test
+  public void testSplit_singleQuoted() {
+    String[] args = CommandLine.split("java '-version'");
+    String[] expected = {"java", "'-version'"};
+    Assert.assertArrayEquals(expected, args);
+  }
   @Test
   public void testSplit_quotedArgs() {
     String[] args = CommandLine.split("  --foo=\"bar baz\" -name=value baz");
