@@ -15,21 +15,24 @@ package com.google.cloud.tools.shell;
 
 import java.util.ArrayList;
 
+import com.google.common.annotations.Beta;
+
 /**
  * Utilities for working with command line arguments.
  */
+@Beta
 public class CommandLine {
 
   /**
    * Split a full command line into an array of individual arguments,
-   * similar to the shlex function in Python.
+   * similar to the shlex function in Python according to POSIX rules. 
+   * All input characters are preserved except for separating whitespace. 
+   * This function tokenizes the input string, but does not attempt to parse it.
    * 
    * @param line the input line
    * @return a non-null but possibly empty array of arguments
    */
-  public static String[] split(String line) {
-    String[] empty = new String[0];
-    
+  public static String[] split(String line) {    
     char quote = '"';
     boolean quoted = false;
     
@@ -37,7 +40,7 @@ public class CommandLine {
     StringBuilder arg = null;
     for (char c : line.toCharArray()) {
       if (!Character.isWhitespace(c)) {
-        if (arg == null) {
+        if (arg == null) { // start of token
           arg = new StringBuilder();
         }
         if (!quoted && (c == '"' || c == '\'')) { // opening quote
@@ -49,7 +52,7 @@ public class CommandLine {
         arg.append(c);
       } else if (quoted) { // quoted whitespace
         arg.append(c);
-      } else {
+      } else { // end of token
         if (arg != null) {
           result.add(arg.toString());
           arg = null;
@@ -57,12 +60,12 @@ public class CommandLine {
       }
     }
     
-    if (arg != null) {
+    if (arg != null) { // final token
       result.add(arg.toString());
       arg = null;
     }
     
-    return result.toArray(empty);
+    return result.toArray(new String[0]);
   }
 
 }
