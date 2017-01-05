@@ -14,6 +14,7 @@
 package com.google.cloud.tools.shell;
 
 import java.util.ArrayList;
+
 /**
  * Utilities for working with command line arguments.
  */
@@ -24,7 +25,7 @@ public class CommandLine {
    * similar to the shlex function in Python.
    * 
    * @param line the input line
-   * @return an array of arguments
+   * @return a non-null but possibly empty array of arguments
    */
   public static String[] split(String line) {
     String[] empty = new String[0];
