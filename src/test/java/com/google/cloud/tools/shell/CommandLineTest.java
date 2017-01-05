@@ -76,6 +76,13 @@ public class CommandLineTest {
   }
   
   @Test
+  public void testSplit_quoteEmptyString() {
+    String[] args = CommandLine.split("echo ''");
+    String[] expected = {"echo", "''"};
+    Assert.assertArrayEquals(expected, args);
+  }
+  
+  @Test
   public void testSplit_quotedArgs() {
     String[] args = CommandLine.split("  --foo=\"bar baz\" -name=value baz");
     String[] expected = {"--foo=\"bar baz\"", "-name=value", "baz"};

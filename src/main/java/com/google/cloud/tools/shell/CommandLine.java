@@ -13,9 +13,9 @@
 
 package com.google.cloud.tools.shell;
 
-import java.util.ArrayList;
-
 import com.google.common.annotations.Beta;
+
+import java.util.ArrayList;
 
 /**
  * Utilities for working with command line arguments.
