@@ -34,11 +34,11 @@ public class CommandLine {
     boolean quoted = false;
     
     ArrayList<String> result = new ArrayList<>();
-    StringBuffer arg = null;
+    StringBuilder arg = null;
     for (char c : line.toCharArray()) {
       if (!Character.isWhitespace(c)) {
         if (arg == null) {
-          arg = new StringBuffer();
+          arg = new StringBuilder();
         }
         if (c == quote) {
           quoted = !quoted;
