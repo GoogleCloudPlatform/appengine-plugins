@@ -43,15 +43,9 @@ public class CommandLine {
     StringBuilder arg = null;
     for (char c : line.toCharArray()) {
       if (escaped) {
-        if (arg == null) { // start of token
-          arg = new StringBuilder();
-        }
         arg.append(c);
         escaped = false;
       } else if (!Character.isWhitespace(c)) {
-        if (arg == null) { // start of token
-          arg = new StringBuilder();
-        }
         if (!quoted && (c == '"' || c == '\'')) { // opening quote
           quoted = true;
           quote = c;
@@ -59,6 +53,10 @@ public class CommandLine {
           quoted = false;
         } else if (c == '\\') { // escape next character {
           escaped = true;
+        }
+        
+        if (arg == null) { // start of token
+          arg = new StringBuilder();
         }
         arg.append(c);
       } else if (quoted) { // quoted whitespace
