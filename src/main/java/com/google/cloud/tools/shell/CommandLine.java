@@ -28,6 +28,8 @@ public class CommandLine {
    * similar to the shlex function in Python according to POSIX rules. 
    * All input characters are preserved except for separating whitespace. 
    * This function tokenizes the input string, but does not attempt to parse it.
+   * For example, it recognizes that a space escaped with a backslash does not
+   * start a new token, but it does not replace the "\ " with a single space. 
    * 
    * @param line the input line
    * @return a non-null but possibly empty array of arguments
@@ -35,11 +37,18 @@ public class CommandLine {
   public static String[] split(String line) {    
     char quote = '"';
     boolean quoted = false;
+    boolean escaped = false;
     
     ArrayList<String> result = new ArrayList<>();
     StringBuilder arg = null;
     for (char c : line.toCharArray()) {
-      if (!Character.isWhitespace(c)) {
+      if (escaped) {
+        if (arg == null) { // start of token
+          arg = new StringBuilder();
+        }
+        arg.append(c);
+        escaped = false;
+      } else if (!Character.isWhitespace(c)) {
         if (arg == null) { // start of token
           arg = new StringBuilder();
         }
@@ -48,6 +57,8 @@ public class CommandLine {
           quote = c;
         } else if (quoted && c == quote) { // closing quote
           quoted = false;
+        } else if (c == '\\') { // escape next character {
+          escaped = true;
         }
         arg.append(c);
       } else if (quoted) { // quoted whitespace

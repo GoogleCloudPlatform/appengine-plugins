@@ -76,6 +76,13 @@ public class CommandLineTest {
   }
   
   @Test
+  public void testSplit_escapedSpaces() {
+    String[] args = CommandLine.split("echo foo\\ \\ bar");
+    String[] expected = {"echo", "foo\\ \\ bar"};
+    Assert.assertArrayEquals(expected, args);
+  }
+  
+  @Test
   public void testSplit_quoteEmptyString() {
     String[] args = CommandLine.split("echo ''");
     String[] expected = {"echo", "''"};
