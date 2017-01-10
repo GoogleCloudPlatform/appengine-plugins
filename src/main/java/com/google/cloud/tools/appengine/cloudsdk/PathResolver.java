@@ -17,16 +17,21 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Resolve paths with CloudSdk and Python defaults.
  */
 public class PathResolver implements CloudSdkResolver {
+
+  private static final Logger logger = Logger.getLogger(PathResolver.class.getName());
 
   /**
    * Attempts to find the path to Google Cloud SDK.
@@ -58,6 +63,8 @@ public class PathResolver implements CloudSdkResolver {
       possiblePaths.add("/usr/local/share/google/google-cloud-sdk");
     }
 
+    Path finalPath = searchPaths(possiblePaths);
+    logger.log(Level.FINE, "Resolved SDK path : " + finalPath.toString());
     return searchPaths(possiblePaths);
   }
 
@@ -85,8 +92,32 @@ public class PathResolver implements CloudSdkResolver {
         if (path.endsWith("google-cloud-sdk" + File.separator + "bin")) {
           possiblePaths.add(path.substring(0, path.length() - 4));
         }
+
+        Path possibleLink = Paths.get(path, "gcloud");
+        if (Files.isSymbolicLink(possibleLink)) {
+          getLocationsFromLink(possiblePaths, possibleLink);
+        }
       }
     }
+  }
+
+  // resolve symlinks to a path that
+  private static void getLocationsFromLink(List<String> possiblePaths, Path link) {
+    try {
+      Path resolvedLink = link.toRealPath();
+      Path possibleBinDir = resolvedLink.getParent();
+      // check if the parent is "bin", we actually depend on that for other resolution
+      if (possibleBinDir != null && possibleBinDir.getFileName().toString().equals("bin")) {
+        Path possibleCloudSdkHome = possibleBinDir.getParent();
+        if (possibleCloudSdkHome != null && Files.exists(possibleCloudSdkHome)) {
+          possiblePaths.add(possibleCloudSdkHome.toString());
+        }
+      }
+    } catch (IOException ioe) {
+      // intentionally ignore exception
+      logger.log(Level.FINE, "Non-critical exception when searching for cloud-sdk", ioe);
+    }
+
   }
 
   private static String getProgramFilesLocation() {
