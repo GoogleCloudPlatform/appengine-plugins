@@ -39,7 +39,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       "swagger.yaml");
 
   /**
-   * Stages a Java JAR/WAR Managed VMs application to be deployed.
+   * Stages a Java JAR/WAR App Engine Flexible Environment application to be deployed.
    *
    * <p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
    *
