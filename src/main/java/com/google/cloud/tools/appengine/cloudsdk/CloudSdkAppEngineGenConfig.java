@@ -35,16 +35,18 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
 
   public CloudSdkAppEngineGenConfig(
       CloudSdk sdk) {
-    this.sdk = sdk;
+    this.sdk = Preconditions.checkNotNull(sdk);;
   }
 
   /**
    * Generates missing configuration files.
+   * 
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
    */
   @Override
   public void genConfig(GenConfigParams config) throws AppEngineException {
     Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(sdk);
 
     if (!config.getSourceDirectory().exists()) {
       throw new AppEngineException("Source directory does not exist. Location: "
