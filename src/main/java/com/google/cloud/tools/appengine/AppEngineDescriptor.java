@@ -32,11 +32,12 @@ import org.xml.sax.SAXException;
  */
 public class AppEngineDescriptor {
 
-  private static final String WEB_XML_NS_URI = "http://appengine.google.com/ns/1.0";
-  private Document document;
+  private static final String APP_ENGINE_NAMESPACE = "http://appengine.google.com/ns/1.0";
+  private final Document document;
   
-  private AppEngineDescriptor() {
-    // force use of parse method
+  // private to force use of parse method
+  private AppEngineDescriptor(Document document) {
+    this.document = document;
   }
 
   /**
@@ -44,15 +45,13 @@ public class AppEngineDescriptor {
    * 
    * @param in the contents of appengine-web.xml
    * @return a fully parsed object that can be queried 
-   * @throws IOException if parsing fails for any reason
+   * @throws IOException if parsing fails for any reason including malformed XML
    */
   public static AppEngineDescriptor parse(InputStream in) throws IOException {
     try {
-      AppEngineDescriptor instance = new AppEngineDescriptor();
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilderFactory.setNamespaceAware(true);
-      instance.document = documentBuilderFactory.newDocumentBuilder().parse(in);
-      return instance;
+      return new AppEngineDescriptor(documentBuilderFactory.newDocumentBuilder().parse(in));
     } catch (SAXException | ParserConfigurationException exception) {
       throw new IOException("Cannot parse appengine-web.xml", exception);
     }
@@ -91,7 +90,7 @@ public class AppEngineDescriptor {
   private static String getTopLevelValue(Document doc, String parentTagName, String childTagName)
       throws AppEngineException {
     try {
-      NodeList parentElements = doc.getElementsByTagNameNS(WEB_XML_NS_URI, parentTagName);
+      NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentTagName);
       if (parentElements.getLength() > 0) {
         Node parent = parentElements.item(0);
         if (parent.hasChildNodes()) {
@@ -105,7 +104,7 @@ public class AppEngineDescriptor {
       }
       return null;
     } catch (DOMException ex) {
-      // this really shouldn't happen barring a very funky DOM implementation
+      // this shouldn't happen barring a very funky DOM implementation
       throw new AppEngineException(ex);
     }
   }
