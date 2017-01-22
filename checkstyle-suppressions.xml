@@ -21,4 +21,5 @@ limitations under the License.
   <!-- Suppress paragraph validation in copyright header -->
   <suppress files=".*\.java" checks="JavadocParagraph" lines="1-12"/>
   <suppress files="ProjectIdValidator\.java" checks="JavadocParagraph"/>
+  <suppress files=".*\.java" checks="CustomImportOrder"/>
 </suppressions>
