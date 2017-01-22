@@ -288,13 +288,13 @@ public class CloudSdk {
    * Returns the version of the Cloud SDK installation. Version is determined by reading the VERSION
    * file located in the Cloud SDK directory.
    *
-   * @throws CloudSdkVersionFileNotFoundException if the VERSION file could not be read
+   * @throws CloudSdkVersionFileException if the VERSION file could not be read
    */
   public CloudSdkVersion getVersion() {
     Path versionFile = getSdkPath().resolve(VERSION_FILE_NAME);
 
     if (!Files.isRegularFile(versionFile)) {
-      throw new CloudSdkVersionFileNotFoundException("Cloud SDK version file not found at "
+      throw new CloudSdkVersionFileException("Cloud SDK version file not found at "
           + versionFile.toString());
     }
 
@@ -307,9 +307,9 @@ public class CloudSdk {
       }
       return new CloudSdkVersion(contents);
     } catch (IOException ex) {
-      throw new CloudSdkVersionFileNotFoundException(ex);
+      throw new CloudSdkVersionFileException(ex);
     } catch (IllegalArgumentException ex) {
-      throw new CloudSdkVersionFileNotFoundException(
+      throw new CloudSdkVersionFileException(
           "Pattern found in the Cloud SDK version file could not be parsed: " + contents, ex);
     }
   }
@@ -410,7 +410,7 @@ public class CloudSdk {
       if (version.compareTo(MINIMUM_VERSION) < 0) {
         throw new CloudSdkOutOfDateException(version, MINIMUM_VERSION);
       }
-    } catch (CloudSdkVersionFileNotFoundException ex) {
+    } catch (CloudSdkVersionFileException ex) {
       // this is a version of the Cloud SDK prior to when VERSION files were introduced
       throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
     }
