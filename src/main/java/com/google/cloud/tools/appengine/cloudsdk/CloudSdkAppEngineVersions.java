@@ -32,10 +32,9 @@ import java.util.List;
  */
 public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
-  private CloudSdk sdk;
+  private final CloudSdk sdk;
 
-  public CloudSdkAppEngineVersions(
-      CloudSdk sdk) {
+  public CloudSdkAppEngineVersions(CloudSdk sdk) {
     this.sdk = sdk;
   }
 
@@ -118,7 +117,8 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     execute(arguments);
   }
 
-  private List<String> commonVersionSelectionArgs(VersionsSelectionConfiguration configuration) {
+  private static List<String> commonVersionSelectionArgs(
+      VersionsSelectionConfiguration configuration) {
     List<String> arguments = new ArrayList<>();
     arguments.addAll(configuration.getVersions());
     arguments.addAll(GcloudArgs.get("service", configuration.getService()));

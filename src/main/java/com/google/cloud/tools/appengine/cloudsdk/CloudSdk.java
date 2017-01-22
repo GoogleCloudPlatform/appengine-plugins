@@ -288,9 +288,7 @@ public class CloudSdk {
    * Returns the version of the Cloud SDK installation. Version is determined by reading the VERSION
    * file located in the Cloud SDK directory.
    *
-   * @throws CloudSdkVersionFileNotFoundException if the VERSION file is not present
-   * @throws RuntimeException if there was an error reading the file
-   * @throws IllegalStateException if the file content could not be parsed
+   * @throws CloudSdkVersionFileNotFoundException if the VERSION file could not be read
    */
   public CloudSdkVersion getVersion() {
     Path versionFile = getSdkPath().resolve(VERSION_FILE_NAME);
@@ -308,11 +306,11 @@ public class CloudSdk {
         contents = lines.get(0);
       }
       return new CloudSdkVersion(contents);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (IllegalArgumentException e) {
-      throw new IllegalStateException(
-          "Pattern found in the Cloud SDK version file could not be parsed: " + contents, e);
+    } catch (IOException ex) {
+      throw new CloudSdkVersionFileNotFoundException(ex);
+    } catch (IllegalArgumentException ex) {
+      throw new CloudSdkVersionFileNotFoundException(
+          "Pattern found in the Cloud SDK version file could not be parsed: " + contents, ex);
     }
   }
 
@@ -339,7 +337,7 @@ public class CloudSdk {
     return CloudSdkComponent.fromJsonList(componentsJson);
   }
 
-  private void logCommand(List<String> command) {
+  private static void logCommand(List<String> command) {
     logger.info("submitting command: " + WHITESPACE_JOINER.join(command));
   }
 

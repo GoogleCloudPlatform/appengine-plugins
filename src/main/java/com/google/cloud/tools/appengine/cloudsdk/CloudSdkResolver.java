@@ -26,7 +26,7 @@ public interface CloudSdkResolver {
   /**
    * Attempts to find the path to Google Cloud SDK.
    *
-   * @return Path to Google Cloud SDK or null
+   * @return path to Google Cloud SDK or null
    */
   Path getCloudSdkPath();
 
