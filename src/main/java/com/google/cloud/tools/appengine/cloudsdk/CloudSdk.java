@@ -296,7 +296,7 @@ public class CloudSdk {
     Path versionFile = getSdkPath().resolve(VERSION_FILE_NAME);
 
     if (!Files.isRegularFile(versionFile)) {
-      throw new CloudSdkVersionFileException("Cloud SDK version file not found at "
+      throw new CloudSdkVersionFileNotFoundException("Cloud SDK version file not found at "
           + versionFile.toString());
     }
 
@@ -311,7 +311,7 @@ public class CloudSdk {
     } catch (IOException ex) {
       throw new CloudSdkVersionFileException(ex);
     } catch (IllegalArgumentException ex) {
-      throw new CloudSdkVersionFileException(
+      throw new CloudSdkVersionFileParseException(
           "Pattern found in the Cloud SDK version file could not be parsed: " + contents, ex);
     }
   }
@@ -400,20 +400,23 @@ public class CloudSdk {
    *
    * @throws CloudSdkNotFoundException when Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when Cloud SDK is out of date
+   * @throws CloudSdkVersionFileException VERSION file could not be read
    */
-  public void validateCloudSdk() throws CloudSdkNotFoundException, CloudSdkOutOfDateException {
+  public void validateCloudSdk()
+      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException {
     validateCloudSdkLocation();
     validateCloudSdkVersion();
   }
 
-  private void validateCloudSdkVersion() throws CloudSdkOutOfDateException {
+  private void validateCloudSdkVersion() 
+      throws CloudSdkOutOfDateException, CloudSdkVersionFileException {
     try {
       CloudSdkVersion version = getVersion();
       if (version.compareTo(MINIMUM_VERSION) < 0) {
         throw new CloudSdkOutOfDateException(version, MINIMUM_VERSION);
       }
-    } catch (CloudSdkVersionFileException ex) {
-      // this is a version of the Cloud SDK prior to when VERSION files were introduced
+    } catch (CloudSdkVersionFileNotFoundException ex) {
+      // this is likely a version of the Cloud SDK prior to when VERSION files were introduced
       throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
     }
   }
