@@ -72,4 +72,6 @@ public interface RunConfiguration {
   String getDefaultGcsBucketName();
 
   String getJavaHomeDir();
+
+  Boolean getClearDatastore();
 }
