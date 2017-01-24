@@ -18,7 +18,6 @@ package com.google.cloud.tools.io;
 
 import static org.junit.Assume.assumeTrue;
 
-import com.google.cloud.tools.io.FileUtil;
 import com.google.common.collect.Sets;
 
 import org.junit.Assert;
