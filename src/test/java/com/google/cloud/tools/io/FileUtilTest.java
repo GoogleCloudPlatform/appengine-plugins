@@ -124,4 +124,11 @@ public class FileUtilTest {
     thrown.expectMessage("Source and destination are the same");
     FileUtil.copyDirectory(src, dest);
   }
+  
+  @Test
+  public void testWeirdNames() throws IOException {
+    Path src = testDir.newFolder("funny (is a directory)").toPath();
+    Path dest = testDir.newFolder("funny2").toPath();
+    FileUtil.copyDirectory(src, dest);
+  }
 }

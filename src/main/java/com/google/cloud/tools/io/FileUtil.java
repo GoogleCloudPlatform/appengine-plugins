@@ -29,7 +29,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
- * File utilities we hope to eventually push up to Guava. 
+ * File utilities. 
  */
 @Beta
 public class FileUtil {
