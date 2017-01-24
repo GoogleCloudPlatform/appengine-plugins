@@ -127,7 +127,7 @@ public class FileUtilTest {
   
   @Test
   public void testWeirdNames() throws IOException {
-    Path src = testDir.newFolder("funny (is a directory)").toPath();
+    Path src = testDir.newFolder("funny").toPath();
     Path dest = testDir.newFolder("funny2").toPath();
     FileUtil.copyDirectory(src, dest);
   }
