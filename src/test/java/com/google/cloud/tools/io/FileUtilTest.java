@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.internal;
+package com.google.cloud.tools.io;
 
 import static org.junit.Assume.assumeTrue;
 
-import com.google.cloud.tools.appengine.cloudsdk.internal.FileUtil;
+import com.google.cloud.tools.io.FileUtil;
 import com.google.common.collect.Sets;
 
 import org.junit.Assert;
@@ -30,6 +30,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
@@ -113,6 +114,15 @@ public class FileUtilTest {
 
     thrown.expect(IllegalArgumentException.class);
     thrown.expectMessage("destination is child of source");
+    FileUtil.copyDirectory(src, dest);
+  }
+  
+  @Test
+  public void testCopyDirectory_sameFile() throws IOException {
+    Path src = testDir.newFolder().toPath();
+    Path dest = Paths.get(src.toString(), "..", src.getFileName().toString());
+    thrown.expect(IllegalArgumentException.class);
+    thrown.expectMessage("Source and destination are the same");
     FileUtil.copyDirectory(src, dest);
   }
 }

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal;
+package com.google.cloud.tools.io;
 
+import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
@@ -28,23 +29,28 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
- * Internal file utilities.
+ * File utilities we hope to eventually push up to Guava. 
  */
+@Beta
 public class FileUtil {
 
   /**
-   * Implementation of recursive directory copy, does NOT overwrite
+   * Implementation of recursive directory copy, does NOT overwrite.
    *
-   * @param source an existing source directory to copy from.
-   * @param destination an existing destination directory to copy to.
+   * @param source an existing source directory to copy from
+   * @param destination an existing destination directory to copy to
+   * @throws IllegalArgumentException if source directory is same destination directory, 
+   *     either source or destination is not a directory, or destination is inside source
    */
   public static void copyDirectory(final Path source, final Path destination) throws IOException {
     Preconditions.checkNotNull(source);
     Preconditions.checkNotNull(destination);
     Preconditions.checkArgument(Files.isDirectory(source));
     Preconditions.checkArgument(Files.isDirectory(destination));
-    Preconditions.checkArgument(!source.equals(destination));
-    Preconditions.checkArgument(!destination.startsWith(source), "destination is child of source");
+    Preconditions.checkArgument(!Files.isSameFile(source, destination),
+        "Source and destination are the same");
+    Preconditions.checkArgument(!destination.toAbsolutePath().startsWith(source.toAbsolutePath()), 
+        "destination is child of source");
 
     Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
       final CopyOption[] copyOptions = new CopyOption[] { StandardCopyOption.COPY_ATTRIBUTES };

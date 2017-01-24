@@ -21,7 +21,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.internal.FileUtil;
+import com.google.cloud.tools.io.FileUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
