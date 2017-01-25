@@ -89,6 +89,7 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setSkipSdkUpdateCheck(true);
     configuration.setDefaultGcsBucketName("buckets");
     configuration.setJavaHomeDir("/usr/lib/jvm/default-java");
+    configuration.setClearDatastore(true);
 
     List<String> expected = ImmutableList
         .of("app.yaml", "--host=host", "--port=8090", "--admin_host=adminHost",
@@ -98,7 +99,8 @@ public class CloudSdkAppEngineDevServerTest {
             "--python_startup_args=arguments", "--jvm_flag=-Dflag1", "--jvm_flag=-Dflag2",
             "--custom_entrypoint=entrypoint", "--runtime=java", "--allow_skipped_files=true",
             "--api_port=8091", "--automatic_restart=false", "--dev_appserver_log_level=info",
-            "--skip_sdk_update_check=true", "--default_gcs_bucket_name=buckets");
+            "--skip_sdk_update_check=true", "--default_gcs_bucket_name=buckets",
+            "--clear_datastore=true");
 
     Map<String,String> expectedEnv = ImmutableMap.of("JAVA_HOME", "/usr/lib/jvm/default-java");
 
@@ -107,20 +109,25 @@ public class CloudSdkAppEngineDevServerTest {
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
   }
 
+  @Test
   public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
 
-    devServer.run(configuration);
     configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
     configuration.setUseMtimeFileWatcher(false);
     configuration.setAllowSkippedFiles(false);
     configuration.setAutomaticRestart(false);
     configuration.setSkipSdkUpdateCheck(false);
+    configuration.setClearDatastore(false);
 
-    List<String> expected = ImmutableList.of("app.yaml");
+    List<String> expected = ImmutableList
+        .of("app.yaml", "--use_mtime_file_watcher=false", "--allow_skipped_files=false",
+            "--automatic_restart=false", "--skip_sdk_update_check=false",
+            "--clear_datastore=false");
+    Map<String,String> expectedEnv = ImmutableMap.of();
 
     devServer.run(configuration);
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
   }
 
   @Test
