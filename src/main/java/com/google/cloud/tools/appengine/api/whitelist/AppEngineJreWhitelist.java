@@ -25,7 +25,7 @@ import java.util.Set;
  * in the App Engine Standard Environment. Note that just because a class is whitelisted  
  * does not mean that all features and methods of the class are supported for an 
  * application running in the App Engine sandbox environment.
- * 
+ * <p/>
  * All classes that are not bundled into the JDK are whitelisted. 
  * 
  * @see <a href="https://cloud.google.com/appengine/docs/java/jrewhitelist">The 
