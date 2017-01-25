@@ -100,22 +100,25 @@ public class AppEngineDescriptorTest {
     assertNull(descriptor.getProjectVersion());
   }
 
+  @Test
   public void testService_noContent() throws IOException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + ROOT_END_TAG);
 
     assertNull(descriptor.getServiceId());
   }
 
+  @Test
   public void testService_service() throws IOException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + SERVICE + ROOT_END_TAG);
 
-    assertEquals(TEST_VERSION, descriptor.getServiceId());
+    assertEquals(TEST_ID, descriptor.getServiceId());
   }
 
+  @Test
   public void testService_module() throws IOException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + MODULE + ROOT_END_TAG);
 
-    assertEquals(TEST_VERSION, descriptor.getServiceId());
+    assertEquals(TEST_ID, descriptor.getServiceId());
   }
 
   private static AppEngineDescriptor parse(String xmlString) throws IOException {
