@@ -60,7 +60,6 @@ public class AppEngineDescriptor {
   /**
    * @return project ID from the &lt;application&gt; element of the appengine-web.xml or null
    *         if it is missing
-   * @throws AppEngineException if parsing the value fails
    */
   public String getProjectId()  {
     return getTopLevelValue(document, "appengine-web-app", "application");
@@ -69,7 +68,6 @@ public class AppEngineDescriptor {
   /**
    * @return project version from the &lt;version&gt; element of the appengine-web.xml or
    *         null if it is missing
-   * @throws AppEngineException if parsing the value fails
    */
   public String getProjectVersion() {
     return getTopLevelValue(document, "appengine-web-app", "version");
@@ -105,7 +103,7 @@ public class AppEngineDescriptor {
       return null;
     } catch (DOMException ex) {
       // this shouldn't happen barring a very funky DOM implementation
-      throw new AppEngineException(ex);
+      return null;
     }
   }
 }

@@ -29,11 +29,11 @@ public class AppEngineDescriptorTest {
   private static final String TEST_VERSION = "fooVersion";
   private static final String TEST_ID = "fooId";
 
-  private static final String XML_END_TAG = "</appengine-web-app>";
-  private static final String XML_DECLARATION = "<?xml version='1.0' encoding='utf-8'?>"
-                                              + "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>";
-  private static final String XML_DECLARATION_WITH_INVALID_NS =
-      "<?xml version='1.0' encoding='utf-8'?><appengine-web-app xmlns='http://foo.bar.com/ns/42'>";
+  private static final String ROOT_END_TAG = "</appengine-web-app>";
+  private static final String ROOT_START_TAG =
+      "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>";
+  private static final String ROOT_START_TAG_WITH_INVALID_NS =
+      "<appengine-web-app xmlns='http://foo.bar.com/ns/42'>";
   private static final String PROJECT_ID = "<application>" + TEST_ID + "</application>";
   private static final String VERSION = "<version>" + TEST_VERSION + "</version>";
   private static final String COMMENT = "<!-- this is a test comment -->";
@@ -42,16 +42,16 @@ public class AppEngineDescriptorTest {
   private static final String SERVICE = "<service>" + TEST_ID + "</service>";
   private static final String MODULE = "<module>" + TEST_ID + "</module>";
   
-  private static final String XML_WITHOUT_PROJECT_ID = XML_DECLARATION + XML_END_TAG;
-  private static final String XML_WITHOUT_VERSION = XML_DECLARATION + PROJECT_ID + XML_END_TAG;
+  private static final String XML_WITHOUT_PROJECT_ID = ROOT_START_TAG + ROOT_END_TAG;
+  private static final String XML_WITHOUT_VERSION = ROOT_START_TAG + PROJECT_ID + ROOT_END_TAG;
   private static final String XML_WITH_VERSION_AND_PROJECT_ID =
-      XML_DECLARATION + PROJECT_ID + VERSION + XML_END_TAG;
+      ROOT_START_TAG + PROJECT_ID + VERSION + ROOT_END_TAG;
   private static final String XML_WITH_COMMENT_BEFORE_VERSION =
-      XML_DECLARATION + PROJECT_ID + COMMENT_BEFORE_VERSION + XML_END_TAG;
+      ROOT_START_TAG + PROJECT_ID + COMMENT_BEFORE_VERSION + ROOT_END_TAG;
   private static final String XML_WITH_COMMENT_AFTER_VERSION =
-      XML_DECLARATION + PROJECT_ID + COMMENT_AFTER_VERSION + XML_END_TAG;
+      ROOT_START_TAG + PROJECT_ID + COMMENT_AFTER_VERSION + ROOT_END_TAG;
   private static final String XML_WITH_VERSION_AND_PROJECT_ID_WRONG_NS =
-      XML_DECLARATION_WITH_INVALID_NS + PROJECT_ID + VERSION + XML_END_TAG;
+      ROOT_START_TAG_WITH_INVALID_NS + PROJECT_ID + VERSION + ROOT_END_TAG;
 
   @Test
   public void testParse_noProjectId() throws IOException {
@@ -101,19 +101,19 @@ public class AppEngineDescriptorTest {
   }
 
   public void testService_noContent() throws IOException {
-    AppEngineDescriptor descriptor = parse(XML_DECLARATION + XML_END_TAG);
+    AppEngineDescriptor descriptor = parse(ROOT_START_TAG + ROOT_END_TAG);
 
     assertNull(descriptor.getServiceId());
   }
 
   public void testService_service() throws IOException {
-    AppEngineDescriptor descriptor = parse(XML_DECLARATION + SERVICE + XML_END_TAG);
+    AppEngineDescriptor descriptor = parse(ROOT_START_TAG + SERVICE + ROOT_END_TAG);
 
     assertEquals(TEST_VERSION, descriptor.getServiceId());
   }
 
   public void testService_module() throws IOException {
-    AppEngineDescriptor descriptor = parse(XML_DECLARATION + MODULE + XML_END_TAG);
+    AppEngineDescriptor descriptor = parse(ROOT_START_TAG + MODULE + ROOT_END_TAG);
 
     assertEquals(TEST_VERSION, descriptor.getServiceId());
   }
