@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.appengine;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.parsers.DocumentBuilderFactory;
