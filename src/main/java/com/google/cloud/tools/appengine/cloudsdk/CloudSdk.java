@@ -290,9 +290,7 @@ public class CloudSdk {
    * Returns the version of the Cloud SDK installation. Version is determined by reading the VERSION
    * file located in the Cloud SDK directory.
    *
-   * @throws CloudSdkVersionFileNotFoundException if the VERSION file is not present
-   * @throws RuntimeException if there was an error reading the file
-   * @throws IllegalStateException if the file content could not be parsed
+   * @throws CloudSdkVersionFileException if the VERSION file could not be read
    */
   public CloudSdkVersion getVersion() {
     Path versionFile = getSdkPath().resolve(VERSION_FILE_NAME);
@@ -310,11 +308,11 @@ public class CloudSdk {
         contents = lines.get(0);
       }
       return new CloudSdkVersion(contents);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (IllegalArgumentException e) {
-      throw new IllegalStateException(
-          "Pattern found in the Cloud SDK version file could not be parsed: " + contents, e);
+    } catch (IOException ex) {
+      throw new CloudSdkVersionFileException(ex);
+    } catch (IllegalArgumentException ex) {
+      throw new CloudSdkVersionFileParseException(
+          "Pattern found in the Cloud SDK version file could not be parsed: " + contents, ex);
     }
   }
 
@@ -341,7 +339,7 @@ public class CloudSdk {
     return CloudSdkComponent.fromJsonList(componentsJson);
   }
 
-  private void logCommand(List<String> command) {
+  private static void logCommand(List<String> command) {
     logger.info("submitting command: " + WHITESPACE_JOINER.join(command));
   }
 
@@ -402,20 +400,23 @@ public class CloudSdk {
    *
    * @throws CloudSdkNotFoundException when Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when Cloud SDK is out of date
+   * @throws CloudSdkVersionFileException VERSION file could not be read
    */
-  public void validateCloudSdk() throws CloudSdkNotFoundException, CloudSdkOutOfDateException {
+  public void validateCloudSdk()
+      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException {
     validateCloudSdkLocation();
     validateCloudSdkVersion();
   }
 
-  private void validateCloudSdkVersion() throws CloudSdkOutOfDateException {
+  private void validateCloudSdkVersion() 
+      throws CloudSdkOutOfDateException, CloudSdkVersionFileException {
     try {
       CloudSdkVersion version = getVersion();
       if (version.compareTo(MINIMUM_VERSION) < 0) {
         throw new CloudSdkOutOfDateException(version, MINIMUM_VERSION);
       }
     } catch (CloudSdkVersionFileNotFoundException ex) {
-      // this is a version of the Cloud SDK prior to when VERSION files were introduced
+      // this is likely a version of the Cloud SDK prior to when VERSION files were introduced
       throw new CloudSdkOutOfDateException(MINIMUM_VERSION);
     }
   }
