@@ -85,8 +85,7 @@ public class AppEngineDescriptor {
     return getTopLevelValue(document, "appengine-web-app", "module");
   }
 
-  private static String getTopLevelValue(Document doc, String parentTagName, String childTagName)
-      throws AppEngineException {
+  private static String getTopLevelValue(Document doc, String parentTagName, String childTagName) {
     try {
       NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentTagName);
       if (parentElements.getLength() > 0) {
