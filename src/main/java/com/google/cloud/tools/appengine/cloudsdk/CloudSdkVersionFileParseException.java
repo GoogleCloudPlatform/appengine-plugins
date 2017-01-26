@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,10 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import java.nio.file.Path;
+public class CloudSdkVersionFileParseException extends CloudSdkVersionFileException {
 
-/**
- * Resolve paths find the CloudSdk.
- */
-public interface CloudSdkResolver {
+  public CloudSdkVersionFileParseException(String message, Throwable ex) {
+    super(message, ex);
+  }
 
-  /**
-   * Attempts to find the path to Google Cloud SDK.
-   *
-   * @return path to Google Cloud SDK or null
-   */
-  Path getCloudSdkPath();
-
-  /**
-   * Provides a rank for ordering a set of {@link CloudSdkResolver}s.
-   */
-  int getRank();
 }

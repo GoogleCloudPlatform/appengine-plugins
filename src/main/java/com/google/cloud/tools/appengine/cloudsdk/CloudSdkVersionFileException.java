@@ -16,22 +16,22 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import java.nio.file.Path;
+import com.google.cloud.tools.appengine.api.AppEngineException;
 
 /**
- * Resolve paths find the CloudSdk.
+ * The Cloud SDK's version file could not be read.
  */
-public interface CloudSdkResolver {
+public class CloudSdkVersionFileException extends AppEngineException {
 
-  /**
-   * Attempts to find the path to Google Cloud SDK.
-   *
-   * @return path to Google Cloud SDK or null
-   */
-  Path getCloudSdkPath();
+  public CloudSdkVersionFileException(String message) {
+    super(message);
+  }
 
-  /**
-   * Provides a rank for ordering a set of {@link CloudSdkResolver}s.
-   */
-  int getRank();
+  public CloudSdkVersionFileException(Throwable cause) {
+    super(cause);
+  }
+
+  public CloudSdkVersionFileException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }
