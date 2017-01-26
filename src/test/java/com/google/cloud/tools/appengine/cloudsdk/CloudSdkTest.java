@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2016 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ public class CloudSdkTest {
   public void testGetVersion_fileNotExists() throws IOException {
     try {
       builder.build().getVersion();
-    } catch (CloudSdkVersionFileNotFoundException e) {
+    } catch (CloudSdkVersionFileException e) {
       assertEquals("Cloud SDK version file not found at " + root.resolve("VERSION"),
           e.getMessage());
       return;
@@ -91,9 +91,9 @@ public class CloudSdkTest {
     writeVersionFile(fileContents);
     try {
       builder.build().getVersion();
-    } catch (IllegalStateException e) {
+    } catch (CloudSdkVersionFileException ex) {
       assertEquals("Pattern found in the Cloud SDK version file could not be parsed: "
-          + fileContents, e.getMessage());
+          + fileContents, ex.getMessage());
 
       return;
     }

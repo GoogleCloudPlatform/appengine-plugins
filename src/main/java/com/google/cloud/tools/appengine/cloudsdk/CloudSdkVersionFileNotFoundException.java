@@ -16,22 +16,10 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-
-/**
- * The Cloud SDK's version file could not be found where expected.
- */
-public class CloudSdkVersionFileNotFoundException extends AppEngineException {
+public class CloudSdkVersionFileNotFoundException extends CloudSdkVersionFileException {
 
   public CloudSdkVersionFileNotFoundException(String message) {
     super(message);
   }
 
-  public CloudSdkVersionFileNotFoundException(Throwable cause) {
-    super(cause);
-  }
-
-  public CloudSdkVersionFileNotFoundException(String message, Throwable cause) {
-    super(message, cause);
-  }
 }
