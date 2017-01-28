@@ -176,7 +176,7 @@ class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRelease>
       return firstInt.compareTo(secondInt);
     }
 
-    private boolean isNumericOnly(String num) {
+    private static boolean isNumericOnly(String num) {
       return num.matches("[0-9]+");
     }
 

@@ -27,10 +27,8 @@ import org.junit.rules.TemporaryFolder;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 public class AppEngineRequestsTest {
 
@@ -40,12 +38,10 @@ public class AppEngineRequestsTest {
   public TemporaryFolder testDirectory = new TemporaryFolder();
 
   private Path sdkHome;
-  private Path credentialFile;
 
   @Before
   public void setup() throws IOException {
     sdkHome = testDirectory.newFolder("sdk").toPath();
-    credentialFile = testDirectory.newFile("crendential").toPath();
   }
 
   @Test
