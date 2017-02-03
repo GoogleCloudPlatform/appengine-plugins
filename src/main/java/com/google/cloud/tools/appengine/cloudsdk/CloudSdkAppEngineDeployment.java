@@ -52,15 +52,20 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDeployables());
     Preconditions.checkArgument(config.getDeployables().size() > 0);
+    File workingDirectory = null;
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
-    for (File deployable : config.getDeployables()) {
-      if (!deployable.exists()) {
-        throw new IllegalArgumentException(
-            "Deployable " + deployable.toPath() + " does not exist.");
+    if (config.getDeployables().size() == 1 && config.getDeployables().get(0).isDirectory()) {
+      workingDirectory = config.getDeployables().get(0);
+    } else {
+      for (File deployable : config.getDeployables()) {
+        if (!deployable.exists()) {
+          throw new IllegalArgumentException(
+              "Deployable " + deployable.toPath() + " does not exist.");
+        }
+        arguments.add(deployable.toPath().toString());
       }
-      arguments.add(deployable.toPath().toString());
     }
 
     arguments.addAll(GcloudArgs.get("bucket", config.getBucket()));
@@ -72,7 +77,11 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.addAll(GcloudArgs.get(config));
 
     try {
-      sdk.runAppCommand(arguments);
+      if (workingDirectory != null) {
+        sdk.runAppCommandInWorkingDirectory(arguments, workingDirectory);
+      } else {
+        sdk.runAppCommand(arguments);
+      }
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

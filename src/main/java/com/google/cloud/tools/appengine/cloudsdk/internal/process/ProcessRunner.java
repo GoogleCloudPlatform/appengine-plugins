@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -26,5 +27,7 @@ public interface ProcessRunner {
   void run(String[] command) throws ProcessRunnerException;
 
   void setEnvironment(Map<String, String> environment);
+
+  void setWorkingDirectory(File workingDirectory);
 
 }
