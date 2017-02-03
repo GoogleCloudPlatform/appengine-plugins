@@ -123,10 +123,10 @@ public class CloudSdk {
   /**
    * Uses the process runner to execute the gcloud app command with the provided arguments.
    *
-   * @param args              the arguments to pass to gcloud command
-   * @param workingDirectory  the working directory in which to run the command
-   * @throws ProcessRunnerException when there is an issue running the gcloud process
-   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @param args             the arguments to pass to gcloud command
+   * @param workingDirectory the working directory in which to run the command
+   * @throws ProcessRunnerException     when there is an issue running the gcloud process
+   * @throws CloudSdkNotFoundException  when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   public void runAppCommandInWorkingDirectory(List<String> args, File workingDirectory)
@@ -148,7 +148,7 @@ public class CloudSdk {
   }
 
   private void runDebugCommand(List<String> args, String group) throws ProcessRunnerException {
-    runGcloudCommand(args, null,"beta", "debug", group);
+    runGcloudCommand(args, null, "beta", "debug", group);
   }
 
   private void runGcloudCommand(List<String> args, File workingDirectory, String... topLevelCommand)
