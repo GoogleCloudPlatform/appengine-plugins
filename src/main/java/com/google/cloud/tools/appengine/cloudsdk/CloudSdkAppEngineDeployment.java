@@ -56,6 +56,11 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
+
+    // Unfortunately, 'gcloud app deploy' does not let you pass a staging directory as a deployable.
+    // Instead, we have to run 'gcloud app deploy' from the staging directory to achieve this.
+    // So, if we find that the only deployable in the list is a directory, we just run the command
+    // from that directory without passing in any deployables to gcloud.
     if (config.getDeployables().size() == 1 && config.getDeployables().get(0).isDirectory()) {
       workingDirectory = config.getDeployables().get(0);
     } else {
