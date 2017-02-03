@@ -100,7 +100,7 @@ public class CloudSdkAppEngineVersionsTest {
     verify(sdk, times(1)).runAppCommand(eq(args));
   }
 
-  private DefaultVersionsSelectionConfiguration getVersionConfig() {
+  private static DefaultVersionsSelectionConfiguration getVersionConfig() {
     DefaultVersionsSelectionConfiguration configuration = new DefaultVersionsSelectionConfiguration();
     configuration.setVersions(Arrays.asList("v1", "v2"));
     configuration.setService("myService");
@@ -108,7 +108,7 @@ public class CloudSdkAppEngineVersionsTest {
     return configuration;
   }
 
-  private DefaultVersionsListConfiguration getListConfig(boolean hideNoTraffic) {
+  private static DefaultVersionsListConfiguration getListConfig(boolean hideNoTraffic) {
     DefaultVersionsListConfiguration listConfiguration = new DefaultVersionsListConfiguration();
     listConfiguration.setService("myService");
     listConfiguration.setProject("myProject");

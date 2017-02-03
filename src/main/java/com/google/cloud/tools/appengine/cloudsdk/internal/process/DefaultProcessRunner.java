@@ -231,7 +231,7 @@ public class DefaultProcessRunner implements ProcessRunner {
     }
   }
 
-  private void shutdownProcessHook(final Process process) {
+  private static void shutdownProcessHook(final Process process) {
     Runtime.getRuntime().addShutdownHook(new Thread("destroy-process") {
       @Override
       public void run() {
