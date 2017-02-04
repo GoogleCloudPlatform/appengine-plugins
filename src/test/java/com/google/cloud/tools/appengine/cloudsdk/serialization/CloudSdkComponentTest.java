@@ -115,7 +115,7 @@ public class CloudSdkComponentTest {
     assertTrue(result.matches(regex));
   }
 
-  private String getCloudSdkComponentTestFixtureAsJson() {
+  private static String getCloudSdkComponentTestFixtureAsJson() {
     return "{" +
         "\"current_version_string\": \"1.9.43\"," +
         "\"id\": \"app-engine-java\"," +
@@ -130,7 +130,7 @@ public class CloudSdkComponentTest {
       "}";
   }
 
-  private CloudSdkComponent getCloudSdkComponentTestFixture() {
+  private static CloudSdkComponent getCloudSdkComponentTestFixture() {
     CloudSdkComponent.State state = new CloudSdkComponent.State();
     state.setName("Installed");
 

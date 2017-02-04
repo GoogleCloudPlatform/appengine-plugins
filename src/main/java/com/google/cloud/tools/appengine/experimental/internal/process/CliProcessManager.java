@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.experimental.internal.process;
 
 import com.google.cloud.tools.appengine.experimental.OutputHandler;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.MoreExecutors;
 
@@ -71,13 +70,14 @@ public class CliProcessManager<T> implements Future<T> {
       StringBuilder result = new StringBuilder("");
       @Override
       public String call() throws Exception {
-        final Scanner stdOut = new Scanner(process.getInputStream(), "UTF-8");
-        while (stdOut.hasNextLine() && !Thread.interrupted()) {
-          String line = stdOut.nextLine();
-          result.append(line);
-          result.append(System.getProperty("line.separator"));
-        }
-        return result.toString();
+        try (final Scanner stdOut = new Scanner(process.getInputStream(), "UTF-8")) {
+          while (stdOut.hasNextLine() && !Thread.interrupted()) {
+            String line = stdOut.nextLine();
+            result.append(line);
+            result.append(System.getProperty("line.separator"));
+          }
+          return result.toString();
+        } 
       }
     });
 
@@ -85,12 +85,13 @@ public class CliProcessManager<T> implements Future<T> {
     processStdErr = new FutureTask<Void>(new Callable<Void>() {
       @Override
       public Void call() throws Exception {
-        final Scanner stdOut = new Scanner(process.getErrorStream(), "UTF-8");
-        while (stdOut.hasNextLine() && !Thread.interrupted()) {
-          String line = stdOut.nextLine();
-          outputHandler.handleLine(line);
+        try (final Scanner stdOut = new Scanner(process.getErrorStream(), "UTF-8")) {
+          while (stdOut.hasNextLine() && !Thread.interrupted()) {
+            String line = stdOut.nextLine();
+            outputHandler.handleLine(line);
+          }
+          return null;
         }
-        return null;
       }
     });
 

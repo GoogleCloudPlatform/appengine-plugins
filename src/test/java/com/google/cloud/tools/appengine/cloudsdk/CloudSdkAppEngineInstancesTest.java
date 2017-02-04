@@ -66,8 +66,9 @@ public class CloudSdkAppEngineInstancesTest {
     verify(sdk, times(1)).runAppCommand(eq(args));
   }
 
-  private DefaultInstancesSelectionConfiguration getConfig() {
-    DefaultInstancesSelectionConfiguration configuration = new DefaultInstancesSelectionConfiguration();
+  private static DefaultInstancesSelectionConfiguration getConfig() {
+    DefaultInstancesSelectionConfiguration configuration =
+        new DefaultInstancesSelectionConfiguration();
     configuration.setVersion("v1");
     configuration.setService("myService");
     configuration.setProject("myProject");
