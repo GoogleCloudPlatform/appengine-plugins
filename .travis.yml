@@ -1,7 +1,8 @@
 sudo: false
 language: java
 jdk:
-  - openjdk7
+  # no openjdk8 yet on travis without special configuration
+  - oraclejdk8
 cache:  
   directories:  
    - $HOME/.m2  
