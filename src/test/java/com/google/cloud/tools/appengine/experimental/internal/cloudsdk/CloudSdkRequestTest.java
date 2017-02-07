@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.experimental.AppEngineRequest;
-import com.google.cloud.tools.appengine.experimental.OutputHandler;
+import com.google.cloud.tools.appengine.experimental.internal.process.CliProcessManager;
 import com.google.cloud.tools.appengine.experimental.internal.process.CliProcessManagerProvider;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
 
@@ -48,37 +48,33 @@ public class CloudSdkRequestTest {
   @Mock
   private StringResultConverter<String> resultConverter;
   @Mock
-  private OutputHandler outputHandler;
-  @Mock
   private Process process;
   @Mock
-  private Future<String> manager;
+  private CliProcessManager<String> manager;
 
   @Before
   public void configureMocks() throws IOException {
     when(processFactory.newProcess()).thenReturn(process);
-    when(processManagerProvider.manage(process, resultConverter, outputHandler))
-        .thenReturn(manager);
+    when(processManagerProvider.manage(process, resultConverter)).thenReturn(manager);
   }
 
   @Test
   public void testExecute_success() throws IOException {
     AppEngineRequest<String> request = new CloudSdkRequest<String>(processFactory,
         processManagerProvider, resultConverter);
-    request.outputHandler(outputHandler);
     request.execute();
     verify(processFactory).newProcess();
-    verify(processManagerProvider).manage(process, resultConverter, outputHandler);
+    verify(processManagerProvider).manage(process, resultConverter);
   }
 
   @Test
-  public void testExecute_configureAfterExecute() {
+  public void testExecute_executeAfterExecute() {
     AppEngineRequest<String> request = new CloudSdkRequest<String>(processFactory,
         processManagerProvider, resultConverter);
     request.execute();
 
     exception.expect(IllegalStateException.class);
-    exception.expectMessage("Already executed");
-    request.outputHandler(outputHandler);
+    exception.expectMessage("Request already executed");
+    request.execute();
   }
 }

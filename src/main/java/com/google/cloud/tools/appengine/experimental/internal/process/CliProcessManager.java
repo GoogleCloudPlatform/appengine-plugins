@@ -16,18 +16,17 @@
 
 package com.google.cloud.tools.appengine.experimental.internal.process;
 
-import com.google.cloud.tools.appengine.experimental.OutputHandler;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.MoreExecutors;
 
+import java.io.InputStream;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -46,25 +45,21 @@ import java.util.concurrent.TimeoutException;
 public class CliProcessManager<T> implements Future<T> {
 
   private final ExecutorService executor;
-  private final OutputHandler outputHandler;
   private final StringResultConverter<T> stringResultConverter;
   private final Process process;
   private ListenableFutureTask<CliProcessResult<T>> processMain;
   private ListenableFutureTask<String> processStdOut;
-  private FutureTask<Void> processStdErr;
 
-  private CliProcessManager(Process process, OutputHandler outputHandler,
-      StringResultConverter<T> stringResultConverter) {
+  private CliProcessManager(Process process, StringResultConverter<T> stringResultConverter) {
 
     this.process = process;
     this.executor = MoreExecutors.listeningDecorator(MoreExecutors.getExitingExecutorService(
         (ThreadPoolExecutor) Executors.newFixedThreadPool(3), 2, TimeUnit.SECONDS));
-    this.outputHandler = outputHandler;
     this.stringResultConverter = stringResultConverter;
   }
 
   // Main entry point, adds three managing threads to the executor
-  private Future<T> manage() {
+  private CliProcessManager<T> manage() {
 
     processStdOut = ListenableFutureTask.create(new Callable<String>() {
       StringBuilder result = new StringBuilder("");
@@ -81,20 +76,6 @@ public class CliProcessManager<T> implements Future<T> {
       }
     });
 
-
-    processStdErr = new FutureTask<Void>(new Callable<Void>() {
-      @Override
-      public Void call() throws Exception {
-        try (final Scanner stdOut = new Scanner(process.getErrorStream(), "UTF-8")) {
-          while (stdOut.hasNextLine() && !Thread.interrupted()) {
-            String line = stdOut.nextLine();
-            outputHandler.handleLine(line);
-          }
-          return null;
-        }
-      }
-    });
-
     // processMain does some special handling to get the result of the stdout and store
     // exit code and result in a single return object
     processMain = ListenableFutureTask.create(new Callable<CliProcessResult<T>>() {
@@ -102,13 +83,11 @@ public class CliProcessManager<T> implements Future<T> {
       public CliProcessResult<T> call() throws Exception {
         int exitCode = process.waitFor();
         T result = stringResultConverter.getResult(processStdOut.get());
-        processStdErr.get();
         return new CliProcessResult<T>(exitCode,result);
       }
     });
 
     executor.submit(processStdOut);
-    executor.submit(processStdErr);
     executor.submit(processMain);
     return this;
   }
@@ -150,6 +129,10 @@ public class CliProcessManager<T> implements Future<T> {
     return result.getResult();
   }
 
+  public InputStream getInputStream() {
+    return process.getErrorStream();
+  }
+
   private static class CliProcessResult<R> {
     private final int exitCode;
     private final R result;
@@ -171,9 +154,8 @@ public class CliProcessManager<T> implements Future<T> {
   public static class Provider<T> implements CliProcessManagerProvider<T> {
 
     @Override
-    public Future<T> manage(Process process, StringResultConverter<T> stringResultConverter,
-        OutputHandler outputHandler) {
-      return new CliProcessManager<T>(process, outputHandler, stringResultConverter).manage();
+    public CliProcessManager<T> manage(Process process, StringResultConverter<T> stringResultConverter) {
+      return new CliProcessManager<T>(process, stringResultConverter).manage();
     }
   }
 }

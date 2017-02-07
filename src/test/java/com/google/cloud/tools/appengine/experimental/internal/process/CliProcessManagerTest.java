@@ -16,11 +16,9 @@
 
 package com.google.cloud.tools.appengine.experimental.internal.process;
 
-import static org.junit.Assume.assumeTrue;
-
-import com.google.cloud.tools.appengine.experimental.OutputHandler;
-import com.google.cloud.tools.appengine.experimental.internal.process.io.CollectingOutputHandler;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.DumbConverter;
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 
 import org.junit.Assert;
 import org.junit.Rule;
@@ -30,13 +28,15 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+import static org.junit.Assume.assumeTrue;
 
 public class CliProcessManagerTest {
 
@@ -50,32 +50,32 @@ public class CliProcessManagerTest {
   public void testManage_linuxEcho() throws IOException, ExecutionException, InterruptedException {
     assumeTrue(!System.getProperty("os.name").startsWith("Windows"));
 
-    CollectingOutputHandler outputHandler = new CollectingOutputHandler();
-    Future<String> future = createTestProcess("echo 'stdout'; echo 'stderr' 1>&2", outputHandler);
+    CliProcessManager<String> future = createTestProcess("echo 'stdout'; echo 'stderr' 1>&2;");
 
+    String output = CharStreams.toString(new InputStreamReader(future.getInputStream(), Charsets.UTF_8));
     String result = future.get();
+    String[] lines = output.split("\n");
 
     Assert.assertEquals("stdout\n", result);
-    List<String> lines = outputHandler.getLines();
-    Assert.assertEquals(1, lines.size());
-    Assert.assertEquals("stderr", lines.get(0));  }
+    Assert.assertEquals(1, lines.length);
+    Assert.assertEquals("stderr", lines[0]);
+  }
 
   @Test
   public void testManage_linuxEchoFail()
       throws IOException, InterruptedException, ExecutionException {
     assumeTrue(!System.getProperty("os.name").startsWith("Windows"));
 
-    CollectingOutputHandler outputHandler = new CollectingOutputHandler();
-    Future<String> future = createTestProcess("echo 'stdout'; echo 'stderr' 1>&2; exit 1",
-        outputHandler);
+    CliProcessManager<String> future = createTestProcess("echo 'stdout'; echo 'stderr' 1>&2; exit 1");
 
     exception.expect(ExecutionException.class);
     exception.expectMessage("Process failed with exit code : 1");
     future.get();
+    String output = CharStreams.toString(new InputStreamReader(future.getInputStream(), Charsets.UTF_8));
+    String[] lines = output.split("\n");
 
-    List<String> lines = outputHandler.getLines();
-    Assert.assertEquals(1, lines.size());
-    Assert.assertEquals("stderr", lines.get(0));
+    Assert.assertEquals(1, lines.length);
+    Assert.assertEquals("stderr", lines[0]);
   }
 
   @Test
@@ -83,8 +83,7 @@ public class CliProcessManagerTest {
       throws IOException, InterruptedException, ExecutionException {
     assumeTrue(!System.getProperty("os.name").startsWith("Windows"));
 
-    CollectingOutputHandler outputHandler = new CollectingOutputHandler();
-    Future<String> future = createTestProcess("sleep 10000", outputHandler);
+    Future<String> future = createTestProcess("sleep 10000");
 
     boolean interrupted = future.cancel(false);
     Assert.assertTrue(interrupted);
@@ -95,7 +94,7 @@ public class CliProcessManagerTest {
   }
 
   // test specific helper
-  private Future<String> createTestProcess(String commandFileContents, OutputHandler outputHandler)
+  private CliProcessManager<String> createTestProcess(String commandFileContents)
       throws IOException {
     File echo = testRoot.newFile();
 
@@ -105,6 +104,6 @@ public class CliProcessManagerTest {
         .command(Arrays.asList("sh", echo.getName()))
         .directory(testRoot.getRoot());
 
-    return new CliProcessManager.Provider<String>().manage(pb.start(), new DumbConverter(), outputHandler);
+    return new CliProcessManager.Provider<String>().manage(pb.start(), new DumbConverter());
   }
 }

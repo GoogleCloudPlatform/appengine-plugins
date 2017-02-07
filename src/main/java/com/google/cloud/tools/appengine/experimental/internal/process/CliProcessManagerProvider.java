@@ -16,13 +16,9 @@
 
 package com.google.cloud.tools.appengine.experimental.internal.process;
 
-import com.google.cloud.tools.appengine.experimental.OutputHandler;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
-
-import java.util.concurrent.Future;
 
 public interface CliProcessManagerProvider<T> {
 
-  Future<T> manage(Process process, StringResultConverter<T> stringResultConverter,
-      OutputHandler outputHandler);
+  CliProcessManager<T> manage(Process process, StringResultConverter<T> stringResultConverter);
 }

@@ -19,13 +19,16 @@ package com.google.cloud.tools.appengine.experimental.deploy;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.PathResolver;
 import com.google.cloud.tools.appengine.experimental.AppEngineRequestFactory;
+import com.google.cloud.tools.appengine.experimental.AppEngineRequestFuture;
 import com.google.cloud.tools.appengine.experimental.AppEngineRequests;
-import com.google.cloud.tools.appengine.experimental.internal.process.io.PrintStreamOutputHandler;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class DeployExample {
 
@@ -38,22 +41,35 @@ public class DeployExample {
     DefaultDeployConfiguration config = new DefaultDeployConfiguration();
     config.setDeployables(Collections.singletonList(new File("/tmp/app.yaml")));
 
-    // the current implementation doesn't have a good hook in to the autodetection of the
-    // cloud sdk.
     AppEngineRequestFactory requestFactory = AppEngineRequests.newRequestFactoryBuilder()
         //.cloudSdk(Paths.get("/path/to/cloudsk"))
         // or explicitly tell it to look for it
-        .cloudSdk(
-            new PathResolver().getCloudSdkPath()) //<<-- path resolver would go into the public API
+        .cloudSdk(new PathResolver().getCloudSdkPath()) //<<-- path resolver would go into the public API
         .build();
 
     // do the execute,
     // the implementation of Deployment request doesn't allow modifiying the DeploymentRequest
     // after execute() is called by enforcing it with illegal state exceptions? Is that necessary?
     // Does the builder style imply that would be the case? Who knows...
-    Future<DeployResult> deployFuture = requestFactory.newDeploymentRequest(config)
-        .outputHandler(new PrintStreamOutputHandler(System.out))
-        .execute();
+    AppEngineRequestFuture<DeployResult> deployFuture = requestFactory.newDeploymentRequest(config).execute();
+    final InputStream is = deployFuture.getInputStream();
+
+    // perhaps we could offer some abstraction of this, but essentially in this modification
+    // we're giving the user straight accesss to the input stream (stderr from gcloud)
+    Thread t = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try (Reader r = new InputStreamReader(is)) {
+          int c;
+          while ((c = r.read()) != -1) {
+            System.out.print((char) c);
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    });
+    t.start();
 
     try {
       // get the result -- a blocking call

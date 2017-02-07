@@ -16,15 +16,14 @@
 
 package com.google.cloud.tools.appengine.experimental;
 
-import java.util.concurrent.Future;
+import com.google.cloud.tools.appengine.experimental.internal.cloudsdk.CloudSdkRequestFuture;
+
+import java.io.InputStream;
 
 /**
  * Interface for remote App Engine Requests.
  * @param <T> return request result type
  */
 public interface AppEngineRequest<T> {
-
-  AppEngineRequest<T> outputHandler(OutputHandler outputHandler);
-
-  Future<T> execute();
+  AppEngineRequestFuture<T> execute();
 }

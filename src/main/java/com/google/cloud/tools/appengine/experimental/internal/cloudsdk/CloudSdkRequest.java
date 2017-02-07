@@ -18,14 +18,12 @@ package com.google.cloud.tools.appengine.experimental.internal.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.experimental.AppEngineRequest;
-import com.google.cloud.tools.appengine.experimental.OutputHandler;
+import com.google.cloud.tools.appengine.experimental.AppEngineRequestFuture;
 import com.google.cloud.tools.appengine.experimental.internal.process.CliProcessManagerProvider;
-import com.google.cloud.tools.appengine.experimental.internal.process.io.NullOutputHandler;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
-import com.google.common.base.Preconditions;
 
 import java.io.IOException;
-import java.util.concurrent.Future;
+import java.io.InputStream;
 
 /**
  * The CloudSdkRequest template, all requests will essentially be instances of this class
@@ -37,8 +35,7 @@ public class CloudSdkRequest<R> implements AppEngineRequest<R> {
   private final CloudSdkProcessFactory processFactory;
   private final CliProcessManagerProvider<R> processManagerProvider;
   private final StringResultConverter<R> resultConverter;
-  private OutputHandler outputHandler;
-  private boolean mutable = true;
+  private boolean executed = false;
 
   /**
    * Create a new CloudSdkRequest, there are no subclasses, just configure the providers correctly.
@@ -49,27 +46,22 @@ public class CloudSdkRequest<R> implements AppEngineRequest<R> {
     this.processFactory = processFactory;
     this.processManagerProvider = processManagerProvider;
     this.resultConverter = resultConverter;
-    this.outputHandler = new NullOutputHandler();
   }
 
   @Override
-  public Future<R> execute() {
-    mutable = false;
+  public AppEngineRequestFuture<R> execute() {
+    if (executed) {
+      throw new IllegalStateException("Request already executed");
+    }
+    executed = true;
     try {
-      return processManagerProvider
-          .manage(processFactory.newProcess(), resultConverter, outputHandler);
+      return new CloudSdkRequestFuture<>(
+          processManagerProvider.manage(processFactory.newProcess(), resultConverter));
+
     } catch (IOException e) {
       // maybe this should be checked, we designed with runtime exceptions with
       // build tools in mind, but presumably, IDEs would want to check them.
       throw new AppEngineException("Error executing request", e);
     }
   }
-
-  @Override
-  public AppEngineRequest<R> outputHandler(OutputHandler outputHandler) {
-    Preconditions.checkState(mutable, "Already executed");
-    this.outputHandler = outputHandler;
-    return this;
-  }
-
 }

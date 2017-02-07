@@ -16,9 +16,9 @@
 
 package com.google.cloud.tools.appengine.experimental;
 
-/**
- * Interface that defines how output lines are handled.
- */
-public interface OutputHandler {
-  void handleLine(String line);
+import java.io.InputStream;
+import java.util.concurrent.Future;
+
+public interface AppEngineRequestFuture<T> extends Future<T> {
+  InputStream getInputStream();
 }
