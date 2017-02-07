@@ -44,32 +44,33 @@ public class DeployExample {
     AppEngineRequestFactory requestFactory = AppEngineRequests.newRequestFactoryBuilder()
         //.cloudSdk(Paths.get("/path/to/cloudsk"))
         // or explicitly tell it to look for it
-        .cloudSdk(new PathResolver().getCloudSdkPath()) //<<-- path resolver would go into the public API
+        .cloudSdk(new PathResolver().getCloudSdkPath()) //<<-- path resolver is in the public API
         .build();
 
     // do the execute,
     // the implementation of Deployment request doesn't allow modifiying the DeploymentRequest
     // after execute() is called by enforcing it with illegal state exceptions? Is that necessary?
     // Does the builder style imply that would be the case? Who knows...
-    AppEngineRequestFuture<DeployResult> deployFuture = requestFactory.newDeploymentRequest(config).execute();
+    AppEngineRequestFuture<DeployResult> deployFuture =
+        requestFactory.newDeploymentRequest(config).execute();
     final InputStream is = deployFuture.getInputStream();
 
     // perhaps we could offer some abstraction of this, but essentially in this modification
     // we're giving the user straight accesss to the input stream (stderr from gcloud)
-    Thread t = new Thread(new Runnable() {
+    Thread thread = new Thread(new Runnable() {
       @Override
       public void run() {
         try (Reader r = new InputStreamReader(is)) {
-          int c;
-          while ((c = r.read()) != -1) {
-            System.out.print((char) c);
+          int ch;
+          while ((ch = r.read()) != -1) {
+            System.out.print((char) ch);
           }
         } catch (IOException e) {
           e.printStackTrace();
         }
       }
     });
-    t.start();
+    thread.start();
 
     try {
       // get the result -- a blocking call

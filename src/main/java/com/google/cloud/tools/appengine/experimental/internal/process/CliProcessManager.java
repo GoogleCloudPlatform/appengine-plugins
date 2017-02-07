@@ -154,7 +154,8 @@ public class CliProcessManager<T> implements Future<T> {
   public static class Provider<T> implements CliProcessManagerProvider<T> {
 
     @Override
-    public CliProcessManager<T> manage(Process process, StringResultConverter<T> stringResultConverter) {
+    public CliProcessManager<T> manage(Process process,
+                                       StringResultConverter<T> stringResultConverter) {
       return new CliProcessManager<T>(process, stringResultConverter).manage();
     }
   }

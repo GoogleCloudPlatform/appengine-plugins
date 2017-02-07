@@ -55,7 +55,8 @@ public class CloudSdkRequestFuture<T> implements AppEngineRequestFuture<T> {
   }
 
   @Override
-  public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+  public T get(long timeout, TimeUnit unit)
+      throws InterruptedException, ExecutionException, TimeoutException {
     return future.get(timeout, unit);
   }
 
