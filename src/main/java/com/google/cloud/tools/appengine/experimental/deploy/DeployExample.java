@@ -44,7 +44,7 @@ public class DeployExample {
     AppEngineRequestFactory requestFactory = AppEngineRequests.newRequestFactoryBuilder()
         //.cloudSdk(Paths.get("/path/to/cloudsk"))
         // or explicitly tell it to look for it
-        .cloudSdk(new PathResolver().getCloudSdkPath()) //<<-- path resolver is in the public API
+        .cloudSdk(new PathResolver().getCloudSdkPath())
         .build();
 
     // do the execute,

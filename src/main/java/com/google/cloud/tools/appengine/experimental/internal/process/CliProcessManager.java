@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.experimental.internal.process;
 
+import com.google.cloud.tools.appengine.experimental.AppEngineRequestFuture;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -42,7 +43,7 @@ import java.util.concurrent.TimeoutException;
  *
  * @param <T> the process return type
  */
-public class CliProcessManager<T> implements Future<T> {
+public class CliProcessManager<T> implements AppEngineRequestFuture<T> {
 
   private final ExecutorService executor;
   private final StringResultConverter<T> stringResultConverter;

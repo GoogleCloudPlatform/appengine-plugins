@@ -31,7 +31,7 @@ import java.io.InputStream;
  *
  * @param <R> Request result type
  */
-public class CloudSdkRequest<R> implements AppEngineRequest<R> {
+public final class CloudSdkRequest<R> implements AppEngineRequest<R> {
   private final CloudSdkProcessFactory processFactory;
   private final CliProcessManagerProvider<R> processManagerProvider;
   private final StringResultConverter<R> resultConverter;
@@ -55,9 +55,7 @@ public class CloudSdkRequest<R> implements AppEngineRequest<R> {
     }
     executed = true;
     try {
-      return new CloudSdkRequestFuture<>(
-          processManagerProvider.manage(processFactory.newProcess(), resultConverter));
-
+      return processManagerProvider.manage(processFactory.newProcess(), resultConverter);
     } catch (IOException e) {
       // maybe this should be checked, we designed with runtime exceptions with
       // build tools in mind, but presumably, IDEs would want to check them.
