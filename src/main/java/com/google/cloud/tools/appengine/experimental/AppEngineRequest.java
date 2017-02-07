@@ -16,10 +16,6 @@
 
 package com.google.cloud.tools.appengine.experimental;
 
-import com.google.cloud.tools.appengine.experimental.internal.cloudsdk.CloudSdkRequestFuture;
-
-import java.io.InputStream;
-
 /**
  * Interface for remote App Engine Requests.
  * @param <T> return request result type
