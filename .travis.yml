@@ -25,7 +25,7 @@ script:
     else
       mvn clean install -B -U
     fi
-    mvn cobertura:cobertuna verify
+    mvn cobertura:cobertura verify
 
 env:
   global:
