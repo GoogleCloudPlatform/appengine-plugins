@@ -64,7 +64,7 @@ public class CloudSdk {
 
   public static final CloudSdkVersion MINIMUM_VERSION = new CloudSdkVersion("133.0.0");
 
-  private static final Logger logger = Logger.getLogger(CloudSdk.class.toString());
+  private static final Logger logger = Logger.getLogger(CloudSdk.class.getName());
   private static final Joiner WHITESPACE_JOINER = Joiner.on(" ");
 
   private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");

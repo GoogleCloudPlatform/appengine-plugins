@@ -22,6 +22,7 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
 import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.io.FileUtil;
+import com.google.cloud.tools.project.AppYaml;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
@@ -29,11 +30,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Cloud SDK based implementation of {@link AppEngineFlexibleStaging}.
  */
 public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStaging {
+
+  private static Logger log = Logger.getLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
+
   protected static final Set<String> APP_ENGINE_CONFIG_FILES_WHITELIST = ImmutableSet.of("app.yaml",
       "cron.yaml", "queue.yaml", "dispatch.yaml", "index.yaml", "dos.yaml", "swagger.json",
       "swagger.yaml");
@@ -60,16 +66,33 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
           + config.getStagingDirectory().toPath());
     }
 
+    // verification for app.yaml that contains runtime:java
+    Path appYaml = config.getAppEngineDirectory().toPath().resolve("app.yaml");
+    String runtime = "non-determined";
+    try {
+      if (Files.isRegularFile(appYaml)) {
+        runtime = new AppYaml(appYaml).getRuntime();
+      }
+    } catch (IOException e) {
+      log.warning("Unable to determine runtime: error parsing app.yaml");
+    }
+
     try {
 
-      // Copy docker context to staging
       if (config.getDockerDirectory() != null && config.getDockerDirectory().exists()) {
-        if (!Files.isRegularFile(config.getDockerDirectory().toPath().resolve("Dockerfile"))) {
-          throw new AppEngineException("Docker directory " + config.getDockerDirectory().toPath()
-              + " does not contain Dockerfile");
+        if (runtime.equals("java")) {
+          log.warning("WARNING: Runtime 'java' detected, any docker configuration in "
+              + config.getDockerDirectory() + " will be ignored.");
+        } else {
+          // Copy docker context to staging
+          if (!Files.isRegularFile(config.getDockerDirectory().toPath().resolve("Dockerfile"))) {
+            throw new AppEngineException("Docker directory " + config.getDockerDirectory().toPath()
+                + " does not contain Dockerfile");
+          } else {
+            FileUtil.copyDirectory(config.getDockerDirectory().toPath(),
+                config.getStagingDirectory().toPath());
+          }
         }
-        FileUtil.copyDirectory(config.getDockerDirectory().toPath(),
-            config.getStagingDirectory().toPath());
       }
 
       // Copy app.yaml and other App Engine config files to staging
