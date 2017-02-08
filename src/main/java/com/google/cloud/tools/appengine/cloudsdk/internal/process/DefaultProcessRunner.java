@@ -23,6 +23,7 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListen
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
 import com.google.common.base.Charsets;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,8 @@ public class DefaultProcessRunner implements ProcessRunner {
   private final boolean inheritProcessOutput;
 
   private Map<String, String> environment;
+
+  private File workingDirectory;
 
   /**
    * Base constructor.
@@ -107,8 +110,10 @@ public class DefaultProcessRunner implements ProcessRunner {
         processBuilder.environment().putAll(environment);
       }
 
+      processBuilder.directory(workingDirectory);
+
       processBuilder.command(command);
-      
+
       Process process = processBuilder.start();
 
       Thread stdOutHandler = null;
@@ -143,6 +148,14 @@ public class DefaultProcessRunner implements ProcessRunner {
   @Override
   public void setEnvironment(Map<String, String> environment) {
     this.environment = environment;
+  }
+
+  /**
+   * Sets the working directory of the process.
+   */
+  @Override
+  public void setWorkingDirectory(File workingDirectory) {
+    this.workingDirectory = workingDirectory;
   }
 
   private Thread handleStdOut(Process process) {

@@ -55,6 +55,7 @@ public class CloudSdkAppEngineDeploymentTest {
 
   private File appYaml1;
   private File appYaml2;
+  private File stagingDirectory;
 
   private CloudSdkAppEngineDeployment deployment;
 
@@ -62,6 +63,7 @@ public class CloudSdkAppEngineDeploymentTest {
   public void setUp() throws IOException {
     appYaml1 = tmpDir.newFile("app1.yaml");
     appYaml2 = tmpDir.newFile("app2.yaml");
+    stagingDirectory = tmpDir.newFolder("appengine-staging");
     deployment = new CloudSdkAppEngineDeployment(sdk);
   }
   
@@ -123,6 +125,20 @@ public class CloudSdkAppEngineDeploymentTest {
     deployment.deploy(configuration);
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+  }
+
+  @Test
+  public void testNewDeployAction_dir() throws AppEngineException, ProcessRunnerException {
+
+    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+    configuration.setDeployables(Arrays.asList(stagingDirectory));
+
+    List<String> expectedCommand = ImmutableList.of("deploy");
+
+    deployment.deploy(configuration);
+
+    verify(sdk, times(1)).runAppCommandInWorkingDirectory(
+        eq(expectedCommand), eq(stagingDirectory));
   }
 
   @Test

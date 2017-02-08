@@ -52,15 +52,25 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDeployables());
     Preconditions.checkArgument(config.getDeployables().size() > 0);
+    File workingDirectory = null;
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
-    for (File deployable : config.getDeployables()) {
-      if (!deployable.exists()) {
-        throw new IllegalArgumentException(
-            "Deployable " + deployable.toPath() + " does not exist.");
+
+    // Unfortunately, 'gcloud app deploy' does not let you pass a staging directory as a deployable.
+    // Instead, we have to run 'gcloud app deploy' from the staging directory to achieve this.
+    // So, if we find that the only deployable in the list is a directory, we just run the command
+    // from that directory without passing in any deployables to gcloud.
+    if (config.getDeployables().size() == 1 && config.getDeployables().get(0).isDirectory()) {
+      workingDirectory = config.getDeployables().get(0);
+    } else {
+      for (File deployable : config.getDeployables()) {
+        if (!deployable.exists()) {
+          throw new IllegalArgumentException(
+              "Deployable " + deployable.toPath() + " does not exist.");
+        }
+        arguments.add(deployable.toPath().toString());
       }
-      arguments.add(deployable.toPath().toString());
     }
 
     arguments.addAll(GcloudArgs.get("bucket", config.getBucket()));
@@ -72,7 +82,11 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.addAll(GcloudArgs.get(config));
 
     try {
-      sdk.runAppCommand(arguments);
+      if (workingDirectory != null) {
+        sdk.runAppCommandInWorkingDirectory(arguments, workingDirectory);
+      } else {
+        sdk.runAppCommand(arguments);
+      }
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

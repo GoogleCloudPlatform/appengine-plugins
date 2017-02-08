@@ -5,7 +5,8 @@ This is the client Java library to manage App Engine Java applications. It shoul
 
 # Requirements
 
-This library requires Java 1.7 or higher to run, and Maven to build.
+This library requires Java 1.7 or higher to run.
+This library requries Maven and Java 1.8 or higher to build.
 
 You must also install the Cloud SDK command line interface (CLI), if it isn't installed yet, following the [instructions](https://cloud.google.com/sdk/).
 
