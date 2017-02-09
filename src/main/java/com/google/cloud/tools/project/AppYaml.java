@@ -57,7 +57,7 @@ public class AppYaml {
    */
   public String getRuntime() {
     Object result = yamlMap.get(RUNTIME_KEY);
-    if (result != null && result instanceof String) {
+    if (result instanceof String) {
       return (String) result;
     }
 
