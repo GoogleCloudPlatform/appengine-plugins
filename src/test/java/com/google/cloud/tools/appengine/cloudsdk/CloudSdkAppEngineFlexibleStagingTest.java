@@ -64,9 +64,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Before
   public void setUp() {
-    Logger log = Logger.getLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
-    handler = new LogStoringHandler();
-    log.addHandler(handler);
+    handler = LogStoringHandler.getForLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
   }
 
   @Test

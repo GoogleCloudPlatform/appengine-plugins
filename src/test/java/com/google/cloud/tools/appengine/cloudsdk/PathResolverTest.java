@@ -16,16 +16,20 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.test.utils.LogStoringHandler;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogRecord;
 
 public class PathResolverTest {
 
@@ -69,5 +73,24 @@ public class PathResolverTest {
     PathResolver.getLocationsFromLink(possiblePaths, invalidPath);
 
     Assert.assertEquals(0, possiblePaths.size());
+  }
+
+  @Test
+  public void testGetLocationFromLink_triggerException() throws IOException {
+    LogStoringHandler testHandler = LogStoringHandler.getForLogger(PathResolver.class.getName());
+
+    Path exceptionForcingPath = Mockito.mock(Path.class);
+    IOException exception = Mockito.mock(IOException.class);
+    Mockito.when(exceptionForcingPath.toRealPath()).thenThrow(exception);
+
+    List<String> possiblePaths = new ArrayList<>();
+    PathResolver.getLocationsFromLink(possiblePaths, exceptionForcingPath);
+
+    Assert.assertEquals(1, testHandler.getLogs().size());
+    LogRecord logRecord = testHandler.getLogs().get(0);
+
+    Assert.assertEquals("Non-critical exception when searching for cloud-sdk",
+        logRecord.getMessage());
+    Assert.assertEquals(exception, logRecord.getThrown());
   }
 }
