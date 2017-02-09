@@ -59,6 +59,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   public CopyService copyService;
 
   private LogStoringHandler handler;
+  private File stagingDirectory;
+  private File dockerDirectory;
 
   @Before
   public void setUp() {
@@ -69,10 +71,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyDockerContext_runtimeJavaNoWarning() throws Exception {
-    File dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
-    Assert.assertFalse(dockerDirectory.exists());
+    new FlexibleStagingContext().withNonExistantDockerDirectory();
 
-    when(config.getDockerDirectory()).thenReturn(dockerDirectory);
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
 
     List<LogRecord> logs = handler.getLogs();
@@ -83,8 +83,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyDockerContext_runtimeJavaWithWarning() throws Exception {
-    File dockerDirectory = temporaryFolder.newFolder();
-    when(config.getDockerDirectory()).thenReturn(dockerDirectory);
+    new FlexibleStagingContext().withDockerDirectory();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
 
@@ -100,8 +99,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyDockerContext_runtimeNotJavaNoDockerfile() throws Exception {
-    File dockerDirectory = temporaryFolder.newFolder();
-    when(config.getDockerDirectory()).thenReturn(dockerDirectory);
+    new FlexibleStagingContext().withDockerDirectory();
 
     exception.expect(AppEngineException.class);
     exception.expectMessage("Docker directory " + config.getDockerDirectory().toPath()
@@ -117,15 +115,10 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyDockerContext_runtimeNotJavaWithDockerfile() throws IOException {
-
-    File stagingDirectory = temporaryFolder.newFolder();
-    File dockerDirectory = temporaryFolder.newFolder();
-    File dockerfile = new File(dockerDirectory, "Dockerfile");
-    if (!dockerfile.createNewFile()) {
-      throw new IOException("Could not create Dockerfile for test");
-    }
-    when(config.getDockerDirectory()).thenReturn(dockerDirectory);
-    when(config.getStagingDirectory()).thenReturn(stagingDirectory);
+    new FlexibleStagingContext()
+        .withStagingDirectory()
+        .withDockerDirectory()
+        .withDockerFile();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
 
@@ -133,5 +126,67 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     Assert.assertEquals(0, logs.size());
 
     verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+  }
+
+  @Test
+  public void testCopyDockerContext_runtimeNullNoDockerfile() throws Exception {
+    new FlexibleStagingContext().withDockerDirectory();
+
+    exception.expect(AppEngineException.class);
+    exception.expectMessage("Docker directory " + config.getDockerDirectory().toPath()
+        + " does not contain Dockerfile");
+
+    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyDockerContext_runtimeNull() throws IOException {
+    new FlexibleStagingContext()
+        .withStagingDirectory()
+        .withDockerDirectory()
+        .withDockerFile();
+
+    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+
+    verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+  }
+
+  /**
+   * Private class for creating test file system structures, it will
+   * write to the test class members
+   */
+  private class FlexibleStagingContext {
+    private FlexibleStagingContext withStagingDirectory() throws IOException {
+      stagingDirectory = temporaryFolder.newFolder();
+      when(config.getStagingDirectory()).thenReturn(stagingDirectory);
+      return this;
+    }
+    private FlexibleStagingContext withNonExistantDockerDirectory() {
+      dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
+      assert !dockerDirectory.exists();
+      when(config.getDockerDirectory()).thenReturn(dockerDirectory);
+      return this;
+    }
+    private FlexibleStagingContext withDockerDirectory() throws IOException {
+      dockerDirectory = temporaryFolder.newFolder();
+      when(config.getDockerDirectory()).thenReturn(dockerDirectory);
+      return this;
+    }
+    private FlexibleStagingContext withDockerFile() throws IOException {
+      // needs withDockerDirectory to be called first
+      File dockerFile = new File(dockerDirectory, "Dockerfile");
+      if (!dockerFile.createNewFile()) {
+        throw new IOException("Could not create Dockerfile for test");
+      }
+      return this;
+    }
   }
 }

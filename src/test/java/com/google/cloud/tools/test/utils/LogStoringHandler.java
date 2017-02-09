@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 /**
- * A simple log storing handler. Apply this to the logger you want to track for example the logger
+ * A simple log storing handler. Apply this to the logger you want to track - for example the logger
  * in some class ABC
  *
  * Logger log = Logger.getLogger(ABC.class.getName());
