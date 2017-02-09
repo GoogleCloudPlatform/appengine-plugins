@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -101,8 +103,9 @@ public class PathResolver implements CloudSdkResolver {
     }
   }
 
+  @VisibleForTesting
   // resolve symlinks to a path that could be the bin directory of the cloud sdk
-  private static void getLocationsFromLink(List<String> possiblePaths, Path link) {
+  static void getLocationsFromLink(List<String> possiblePaths, Path link) {
     try {
       Path resolvedLink = link.toRealPath();
       Path possibleBinDir = resolvedLink.getParent();
