@@ -28,6 +28,7 @@ public class AppEngineDescriptorTest {
 
   private static final String TEST_VERSION = "fooVersion";
   private static final String TEST_ID = "fooId";
+  private static final String RUNTIME_ID = "java9";
 
   private static final String ROOT_END_TAG = "</appengine-web-app>";
   private static final String ROOT_START_TAG =
@@ -41,6 +42,7 @@ public class AppEngineDescriptorTest {
   private static final String COMMENT_BEFORE_VERSION = "<version>" + COMMENT + TEST_VERSION + "</version>";
   private static final String SERVICE = "<service>" + TEST_ID + "</service>";
   private static final String MODULE = "<module>" + TEST_ID + "</module>";
+  private static final String RUNTIME = "<runtime>" + RUNTIME_ID + "</runtime>";
   
   private static final String XML_WITHOUT_PROJECT_ID = ROOT_START_TAG + ROOT_END_TAG;
   private static final String XML_WITHOUT_VERSION = ROOT_START_TAG + PROJECT_ID + ROOT_END_TAG;
@@ -119,6 +121,13 @@ public class AppEngineDescriptorTest {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + MODULE + ROOT_END_TAG);
 
     assertEquals(TEST_ID, descriptor.getServiceId());
+  }
+
+  @Test
+  public void testService_runtime() throws IOException {
+    AppEngineDescriptor descriptor = parse(ROOT_START_TAG + RUNTIME + ROOT_END_TAG);
+
+    assertEquals(RUNTIME_ID, descriptor.getRuntime());
   }
 
   private static AppEngineDescriptor parse(String xmlString) throws IOException {

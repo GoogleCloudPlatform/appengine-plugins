@@ -65,6 +65,13 @@ public class AppEngineDescriptor {
   }
 
   /**
+   * @return runtime from the &lt;application&gt; element of the appengine-web.xml or null
+   *         if it is missing
+   */
+  public String getRuntime()  {
+    return getTopLevelValue(document, "appengine-web-app", "runtime");
+  }
+  /**
    * @return project version from the &lt;version&gt; element of the appengine-web.xml or
    *         null if it is missing
    */
