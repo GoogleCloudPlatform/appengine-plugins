@@ -19,6 +19,9 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import com.google.cloud.tools.test.utils.LogStoringHandler;
 
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -33,10 +36,26 @@ import java.util.logging.LogRecord;
 
 public class PathResolverTest {
 
+  @ClassRule
+  public static TemporaryFolder symlinkTestArea = new TemporaryFolder();
+  private static Exception symlinkException = null;
+
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   private PathResolver resolver = new PathResolver();
+
+
+  @BeforeClass
+  public static void generateSymlinkException() throws IOException {
+    Path dest = symlinkTestArea.newFile().toPath();
+    Path link = symlinkTestArea.getRoot().toPath().resolve("test-link"+ System.currentTimeMillis());
+    try {
+      Files.createSymbolicLink(link, dest);
+    } catch (Exception e) {
+      symlinkException = e;
+    }
+  }
   
   @Test
   public void testResolve() {
@@ -50,6 +69,7 @@ public class PathResolverTest {
 
   @Test
   public void testGetLocationFromLink_valid() throws IOException {
+    Assume.assumeNoException(symlinkException);
     Path sdkHome = temporaryFolder.newFolder().toPath();
     Path bin = Files.createDirectory(sdkHome.resolve("bin"));
     Path gcloud =  Files.createFile(bin.resolve("gcloud"));
@@ -65,6 +85,7 @@ public class PathResolverTest {
 
   @Test
   public void testGetLocationFromLink_notValid() throws IOException {
+    Assume.assumeNoException(symlinkException);
     Path invalidPath = temporaryFolder.newFolder().toPath();
     Files.createSymbolicLink(temporaryFolder.getRoot().toPath().resolve("gcloud"), invalidPath);
 
@@ -77,6 +98,7 @@ public class PathResolverTest {
 
   @Test
   public void testGetLocationFromLink_triggerException() throws IOException {
+    Assume.assumeNoException(symlinkException);
     LogStoringHandler testHandler = LogStoringHandler.getForLogger(PathResolver.class.getName());
 
     Path exceptionForcingPath = Mockito.mock(Path.class);
