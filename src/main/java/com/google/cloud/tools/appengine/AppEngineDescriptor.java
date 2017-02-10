@@ -65,7 +65,7 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * @return runtime from the &lt;application&gt; element of the appengine-web.xml or null
+   * @return runtime from the &lt;runtime&gt; element of the appengine-web.xml or null
    *         if it is missing
    */
   public String getRuntime()  {
