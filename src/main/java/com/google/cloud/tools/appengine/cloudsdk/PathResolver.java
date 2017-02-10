@@ -103,8 +103,8 @@ public class PathResolver implements CloudSdkResolver {
     }
   }
 
-  @VisibleForTesting
   // resolve symlinks to a path that could be the bin directory of the cloud sdk
+  @VisibleForTesting
   static void getLocationsFromLink(List<String> possiblePaths, Path link) {
     try {
       Path resolvedLink = link.toRealPath();
