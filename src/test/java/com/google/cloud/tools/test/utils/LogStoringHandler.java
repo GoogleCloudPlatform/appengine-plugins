@@ -19,7 +19,9 @@ package com.google.cloud.tools.test.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * A simple log storing handler. Apply this to the logger you want to track - for example the logger
@@ -34,6 +36,19 @@ import java.util.logging.LogRecord;
 public class LogStoringHandler extends Handler {
 
     private List<LogRecord> logs = new ArrayList<>();
+
+    /**
+     * Convenience method for test handler creation and registration. It will
+     * configure the logger and handler to Level.ALL to accept all logs.
+     */
+    public static LogStoringHandler getForLogger(String loggerName) {
+        LogStoringHandler handler = new LogStoringHandler();
+        Logger log = Logger.getLogger(loggerName);
+        log.addHandler(handler);
+        log.setLevel(Level.ALL);
+        handler.setLevel(Level.ALL);
+        return handler;
+    }
 
     @Override
     public void publish(LogRecord record) {
