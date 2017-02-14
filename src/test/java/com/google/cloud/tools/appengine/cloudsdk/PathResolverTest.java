@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.test.utils.LogStoringHandler;
+import org.apache.commons.lang3.SystemUtils;
 
 import org.junit.Assert;
 import org.junit.Assume;
@@ -80,7 +81,12 @@ public class PathResolverTest {
     PathResolver.getLocationsFromLink(possiblePaths, gcloud);
 
     Assert.assertEquals(1, possiblePaths.size());
-    Assert.assertEquals(gcloud.getParent().getParent().toString(), possiblePaths.get(0));
+   if (SystemUtils.IS_OS_MAC_OSX) {
+     Assert.assertEquals("/private" + gcloud.getParent().getParent().toString(),  possiblePaths.get(0));
+   } else {
+     Assert.assertEquals(gcloud.getParent().getParent().toString(), possiblePaths.get(0));
+    
+   }
   }
 
   @Test
