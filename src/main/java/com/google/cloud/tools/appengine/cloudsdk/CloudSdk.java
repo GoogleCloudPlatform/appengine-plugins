@@ -275,7 +275,39 @@ public class CloudSdk {
       runDevAppServerWaitListener.await();
     }
   }
+  
+  /**
+   * Uses the process runner to execute the classic Java SDK devappsever command.
+   *
+   * @param args the arguments to pass to devappserver
+   * @param environment map of environment variables to set for the dev_appserver process
+   * @throws ProcessRunnerException when process runner encounters an error
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
+   * @throws AppEngineException when dev appserver cannot be found
+   */
+  public void runDevAppServer1Command(List<String> jvmArgs, List<String> args, 
+          Map<String, String> environment)
+          throws ProcessRunnerException {
+    validateAppEngineJavaComponents();
 
+    List<String> command = new ArrayList<>();
+    command.add(
+        Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
+  
+    command.addAll(jvmArgs);
+    command.add("-Dappengine.sdk.root=" + getJavaAppEngineSdkPath().getParent().toString());
+    command.add("-cp");
+    command.add(jarLocations.get(JAVA_TOOLS_JAR).toString());
+    command.add("com.google.appengine.tools.development.DevAppServerMain");
+
+    command.addAll(args);
+
+    logCommand(command);
+
+    processRunner.run(command.toArray(new String[command.size()]));
+  }
+  
   /**
    * Executes an App Engine SDK CLI command.
    *

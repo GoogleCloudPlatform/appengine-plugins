@@ -29,6 +29,12 @@ public interface RunConfiguration {
   // PHP, AppIdentity, Blobstore, etc.
   List<File> getAppYamls();
 
+  /**
+   *  List of all the service directories (1 or more) that need to be run with 
+   *  the local devappserver. Such directory needs to include WEB-INF/appengine-web.xml.
+   */
+  List<File> getServiceDirectories();
+
   String getHost();
 
   Integer getPort();
