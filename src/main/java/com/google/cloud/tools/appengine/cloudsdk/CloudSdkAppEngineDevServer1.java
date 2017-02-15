@@ -92,6 +92,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("jvm_flag", config.getJvmFlags()));
 
     arguments.add("--allow_remote_shutdown");
+    arguments.add("--disable_update_check");
     if (appengineWeb.isJava8()) {
       arguments.add("--no_java_agent");
     }
