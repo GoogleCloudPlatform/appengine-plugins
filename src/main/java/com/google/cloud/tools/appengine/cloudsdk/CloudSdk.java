@@ -292,9 +292,15 @@ public class CloudSdk {
     validateAppEngineJavaComponents();
 
     List<String> command = new ArrayList<>();
+    String javaHome = System.getProperty("java.home");
+    for (Map.Entry<String, String> entry : environment.entrySet()) {
+      if (entry.getKey().equals("JAVA_HOME")) {
+        javaHome = entry.getValue();
+      }
+    }
     command.add(
-        Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
-  
+            Paths.get(javaHome).resolve("bin/java").toAbsolutePath().toString());
+
     command.addAll(jvmArgs);
     command.add("-Dappengine.sdk.root=" + getJavaAppEngineSdkPath().getParent().toString());
     command.add("-cp");
@@ -304,7 +310,7 @@ public class CloudSdk {
     command.addAll(args);
 
     logCommand(command);
-
+    processRunner.setEnvironment(environment);
     processRunner.run(command.toArray(new String[command.size()]));
   }
   
