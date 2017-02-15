@@ -30,7 +30,7 @@ public interface RunConfiguration {
   List<File> getAppYamls();
 
   /**
-   *  List of all the service directories (1 or more) that need to be run with 
+   *  List of all the service web output directories (1 or more) that need to be run with 
    *  the local devappserver. Such directory needs to include WEB-INF/appengine-web.xml.
    */
   List<File> getServiceDirectories();
