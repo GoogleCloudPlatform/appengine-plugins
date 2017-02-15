@@ -310,6 +310,11 @@ public class CloudSdk {
     logCommand(command);
     processRunner.setEnvironment(environment);
     processRunner.run(command.toArray(new String[command.size()]));
+
+    // wait for start if configured
+    if (runDevAppServerWaitListener != null) {
+      runDevAppServerWaitListener.await();
+    }
   }
   
   /**
