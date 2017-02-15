@@ -33,7 +33,7 @@ public interface RunConfiguration {
    *  List of all the service web output directories (1 or more) that need to be run with 
    *  the local devappserver. Such directory needs to include WEB-INF/appengine-web.xml.
    */
-  List<File> getServiceDirectories();
+  List<File> getServices();
 
   String getHost();
 

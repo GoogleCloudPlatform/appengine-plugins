@@ -59,12 +59,12 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   @Override
   public void run(RunConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getServiceDirectories());
-    Preconditions.checkArgument(config.getServiceDirectories().size() > 0);
+    Preconditions.checkNotNull(config.getServices());
+    Preconditions.checkArgument(config.getServices().size() > 0);
     AppEngineDescriptor appengineWeb;
     try (// TODO(ludo: Make sure we support the case when more than 1 service is given...
          FileInputStream is = new FileInputStream(
-          new File(config.getServiceDirectories().get(0), "WEB-INF/appengine-web.xml"))) {
+          new File(config.getServices().get(0), "WEB-INF/appengine-web.xml"))) {
       appengineWeb = AppEngineDescriptor.parse(is);
     } catch (IOException e) {
       throw new AppEngineException(e);
@@ -96,7 +96,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     if (appengineWeb.isJava8()) {
       arguments.add("--no_java_agent");
     }
-    for (File service : config.getServiceDirectories()) {
+    for (File service : config.getServices()) {
       arguments.add(service.toPath().toString());
     }
     try {

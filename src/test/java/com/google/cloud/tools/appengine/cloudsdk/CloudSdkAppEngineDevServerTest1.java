@@ -67,7 +67,7 @@ public class CloudSdkAppEngineDevServerTest1 {
   public void testPrepareCommand_allFlags() throws AppEngineException, ProcessRunnerException {
 
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServiceDirectories(ImmutableList.of(serviceDirectory));
+    configuration.setServices(ImmutableList.of(serviceDirectory));
     configuration.setHost("host");
     configuration.setPort(8090);
     configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
@@ -92,7 +92,7 @@ public class CloudSdkAppEngineDevServerTest1 {
   public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
 
-    configuration.setServiceDirectories(ImmutableList.of(serviceDirectory));
+    configuration.setServices(ImmutableList.of(serviceDirectory));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
             "--no_java_agent", "src/test/java/resources");
@@ -107,7 +107,7 @@ public class CloudSdkAppEngineDevServerTest1 {
   public void testPrepareCommand_noFlags() throws AppEngineException, ProcessRunnerException {
 
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServiceDirectories(ImmutableList.of(serviceDirectory));
+    configuration.setServices(ImmutableList.of(serviceDirectory));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
             "--no_java_agent", "src/test/java/resources");
