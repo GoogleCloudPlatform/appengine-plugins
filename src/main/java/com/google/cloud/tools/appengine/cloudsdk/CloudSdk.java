@@ -294,7 +294,7 @@ public class CloudSdk {
     List<String> command = new ArrayList<>();
     String javaHome = environment.get("JAVA_HOME");
     if (javaHome == null) {
-      System.getProperty("java.home");
+      javaHome = System.getProperty("java.home");
     }
     command.add(
             Paths.get(javaHome).resolve("bin/java").toAbsolutePath().toString());
