@@ -90,6 +90,14 @@ public class AppEngineDescriptor {
     }
     return getTopLevelValue(document, "appengine-web-app", "module");
   }
+  
+  /**
+   * @return true if the runtime specified by the user is Java8.
+   */
+  public boolean isJava8() {
+    return (getRuntime() != null)
+            && getRuntime().startsWith("java8");
+  }
 
   private static String getTopLevelValue(Document doc, String parentTagName, String childTagName) {
     try {
