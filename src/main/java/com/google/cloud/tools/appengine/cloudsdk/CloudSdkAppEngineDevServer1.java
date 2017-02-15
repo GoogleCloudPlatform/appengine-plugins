@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,7 +54,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   /**
    * Starts the local development server, synchronously or asynchronously.
    *
-   * @throws AppEngineException I/O error in the Java dev server.
+   * @throws AppEngineException I/O error in the Java dev server
    */
   @Override
   public void run(RunConfiguration config) throws AppEngineException {
@@ -61,10 +62,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     Preconditions.checkNotNull(config.getServiceDirectories());
     Preconditions.checkArgument(config.getServiceDirectories().size() > 0);
     AppEngineDescriptor appengineWeb;
-    try {
-      // TODO(ludo: Make sure we support the case when more than 1 service is given...
-      FileInputStream is = new FileInputStream(
-              new File(config.getServiceDirectories().get(0), "WEB-INF/appengine-web.xml"));
+    try (// TODO(ludo: Make sure we support the case when more than 1 service is given...
+         FileInputStream is = new FileInputStream(
+          new File(config.getServiceDirectories().get(0), "WEB-INF/appengine-web.xml"))) {
       appengineWeb = AppEngineDescriptor.parse(is);
     } catch (IOException e) {
       throw new AppEngineException(e);
@@ -77,9 +77,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
 
     List<String> jvmArguments = new ArrayList<>();
-    boolean isJava8 = (appengineWeb.getRuntime() != null)
-            && appengineWeb.getRuntime().startsWith("java8");
-    if (isJava8) {
+    if (appengineWeb.isJava8()) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
       jvmArguments.add("-D--enable_all_permissions=true");
     } else {
@@ -94,7 +92,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("jvm_flag", config.getJvmFlags()));
 
     arguments.add("--allow_remote_shutdown");
-    if (isJava8) {
+    if (appengineWeb.isJava8()) {
       arguments.add("--no_java_agent");
     }
     for (File service : config.getServiceDirectories()) {
@@ -113,29 +111,21 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   @Override
   public void stop(StopConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
-
+    HttpURLConnection connection = null;
     try {
       URL adminServerUrl = new URL(
               "http",
               configuration.getAdminHost() != null
               ? configuration.getAdminHost() : DEFAULT_HOST,
-              /* configuration.getAdminPort() != null ? configuration.getAdminPort() : */
               DEFAULT_PORT,
               "/_ah/admin/quit");
-      HttpURLConnection connection = (HttpURLConnection) adminServerUrl.openConnection();
-
+      connection = (HttpURLConnection) adminServerUrl.openConnection();
+      System.out.println("UR" + adminServerUrl);
       connection.setDoOutput(true);
       connection.setDoInput(true);
-      connection.setReadTimeout(4000);
-
       connection.setRequestMethod("POST");
-      connection.getOutputStream().write(10);
-      connection.getInputStream();
-      connection.getOutputStream().flush();
-      connection.getOutputStream().close();
-      connection.getInputStream().close();
-
-      connection.connect();
+      connection.getOutputStream().write('\n');
+      byte[] responses = ByteStreams.toByteArray(connection.getInputStream());
       connection.disconnect();
       int responseCode = connection.getResponseCode();
       if (responseCode < 200 || responseCode > 299) {
@@ -144,6 +134,14 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       }
     } catch (IOException e) {
       throw new AppEngineException(e);
+    } finally {
+      if (connection != null) {
+        try {
+          connection.getInputStream().close();
+        } catch (IOException ex) {
+          throw new AppEngineException(ex);
+        }
+      }
     }
   }
 }
