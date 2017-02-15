@@ -292,11 +292,9 @@ public class CloudSdk {
     validateAppEngineJavaComponents();
 
     List<String> command = new ArrayList<>();
-    String javaHome = System.getProperty("java.home");
-    for (Map.Entry<String, String> entry : environment.entrySet()) {
-      if (entry.getKey().equals("JAVA_HOME")) {
-        javaHome = entry.getValue();
-      }
+    String javaHome = environment.get("JAVA_HOME");
+    if (javaHome == null) {
+      System.getProperty("java.home");
     }
     command.add(
             Paths.get(javaHome).resolve("bin/java").toAbsolutePath().toString());
