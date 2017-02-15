@@ -121,7 +121,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
               DEFAULT_PORT,
               "/_ah/admin/quit");
       connection = (HttpURLConnection) adminServerUrl.openConnection();
-      System.out.println("UR" + adminServerUrl);
       connection.setDoOutput(true);
       connection.setDoInput(true);
       connection.setRequestMethod("POST");
