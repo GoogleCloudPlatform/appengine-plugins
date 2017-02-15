@@ -70,22 +70,16 @@ public class PathResolverTest {
   @Test
   public void testGetLocationFromLink_valid() throws IOException {
     Assume.assumeNoException(symlinkException);
-    Path sdkHome = temporaryFolder.newFolder().toPath();
+    Path sdkHome = temporaryFolder.newFolder().toPath().toRealPath();
     Path bin = Files.createDirectory(sdkHome.resolve("bin"));
     Path gcloud =  Files.createFile(bin.resolve("gcloud"));
     Files.createSymbolicLink(temporaryFolder.getRoot().toPath().resolve("gcloud"), gcloud);
 
     List<String> possiblePaths = new ArrayList<>();
-
     PathResolver.getLocationsFromLink(possiblePaths, gcloud);
 
     Assert.assertEquals(1, possiblePaths.size());
-   if (System.getProperty("os.name").startsWith("Mac")) {
-     Assert.assertEquals("/private" + gcloud.getParent().getParent().toString(),  possiblePaths.get(0));
-   } else {
-     Assert.assertEquals(gcloud.getParent().getParent().toString(), possiblePaths.get(0));
-    
-   }
+    Assert.assertEquals(gcloud.getParent().getParent().toString(), possiblePaths.get(0));
   }
 
   @Test
