@@ -27,7 +27,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -87,11 +86,13 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
               .getAbsolutePath();
       jvmArguments.add("-javaagent:" + appengineAgentJar);
     } 
-    arguments.addAll(DevAppServerArgs.get("server", config.getHost()));
-    arguments.addAll(DevAppServerArgs.get("address", config.getPort()));
-    arguments.addAll(DevAppServerArgs.get("jvm_flag", config.getJvmFlags()));
+    arguments.addAll(DevAppServerArgs.get("address", config.getHost()));
+    arguments.addAll(DevAppServerArgs.get("port", config.getPort()));
+    if (config.getJvmFlags() != null) {
+      jvmArguments.addAll(config.getJvmFlags());
+    }
 
-    arguments.add("--allow_remote_shutdown");
+    // arguments.add("--allow_remote_shutdown");
     arguments.add("--disable_update_check");
     if (appengineWeb.isJava8()) {
       arguments.add("--no_java_agent");
