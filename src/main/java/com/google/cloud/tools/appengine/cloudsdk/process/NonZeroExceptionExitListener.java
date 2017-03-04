@@ -21,7 +21,7 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 /**
  * Exit listener that throws a {@link AppEngineException} on a non-zero exit value.
  */
-// Is this being used by the clients?  I'm not a big fan of unused code and it has no tests.
+// Used by Maven plugin
 public class NonZeroExceptionExitListener implements ProcessExitListener {
 
   @Override
