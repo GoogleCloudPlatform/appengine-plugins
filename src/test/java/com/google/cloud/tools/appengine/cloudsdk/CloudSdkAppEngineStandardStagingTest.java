@@ -19,7 +19,9 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultStageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,7 +29,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,10 +74,9 @@ public class CloudSdkAppEngineStandardStagingTest {
   }
 
   @Test
-  public void testCheckFlags_allFlags()
-      throws IOException, AppEngineException, ProcessRunnerException {
+  public void testCheckFlags_allFlags() throws Exception {
 
-    DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
+    DefaultStageStandardConfiguration configuration = Mockito.spy(new DefaultStageStandardConfiguration());
     configuration.setSourceDirectory(source);
     configuration.setStagingDirectory(destination);
     configuration.setDockerfile(dockerfile);
@@ -99,6 +101,12 @@ public class CloudSdkAppEngineStandardStagingTest {
     staging.stageStandard(configuration);
 
     verify(sdk, times(1)).runAppCfgCommand(eq(expected));
+    SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
+        ImmutableMap.<String, Integer>of(
+            "getRuntime", 4,
+            "getSourceDirectory", 3,
+            "getDockerfile", 2,
+            "getStagingDirectory", 3));
   }
 
   @Test
@@ -138,19 +146,6 @@ public class CloudSdkAppEngineStandardStagingTest {
     staging.stageStandard(configuration);
 
     verify(sdk, times(1)).runAppCfgCommand(eq(expected));
-  }
-
-  @Test
-  public void testStop() throws IOException {
-
-    HttpURLConnection connection = mock(HttpURLConnection.class);
-
-    doNothing().when(connection).setReadTimeout(anyInt());
-    doNothing().when(connection).connect();
-    doNothing().when(connection).disconnect();
-    when(connection.getResponseMessage()).thenReturn("response");
-
-    // TODO : write a new test here
   }
 
 }

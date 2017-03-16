@@ -21,7 +21,9 @@ import com.google.cloud.tools.appengine.api.genconfig.DefaultGenConfigParams;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineGenConfig;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
+import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,7 +31,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,9 +65,9 @@ public class CloudSdkAppEngineGenConfigTest {
   }
 
   @Test
-  public void testPrepareCommand_allFlags() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_allFlags() throws Exception {
 
-    DefaultGenConfigParams params = new DefaultGenConfigParams();
+    DefaultGenConfigParams params = Mockito.spy(new DefaultGenConfigParams());
     params.setSourceDirectory(source);
     params.setConfig("app.yaml");
     params.setCustom(true);
@@ -77,6 +80,8 @@ public class CloudSdkAppEngineGenConfigTest {
     genConfig.genConfig(params);
 
     verify(sdk, times(1)).runAppCommand(eq(expected));
+    SpyVerifier.newVerifier(params)
+        .verifyDeclaredGetters(ImmutableMap.<String, Integer>of("getSourceDirectory", 4));
   }
 
   @Test

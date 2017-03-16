@@ -18,10 +18,10 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeployment;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
+import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,7 +30,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,9 +78,9 @@ public class CloudSdkAppEngineDeploymentTest {
   }
   
   @Test
-  public void testNewDeployAction_allFlags() throws AppEngineException, ProcessRunnerException {
+  public void testNewDeployAction_allFlags() throws Exception {
 
-    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
+    DefaultDeployConfiguration configuration = Mockito.spy(new DefaultDeployConfiguration());
     configuration.setDeployables(Arrays.asList(appYaml1));
     configuration.setBucket("gs://a-bucket");
     configuration.setImageUrl("imageUrl");
@@ -97,6 +98,7 @@ public class CloudSdkAppEngineDeploymentTest {
             "v1", "--project", "project");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(ImmutableMap.of("getDeployables", 5));
   }
 
   @Test

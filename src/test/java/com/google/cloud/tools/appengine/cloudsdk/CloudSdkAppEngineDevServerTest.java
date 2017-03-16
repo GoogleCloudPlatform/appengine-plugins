@@ -19,6 +19,7 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
@@ -27,9 +28,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -63,9 +66,9 @@ public class CloudSdkAppEngineDevServerTest {
   }
 
   @Test
-  public void testPrepareCommand_allFlags() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_allFlags() throws Exception {
 
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    DefaultRunConfiguration configuration = Mockito.spy(new DefaultRunConfiguration());
     configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
     configuration.setHost("host");
     configuration.setPort(8090);
@@ -107,6 +110,10 @@ public class CloudSdkAppEngineDevServerTest {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
+
+    SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
+        ImmutableMap.<String, Integer>of("getJavaHomeDir", 2, "getServices", 0, "getAppYamls", 3));
+
   }
 
   @Test
