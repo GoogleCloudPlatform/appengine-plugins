@@ -31,4 +31,9 @@ public interface AppEngineDeployment {
    */
   void deploy(DeployConfiguration config) throws AppEngineException;
 
+  void deployCron(DeployCronConfiguration config) throws AppEngineException;
+  void deployDos(DeployDosConfiguration config) throws AppEngineException;
+  void deployDispatch(DeployDispatchConfiguration config) throws AppEngineException;
+  void deployIndexes(DeployIndexesConfiguration config) throws AppEngineException;
+  void deployQueue(DeployQueueConfiguration config) throws AppEngineException;
 }

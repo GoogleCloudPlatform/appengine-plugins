@@ -19,6 +19,11 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployCronConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployDispatchConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployDosConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployIndexesConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployQueueConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
@@ -91,6 +96,96 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
       throw new AppEngineException(e);
     }
 
+  }
+
+  @Override
+  public void deployCron(DeployCronConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getCronYaml());
+    Preconditions.checkArgument(config.getCronYaml().getName().equals("cron.yaml"), "Expecting cron.yaml");
+
+    List<String> arguments = new ArrayList<>();
+    arguments.add("deploy");
+    arguments.add(config.getCronYaml().toPath().toString());
+    arguments.addAll(GcloudArgs.get(config));
+
+    try {
+        sdk.runAppCommand(arguments);
+    } catch (ProcessRunnerException e) {
+      throw new AppEngineException(e);
+    }
+  }
+
+  @Override
+  public void deployDos(DeployDosConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getDosYaml());
+    Preconditions.checkArgument(config.getDosYaml().getName().equals("dos.yaml"), "Expecting dos.yaml");
+
+    List<String> arguments = new ArrayList<>();
+    arguments.add("deploy");
+    arguments.add(config.getDosYaml().toPath().toString());
+    arguments.addAll(GcloudArgs.get(config));
+
+    try {
+      sdk.runAppCommand(arguments);
+    } catch (ProcessRunnerException e) {
+      throw new AppEngineException(e);
+    }
+  }
+
+  @Override
+  public void deployDispatch(DeployDispatchConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getDispatchYaml());
+    Preconditions.checkArgument(config.getDispatchYaml().getName().equals("dispatch.yaml"), "Expecting dispatch.yaml");
+
+    List<String> arguments = new ArrayList<>();
+    arguments.add("deploy");
+    arguments.add(config.getDispatchYaml().toPath().toString());
+    arguments.addAll(GcloudArgs.get(config));
+
+    try {
+      sdk.runAppCommand(arguments);
+    } catch (ProcessRunnerException e) {
+      throw new AppEngineException(e);
+    }
+  }
+
+  @Override
+  public void deployIndexes(DeployIndexesConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getIndexesYaml());
+    Preconditions.checkArgument(config.getIndexesYaml().getName().equals("indexes.yaml"), "Expecting indexes.yaml");
+
+    List<String> arguments = new ArrayList<>();
+    arguments.add("deploy");
+    arguments.add(config.getIndexesYaml().toPath().toString());
+    arguments.addAll(GcloudArgs.get(config));
+
+    try {
+      sdk.runAppCommand(arguments);
+    } catch (ProcessRunnerException e) {
+      throw new AppEngineException(e);
+    }
+  }
+
+  @Override
+  public void deployQueue(DeployQueueConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
+    Preconditions.checkNotNull(config.getQueueYaml());
+    Preconditions.checkArgument(config.getQueueYaml().getName().equals("queue.yaml"), "Expecting queue.yaml");
+
+    List<String> arguments = new ArrayList<>();
+    arguments.add("deploy");
+    arguments.add(config.getQueueYaml().toPath().toString());
+    arguments.addAll(GcloudArgs.get(config));
+
+    try {
+      sdk.runAppCommand(arguments);
+    } catch (ProcessRunnerException e) {
+      throw new AppEngineException(e);
+    }
   }
 
 }

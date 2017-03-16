@@ -18,6 +18,11 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DefaultDeployCronConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DefaultDeployDispatchConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DefaultDeployDosConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DefaultDeployIndexesConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DefaultDeployQueueConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
@@ -27,6 +32,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -53,6 +59,9 @@ public class CloudSdkAppEngineDeploymentTest {
 
   @Rule
   public TemporaryFolder tmpDir = new TemporaryFolder();
+
+  @Rule
+  public final ExpectedException exception = ExpectedException.none();
 
   private File appYaml1;
   private File appYaml2;
@@ -162,4 +171,138 @@ public class CloudSdkAppEngineDeploymentTest {
 
   }
 
+  @Test
+  public void testNewDeployCronAction() throws Exception {
+
+    DefaultDeployCronConfiguration configuration = new DefaultDeployCronConfiguration();
+    File cronYaml = tmpDir.newFile("cron.yaml");
+    configuration.setCronYaml(cronYaml);
+    configuration.setProject("project");
+
+    deployment.deployCron(configuration);
+
+    List<String> expectedCommand = ImmutableList
+        .of("deploy", cronYaml.toString(), "--project", "project");
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+  }
+
+  @Test
+  public void testNewDeployCronAction_badName() throws Exception {
+
+    DefaultDeployCronConfiguration configuration = new DefaultDeployCronConfiguration();
+    configuration.setCronYaml(tmpDir.newFile("another.yaml"));
+
+    exception.expect(IllegalArgumentException.class);
+    exception.expectMessage("Expecting cron.yaml");
+    deployment.deployCron(configuration);
+  }
+
+  @Test
+  public void testNewDeployDispatchAction() throws Exception {
+
+    DefaultDeployDispatchConfiguration configuration = new DefaultDeployDispatchConfiguration();
+    File dispatchYaml = tmpDir.newFile("dispatch.yaml");
+    configuration.setDispatchYaml(dispatchYaml);
+    configuration.setProject("project");
+
+    deployment.deployDispatch(configuration);
+
+    List<String> expectedCommand = ImmutableList
+        .of("deploy", dispatchYaml.toString(), "--project", "project");
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+  }
+
+  @Test
+  public void testNewDeployDispatchAction_badName() throws Exception {
+
+    DefaultDeployDispatchConfiguration configuration = new DefaultDeployDispatchConfiguration();
+    configuration.setDispatchYaml(tmpDir.newFile("another.yaml"));
+
+    exception.expect(IllegalArgumentException.class);
+    exception.expectMessage("Expecting dispatch.yaml");
+    deployment.deployDispatch(configuration);
+  }
+
+  @Test
+  public void testNewDeployDosAction() throws Exception {
+
+    DefaultDeployDosConfiguration configuration = new DefaultDeployDosConfiguration();
+    File dosYaml = tmpDir.newFile("dos.yaml");
+    configuration.setDosYaml(dosYaml);
+    configuration.setProject("project");
+
+    deployment.deployDos(configuration);
+
+    List<String> expectedCommand = ImmutableList
+        .of("deploy", dosYaml.toString(), "--project", "project");
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+  }
+
+  @Test
+  public void testNewDeployDosAction_badName() throws Exception {
+
+    DefaultDeployDosConfiguration configuration = new DefaultDeployDosConfiguration();
+    configuration.setDosYaml(tmpDir.newFile("another.yaml"));
+
+    exception.expect(IllegalArgumentException.class);
+    exception.expectMessage("Expecting dos.yaml");
+    deployment.deployDos(configuration);
+  }
+
+  @Test
+  public void testNewDeployIndexesAction() throws Exception {
+
+    DefaultDeployIndexesConfiguration configuration = new DefaultDeployIndexesConfiguration();
+    File indexesYaml = tmpDir.newFile("indexes.yaml");
+    configuration.setIndexesYaml(indexesYaml);
+    configuration.setProject("project");
+
+    deployment.deployIndexes(configuration);
+
+    List<String> expectedCommand = ImmutableList
+        .of("deploy", indexesYaml.toString(), "--project", "project");
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+  }
+
+  @Test
+  public void testNewDeployIndexesAction_badName() throws Exception {
+
+    DefaultDeployIndexesConfiguration configuration = new DefaultDeployIndexesConfiguration();
+    configuration.setIndexesYaml(tmpDir.newFile("another.yaml"));
+
+    exception.expect(IllegalArgumentException.class);
+    exception.expectMessage("Expecting indexes.yaml");
+    deployment.deployIndexes(configuration);
+  }
+
+  @Test
+  public void testNewDeployQueueAction() throws Exception {
+
+    DefaultDeployQueueConfiguration configuration = new DefaultDeployQueueConfiguration();
+    File queueYaml = tmpDir.newFile("queue.yaml");
+    configuration.setQueueYaml(queueYaml);
+    configuration.setProject("project");
+
+    deployment.deployQueue(configuration);
+
+    List<String> expectedCommand = ImmutableList
+        .of("deploy", queueYaml.toString(), "--project", "project");
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+  }
+
+  @Test
+  public void testNewDeployQueueAction_badName() throws Exception {
+
+    DefaultDeployQueueConfiguration configuration = new DefaultDeployQueueConfiguration();
+    configuration.setQueueYaml(tmpDir.newFile("another.yaml"));
+
+    exception.expect(IllegalArgumentException.class);
+    exception.expectMessage("Expecting queue.yaml");
+    deployment.deployQueue(configuration);
+  }
 }
