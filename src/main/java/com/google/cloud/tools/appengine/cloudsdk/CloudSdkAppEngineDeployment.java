@@ -102,7 +102,8 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   public void deployCron(DeployCronConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getCronYaml());
-    Preconditions.checkArgument(config.getCronYaml().getName().equals("cron.yaml"), "Expecting cron.yaml");
+    Preconditions.checkArgument(config.getCronYaml().getName().equals("cron.yaml"),
+        "Expecting cron.yaml");
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
@@ -110,7 +111,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.addAll(GcloudArgs.get(config));
 
     try {
-        sdk.runAppCommand(arguments);
+      sdk.runAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
@@ -120,7 +121,8 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   public void deployDos(DeployDosConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDosYaml());
-    Preconditions.checkArgument(config.getDosYaml().getName().equals("dos.yaml"), "Expecting dos.yaml");
+    Preconditions.checkArgument(config.getDosYaml().getName().equals("dos.yaml"),
+        "Expecting dos.yaml");
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
@@ -138,7 +140,8 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   public void deployDispatch(DeployDispatchConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDispatchYaml());
-    Preconditions.checkArgument(config.getDispatchYaml().getName().equals("dispatch.yaml"), "Expecting dispatch.yaml");
+    Preconditions.checkArgument(config.getDispatchYaml().getName().equals("dispatch.yaml"),
+        "Expecting dispatch.yaml");
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
@@ -156,7 +159,8 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   public void deployIndexes(DeployIndexesConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getIndexesYaml());
-    Preconditions.checkArgument(config.getIndexesYaml().getName().equals("indexes.yaml"), "Expecting indexes.yaml");
+    Preconditions.checkArgument(config.getIndexesYaml().getName().equals("indexes.yaml"),
+        "Expecting indexes.yaml");
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
@@ -174,7 +178,8 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   public void deployQueue(DeployQueueConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getQueueYaml());
-    Preconditions.checkArgument(config.getQueueYaml().getName().equals("queue.yaml"), "Expecting queue.yaml");
+    Preconditions.checkArgument(config.getQueueYaml().getName().equals("queue.yaml"),
+        "Expecting queue.yaml");
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");

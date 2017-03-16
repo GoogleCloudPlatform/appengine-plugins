@@ -31,9 +31,28 @@ public interface AppEngineDeployment {
    */
   void deploy(DeployConfiguration config) throws AppEngineException;
 
+  /**
+   * Deploy cron configuration to App Engine.
+   */
   void deployCron(DeployCronConfiguration config) throws AppEngineException;
+
+  /**
+   * Deploy dos configuration to App Engine.
+   */
   void deployDos(DeployDosConfiguration config) throws AppEngineException;
+
+  /**
+   * Deploy dispatch configuration to App Engine.
+   */
   void deployDispatch(DeployDispatchConfiguration config) throws AppEngineException;
+
+  /**
+   * Deploy indexes configuration to App Engine.
+   */
   void deployIndexes(DeployIndexesConfiguration config) throws AppEngineException;
+
+  /**
+   * Deploy queue configuration to App Engine.
+   */
   void deployQueue(DeployQueueConfiguration config) throws AppEngineException;
 }

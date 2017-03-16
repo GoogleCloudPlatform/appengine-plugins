@@ -20,7 +20,8 @@ import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 
 import java.io.File;
 
-public class DefaultDeployDispatchConfiguration extends DefaultConfiguration implements DeployDispatchConfiguration{
+public class DefaultDeployDispatchConfiguration extends DefaultConfiguration
+    implements DeployDispatchConfiguration{
 
   private File dispatchYaml;
 

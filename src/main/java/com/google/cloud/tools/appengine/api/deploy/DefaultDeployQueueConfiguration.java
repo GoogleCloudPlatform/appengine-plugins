@@ -20,7 +20,8 @@ import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 
 import java.io.File;
 
-public class DefaultDeployQueueConfiguration extends DefaultConfiguration implements DeployQueueConfiguration {
+public class DefaultDeployQueueConfiguration extends DefaultConfiguration
+    implements DeployQueueConfiguration {
 
   private File queueYaml;
 

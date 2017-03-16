@@ -20,8 +20,8 @@ import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 
 import java.io.File;
 
-public class DefaultDeployCronConfiguration extends DefaultConfiguration implements
-    DeployCronConfiguration {
+public class DefaultDeployCronConfiguration extends DefaultConfiguration
+    implements DeployCronConfiguration {
 
   private File cronYaml;
 

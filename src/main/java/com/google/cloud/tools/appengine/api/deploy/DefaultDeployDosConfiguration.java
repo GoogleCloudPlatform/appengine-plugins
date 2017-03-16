@@ -20,7 +20,8 @@ import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 
 import java.io.File;
 
-public class DefaultDeployDosConfiguration extends DefaultConfiguration implements DeployDosConfiguration {
+public class DefaultDeployDosConfiguration extends DefaultConfiguration
+    implements DeployDosConfiguration {
 
   private File dosYaml;
 
