@@ -23,6 +23,7 @@ import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
@@ -35,11 +36,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Classic Java SDK based implementation of {@link AppEngineDevServer}.
  */
 public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
+
+  private static final Logger log = Logger.getLogger(CloudSdkAppEngineDevServer1.class.getName());
 
   private final CloudSdk sdk;
 
@@ -60,37 +64,49 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getServices());
     Preconditions.checkArgument(config.getServices().size() > 0);
-    AppEngineDescriptor appengineWeb;
-    try (// TODO(ludo: Make sure we support the case when more than 1 service is given...
-         FileInputStream is = new FileInputStream(
-          new File(config.getServices().get(0), "WEB-INF/appengine-web.xml"))) {
-      appengineWeb = AppEngineDescriptor.parse(is);
-    } catch (IOException e) {
-      throw new AppEngineException(e);
-    }
+    boolean isJava8 = determineJavaRuntimeVersion(config.getServices()).equals("java8");
     List<String> arguments = new ArrayList<>();
 
     List<String> jvmArguments = new ArrayList<>();
-    if (appengineWeb.isJava8()) {
-      jvmArguments.add("-Duse_jetty9_runtime=true");
-      jvmArguments.add("-D--enable_all_permissions=true");
-    } else {
-      // Add in the appengine agent
-      String appengineAgentJar = new File(
-              sdk.getJavaAppEngineSdkPath().toFile(), "agent/appengine-agent.jar")
-              .getAbsolutePath();
-      jvmArguments.add("-javaagent:" + appengineAgentJar);
-    } 
     arguments.addAll(DevAppServerArgs.get("address", config.getHost()));
     arguments.addAll(DevAppServerArgs.get("port", config.getPort()));
     if (config.getJvmFlags() != null) {
       jvmArguments.addAll(config.getJvmFlags());
     }
+    arguments.addAll(DevAppServerArgs.get("default_gcs_bucket", config.getDefaultGcsBucketName()));
+    // TODO: It's not really clear what the behavior here is when this is specified
+    arguments.addAll(DevAppServerArgs.get("runtime", config.getRuntime()));
+
+    // Arguments ignore by dev appserver 1
+    checkAndWarnIgnored(config.getAppYamls(), "appYamls");
+    checkAndWarnIgnored(config.getAdminHost(), "adminHost");
+    checkAndWarnIgnored(config.getAdminPort(), "adminPort");
+    checkAndWarnIgnored(config.getAuthDomain(), "authDomain");
+    checkAndWarnIgnored(config.getStoragePath(), "storagePath");
+    checkAndWarnIgnored(config.getLogLevel(), "logLevel");
+    checkAndWarnIgnored(config.getMaxModuleInstances(), "maxModuleInstances");
+    checkAndWarnIgnored(config.getUseMtimeFileWatcher(), "useMtimeFileWatcher");
+    checkAndWarnIgnored(config.getThreadsafeOverride(), "threadsafeOverride");
+    checkAndWarnIgnored(config.getPythonStartupScript(), "pythonStartupScript");
+    checkAndWarnIgnored(config.getPythonStartupArgs(), "pythonStartupArgs");
+    checkAndWarnIgnored(config.getCustomEntrypoint(), "customEntrypoint");
+    checkAndWarnIgnored(config.getAllowSkippedFiles(), "allowSkippedFiles");
+    checkAndWarnIgnored(config.getApiPort(), "apiPort");
+    checkAndWarnIgnored(config.getAutomaticRestart(), "automaticRestart");
+    checkAndWarnIgnored(config.getClearDatastore(), "clearDatastore");
+    checkAndWarnIgnored(config.getDevAppserverLogLevel(), "devAppserverLogLevel");
+    checkAndWarnIgnored(config.getSkipSdkUpdateCheck(), "skipSdkUpdateCheck");
 
     arguments.add("--allow_remote_shutdown");
     arguments.add("--disable_update_check");
-    if (appengineWeb.isJava8()) {
+    if (isJava8) {
+      jvmArguments.add("-Duse_jetty9_runtime=true");
+      jvmArguments.add("-D--enable_all_permissions=true");
       arguments.add("--no_java_agent");
+    } else {
+      // Add in the appengine agent
+      String appengineAgentJar = sdk.getJavaAppEngineSdkPath().resolve("agent/appengine-agent.jar").toAbsolutePath().toString();
+      jvmArguments.add("-javaagent:" + appengineAgentJar);
     }
     for (File service : config.getServices()) {
       arguments.add(service.toPath().toString());
@@ -139,5 +155,35 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
         }
       }
     }
+  }
+
+  @VisibleForTesting
+  void checkAndWarnIgnored(Object valueToIgnore, String propertyName) {
+    if (valueToIgnore != null) {
+      log.warning(propertyName + " will be ignored by Dev Appserver v1");
+    }
+  }
+
+  @VisibleForTesting
+  String determineJavaRuntimeVersion(List<File> services) {
+    boolean java8Detected = false;
+    boolean java7Detected = false;
+    for (File serviceDirectory : services) {
+      File appengineWebXml = new File(serviceDirectory, "WEB-INF/appengine-web.xml");
+      try (FileInputStream is = new FileInputStream(appengineWebXml)) {
+        if (AppEngineDescriptor.parse(is).isJava8()) {
+          java8Detected = true;
+        }
+        else {
+          java7Detected = true;
+        }
+      } catch (IOException e) {
+        throw new AppEngineException(e);
+      }
+    }
+    if (java8Detected && java7Detected) {
+      log.warning("Mixed runtimes java7/java8 detected, will use java8 settings");
+    }
+    return java8Detected ? "java8" : "java7";
   }
 }
