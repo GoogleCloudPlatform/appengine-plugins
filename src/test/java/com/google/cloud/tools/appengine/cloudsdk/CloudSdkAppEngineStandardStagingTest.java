@@ -90,6 +90,8 @@ public class CloudSdkAppEngineStandardStagingTest {
     configuration.setDisableJarJsps(true);
     configuration.setRuntime("java");
 
+    SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
+
     List<String> expected = ImmutableList
         .of("--enable_quickstart", "--disable_update_check", "--enable_jar_splitting",
             "--jar_splitting_excludes=suffix1,suffix2", "--compile_encoding=UTF8", "--delete_jsps",

@@ -90,6 +90,8 @@ public class CloudSdkAppEngineDeploymentTest {
     configuration.setStopPreviousVersion(true);
     configuration.setVersion("v1");
 
+    SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
+
     deployment.deploy(configuration);
 
     List<String> expectedCommand = ImmutableList
@@ -98,6 +100,7 @@ public class CloudSdkAppEngineDeploymentTest {
             "v1", "--project", "project");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(ImmutableMap.of("getDeployables", 5));
   }
 

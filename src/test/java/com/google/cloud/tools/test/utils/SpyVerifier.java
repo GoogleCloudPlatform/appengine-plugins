@@ -19,11 +19,15 @@ package com.google.cloud.tools.test.utils;
 import com.google.common.base.Preconditions;
 
 import org.mockito.Mockito;
+import org.mockito.exceptions.base.MockitoAssertionError;
+import org.mockito.invocation.Invocation;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SpyVerifier {
@@ -41,24 +45,68 @@ public class SpyVerifier {
         .getTypeToMock();
   }
 
-  public void verifyDeclaredGetters() throws Exception {
-    verifyDeclaredGetters(Collections.<String, Integer>emptyMap());
+  /**
+   * This method is to verify that all setters in a configuration were called. The motivation is
+   * to ensure that configurations are fully built and we can ensure our handling is being
+   * properly tested.
+   */
+  public SpyVerifier verifyDeclaredSetters() throws Exception {
+    // extract all invocations of getters by inspecting the spy
+    List<Method> knownSetters = Arrays.asList(classToInspectAs.getDeclaredMethods());
+
+    Map<Method, Integer> methodInvocationCount = new HashMap<>();
+    for (Invocation invocation : Mockito.mockingDetails(objectToInspect).getInvocations()) {
+      Method m = invocation.getMethod();
+      if (knownSetters.contains(m) && isSetter(m)) {
+        if (methodInvocationCount.containsKey(m)) {
+          methodInvocationCount.put(m, methodInvocationCount.get(m) + 1);
+        }
+        else {
+          methodInvocationCount.put(m, 1);
+        }
+        invocation.markVerified();
+      }
+    }
+
+    // compare setter invocations against our expections
+    for (Method m : knownSetters) {
+      if (isSetter(m)) {
+        Integer invocationCount = methodInvocationCount.get(m);
+        if (invocationCount == null || invocationCount != 1) {
+          throw new MockitoAssertionError("Setter invocations for '"
+              + m.getName()
+              + "' expected 1, but was "
+              + invocationCount);
+        }
+      }
+    }
+    return this;
+  }
+
+  private boolean isSetter(Method m) {
+    return !m.isSynthetic() && Modifier.isPublic(m.getModifiers()) && m.getName().startsWith("set");
+  }
+
+
+  public SpyVerifier verifyDeclaredGetters() throws Exception {
+    return verifyDeclaredGetters(Collections.<String, Integer>emptyMap());
   }
 
   /**
-   * Verify getters were called once or if in the exception map, called 'count' times
-   * @param exceptions Exceptions of the form ["getter name" : count]
+   * Verify getters were called once or if in the override map, called 'count' times
+   * @param overrides Override default counts in the style ["getterName" : count]
    */
-  public void verifyDeclaredGetters(Map<String, Integer> exceptions) throws Exception {
+  public SpyVerifier verifyDeclaredGetters(Map<String, Integer> overrides) throws Exception {
     Method[] methods = classToInspectAs.getDeclaredMethods();
     for (Method m : methods) {
       if (!m.isSynthetic() && Modifier.isPublic(m.getModifiers())
           && m.getName().startsWith("get")) {
-        Integer times = exceptions.get(m.getName());
+        Integer times = overrides.get(m.getName());
         times = (times == null) ? 1 : times;
         Mockito.verify(objectToInspect, Mockito.times(times)).getClass().getMethod(m.getName())
             .invoke(objectToInspect);
       }
     }
+    return this;
   }
 }

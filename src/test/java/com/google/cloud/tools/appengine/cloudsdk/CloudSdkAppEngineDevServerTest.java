@@ -32,7 +32,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +69,7 @@ public class CloudSdkAppEngineDevServerTest {
 
     DefaultRunConfiguration configuration = Mockito.spy(new DefaultRunConfiguration());
     configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
     configuration.setHost("host");
     configuration.setPort(8090);
     configuration.setAdminHost("adminHost");
@@ -93,6 +93,8 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setDefaultGcsBucketName("buckets");
     configuration.setJavaHomeDir("/usr/lib/jvm/default-java");
     configuration.setClearDatastore(true);
+
+    SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
     List<String> expected = ImmutableList
         .of("app.yaml", "--host=host", "--port=8090", "--admin_host=adminHost",

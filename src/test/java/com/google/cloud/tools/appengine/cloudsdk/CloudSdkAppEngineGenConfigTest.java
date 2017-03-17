@@ -73,6 +73,8 @@ public class CloudSdkAppEngineGenConfigTest {
     params.setCustom(true);
     params.setRuntime("java");
 
+    SpyVerifier.newVerifier(params).verifyDeclaredSetters();
+
     List<String> expected = ImmutableList
         .of("gen-config", source.toString(), "--config", "app.yaml", "--custom",
             "--runtime", "java");
