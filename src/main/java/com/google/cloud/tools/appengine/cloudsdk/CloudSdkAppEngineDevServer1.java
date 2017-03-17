@@ -64,7 +64,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getServices());
     Preconditions.checkArgument(config.getServices().size() > 0);
-    boolean isJava8 = determineJavaRuntimeVersion(config.getServices()).equals("java8");
     List<String> arguments = new ArrayList<>();
 
     List<String> jvmArguments = new ArrayList<>();
@@ -99,13 +98,14 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
 
     arguments.add("--allow_remote_shutdown");
     arguments.add("--disable_update_check");
-    if (isJava8) {
+    if (determineJavaRuntimeVersion(config.getServices()).equals("java8")) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
       jvmArguments.add("-D--enable_all_permissions=true");
       arguments.add("--no_java_agent");
     } else {
       // Add in the appengine agent
-      String appengineAgentJar = sdk.getJavaAppEngineSdkPath().resolve("agent/appengine-agent.jar").toAbsolutePath().toString();
+      String appengineAgentJar = sdk.getJavaAppEngineSdkPath().resolve("agent/appengine-agent.jar")
+          .toAbsolutePath().toString();
       jvmArguments.add("-javaagent:" + appengineAgentJar);
     }
     for (File service : config.getServices()) {
@@ -173,8 +173,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       try (FileInputStream is = new FileInputStream(appengineWebXml)) {
         if (AppEngineDescriptor.parse(is).isJava8()) {
           java8Detected = true;
-        }
-        else {
+        } else {
           java7Detected = true;
         }
       } catch (IOException e) {
