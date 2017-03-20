@@ -23,7 +23,7 @@ import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployCronConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployDispatchConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployDosConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployIndexesConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployIndexConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployQueueConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
@@ -122,11 +122,11 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   }
 
   @Override
-  public void deployIndexes(DeployIndexesConfiguration config) throws AppEngineException {
+  public void deployIndex(DeployIndexConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getIndexesYaml());
+    Preconditions.checkNotNull(config.getIndexYaml());
 
-    deployConfig(config.getIndexesYaml(), "indexes.yaml", config);
+    deployConfig(config.getIndexYaml(), "index.yaml", config);
   }
 
   @Override

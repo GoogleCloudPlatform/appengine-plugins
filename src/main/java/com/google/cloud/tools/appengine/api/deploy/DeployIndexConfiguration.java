@@ -20,7 +20,7 @@ import com.google.cloud.tools.appengine.api.Configuration;
 
 import java.io.File;
 
-public interface DeployIndexesConfiguration extends Configuration {
+public interface DeployIndexConfiguration extends Configuration {
 
-  File getIndexesYaml();
+  File getIndexYaml();
 }

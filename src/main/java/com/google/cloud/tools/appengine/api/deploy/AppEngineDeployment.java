@@ -47,9 +47,9 @@ public interface AppEngineDeployment {
   void deployDispatch(DeployDispatchConfiguration config) throws AppEngineException;
 
   /**
-   * Deploy indexes configuration to App Engine.
+   * Deploy index configuration to App Engine.
    */
-  void deployIndexes(DeployIndexesConfiguration config) throws AppEngineException;
+  void deployIndex(DeployIndexConfiguration config) throws AppEngineException;
 
   /**
    * Deploy queue configuration to App Engine.

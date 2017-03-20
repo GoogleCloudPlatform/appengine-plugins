@@ -21,7 +21,7 @@ import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployCronConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployDispatchConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployDosConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DefaultDeployIndexesConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DefaultDeployIndexConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployQueueConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
@@ -253,30 +253,30 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployIndexesAction() throws Exception {
+  public void testNewDeployIndexAction() throws Exception {
 
-    DefaultDeployIndexesConfiguration configuration = new DefaultDeployIndexesConfiguration();
-    File indexesYaml = tmpDir.newFile("indexes.yaml");
-    configuration.setIndexesYaml(indexesYaml);
+    DefaultDeployIndexConfiguration configuration = new DefaultDeployIndexConfiguration();
+    File indexYaml = tmpDir.newFile("index.yaml");
+    configuration.setIndexYaml(indexYaml);
     configuration.setProject("project");
 
-    deployment.deployIndexes(configuration);
+    deployment.deployIndex(configuration);
 
     List<String> expectedCommand = ImmutableList
-        .of("deploy", indexesYaml.toString(), "--project", "project");
+        .of("deploy", indexYaml.toString(), "--project", "project");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
 
   @Test
-  public void testNewDeployIndexesAction_badName() throws Exception {
+  public void testNewDeployIndexAction_badName() throws Exception {
 
-    DefaultDeployIndexesConfiguration configuration = new DefaultDeployIndexesConfiguration();
-    configuration.setIndexesYaml(tmpDir.newFile("another.yaml"));
+    DefaultDeployIndexConfiguration configuration = new DefaultDeployIndexConfiguration();
+    configuration.setIndexYaml(tmpDir.newFile("another.yaml"));
 
     exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Invalid deployable: another.yaml, expecting: indexes.yaml");
-    deployment.deployIndexes(configuration);
+    exception.expectMessage("Invalid deployable: another.yaml, expecting: index.yaml");
+    deployment.deployIndex(configuration);
   }
 
   @Test
