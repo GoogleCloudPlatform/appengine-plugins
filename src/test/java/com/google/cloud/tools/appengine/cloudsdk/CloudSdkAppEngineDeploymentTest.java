@@ -194,7 +194,7 @@ public class CloudSdkAppEngineDeploymentTest {
     configuration.setCronYaml(tmpDir.newFile("another.yaml"));
 
     exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Expecting cron.yaml");
+    exception.expectMessage("Invalid deployable: another.yaml, expecting: cron.yaml");
     deployment.deployCron(configuration);
   }
 
@@ -221,7 +221,7 @@ public class CloudSdkAppEngineDeploymentTest {
     configuration.setDispatchYaml(tmpDir.newFile("another.yaml"));
 
     exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Expecting dispatch.yaml");
+    exception.expectMessage("Invalid deployable: another.yaml, expecting: dispatch.yaml");
     deployment.deployDispatch(configuration);
   }
 
@@ -248,7 +248,7 @@ public class CloudSdkAppEngineDeploymentTest {
     configuration.setDosYaml(tmpDir.newFile("another.yaml"));
 
     exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Expecting dos.yaml");
+    exception.expectMessage("Invalid deployable: another.yaml, expecting: dos.yaml");
     deployment.deployDos(configuration);
   }
 
@@ -275,7 +275,7 @@ public class CloudSdkAppEngineDeploymentTest {
     configuration.setIndexesYaml(tmpDir.newFile("another.yaml"));
 
     exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Expecting indexes.yaml");
+    exception.expectMessage("Invalid deployable: another.yaml, expecting: indexes.yaml");
     deployment.deployIndexes(configuration);
   }
 
@@ -302,7 +302,7 @@ public class CloudSdkAppEngineDeploymentTest {
     configuration.setQueueYaml(tmpDir.newFile("another.yaml"));
 
     exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Expecting queue.yaml");
+    exception.expectMessage("Invalid deployable: another.yaml, expecting: queue.yaml");
     deployment.deployQueue(configuration);
   }
 }

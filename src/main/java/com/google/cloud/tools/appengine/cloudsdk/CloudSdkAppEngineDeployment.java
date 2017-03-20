@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.cloud.tools.appengine.api.Configuration;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployCronConfiguration;
@@ -102,95 +103,62 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   public void deployCron(DeployCronConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getCronYaml());
-    Preconditions.checkArgument(config.getCronYaml().getName().equals("cron.yaml"),
-        "Expecting cron.yaml");
 
-    List<String> arguments = new ArrayList<>();
-    arguments.add("deploy");
-    arguments.add(config.getCronYaml().toPath().toString());
-    arguments.addAll(GcloudArgs.get(config));
-
-    try {
-      sdk.runAppCommand(arguments);
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
-    }
+    deployConfig(config.getCronYaml(), "cron.yaml", config);
   }
 
   @Override
   public void deployDos(DeployDosConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDosYaml());
-    Preconditions.checkArgument(config.getDosYaml().getName().equals("dos.yaml"),
-        "Expecting dos.yaml");
-
-    List<String> arguments = new ArrayList<>();
-    arguments.add("deploy");
-    arguments.add(config.getDosYaml().toPath().toString());
-    arguments.addAll(GcloudArgs.get(config));
-
-    try {
-      sdk.runAppCommand(arguments);
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
-    }
+    deployConfig(config.getDosYaml(), "dos.yaml", config);
   }
 
   @Override
   public void deployDispatch(DeployDispatchConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDispatchYaml());
-    Preconditions.checkArgument(config.getDispatchYaml().getName().equals("dispatch.yaml"),
-        "Expecting dispatch.yaml");
-
-    List<String> arguments = new ArrayList<>();
-    arguments.add("deploy");
-    arguments.add(config.getDispatchYaml().toPath().toString());
-    arguments.addAll(GcloudArgs.get(config));
-
-    try {
-      sdk.runAppCommand(arguments);
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
-    }
+    deployConfig(config.getDispatchYaml(), "dispatch.yaml", config);
   }
 
   @Override
   public void deployIndexes(DeployIndexesConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getIndexesYaml());
-    Preconditions.checkArgument(config.getIndexesYaml().getName().equals("indexes.yaml"),
-        "Expecting indexes.yaml");
 
-    List<String> arguments = new ArrayList<>();
-    arguments.add("deploy");
-    arguments.add(config.getIndexesYaml().toPath().toString());
-    arguments.addAll(GcloudArgs.get(config));
-
-    try {
-      sdk.runAppCommand(arguments);
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
-    }
+    deployConfig(config.getIndexesYaml(), "indexes.yaml", config);
   }
 
   @Override
   public void deployQueue(DeployQueueConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getQueueYaml());
-    Preconditions.checkArgument(config.getQueueYaml().getName().equals("queue.yaml"),
-        "Expecting queue.yaml");
+
+    deployConfig(config.getQueueYaml(), "queue.yaml", config);
+  }
+
+  /**
+   * Common configuration deployment function.
+   *
+   * @param yamlToDeploy Yaml file that we want to deploy
+   * @param expectedName Expected filename for error checking
+   * @param baseConfig {@link Configuration} to obtain common gcloud parameters
+   */
+  private void deployConfig(File yamlToDeploy, String expectedName, Configuration baseConfig) {
+    Preconditions.checkArgument(yamlToDeploy.getName().equals(expectedName),
+            "Invalid deployable: " + yamlToDeploy.getName() + ", expecting: " + expectedName);
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
-    arguments.add(config.getQueueYaml().toPath().toString());
-    arguments.addAll(GcloudArgs.get(config));
+    arguments.add(yamlToDeploy.getAbsolutePath());
+    arguments.addAll(GcloudArgs.get(baseConfig));
 
     try {
       sdk.runAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
+
   }
 
 }
