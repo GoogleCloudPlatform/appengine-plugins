@@ -37,13 +37,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -136,7 +134,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
     // verify we are checking and ignoring these parameters
     verify(devServer, times(18)).checkAndWarnIgnored(Mockito.any(), Mockito.anyString());
-    verify(devServer).checkAndWarnIgnored(configuration.getAppYamls(), "appYamls");
+      verify(devServer).checkAndWarnIgnored(configuration.getAppYamls(), "appYamls");
     verify(devServer).checkAndWarnIgnored(configuration.getAdminHost(), "adminHost");
     verify(devServer).checkAndWarnIgnored(configuration.getAdminPort(), "adminPort");
     verify(devServer).checkAndWarnIgnored(configuration.getAuthDomain(), "authDomain");
@@ -187,10 +185,6 @@ public class CloudSdkAppEngineDevServer1Test {
     verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags);
   }
 
-  private String convertToPlatformDependentPath(String path) {
-    return Paths.get("", path.split("/")).toString();
-  }
-
   @Test
   public void testPrepareCommand_noFlagsJava7() throws AppEngineException, ProcessRunnerException {
 
@@ -234,7 +228,7 @@ public class CloudSdkAppEngineDevServer1Test {
     Assert.assertEquals(1, testHandler.getLogs().size());
 
     LogRecord logRecord = testHandler.getLogs().get(0);
-    Assert.assertEquals("testName will be ignored by Dev Appserver v1", logRecord.getMessage());
+    Assert.assertEquals("testName only applies to Dev Appserver v2 and will be ignored by Dev Appserver v1", logRecord.getMessage());
     Assert.assertEquals(Level.WARNING, logRecord.getLevel());
   }
 
@@ -247,17 +241,43 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testDetermineJavaRuntime() {
-    LogStoringHandler testHandler = LogStoringHandler.getForLogger(CloudSdkAppEngineDevServer1.class.getName());
-    // non logging determinations
-    Assert.assertEquals("java7", devServer.determineJavaRuntimeVersion(Arrays.asList(java7Service)));
-    Assert.assertEquals("java8", devServer.determineJavaRuntimeVersion(Arrays.asList(java8Service)));
-    Assert.assertEquals("java8", devServer.determineJavaRuntimeVersion(Arrays.asList(java8Service, java8Service)));
-    Assert.assertEquals("java7", devServer.determineJavaRuntimeVersion(Arrays.asList(java7Service, java7Service)));
+  public void testDetermineJavaRuntime_noWarningsJava7() {
+    LogStoringHandler testHandler = LogStoringHandler
+        .getForLogger(CloudSdkAppEngineDevServer1.class.getName());
+    Assert.assertFalse(devServer.isJava8(ImmutableList.of(java7Service)));
     Assert.assertEquals(0, testHandler.getLogs().size());
+  }
 
-    // logging determinations
-    Assert.assertEquals("java8", devServer.determineJavaRuntimeVersion(Arrays.asList(java8Service, java7Service)));
+  @Test
+  public void testDetermineJavaRuntime_noWarningsJava7Multiple() {
+    LogStoringHandler testHandler = LogStoringHandler
+        .getForLogger(CloudSdkAppEngineDevServer1.class.getName());
+    Assert.assertFalse(devServer.isJava8(ImmutableList.of(java7Service, java7Service)));
+    Assert.assertEquals(0, testHandler.getLogs().size());
+  }
+
+  @Test
+  public void testDetermineJavaRuntime_noWarningsJava8() {
+    LogStoringHandler testHandler = LogStoringHandler
+        .getForLogger(CloudSdkAppEngineDevServer1.class.getName());
+    Assert.assertTrue(devServer.isJava8(ImmutableList.of(java8Service)));
+    Assert.assertEquals(0, testHandler.getLogs().size());
+  }
+
+  @Test
+  public void testDetermineJavaRuntime_noWarningsJava8Multiple() {
+    LogStoringHandler testHandler = LogStoringHandler
+        .getForLogger(CloudSdkAppEngineDevServer1.class.getName());
+    Assert.assertTrue(devServer.isJava8(ImmutableList.of(java8Service, java8Service)));
+    Assert.assertEquals(0, testHandler.getLogs().size());
+  }
+
+  @Test
+  public void testDetermineJavaRuntime_mixedModeWarning() {
+    LogStoringHandler testHandler = LogStoringHandler
+        .getForLogger(CloudSdkAppEngineDevServer1.class.getName());
+
+    Assert.assertTrue(devServer.isJava8(ImmutableList.of(java8Service, java7Service)));
     Assert.assertEquals(1, testHandler.getLogs().size());
 
     LogRecord logRecord = testHandler.getLogs().get(0);

@@ -29,10 +29,12 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +78,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     // TODO: It's not really clear what the behavior here is when this is specified
     arguments.addAll(DevAppServerArgs.get("runtime", config.getRuntime()));
 
-    // Arguments ignore by dev appserver 1
+    // Arguments ignored by dev appserver 1
     checkAndWarnIgnored(config.getAppYamls(), "appYamls");
     checkAndWarnIgnored(config.getAdminHost(), "adminHost");
     checkAndWarnIgnored(config.getAdminPort(), "adminPort");
@@ -98,7 +100,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
 
     arguments.add("--allow_remote_shutdown");
     arguments.add("--disable_update_check");
-    if (determineJavaRuntimeVersion(config.getServices()).equals("java8")) {
+    if (isJava8(config.getServices())) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
       jvmArguments.add("-D--enable_all_permissions=true");
       arguments.add("--no_java_agent");
@@ -158,19 +160,27 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   }
 
   @VisibleForTesting
-  void checkAndWarnIgnored(Object valueToIgnore, String propertyName) {
-    if (valueToIgnore != null) {
-      log.warning(propertyName + " will be ignored by Dev Appserver v1");
+  void checkAndWarnIgnored(Object propertyToIgnore, String propertyName) {
+    if (propertyToIgnore != null) {
+      log.warning(propertyName
+          + " only applies to Dev Appserver v2 and will be ignored by Dev Appserver v1");
     }
   }
 
+  /**
+   * This method tries to guess the runtime based on the appengine-web.xml of all
+   * services that are expected to run.
+   * @param services a list of appengine standard service directories
+   * @return {@code false} if only java7 modules are found or {@code true} is at least one java8
+   *         module is found (i.e. pure java8 or mixed java7/java8)
+   */
   @VisibleForTesting
-  String determineJavaRuntimeVersion(List<File> services) {
+  boolean isJava8(List<File> services) {
     boolean java8Detected = false;
     boolean java7Detected = false;
     for (File serviceDirectory : services) {
-      File appengineWebXml = new File(serviceDirectory, "WEB-INF/appengine-web.xml");
-      try (FileInputStream is = new FileInputStream(appengineWebXml)) {
+      Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
+      try (InputStream is = Files.newInputStream(appengineWebXml)) {
         if (AppEngineDescriptor.parse(is).isJava8()) {
           java8Detected = true;
         } else {
@@ -183,6 +193,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     if (java8Detected && java7Detected) {
       log.warning("Mixed runtimes java7/java8 detected, will use java8 settings");
     }
-    return java8Detected ? "java8" : "java7";
+    return java8Detected;
   }
 }
