@@ -152,8 +152,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       if (connection != null) {
         try {
           connection.getInputStream().close();
-        } catch (IOException ex) {
-          throw new AppEngineException(ex);
+        } catch (IOException ignore) {
+          //ignored
         }
       }
     }
