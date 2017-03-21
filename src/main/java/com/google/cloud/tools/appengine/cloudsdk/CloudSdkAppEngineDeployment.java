@@ -108,17 +108,20 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   }
 
   @Override
-  public void deployDispatch(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+  public void deployDispatch(DeployProjectConfigurationConfiguration config)
+      throws AppEngineException {
     deployConfig("dispatch.yaml", config);
   }
 
   @Override
-  public void deployIndex(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+  public void deployIndex(DeployProjectConfigurationConfiguration config)
+      throws AppEngineException {
     deployConfig("index.yaml", config);
   }
 
   @Override
-  public void deployQueue(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+  public void deployQueue(DeployProjectConfigurationConfiguration config)
+      throws AppEngineException {
     deployConfig("queue.yaml", config);
   }
 
