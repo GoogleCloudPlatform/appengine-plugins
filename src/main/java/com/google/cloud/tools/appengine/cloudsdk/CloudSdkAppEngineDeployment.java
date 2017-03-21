@@ -17,19 +17,17 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.Configuration;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployCronConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployDispatchConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployDosConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployIndexConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployQueueConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,58 +98,49 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   }
 
   @Override
-  public void deployCron(DeployCronConfiguration config) throws AppEngineException {
-    Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getCronYaml());
-
-    deployConfig(config.getCronYaml(), "cron.yaml", config);
+  public void deployCron(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+    deployConfig("cron.yaml", config);
   }
 
   @Override
-  public void deployDos(DeployDosConfiguration config) throws AppEngineException {
-    Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getDosYaml());
-    deployConfig(config.getDosYaml(), "dos.yaml", config);
+  public void deployDos(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+    deployConfig("dos.yaml", config);
   }
 
   @Override
-  public void deployDispatch(DeployDispatchConfiguration config) throws AppEngineException {
-    Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getDispatchYaml());
-    deployConfig(config.getDispatchYaml(), "dispatch.yaml", config);
+  public void deployDispatch(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+    deployConfig("dispatch.yaml", config);
   }
 
   @Override
-  public void deployIndex(DeployIndexConfiguration config) throws AppEngineException {
-    Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getIndexYaml());
-
-    deployConfig(config.getIndexYaml(), "index.yaml", config);
+  public void deployIndex(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+    deployConfig("index.yaml", config);
   }
 
   @Override
-  public void deployQueue(DeployQueueConfiguration config) throws AppEngineException {
-    Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getQueueYaml());
-
-    deployConfig(config.getQueueYaml(), "queue.yaml", config);
+  public void deployQueue(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+    deployConfig("queue.yaml", config);
   }
 
   /**
    * Common configuration deployment function.
    *
-   * @param yamlToDeploy Yaml file that we want to deploy
-   * @param expectedName Expected filename for error checking
-   * @param baseConfig {@link Configuration} to obtain common gcloud parameters
+   * @param filename Yaml file that we want to deploy (cron.yaml, dos.yaml, etc)
+   * @param configuration Deployment configuration
    */
-  private void deployConfig(File yamlToDeploy, String expectedName, Configuration baseConfig) {
-    Preconditions.checkArgument(yamlToDeploy.getName().equals(expectedName),
-            "Invalid deployable: " + yamlToDeploy.getName() + ", expecting: " + expectedName);
+  @VisibleForTesting
+  void deployConfig(String filename, DeployProjectConfigurationConfiguration configuration) {
+    Preconditions.checkNotNull(configuration);
+    Preconditions.checkNotNull(configuration.getProjectConfigurationDirectory());
+
+    Path deployable = configuration.getProjectConfigurationDirectory().toPath().resolve(filename);
+    Preconditions
+        .checkArgument(Files.isRegularFile(deployable), deployable.toString() + " does not exist.");
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
-    arguments.add(yamlToDeploy.getAbsolutePath());
-    arguments.addAll(GcloudArgs.get(baseConfig));
+    arguments.add(deployable.toAbsolutePath().toString());
+    arguments.addAll(GcloudArgs.get(configuration));
 
     try {
       sdk.runAppCommand(arguments);

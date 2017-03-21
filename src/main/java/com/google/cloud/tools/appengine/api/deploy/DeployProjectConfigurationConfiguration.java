@@ -20,7 +20,9 @@ import com.google.cloud.tools.appengine.api.Configuration;
 
 import java.io.File;
 
-public interface DeployDispatchConfiguration extends Configuration {
-
-  File getDispatchYaml();
+/**
+ * Created by appu on 3/21/17.
+ */
+public interface DeployProjectConfigurationConfiguration extends Configuration {
+  File getProjectConfigurationDirectory();
 }

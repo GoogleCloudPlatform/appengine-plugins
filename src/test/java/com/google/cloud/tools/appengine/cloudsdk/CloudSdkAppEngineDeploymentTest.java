@@ -16,13 +16,16 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DefaultDeployCronConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DefaultDeployDispatchConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DefaultDeployDosConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DefaultDeployIndexConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DefaultDeployQueueConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DefaultDeployProjectConfigurationConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
@@ -43,10 +46,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for {@link CloudSdkAppEngineDeployment}.
@@ -69,12 +68,18 @@ public class CloudSdkAppEngineDeploymentTest {
 
   private CloudSdkAppEngineDeployment deployment;
 
+  @Mock
+  private CloudSdkAppEngineDeployment mockDeployment;
+  @Mock
+  private DeployProjectConfigurationConfiguration mockProjectConfigurationConfiguration;
+
   @Before
   public void setUp() throws IOException {
     appYaml1 = tmpDir.newFile("app1.yaml");
     appYaml2 = tmpDir.newFile("app2.yaml");
     stagingDirectory = tmpDir.newFolder("appengine-staging");
     deployment = new CloudSdkAppEngineDeployment(sdk);
+
   }
   
   @Test
@@ -87,7 +92,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
   
   @Test
-  public void testNewDeployAction_allFlags() throws Exception {
+  public void testDeploy_allFlags() throws Exception {
 
     DefaultDeployConfiguration configuration = Mockito.spy(new DefaultDeployConfiguration());
     configuration.setDeployables(Arrays.asList(appYaml1));
@@ -114,7 +119,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_booleanFlags() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_booleanFlags() throws AppEngineException, ProcessRunnerException {
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1));
     configuration.setPromote(false);
@@ -129,7 +134,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_noFlags() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_noFlags() throws AppEngineException, ProcessRunnerException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1));
@@ -142,7 +147,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_dir() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_dir() throws AppEngineException, ProcessRunnerException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(stagingDirectory));
@@ -156,7 +161,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_multipleDeployables()
+  public void testDeploy_multipleDeployables()
       throws AppEngineException, ProcessRunnerException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
@@ -172,137 +177,72 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployCronAction() throws Exception {
+  public void testDeployCron() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployCron(mockProjectConfigurationConfiguration);
+    mockDeployment.deployCron(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("cron.yaml", mockProjectConfigurationConfiguration);
+  }
 
-    DefaultDeployCronConfiguration configuration = new DefaultDeployCronConfiguration();
-    File cronYaml = tmpDir.newFile("cron.yaml");
-    configuration.setCronYaml(cronYaml);
+  @Test
+  public void testDeployDispatch() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployDispatch(mockProjectConfigurationConfiguration);
+    mockDeployment.deployDispatch(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("dispatch.yaml", mockProjectConfigurationConfiguration);
+  }
+
+  @Test
+  public void testDeployDos() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployDos(mockProjectConfigurationConfiguration);
+    mockDeployment.deployDos(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("dos.yaml", mockProjectConfigurationConfiguration);
+  }
+
+  @Test
+  public void testDeployIndex() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployIndex(mockProjectConfigurationConfiguration);
+    mockDeployment.deployIndex(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("index.yaml", mockProjectConfigurationConfiguration);
+  }
+
+  @Test
+  public void testDeployQueue() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployQueue(mockProjectConfigurationConfiguration);
+    mockDeployment.deployQueue(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("queue.yaml", mockProjectConfigurationConfiguration);
+  }
+
+  /**
+   * This test uses a fake config.yaml on purpose, In the real world, that means it will
+   * be interpretted as an app.yaml. The method under test has no knowledge of what
+   * configs are valid and what aren't.
+   */
+  @Test
+  public void testDeployConfig() throws Exception {
+
+    DefaultDeployProjectConfigurationConfiguration configuration = new DefaultDeployProjectConfigurationConfiguration();
+    File testConfigYaml = tmpDir.newFile("testconfig.yaml");
+    configuration.setProjectConfigurationDirectory(tmpDir.getRoot());
     configuration.setProject("project");
 
-    deployment.deployCron(configuration);
+    deployment.deployConfig("testconfig.yaml", configuration);
 
     List<String> expectedCommand = ImmutableList
-        .of("deploy", cronYaml.toString(), "--project", "project");
+        .of("deploy", testConfigYaml.toString(), "--project", "project");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
 
   @Test
-  public void testNewDeployCronAction_badName() throws Exception {
+  public void testDeployConfig_doesNotExist() throws Exception {
 
-    DefaultDeployCronConfiguration configuration = new DefaultDeployCronConfiguration();
-    configuration.setCronYaml(tmpDir.newFile("another.yaml"));
-
-    exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Invalid deployable: another.yaml, expecting: cron.yaml");
-    deployment.deployCron(configuration);
-  }
-
-  @Test
-  public void testNewDeployDispatchAction() throws Exception {
-
-    DefaultDeployDispatchConfiguration configuration = new DefaultDeployDispatchConfiguration();
-    File dispatchYaml = tmpDir.newFile("dispatch.yaml");
-    configuration.setDispatchYaml(dispatchYaml);
-    configuration.setProject("project");
-
-    deployment.deployDispatch(configuration);
-
-    List<String> expectedCommand = ImmutableList
-        .of("deploy", dispatchYaml.toString(), "--project", "project");
-
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
-  }
-
-  @Test
-  public void testNewDeployDispatchAction_badName() throws Exception {
-
-    DefaultDeployDispatchConfiguration configuration = new DefaultDeployDispatchConfiguration();
-    configuration.setDispatchYaml(tmpDir.newFile("another.yaml"));
+    DefaultDeployProjectConfigurationConfiguration configuration = new DefaultDeployProjectConfigurationConfiguration();
+    File testConfigYaml = new File(tmpDir.getRoot(), "testconfig.yaml");
+    assert !testConfigYaml.exists();
+    configuration.setProjectConfigurationDirectory(tmpDir.getRoot());
 
     exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Invalid deployable: another.yaml, expecting: dispatch.yaml");
-    deployment.deployDispatch(configuration);
-  }
+    exception.expectMessage(testConfigYaml.toString() + " does not exist");
 
-  @Test
-  public void testNewDeployDosAction() throws Exception {
-
-    DefaultDeployDosConfiguration configuration = new DefaultDeployDosConfiguration();
-    File dosYaml = tmpDir.newFile("dos.yaml");
-    configuration.setDosYaml(dosYaml);
-    configuration.setProject("project");
-
-    deployment.deployDos(configuration);
-
-    List<String> expectedCommand = ImmutableList
-        .of("deploy", dosYaml.toString(), "--project", "project");
-
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
-  }
-
-  @Test
-  public void testNewDeployDosAction_badName() throws Exception {
-
-    DefaultDeployDosConfiguration configuration = new DefaultDeployDosConfiguration();
-    configuration.setDosYaml(tmpDir.newFile("another.yaml"));
-
-    exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Invalid deployable: another.yaml, expecting: dos.yaml");
-    deployment.deployDos(configuration);
-  }
-
-  @Test
-  public void testNewDeployIndexAction() throws Exception {
-
-    DefaultDeployIndexConfiguration configuration = new DefaultDeployIndexConfiguration();
-    File indexYaml = tmpDir.newFile("index.yaml");
-    configuration.setIndexYaml(indexYaml);
-    configuration.setProject("project");
-
-    deployment.deployIndex(configuration);
-
-    List<String> expectedCommand = ImmutableList
-        .of("deploy", indexYaml.toString(), "--project", "project");
-
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
-  }
-
-  @Test
-  public void testNewDeployIndexAction_badName() throws Exception {
-
-    DefaultDeployIndexConfiguration configuration = new DefaultDeployIndexConfiguration();
-    configuration.setIndexYaml(tmpDir.newFile("another.yaml"));
-
-    exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Invalid deployable: another.yaml, expecting: index.yaml");
-    deployment.deployIndex(configuration);
-  }
-
-  @Test
-  public void testNewDeployQueueAction() throws Exception {
-
-    DefaultDeployQueueConfiguration configuration = new DefaultDeployQueueConfiguration();
-    File queueYaml = tmpDir.newFile("queue.yaml");
-    configuration.setQueueYaml(queueYaml);
-    configuration.setProject("project");
-
-    deployment.deployQueue(configuration);
-
-    List<String> expectedCommand = ImmutableList
-        .of("deploy", queueYaml.toString(), "--project", "project");
-
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
-  }
-
-  @Test
-  public void testNewDeployQueueAction_badName() throws Exception {
-
-    DefaultDeployQueueConfiguration configuration = new DefaultDeployQueueConfiguration();
-    configuration.setQueueYaml(tmpDir.newFile("another.yaml"));
-
-    exception.expect(IllegalArgumentException.class);
-    exception.expectMessage("Invalid deployable: another.yaml, expecting: queue.yaml");
-    deployment.deployQueue(configuration);
+    deployment.deployConfig("testconfig.yaml", configuration);
   }
 }

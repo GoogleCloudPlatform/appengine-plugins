@@ -20,17 +20,17 @@ import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 
 import java.io.File;
 
-public class DefaultDeployIndexConfiguration extends DefaultConfiguration
-    implements DeployIndexConfiguration {
+public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfiguration implements
+    DeployProjectConfigurationConfiguration {
 
-  private File indexYaml;
+  private File projectConfigurationDirectory;
 
   @Override
-  public File getIndexYaml() {
-    return indexYaml;
+  public File getProjectConfigurationDirectory() {
+    return projectConfigurationDirectory;
   }
 
-  public void setIndexYaml(File indexYaml) {
-    this.indexYaml = indexYaml;
+  public void setProjectConfigurationDirectory(File projectConfigurationDirectory) {
+    this.projectConfigurationDirectory = projectConfigurationDirectory;
   }
 }
