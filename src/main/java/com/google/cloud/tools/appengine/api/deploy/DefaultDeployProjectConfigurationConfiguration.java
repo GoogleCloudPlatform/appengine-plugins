@@ -23,14 +23,13 @@ import java.io.File;
 public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfiguration implements
     DeployProjectConfigurationConfiguration {
 
-  private File projectConfigurationDirectory;
+  private File appEngineDirectory;
 
-  @Override
-  public File getProjectConfigurationDirectory() {
-    return projectConfigurationDirectory;
+  public File getAppEngineDirectory() {
+    return appEngineDirectory;
   }
 
-  public void setProjectConfigurationDirectory(File projectConfigurationDirectory) {
-    this.projectConfigurationDirectory = projectConfigurationDirectory;
+  public void setAppEngineDirectory(File appEngineDirectory) {
+    this.appEngineDirectory = appEngineDirectory;
   }
 }

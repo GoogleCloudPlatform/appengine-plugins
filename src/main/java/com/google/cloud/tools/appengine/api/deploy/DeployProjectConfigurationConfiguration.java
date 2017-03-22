@@ -24,5 +24,5 @@ import java.io.File;
  * Created by appu on 3/21/17.
  */
 public interface DeployProjectConfigurationConfiguration extends Configuration {
-  File getProjectConfigurationDirectory();
+  File getAppEngineDirectory();
 }

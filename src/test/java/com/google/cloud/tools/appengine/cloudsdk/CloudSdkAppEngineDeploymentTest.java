@@ -20,7 +20,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
@@ -221,7 +220,7 @@ public class CloudSdkAppEngineDeploymentTest {
 
     DefaultDeployProjectConfigurationConfiguration configuration = new DefaultDeployProjectConfigurationConfiguration();
     File testConfigYaml = tmpDir.newFile("testconfig.yaml");
-    configuration.setProjectConfigurationDirectory(tmpDir.getRoot());
+    configuration.setAppEngineDirectory(tmpDir.getRoot());
     configuration.setProject("project");
 
     deployment.deployConfig("testconfig.yaml", configuration);
@@ -238,7 +237,7 @@ public class CloudSdkAppEngineDeploymentTest {
     DefaultDeployProjectConfigurationConfiguration configuration = new DefaultDeployProjectConfigurationConfiguration();
     File testConfigYaml = new File(tmpDir.getRoot(), "testconfig.yaml");
     assert !testConfigYaml.exists();
-    configuration.setProjectConfigurationDirectory(tmpDir.getRoot());
+    configuration.setAppEngineDirectory(tmpDir.getRoot());
 
     exception.expect(IllegalArgumentException.class);
     exception.expectMessage(testConfigYaml.toString() + " does not exist");

@@ -134,9 +134,9 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
   @VisibleForTesting
   void deployConfig(String filename, DeployProjectConfigurationConfiguration configuration) {
     Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(configuration.getProjectConfigurationDirectory());
+    Preconditions.checkNotNull(configuration.getAppEngineDirectory());
 
-    Path deployable = configuration.getProjectConfigurationDirectory().toPath().resolve(filename);
+    Path deployable = configuration.getAppEngineDirectory().toPath().resolve(filename);
     Preconditions
         .checkArgument(Files.isRegularFile(deployable), deployable.toString() + " does not exist.");
 
