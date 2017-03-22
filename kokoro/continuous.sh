@@ -6,6 +6,6 @@ set -e
 set -x
 
 cd github/appengine-plugins-core
-gcloud components update
-gcloud components install app-engine-java
+sudo /opt/google-cloud-sdk/bin/gcloud components update
+sudo /opt/google-cloud-sdk/bin/gcloud components install app-engine-java
 mvn clean install -B -U
