@@ -5,5 +5,5 @@ set -e
 # Display commands to stderr.
 set -x
 
-cd git/appengine-plugins-core/build
-./build.sh
+cd git/appengine-plugins-core
+mvn clean install -B -U
