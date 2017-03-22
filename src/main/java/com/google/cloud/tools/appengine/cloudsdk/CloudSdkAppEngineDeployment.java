@@ -19,11 +19,15 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,6 +91,62 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
       } else {
         sdk.runAppCommand(arguments);
       }
+    } catch (ProcessRunnerException e) {
+      throw new AppEngineException(e);
+    }
+
+  }
+
+  @Override
+  public void deployCron(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+    deployConfig("cron.yaml", config);
+  }
+
+  @Override
+  public void deployDos(DeployProjectConfigurationConfiguration config) throws AppEngineException {
+    deployConfig("dos.yaml", config);
+  }
+
+  @Override
+  public void deployDispatch(DeployProjectConfigurationConfiguration config)
+      throws AppEngineException {
+    deployConfig("dispatch.yaml", config);
+  }
+
+  @Override
+  public void deployIndex(DeployProjectConfigurationConfiguration config)
+      throws AppEngineException {
+    deployConfig("index.yaml", config);
+  }
+
+  @Override
+  public void deployQueue(DeployProjectConfigurationConfiguration config)
+      throws AppEngineException {
+    deployConfig("queue.yaml", config);
+  }
+
+  /**
+   * Common configuration deployment function.
+   *
+   * @param filename Yaml file that we want to deploy (cron.yaml, dos.yaml, etc)
+   * @param configuration Deployment configuration
+   */
+  @VisibleForTesting
+  void deployConfig(String filename, DeployProjectConfigurationConfiguration configuration) {
+    Preconditions.checkNotNull(configuration);
+    Preconditions.checkNotNull(configuration.getAppEngineDirectory());
+
+    Path deployable = configuration.getAppEngineDirectory().toPath().resolve(filename);
+    Preconditions
+        .checkArgument(Files.isRegularFile(deployable), deployable.toString() + " does not exist.");
+
+    List<String> arguments = new ArrayList<>();
+    arguments.add("deploy");
+    arguments.add(deployable.toAbsolutePath().toString());
+    arguments.addAll(GcloudArgs.get(configuration));
+
+    try {
+      sdk.runAppCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

@@ -16,8 +16,15 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DefaultDeployProjectConfigurationConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
@@ -27,6 +34,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -37,10 +45,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for {@link CloudSdkAppEngineDeployment}.
@@ -54,11 +58,19 @@ public class CloudSdkAppEngineDeploymentTest {
   @Rule
   public TemporaryFolder tmpDir = new TemporaryFolder();
 
+  @Rule
+  public final ExpectedException exception = ExpectedException.none();
+
   private File appYaml1;
   private File appYaml2;
   private File stagingDirectory;
 
   private CloudSdkAppEngineDeployment deployment;
+
+  @Mock
+  private CloudSdkAppEngineDeployment mockDeployment;
+  @Mock
+  private DeployProjectConfigurationConfiguration mockProjectConfigurationConfiguration;
 
   @Before
   public void setUp() throws IOException {
@@ -66,6 +78,7 @@ public class CloudSdkAppEngineDeploymentTest {
     appYaml2 = tmpDir.newFile("app2.yaml");
     stagingDirectory = tmpDir.newFolder("appengine-staging");
     deployment = new CloudSdkAppEngineDeployment(sdk);
+
   }
   
   @Test
@@ -78,7 +91,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
   
   @Test
-  public void testNewDeployAction_allFlags() throws Exception {
+  public void testDeploy_allFlags() throws Exception {
 
     DefaultDeployConfiguration configuration = Mockito.spy(new DefaultDeployConfiguration());
     configuration.setDeployables(Arrays.asList(appYaml1));
@@ -105,7 +118,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_booleanFlags() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_booleanFlags() throws AppEngineException, ProcessRunnerException {
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1));
     configuration.setPromote(false);
@@ -120,7 +133,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_noFlags() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_noFlags() throws AppEngineException, ProcessRunnerException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1));
@@ -133,7 +146,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_dir() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_dir() throws AppEngineException, ProcessRunnerException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(stagingDirectory));
@@ -147,7 +160,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testNewDeployAction_multipleDeployables()
+  public void testDeploy_multipleDeployables()
       throws AppEngineException, ProcessRunnerException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
@@ -162,4 +175,73 @@ public class CloudSdkAppEngineDeploymentTest {
 
   }
 
+  @Test
+  public void testDeployCron() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployCron(mockProjectConfigurationConfiguration);
+    mockDeployment.deployCron(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("cron.yaml", mockProjectConfigurationConfiguration);
+  }
+
+  @Test
+  public void testDeployDispatch() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployDispatch(mockProjectConfigurationConfiguration);
+    mockDeployment.deployDispatch(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("dispatch.yaml", mockProjectConfigurationConfiguration);
+  }
+
+  @Test
+  public void testDeployDos() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployDos(mockProjectConfigurationConfiguration);
+    mockDeployment.deployDos(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("dos.yaml", mockProjectConfigurationConfiguration);
+  }
+
+  @Test
+  public void testDeployIndex() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployIndex(mockProjectConfigurationConfiguration);
+    mockDeployment.deployIndex(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("index.yaml", mockProjectConfigurationConfiguration);
+  }
+
+  @Test
+  public void testDeployQueue() throws Exception {
+    Mockito.doCallRealMethod().when(mockDeployment).deployQueue(mockProjectConfigurationConfiguration);
+    mockDeployment.deployQueue(mockProjectConfigurationConfiguration);
+    verify(mockDeployment).deployConfig("queue.yaml", mockProjectConfigurationConfiguration);
+  }
+
+  /**
+   * This test uses a fake config.yaml on purpose, In the real world, that means it will
+   * be interpretted as an app.yaml. The method under test has no knowledge of what
+   * configs are valid and what aren't.
+   */
+  @Test
+  public void testDeployConfig() throws Exception {
+
+    DefaultDeployProjectConfigurationConfiguration configuration = new DefaultDeployProjectConfigurationConfiguration();
+    File testConfigYaml = tmpDir.newFile("testconfig.yaml");
+    configuration.setAppEngineDirectory(tmpDir.getRoot());
+    configuration.setProject("project");
+
+    deployment.deployConfig("testconfig.yaml", configuration);
+
+    List<String> expectedCommand = ImmutableList
+        .of("deploy", testConfigYaml.toString(), "--project", "project");
+
+    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+  }
+
+  @Test
+  public void testDeployConfig_doesNotExist() throws Exception {
+
+    DefaultDeployProjectConfigurationConfiguration configuration = new DefaultDeployProjectConfigurationConfiguration();
+    File testConfigYaml = new File(tmpDir.getRoot(), "testconfig.yaml");
+    assert !testConfigYaml.exists();
+    configuration.setAppEngineDirectory(tmpDir.getRoot());
+
+    exception.expect(IllegalArgumentException.class);
+    exception.expectMessage(testConfigYaml.toString() + " does not exist");
+
+    deployment.deployConfig("testconfig.yaml", configuration);
+  }
 }
