@@ -21,7 +21,7 @@ import com.google.cloud.tools.appengine.api.Configuration;
 import java.io.File;
 
 /**
- * Created by appu on 3/21/17.
+ * Configuration for {@link AppEngineDeployment} project-level yaml deployments.
  */
 public interface DeployProjectConfigurationConfiguration extends Configuration {
   File getAppEngineDirectory();

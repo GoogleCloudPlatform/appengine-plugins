@@ -20,6 +20,9 @@ import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 
 import java.io.File;
 
+/**
+ * Plain java bean implementation of {@link DeployProjectConfigurationConfiguration}
+ */
 public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfiguration implements
     DeployProjectConfigurationConfiguration {
 
