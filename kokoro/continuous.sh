@@ -5,5 +5,5 @@ set -e
 # Display commands to stderr.
 set -x
 
-cd git/appengine-plugins-core
+cd github/appengine-plugins-core
 mvn clean install -B -U
