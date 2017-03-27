@@ -70,11 +70,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
     List<String> arguments = new ArrayList<>();
 
-    Map<String, String> env = Maps.newHashMap();
-    if (!Strings.isNullOrEmpty(config.getJavaHomeDir())) {
-      env.put("JAVA_HOME", config.getJavaHomeDir());
-    }
-
     List<String> jvmArguments = new ArrayList<>();
     if (appengineWeb.isJava8()) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
@@ -101,7 +96,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       arguments.add(service.toPath().toString());
     }
     try {
-      sdk.runDevAppServer1Command(jvmArguments, arguments, env);
+      sdk.runDevAppServer1Command(jvmArguments, arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
