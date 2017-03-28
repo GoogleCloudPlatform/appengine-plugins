@@ -405,7 +405,8 @@ public class CloudSdk {
     return getSdkPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
-  private Path getJavaBinaryPath() {
+  @VisibleForTesting
+  Path getJavaBinaryPath() {
     return javaHomePath.resolve("bin/java");
   }
 
