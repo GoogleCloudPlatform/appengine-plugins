@@ -31,7 +31,6 @@ import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -78,7 +77,7 @@ public class CloudSdk {
 
   private final Map<String, Path> jarLocations = new HashMap<>();
   private final Path sdkPath;
-  private final Path javaBinaryPath;
+  private final Path javaHomePath;
   private final ProcessRunner processRunner;
   private final String appCommandMetricsEnvironment;
   private final String appCommandMetricsEnvironmentVersion;
@@ -87,13 +86,13 @@ public class CloudSdk {
   private final String appCommandOutputFormat;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
-  private CloudSdk(Path sdkPath, Path javaBinaryPath, String appCommandMetricsEnvironment,
+  private CloudSdk(Path sdkPath, Path javaHomePath, String appCommandMetricsEnvironment,
                    String appCommandMetricsEnvironmentVersion,
                    @Nullable File appCommandCredentialFile,
                    String appCommandOutputFormat, ProcessRunner processRunner,
                    WaitingProcessOutputLineListener runDevAppServerWaitListener) {
     this.sdkPath = sdkPath;
-    this.javaBinaryPath = javaBinaryPath;
+    this.javaHomePath = javaHomePath;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
     this.appCommandCredentialFile = appCommandCredentialFile;
@@ -252,7 +251,7 @@ public class CloudSdk {
     logCommand(command);
 
     Map<String, String> environment = Maps.newHashMap();
-    environment.put("JAVA_HOME", javaBinaryPath.getParent().getParent().toString());
+    environment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
     // set quiet mode and consequently auto-install of app-engine-java component
     environment.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
 
@@ -281,7 +280,7 @@ public class CloudSdk {
 
     List<String> command = new ArrayList<>();
 
-    command.add(javaBinaryPath.toAbsolutePath().toString());
+    command.add(getJavaBinaryPath().toAbsolutePath().toString());
 
     command.addAll(jvmArgs);
     command.add("-Dappengine.sdk.root=" + getJavaAppEngineSdkPath().getParent().toString());
@@ -294,7 +293,7 @@ public class CloudSdk {
     logCommand(command);
 
     Map<String, String> environment = Maps.newHashMap();
-    environment.put("JAVA_HOME", javaBinaryPath.getParent().getParent().toString());
+    environment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
     processRunner.setEnvironment(environment);
     processRunner.run(command.toArray(new String[command.size()]));
 
@@ -318,7 +317,7 @@ public class CloudSdk {
     System.setProperty("appengine.sdk.root", getJavaAppEngineSdkPath().toString());
 
     List<String> command = new ArrayList<>();
-    command.add(javaBinaryPath.toAbsolutePath().toString());
+    command.add(getJavaBinaryPath().toAbsolutePath().toString());
     command.add("-cp");
     command.add(jarLocations.get(JAVA_TOOLS_JAR).toString());
     command.add("com.google.appengine.tools.admin.AppCfg");
@@ -406,6 +405,10 @@ public class CloudSdk {
     return getSdkPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
+  private Path getJavaBinaryPath() {
+    return javaHomePath.resolve("bin/java");
+  }
+
   // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/189
   @VisibleForTesting
   Path getWindowsPythonPath() {
@@ -484,9 +487,9 @@ public class CloudSdk {
   }
 
   private void validateJdk() {
-    if (!Files.exists(javaBinaryPath)) {
+    if (!Files.exists(getJavaBinaryPath())) {
       throw new InvalidJavaSdkException(
-          "Invalid Java SDK. " + javaBinaryPath.toString() + " does not exist.");
+          "Invalid Java SDK. " + getJavaBinaryPath().toString() + " does not exist.");
     }
   }
 
@@ -531,7 +534,7 @@ public class CloudSdk {
     private List<CloudSdkResolver> resolvers;
     private int runDevAppServerWaitSeconds;
     private boolean inheritProcessOutput;
-    private Path javaBinaryPath = Paths.get(System.getProperty("java.home"));
+    private Path javaHomePath = Paths.get(System.getProperty("java.home"));
 
     /**
      * The home directory of Google Cloud SDK.
@@ -650,7 +653,7 @@ public class CloudSdk {
      * Sets the desired Java SDK path, used in devappserver runs and App Engine standard staging.
      */
     public Builder javaSdkPath(Path javaSdkPath) {
-      this.javaBinaryPath = javaSdkPath.resolve("bin/java");
+      this.javaHomePath = javaSdkPath;
       return this;
     }
 
@@ -695,7 +698,7 @@ public class CloudSdk {
             new DefaultProcessRunner(async, exitListeners, startListeners, inheritProcessOutput);
       }
 
-      return new CloudSdk(sdkPath, javaBinaryPath, appCommandMetricsEnvironment,
+      return new CloudSdk(sdkPath, javaHomePath, appCommandMetricsEnvironment,
           appCommandMetricsEnvironmentVersion, appCommandCredentialFile, appCommandOutputFormat,
           processRunner, runDevAppServerWaitListener);
     }
