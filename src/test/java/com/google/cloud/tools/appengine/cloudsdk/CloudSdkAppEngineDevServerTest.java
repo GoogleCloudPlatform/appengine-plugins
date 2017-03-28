@@ -111,7 +111,7 @@ public class CloudSdkAppEngineDevServerTest {
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.<String, Integer>of("getJavaHomeDir", 2, "getServices", 0, "getAppYamls", 3));
+        ImmutableMap.<String, Integer>of("getServices", 0, "getAppYamls", 3));
 
   }
 
@@ -130,7 +130,6 @@ public class CloudSdkAppEngineDevServerTest {
         .of("app.yaml", "--use_mtime_file_watcher=false", "--allow_skipped_files=false",
             "--automatic_restart=false", "--skip_sdk_update_check=false",
             "--clear_datastore=false");
-    Map<String,String> expectedEnv = ImmutableMap.of();
 
     devServer.run(configuration);
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
@@ -143,7 +142,6 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
 
     List<String> expected = ImmutableList.of("app.yaml");
-    Map<String,String> expectedEnv = ImmutableMap.of();
 
     devServer.run(configuration);
 
