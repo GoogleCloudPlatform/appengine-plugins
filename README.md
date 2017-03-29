@@ -3,8 +3,12 @@
 
 # Google App Engine Plugins Core Library
 
-This is the client Java library to manage App Engine Java applications. It should be used by any Java application that performs App Engine Java application management. For example, the Maven, Gradle and Eclipse App Engine plugins, custom user tools, etc.
-
+IMPORTANT:
+This library is used by Google internal plugin development teams to share App Engine
+related code.  It's use for any other purpose is highly discouraged and unsupported. Visit our
+[App Engine documentation](https://cloud.google.com/appengine/docs/admin-api/) for more information 
+on Google supported clients for App Engine administration.
+ 
 # Requirements
 
 This library requires Java 1.7 or higher to run.
