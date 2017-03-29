@@ -181,7 +181,7 @@ public class CloudSdk {
     // This is to ensure IDE credentials get correctly passed to the gcloud commands, in Windows.
     // It's a temporary workaround until a fix is released.
     // https://github.com/GoogleCloudPlatform/google-cloud-intellij/issues/985
-    if (System.getProperty("os.name").contains("Windows")) {
+    if (IS_WINDOWS) {
       environment.put("CLOUDSDK_APP_NUM_FILE_UPLOAD_PROCESSES", "1");
     }
 
@@ -407,8 +407,7 @@ public class CloudSdk {
 
   @VisibleForTesting
   Path getJavaExecutablePath() {
-    return javaHomePath.toAbsolutePath().resolve(
-        System.getProperty("os.name").contains("Windows") ? "bin/java.exe" : "bin/java");
+    return javaHomePath.toAbsolutePath().resolve(IS_WINDOWS ? "bin/java.exe" : "bin/java");
   }
 
   // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/189
