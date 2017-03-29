@@ -280,7 +280,7 @@ public class CloudSdk {
 
     List<String> command = new ArrayList<>();
 
-    command.add(getJavaExecutablePath().toAbsolutePath().toString());
+    command.add(getJavaExecutablePath().toString());
 
     command.addAll(jvmArgs);
     command.add("-Dappengine.sdk.root=" + getJavaAppEngineSdkPath().getParent().toString());
@@ -317,7 +317,7 @@ public class CloudSdk {
     System.setProperty("appengine.sdk.root", getJavaAppEngineSdkPath().toString());
 
     List<String> command = new ArrayList<>();
-    command.add(getJavaExecutablePath().toAbsolutePath().toString());
+    command.add(getJavaExecutablePath().toString());
     command.add("-cp");
     command.add(jarLocations.get(JAVA_TOOLS_JAR).toString());
     command.add("com.google.appengine.tools.admin.AppCfg");
