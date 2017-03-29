@@ -35,9 +35,13 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.core.AnyOf.anyOf;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
@@ -111,10 +115,11 @@ public class CloudSdkTest {
   public void testValidateAppEngineJavaComponents() {
     new CloudSdk.Builder().build().validateAppEngineJavaComponents();
   }
-  
+
   @Test
   public void testGetWindowsPythonPath() {
-    assertEquals("python", builder.build().getWindowsPythonPath().toString());
+    assertThat(builder.build().getWindowsPythonPath().toString(),
+        anyOf(is("python"), endsWith("python.exe")));
   }
 
   @Test
