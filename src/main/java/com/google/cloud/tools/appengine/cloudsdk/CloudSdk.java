@@ -280,7 +280,7 @@ public class CloudSdk {
 
     List<String> command = new ArrayList<>();
 
-    command.add(getJavaBinaryPath().toAbsolutePath().toString());
+    command.add(getJavaExecutablePath().toAbsolutePath().toString());
 
     command.addAll(jvmArgs);
     command.add("-Dappengine.sdk.root=" + getJavaAppEngineSdkPath().getParent().toString());
@@ -317,7 +317,7 @@ public class CloudSdk {
     System.setProperty("appengine.sdk.root", getJavaAppEngineSdkPath().toString());
 
     List<String> command = new ArrayList<>();
-    command.add(getJavaBinaryPath().toAbsolutePath().toString());
+    command.add(getJavaExecutablePath().toAbsolutePath().toString());
     command.add("-cp");
     command.add(jarLocations.get(JAVA_TOOLS_JAR).toString());
     command.add("com.google.appengine.tools.admin.AppCfg");
@@ -406,8 +406,9 @@ public class CloudSdk {
   }
 
   @VisibleForTesting
-  Path getJavaBinaryPath() {
-    return javaHomePath.resolve("bin/java");
+  Path getJavaExecutablePath() {
+    return javaHomePath.toAbsolutePath().resolve(
+        System.getProperty("os.name").contains("Windows") ? "bin/java.exe" : "bin/java");
   }
 
   // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/189
@@ -488,9 +489,9 @@ public class CloudSdk {
   }
 
   private void validateJdk() {
-    if (!Files.exists(getJavaBinaryPath())) {
+    if (!Files.exists(getJavaExecutablePath())) {
       throw new InvalidJavaSdkException(
-          "Invalid Java SDK. " + getJavaBinaryPath().toString() + " does not exist.");
+          "Invalid Java SDK. " + getJavaExecutablePath().toString() + " does not exist.");
     }
   }
 
@@ -653,8 +654,8 @@ public class CloudSdk {
     /**
      * Sets the desired Java SDK path, used in devappserver runs and App Engine standard staging.
      */
-    public Builder javaSdkPath(Path javaSdkPath) {
-      this.javaHomePath = javaSdkPath;
+    public Builder javaHome(Path javaHomePath) {
+      this.javaHomePath = javaHomePath;
       return this;
     }
 

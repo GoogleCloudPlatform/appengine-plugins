@@ -216,7 +216,7 @@ public class CloudSdkTest {
 
   @Test
   public void testGetJavaBinary() {
-    CloudSdk sdk = new CloudSdk.Builder().javaSdkPath(Paths.get("/java/path")).build();
-    assertEquals(Paths.get("/java/path/bin/java"), sdk.getJavaBinaryPath());
+    CloudSdk sdk = new CloudSdk.Builder().javaHome(Paths.get("/java/path")).build();
+    assertEquals(Paths.get("/java/path/bin/java"), sdk.getJavaExecutablePath());
   }
 }
