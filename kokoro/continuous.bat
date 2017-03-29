@@ -6,7 +6,10 @@ call t:\google\google-cloud-sdk\bin\gcloud.cmd components copy-bundled-python>>p
 call t:\google\google-cloud-sdk\bin\gcloud.cmd components update --quiet
 call t:\google\google-cloud-sdk\bin\gcloud.cmd components install app-engine-java --quiet
 
-mvn clean install cobertura:cobertura -B -U
-curl -s https://codecov.io/bash | bash
+wget http://www-us.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+unzip apache-maven-3.3.9-bin.zip
+
+apache-maven-3.3.9/bin/mvn clean install cobertura:cobertura -B -U
+REM curl -s https://codecov.io/bash | bash
 
 exit /b %ERRORLEVEL%
