@@ -66,8 +66,9 @@ public class PathResolver implements CloudSdkResolver {
     }
 
     Path finalPath = searchPaths(possiblePaths);
-    logger.log(Level.FINE, "Resolved SDK path : " + finalPath.toString());
-    return searchPaths(possiblePaths);
+    logger.log(Level.FINE, "Resolved SDK path : "
+        + (finalPath == null ? "<null>" : finalPath.toString()));
+    return finalPath;
   }
 
   /** 
