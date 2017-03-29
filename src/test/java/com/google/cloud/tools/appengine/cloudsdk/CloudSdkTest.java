@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -183,10 +183,8 @@ public class CloudSdkTest {
     when(r1.getCloudSdkPath()).thenReturn(Paths.get("/r1"));
     CloudSdkResolver r2 = Mockito.mock(CloudSdkResolver.class, "r2");
     when(r2.getRank()).thenReturn(10);
-    when(r2.getCloudSdkPath()).thenReturn(Paths.get("/r2"));
     CloudSdkResolver r3 = Mockito.mock(CloudSdkResolver.class, "r3");
     when(r3.getRank()).thenReturn(100);
-    when(r3.getCloudSdkPath()).thenReturn(Paths.get("/r3"));
 
     Builder builder = new CloudSdk.Builder().resolvers(Arrays.asList(r3, r2, r1));
     List<CloudSdkResolver> resolvers = builder.getResolvers();
