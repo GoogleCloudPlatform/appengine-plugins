@@ -25,6 +25,7 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
@@ -74,7 +75,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
     List<String> expectedFlags = ImmutableList.of("--address=host", "--port=8090",
         "--allow_remote_shutdown", "--disable_update_check", "--no_java_agent",
-        "src/test/java/resources");
+        convertToPlatformDependentPath("src/test/java/resources"));
 
     Map<String, String> expectedEnv = ImmutableMap.of("JAVA_HOME", "/usr/lib/jvm/default-java");
     List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
@@ -92,7 +93,8 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setServices(ImmutableList.of(serviceDirectory));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
-        "--disable_update_check", "--no_java_agent", "src/test/java/resources");
+        "--disable_update_check", "--no_java_agent",
+        convertToPlatformDependentPath("src/test/java/resources"));
     Map<String, String> expectedEnv = ImmutableMap.of();
     List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
             "-D--enable_all_permissions=true");
@@ -107,7 +109,8 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setServices(ImmutableList.of(serviceDirectory));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
-        "--disable_update_check", "--no_java_agent", "src/test/java/resources");
+        "--disable_update_check", "--no_java_agent",
+        convertToPlatformDependentPath("src/test/java/resources"));
     Map<String, String> expectedEnv = ImmutableMap.of();
 
     List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
@@ -116,6 +119,10 @@ public class CloudSdkAppEngineDevServer1Test {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServer1Command(eq(expectedJvmArgs), eq(expectedFlags), eq(expectedEnv));
+  }
+
+  private String convertToPlatformDependentPath(String path) {
+    return Paths.get("", path.split("/")).toString();
   }
 
 }
