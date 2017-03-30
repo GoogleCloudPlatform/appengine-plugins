@@ -91,7 +91,6 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setDevAppserverLogLevel("info");
     configuration.setSkipSdkUpdateCheck(true);
     configuration.setDefaultGcsBucketName("buckets");
-    configuration.setJavaHomeDir("/usr/lib/jvm/default-java");
     configuration.setClearDatastore(true);
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
@@ -107,14 +106,12 @@ public class CloudSdkAppEngineDevServerTest {
             "--skip_sdk_update_check=true", "--default_gcs_bucket_name=buckets",
             "--clear_datastore=true");
 
-    Map<String,String> expectedEnv = ImmutableMap.of("JAVA_HOME", "/usr/lib/jvm/default-java");
-
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.<String, Integer>of("getJavaHomeDir", 2, "getServices", 0, "getAppYamls", 3));
+        ImmutableMap.<String, Integer>of("getServices", 0, "getAppYamls", 3));
 
   }
 
@@ -133,10 +130,9 @@ public class CloudSdkAppEngineDevServerTest {
         .of("app.yaml", "--use_mtime_file_watcher=false", "--allow_skipped_files=false",
             "--automatic_restart=false", "--skip_sdk_update_check=false",
             "--clear_datastore=false");
-    Map<String,String> expectedEnv = ImmutableMap.of();
 
     devServer.run(configuration);
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
   }
 
   @Test
@@ -146,11 +142,10 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
 
     List<String> expected = ImmutableList.of("app.yaml");
-    Map<String,String> expectedEnv = ImmutableMap.of();
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
   }
 
 }

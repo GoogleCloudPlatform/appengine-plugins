@@ -218,4 +218,12 @@ public class CloudSdkTest {
     CloudSdk sdk = builder.build();
     assertEquals("r1 should not resolve", r2.getCloudSdkPath(), sdk.getSdkPath());
   }
+
+  @Test
+  public void testGetJavaBinary() {
+    CloudSdk sdk = new CloudSdk.Builder().javaHome(Paths.get("java", "path")).build();
+    assertEquals(Paths.get("java", "path", "bin",
+        System.getProperty("os.name").contains("Windows") ? "java.exe" : "java").toAbsolutePath(),
+        sdk.getJavaExecutablePath());
+  }
 }

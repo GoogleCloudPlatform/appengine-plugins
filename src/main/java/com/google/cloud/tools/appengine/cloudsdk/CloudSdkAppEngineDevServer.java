@@ -68,11 +68,6 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
       arguments.add(appYaml.toPath().toString());
     }
 
-    Map<String,String> env = Maps.newHashMap();
-    if (!Strings.isNullOrEmpty(config.getJavaHomeDir())) {
-      env.put("JAVA_HOME", config.getJavaHomeDir());
-    }
-
     arguments.addAll(DevAppServerArgs.get("host", config.getHost()));
     arguments.addAll(DevAppServerArgs.get("port", config.getPort()));
     arguments.addAll(DevAppServerArgs.get("admin_host", config.getAdminHost()));
@@ -102,7 +97,7 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
         .addAll(DevAppServerArgs.get("clear_datastore", config.getClearDatastore()));
 
     try {
-      sdk.runDevAppServerCommand(arguments, env);
+      sdk.runDevAppServerCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

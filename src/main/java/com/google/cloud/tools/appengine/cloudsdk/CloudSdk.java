@@ -31,7 +31,6 @@ import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -78,6 +77,7 @@ public class CloudSdk {
 
   private final Map<String, Path> jarLocations = new HashMap<>();
   private final Path sdkPath;
+  private final Path javaHomePath;
   private final ProcessRunner processRunner;
   private final String appCommandMetricsEnvironment;
   private final String appCommandMetricsEnvironmentVersion;
@@ -86,11 +86,13 @@ public class CloudSdk {
   private final String appCommandOutputFormat;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
-  private CloudSdk(Path sdkPath, String appCommandMetricsEnvironment,
-      String appCommandMetricsEnvironmentVersion, @Nullable File appCommandCredentialFile,
-      String appCommandOutputFormat, ProcessRunner processRunner,
-      WaitingProcessOutputLineListener runDevAppServerWaitListener) {
+  private CloudSdk(Path sdkPath, Path javaHomePath, String appCommandMetricsEnvironment,
+                   String appCommandMetricsEnvironmentVersion,
+                   @Nullable File appCommandCredentialFile,
+                   String appCommandOutputFormat, ProcessRunner processRunner,
+                   WaitingProcessOutputLineListener runDevAppServerWaitListener) {
     this.sdkPath = sdkPath;
+    this.javaHomePath = javaHomePath;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
     this.appCommandCredentialFile = appCommandCredentialFile;
@@ -179,7 +181,7 @@ public class CloudSdk {
     // This is to ensure IDE credentials get correctly passed to the gcloud commands, in Windows.
     // It's a temporary workaround until a fix is released.
     // https://github.com/GoogleCloudPlatform/google-cloud-intellij/issues/985
-    if (System.getProperty("os.name").contains("Windows")) {
+    if (IS_WINDOWS) {
       environment.put("CLOUDSDK_APP_NUM_FILE_UPLOAD_PROCESSES", "1");
     }
 
@@ -233,24 +235,8 @@ public class CloudSdk {
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
    * @throws AppEngineException when dev_appserver.py cannot be found
    */
-  public void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
-    runDevAppServerCommand(args, new HashMap<String, String>());
-  }
-
-  /**
-   * Uses the process runner to execute a dev_appserver.py command.
-   *
-   * @param args the arguments to pass to dev_appserver.py
-   * @param environment map of environment variables to set for the dev_appserver process
-   * @throws InvalidPathException when Python can't be located
-   * @throws ProcessRunnerException when process runner encounters an error
-   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
-   * @throws AppEngineException when dev_appserver.py cannot be found
-   */
-  public void runDevAppServerCommand(List<String> args, Map<String, String> environment)
+  public void runDevAppServerCommand(List<String> args)
       throws ProcessRunnerException {
-    Preconditions.checkNotNull(environment);
     validateCloudSdk();
 
     List<String> command = new ArrayList<>();
@@ -264,6 +250,8 @@ public class CloudSdk {
 
     logCommand(command);
 
+    Map<String, String> environment = Maps.newHashMap();
+    environment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
     // set quiet mode and consequently auto-install of app-engine-java component
     environment.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
 
@@ -280,24 +268,19 @@ public class CloudSdk {
    * Uses the process runner to execute the classic Java SDK devappsever command.
    *
    * @param args the arguments to pass to devappserver
-   * @param environment map of environment variables to set for the dev_appserver process
    * @throws ProcessRunnerException when process runner encounters an error
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
    * @throws AppEngineException when dev appserver cannot be found
    */
-  public void runDevAppServer1Command(List<String> jvmArgs, List<String> args, 
-          Map<String, String> environment)
+  public void runDevAppServer1Command(List<String> jvmArgs, List<String> args)
           throws ProcessRunnerException {
     validateAppEngineJavaComponents();
+    validateJdk();
 
     List<String> command = new ArrayList<>();
-    String javaHome = environment.get("JAVA_HOME");
-    if (javaHome == null) {
-      javaHome = System.getProperty("java.home");
-    }
-    command.add(
-            Paths.get(javaHome).resolve("bin/java").toAbsolutePath().toString());
+
+    command.add(getJavaExecutablePath().toString());
 
     command.addAll(jvmArgs);
     command.add("-Dappengine.sdk.root=" + getJavaAppEngineSdkPath().getParent().toString());
@@ -308,6 +291,9 @@ public class CloudSdk {
     command.addAll(args);
 
     logCommand(command);
+
+    Map<String, String> environment = Maps.newHashMap();
+    environment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
     processRunner.setEnvironment(environment);
     processRunner.run(command.toArray(new String[command.size()]));
 
@@ -325,13 +311,13 @@ public class CloudSdk {
    */
   public void runAppCfgCommand(List<String> args) throws ProcessRunnerException {
     validateAppEngineJavaComponents();
+    validateJdk();
 
     // AppEngineSdk requires this system property to be set.
     System.setProperty("appengine.sdk.root", getJavaAppEngineSdkPath().toString());
 
     List<String> command = new ArrayList<>();
-    command.add(
-        Paths.get(System.getProperty("java.home")).resolve("bin/java").toAbsolutePath().toString());
+    command.add(getJavaExecutablePath().toString());
     command.add("-cp");
     command.add(jarLocations.get(JAVA_TOOLS_JAR).toString());
     command.add("com.google.appengine.tools.admin.AppCfg");
@@ -419,6 +405,11 @@ public class CloudSdk {
     return getSdkPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
+  @VisibleForTesting
+  Path getJavaExecutablePath() {
+    return javaHomePath.toAbsolutePath().resolve(IS_WINDOWS ? "bin/java.exe" : "bin/java");
+  }
+
   // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/189
   @VisibleForTesting
   Path getWindowsPythonPath() {
@@ -462,9 +453,10 @@ public class CloudSdk {
       throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException {
     validateCloudSdkLocation();
     validateCloudSdkVersion();
+    validateJdk();
   }
 
-  private void validateCloudSdkVersion() 
+  private void validateCloudSdkVersion()
       throws CloudSdkOutOfDateException, CloudSdkVersionFileException {
     try {
       CloudSdkVersion version = getVersion();
@@ -492,6 +484,13 @@ public class CloudSdk {
     if (!Files.isRegularFile(getDevAppServerPath())) {
       throw new CloudSdkNotFoundException("Validation Error: dev_appserver.py location '"
           + getDevAppServerPath() + "' is not a file.");
+    }
+  }
+
+  private void validateJdk() {
+    if (!Files.exists(getJavaExecutablePath())) {
+      throw new InvalidJavaSdkException(
+          "Invalid Java SDK. " + getJavaExecutablePath().toString() + " does not exist.");
     }
   }
 
@@ -536,6 +535,7 @@ public class CloudSdk {
     private List<CloudSdkResolver> resolvers;
     private int runDevAppServerWaitSeconds;
     private boolean inheritProcessOutput;
+    private Path javaHomePath = Paths.get(System.getProperty("java.home"));
 
     /**
      * The home directory of Google Cloud SDK.
@@ -651,6 +651,14 @@ public class CloudSdk {
     }
 
     /**
+     * Sets the desired Java SDK path, used in devappserver runs and App Engine standard staging.
+     */
+    public Builder javaHome(Path javaHomePath) {
+      this.javaHomePath = javaHomePath;
+      return this;
+    }
+
+    /**
      * Create a new instance of {@link CloudSdk}.
      * If {@code sdkPath} is not set, this method looks for the SDK in known install locations.
      */
@@ -691,7 +699,7 @@ public class CloudSdk {
             new DefaultProcessRunner(async, exitListeners, startListeners, inheritProcessOutput);
       }
 
-      return new CloudSdk(sdkPath, appCommandMetricsEnvironment,
+      return new CloudSdk(sdkPath, javaHomePath, appCommandMetricsEnvironment,
           appCommandMetricsEnvironmentVersion, appCommandCredentialFile, appCommandOutputFormat,
           processRunner, runDevAppServerWaitListener);
     }
