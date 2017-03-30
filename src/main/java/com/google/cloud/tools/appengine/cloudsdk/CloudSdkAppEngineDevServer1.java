@@ -205,7 +205,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    *    the behavior if the file is not specified somewhere.
    */
   @VisibleForTesting
-  void handleDatastoreFlags(List<String> modifyableJvmArgs, File datastoreFile, Boolean clearDatastore) {
+  void handleDatastoreFlags(List<String> modifyableJvmArgs, File datastoreFile,
+      Boolean clearDatastore) {
     if (datastoreFile != null) {
       Path datastorePath = datastoreFile.toPath();
       modifyableJvmArgs.add("-Ddatastore.backing_store=" + datastorePath);
@@ -217,8 +218,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
           log.warning("Could not clear datastore : " + e.getMessage());
         }
       }
-    }
-    else if (clearDatastore != null) { // and datastoreFile == null
+    } else if (clearDatastore != null) { // and datastoreFile == null
       log.warning("'clearDatastore' flag does not apply unless 'datastorePath'"
           + " is specified for Dev Appserver v1");
     }
