@@ -164,6 +164,9 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   public void testCopyAppEngineContext_nonExistentAppEngineDirectory() throws Exception {
     new FlexibleStagingContext().withNonExistentAppEngineDirectory();
 
+    exception.expect(AppEngineException.class);
+    exception.expectMessage("app.yaml not found in the App Engine directory.");
+
     CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
 
     List<LogRecord> logs = handler.getLogs();
@@ -175,38 +178,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   public void testCopyAppEngineContext_emptyAppEngineDirectory() throws Exception {
     new FlexibleStagingContext().withAppEngineDirectory();
 
-    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
-
-    List<LogRecord> logs = handler.getLogs();
-    Assert.assertEquals(0, logs.size());
-    verifyZeroInteractions(copyService);
-  }
-
-  @Test
-  public void testCopyAppEngineContext_invalidFileInAppEngineDirectory() throws Exception {
-    new FlexibleStagingContext()
-        .withAppEngineDirectory()
-        .withFileInAppEngineDirectory("foo.yaml");
-
     exception.expect(AppEngineException.class);
-    exception.expectMessage("Found an unexpected 'foo.yaml' file in the App Engine directory.");
-
-    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
-
-    List<LogRecord> logs = handler.getLogs();
-    Assert.assertEquals(0, logs.size());
-    verifyZeroInteractions(copyService);
-  }
-
-  @Test
-  public void testCopyAppEngineContext_dockerFileInAppEngineDirectory() throws Exception {
-    new FlexibleStagingContext()
-        .withAppEngineDirectory()
-        .withFileInAppEngineDirectory("Dockerfile");
-
-    exception.expect(AppEngineException.class);
-    exception.expectMessage("Found 'Dockerfile' in the App Engine directory."
-        + " Please move it to the Docker directory.");
+    exception.expectMessage("app.yaml not found in the App Engine directory.");
 
     CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
 

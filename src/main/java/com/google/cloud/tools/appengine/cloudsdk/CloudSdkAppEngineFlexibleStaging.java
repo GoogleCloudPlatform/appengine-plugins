@@ -74,8 +74,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
     }
   }
 
-  @VisibleForTesting
-  static String findRuntime(StageFlexibleConfiguration config) {
+  private static String findRuntime(StageFlexibleConfiguration config) {
     // verification for app.yaml that contains runtime:java
     Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
     String runtime = null;
@@ -113,27 +112,15 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   @VisibleForTesting
   static void copyAppEngineContext(StageFlexibleConfiguration config, CopyService copyService)
       throws IOException {
-    // Copy app.yaml and other App Engine config files to staging
-    String[] appEngineConfigFiles = config.getAppEngineDirectory().list();
-    if (appEngineConfigFiles != null) {
-      for (String configFile : appEngineConfigFiles) {
-        if (APP_YAML.equals(configFile)) {
-          copyService.copyFileAndReplace(
-              config.getAppEngineDirectory().toPath().resolve(configFile),
-              config.getStagingDirectory().toPath().resolve(configFile));
-        } else if (configFile.equals("Dockerfile")) {
-          throw new AppEngineException("Found 'Dockerfile' in the App Engine directory."
-              + " Please move it to the Docker directory.");
-        } else {
-          throw new AppEngineException("Found an unexpected '" + configFile
-              + "' file in the App Engine directory.");
-        }
-      }
+    Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
+    if (!appYaml.toFile().exists()) {
+      throw new AppEngineException(APP_YAML + " not found in the App Engine directory.");
     }
+    copyService.copyFileAndReplace(appYaml, 
+        config.getStagingDirectory().toPath().resolve(APP_YAML));
   }
 
-  @VisibleForTesting
-  static void copyArtifact(StageFlexibleConfiguration config, CopyService copyService)
+  private static void copyArtifact(StageFlexibleConfiguration config, CopyService copyService)
       throws IOException {
     // Copy the JAR/WAR file to staging.
     if (config.getArtifact() != null && config.getArtifact().exists()) {
