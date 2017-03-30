@@ -16,6 +16,9 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -39,7 +42,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 /**
  * Test the CloudSdkAppEngineFlexibleStaging functionality
@@ -61,6 +63,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   private LogStoringHandler handler;
   private File stagingDirectory;
   private File dockerDirectory;
+  private File appEngineDirectory;
 
   @Before
   public void setUp() {
@@ -157,6 +160,76 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
   }
 
+  @Test
+  public void testCopyAppEngineContext_nonExistentAppEngineDirectory() throws Exception {
+    new FlexibleStagingContext().withNonExistentAppEngineDirectory();
+
+    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_emptyAppEngineDirectory() throws Exception {
+    new FlexibleStagingContext().withAppEngineDirectory();
+
+    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_invalidFileInAppEngineDirectory() throws Exception {
+    new FlexibleStagingContext()
+        .withAppEngineDirectory()
+        .withFileInAppEngineDirectory("foo.yaml");
+
+    exception.expect(AppEngineException.class);
+    exception.expectMessage("Found an unexpected 'foo.yaml' file in the App Engine directory.");
+
+    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_dockerFileInAppEngineDirectory() throws Exception {
+    new FlexibleStagingContext()
+        .withAppEngineDirectory()
+        .withFileInAppEngineDirectory("Dockerfile");
+
+    exception.expect(AppEngineException.class);
+    exception.expectMessage("Found 'Dockerfile' in the App Engine directory."
+        + " Please move it to the Docker directory.");
+
+    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_appYamlInAppEngineDirectory() throws Exception {
+    new FlexibleStagingContext()
+        .withStagingDirectory()
+        .withAppEngineDirectory()
+        .withFileInAppEngineDirectory("app.yaml");
+
+    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+    verify(copyService).copyFileAndReplace(appEngineDirectory.toPath().resolve("app.yaml"),
+        stagingDirectory.toPath().resolve("app.yaml"));
+  }
+
   /**
    * Private class for creating test file system structures, it will
    * write to the test class members
@@ -169,7 +242,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     }
     private FlexibleStagingContext withNonExistantDockerDirectory() {
       dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
-      assert !dockerDirectory.exists();
+      assertFalse(dockerDirectory.exists());
       when(config.getDockerDirectory()).thenReturn(dockerDirectory);
       return this;
     }
@@ -179,10 +252,32 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       return this;
     }
     private FlexibleStagingContext withDockerFile() throws IOException {
-      // needs withDockerDirectory to be called first
+      Assert.assertNotNull("needs withDockerDirectory to be called first", dockerDirectory);
+      assertTrue("needs withDockerDirectory to be called first", dockerDirectory.exists());
       File dockerFile = new File(dockerDirectory, "Dockerfile");
       if (!dockerFile.createNewFile()) {
         throw new IOException("Could not create Dockerfile for test");
+      }
+      return this;
+    }
+    private FlexibleStagingContext withNonExistentAppEngineDirectory() throws IOException {
+      appEngineDirectory = new File(temporaryFolder.getRoot(), "non-existent-directory");
+      assertFalse(appEngineDirectory.exists());
+      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
+      return this;
+    }
+    private FlexibleStagingContext withAppEngineDirectory() throws IOException {
+      appEngineDirectory = temporaryFolder.newFolder();
+      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
+      return this;
+    }
+    private FlexibleStagingContext withFileInAppEngineDirectory(String fileName) throws IOException {
+      Assert.assertNotNull("needs withAppEngineDirectory to be called first", appEngineDirectory);
+      assertTrue("needs withAppEngineDirectory to be called first", appEngineDirectory.exists());
+
+      File file = new File(appEngineDirectory, fileName);
+      if (!file.createNewFile()) {
+        throw new IOException("Could not create " + fileName + " for test");
       }
       return this;
     }

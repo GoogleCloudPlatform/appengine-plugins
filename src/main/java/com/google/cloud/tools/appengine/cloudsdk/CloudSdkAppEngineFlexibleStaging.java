@@ -25,12 +25,10 @@ import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -41,9 +39,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   private static final Logger log = Logger
       .getLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
 
-  protected static final Set<String> APP_ENGINE_CONFIG_FILES_WHITELIST = ImmutableSet.of("app.yaml",
-      "cron.yaml", "queue.yaml", "dispatch.yaml", "index.yaml", "dos.yaml", "swagger.json",
-      "swagger.yaml");
+  private static final String APP_YAML = "app.yaml";
 
   /**
    * Stages a Java JAR/WAR App Engine Flexible Environment application to be deployed.
@@ -81,7 +77,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   @VisibleForTesting
   static String findRuntime(StageFlexibleConfiguration config) {
     // verification for app.yaml that contains runtime:java
-    Path appYaml = config.getAppEngineDirectory().toPath().resolve("app.yaml");
+    Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
     String runtime = null;
     try {
       if (Files.isRegularFile(appYaml)) {
@@ -114,13 +110,14 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
     }
   }
 
+  @VisibleForTesting
   static void copyAppEngineContext(StageFlexibleConfiguration config, CopyService copyService)
       throws IOException {
     // Copy app.yaml and other App Engine config files to staging
     String[] appEngineConfigFiles = config.getAppEngineDirectory().list();
     if (appEngineConfigFiles != null) {
       for (String configFile : appEngineConfigFiles) {
-        if (APP_ENGINE_CONFIG_FILES_WHITELIST.contains(configFile)) {
+        if (APP_YAML.equals(configFile)) {
           copyService.copyFileAndReplace(
               config.getAppEngineDirectory().toPath().resolve(configFile),
               config.getStagingDirectory().toPath().resolve(configFile));
