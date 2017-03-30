@@ -205,11 +205,11 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    *    the behavior if the file is not specified somewhere.
    */
   @VisibleForTesting
-  void handleDatastoreFlags(List<String> modifyableJvmArgs, File datastoreFile,
+  void handleDatastoreFlags(List<String> modifiableJvmArgs, File datastoreFile,
       Boolean clearDatastore) {
     if (datastoreFile != null) {
       Path datastorePath = datastoreFile.toPath();
-      modifyableJvmArgs.add("-Ddatastore.backing_store=" + datastorePath);
+      modifiableJvmArgs.add("-Ddatastore.backing_store=" + datastorePath);
 
       if (Boolean.TRUE == clearDatastore) {
         try {
