@@ -8,4 +8,5 @@ set -x
 cd github/appengine-plugins-core
 sudo /opt/google-cloud-sdk/bin/gcloud components update
 sudo /opt/google-cloud-sdk/bin/gcloud components install app-engine-java
-mvn clean install -B -U
+mvn clean install cobertura:cobertura -B -U
+# bash <(curl -s https://codecov.io/bash)
