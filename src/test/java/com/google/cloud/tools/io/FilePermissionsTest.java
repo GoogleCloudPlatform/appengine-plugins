@@ -61,8 +61,8 @@ public class FilePermissionsTest {
   public void testSubDirectoryCannotBeCreatedInWindowsSystem32()  {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
     try {
-      FilePermissions.verifyDirectoryCreatable(Paths.get("/windows/system32/foo/bar"));
-      Assert.fail("Can create directory in /windows/system32");
+      FilePermissions.verifyDirectoryCreatable(Paths.get("c:\\windows\\system32\\foo\\bar"));
+      Assert.fail("Can create directory in c:\\windows\\system32\\foo\\bar");
     } catch (IOException ex) {
       Assert.assertTrue(ex.getMessage(), ex.getMessage().contains("/dev/null"));
     }
