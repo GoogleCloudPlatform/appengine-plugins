@@ -17,7 +17,6 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.common.annotations.VisibleForTesting;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -66,8 +65,8 @@ public class PathResolver implements CloudSdkResolver {
     }
 
     Path finalPath = searchPaths(possiblePaths);
-    logger.log(Level.FINE, "Resolved SDK path : " + finalPath.toString());
-    return searchPaths(possiblePaths);
+    logger.log(Level.FINE, "Resolved SDK path : " + finalPath);
+    return finalPath;
   }
 
   /** 
