@@ -31,7 +31,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   private String adminHost;
   private Integer adminPort;
   private String authDomain;
-  private String storagePath;
+  private File storagePath;
   private String logLevel;
   private Integer maxModuleInstances;
   private Boolean useMtimeFileWatcher;
@@ -48,6 +48,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   private Boolean skipSdkUpdateCheck;
   private String defaultGcsBucketName;
   private Boolean clearDatastore;
+  private File datastorePath;
 
   @Override
   public List<File> getAppYamls() {
@@ -114,11 +115,11 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
-  public String getStoragePath() {
+  public File getStoragePath() {
     return storagePath;
   }
 
-  public void setStoragePath(String storagePath) {
+  public void setStoragePath(File storagePath) {
     this.storagePath = storagePath;
   }
 
@@ -264,5 +265,14 @@ public class DefaultRunConfiguration implements RunConfiguration {
 
   public void setClearDatastore(Boolean clearDatastore) {
     this.clearDatastore = clearDatastore;
+  }
+
+  @Override
+  public File getDatastorePath() {
+    return datastorePath;
+  }
+
+  public void setDatastorePath(File datastorePath) {
+    this.datastorePath = datastorePath;
   }
 }

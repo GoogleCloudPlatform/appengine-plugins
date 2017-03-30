@@ -32,8 +32,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -47,6 +48,8 @@ public class CloudSdkAppEngineDevServerTest {
 
   @Mock
   private CloudSdk sdk;
+  private Path fakeStoragePath = Paths.get("storage/path");
+  private Path fakeDatastorePath = Paths.get("datastore/path");
 
   private CloudSdkAppEngineDevServer devServer;
 
@@ -75,7 +78,7 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setAdminHost("adminHost");
     configuration.setAdminPort(8000);
     configuration.setAuthDomain("example.com");
-    configuration.setStoragePath("storage/path");
+    configuration.setStoragePath(fakeStoragePath.toFile());
     configuration.setLogLevel("debug");
     configuration.setMaxModuleInstances(3);
     configuration.setUseMtimeFileWatcher(true);
@@ -92,19 +95,20 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setSkipSdkUpdateCheck(true);
     configuration.setDefaultGcsBucketName("buckets");
     configuration.setClearDatastore(true);
+    configuration.setDatastorePath(fakeDatastorePath.toFile());
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
     List<String> expected = ImmutableList
         .of("app.yaml", "--host=host", "--port=8090", "--admin_host=adminHost",
-            "--admin_port=8000", "--auth_domain=example.com", "--storage_path=storage/path",
+            "--admin_port=8000", "--auth_domain=example.com", "--storage_path=" + fakeStoragePath,
             "--log_level=debug", "--max_module_instances=3", "--use_mtime_file_watcher=true",
             "--threadsafe_override=default:False,backend:True", "--python_startup_script=script.py",
             "--python_startup_args=arguments", "--jvm_flag=-Dflag1", "--jvm_flag=-Dflag2",
             "--custom_entrypoint=entrypoint", "--runtime=java", "--allow_skipped_files=true",
             "--api_port=8091", "--automatic_restart=false", "--dev_appserver_log_level=info",
             "--skip_sdk_update_check=true", "--default_gcs_bucket_name=buckets",
-            "--clear_datastore=true");
+            "--clear_datastore=true", "--datastore_path=" + fakeDatastorePath);
 
     devServer.run(configuration);
 

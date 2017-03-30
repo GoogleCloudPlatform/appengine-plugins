@@ -45,7 +45,7 @@ public interface RunConfiguration {
 
   String getAuthDomain();
 
-  String getStoragePath();
+  File getStoragePath();
 
   String getLogLevel();
 
@@ -78,4 +78,6 @@ public interface RunConfiguration {
   String getDefaultGcsBucketName();
 
   Boolean getClearDatastore();
+
+  File getDatastorePath();
 }
