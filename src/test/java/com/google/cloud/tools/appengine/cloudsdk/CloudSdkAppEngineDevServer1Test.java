@@ -106,7 +106,6 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setServices(ImmutableList.of(serviceDirectory));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
-        "--disable_update_check", "--no_java_agent", "src/test/java/resources");
         "--disable_update_check", "--no_java_agent",
         convertToPlatformDependentPath("src/test/java/resources"));
 
