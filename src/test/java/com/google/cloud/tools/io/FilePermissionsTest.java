@@ -48,7 +48,7 @@ public class FilePermissionsTest {
   
   @Test // Unix only
   public void testSubDirectoryCannotBeCreatedInDevNull()  {
-    Assume.assumeTrue(!System.getProperty("os.name").startsWith( "Windows"));
+    Assume.assumeTrue(!System.getProperty("os.name").startsWith("Windows"));
     try {
       FilePermissions.verifyDirectoryCreatable(Paths.get("/dev/null/foo/bar"));
       Assert.fail("Can create directory in /dev/null");
@@ -79,8 +79,9 @@ public class FilePermissionsTest {
     }
   }
   
-  @Test
+  @Test // Unix only
   public void testDirectoryCannotBeCreatedDueToUnwritableParent() throws IOException {
+    Assume.assumeTrue(!System.getProperty("os.name").startsWith("Windows"));
     Path dir = Files.createDirectory(Paths.get(parent.toString(), "child"));
     dir.toFile().setWritable(false);
     try {
@@ -91,8 +92,9 @@ public class FilePermissionsTest {
     }
   }
   
-  @Test
+  @Test // Unix only
   public void testRootNotWritable() throws IOException {
+    Assume.assumeTrue(!System.getProperty("os.name").startsWith("Windows"));
     try {
       FilePermissions.verifyDirectoryCreatable(Paths.get("/bar"));
       Assert.fail("Can create directory in root");
