@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.api.devserver;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class DefaultRunConfiguration implements RunConfiguration {
 
-  private List<File> services;
+  private List<Path> services;
   private String host;
   private Integer port;
   private String adminHost;
@@ -50,11 +51,11 @@ public class DefaultRunConfiguration implements RunConfiguration {
   private File datastorePath;
 
   @Override
-  public List<File> getServices() {
+  public List<Path> getServices() {
     return services;
   }
 
-  public void setServices(List<File> services) {
+  public void setServices(List<Path> services) {
     this.services = services;
   }
 

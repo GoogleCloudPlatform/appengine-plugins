@@ -15,6 +15,9 @@
  */
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
@@ -42,9 +45,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 /**
  * Unit tests for {@link CloudSdkAppEngineDevServer}.
  */
@@ -63,10 +63,8 @@ public class CloudSdkAppEngineDevServer1Test {
 
   private CloudSdkAppEngineDevServer1 devServer;
 
-  private final Path pathToJava8Service = Paths.get("src/test/resources/projects/EmptyStandard8Project");
-  private final File java8Service = pathToJava8Service.toFile();
-  private final Path pathToJava7Service = Paths.get("src/test/resources/projects/EmptyStandard7Project");
-  private final File java7Service = pathToJava7Service.toFile();
+  private final Path java8Service = Paths.get("src/test/resources/projects/EmptyStandard8Project");
+  private final Path java7Service = Paths.get("src/test/resources/projects/EmptyStandard7Project");
 
 
   @Before
@@ -126,7 +124,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
     List<String> expectedFlags = ImmutableList.of("--address=host", "--port=8090",
         "--default_gcs_bucket=buckets", "--allow_remote_shutdown", "--disable_update_check",
-        "--no_java_agent", pathToJava8Service.toString());
+        "--no_java_agent", java8Service.toString());
 
     List<String> expectedJvmArgs = ImmutableList.of("-Dflag1", "-Dflag2",
         "-Ddatastore.backing_store=" + fakeDatastorePath, "-Duse_jetty9_runtime=true",
@@ -167,7 +165,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setServices(ImmutableList.of(java8Service));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
-        "--disable_update_check", "--no_java_agent", pathToJava8Service.toString());
+        "--disable_update_check", "--no_java_agent", java8Service.toString());
     List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
             "-D--enable_all_permissions=true");
     devServer.run(configuration);
@@ -181,7 +179,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setServices(ImmutableList.of(java8Service));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
-        "--disable_update_check", "--no_java_agent", pathToJava8Service.toString());
+        "--disable_update_check", "--no_java_agent", java8Service.toString());
 
     List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
             "-D--enable_all_permissions=true");
@@ -198,7 +196,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setServices(ImmutableList.of(java7Service));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
-        "--disable_update_check", pathToJava7Service.toString());
+        "--disable_update_check", java7Service.toString());
     List<String> expectedJvmArgs = ImmutableList
         .of("-javaagent:" + fakeJavaSdkHome.resolve("agent/appengine-agent.jar").toAbsolutePath()
             .toString());
@@ -215,8 +213,8 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setServices(ImmutableList.of(java7Service, java8Service));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
-        "--disable_update_check", "--no_java_agent", pathToJava7Service.toString(),
-        pathToJava8Service.toString());
+        "--disable_update_check", "--no_java_agent", java7Service.toString(),
+        java8Service.toString());
 
     List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
         "-D--enable_all_permissions=true");
