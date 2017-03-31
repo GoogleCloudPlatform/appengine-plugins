@@ -71,7 +71,6 @@ public class CloudSdkAppEngineDevServerTest {
   public void testPrepareCommand_allFlags() throws Exception {
 
     DefaultRunConfiguration configuration = Mockito.spy(new DefaultRunConfiguration());
-    configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
     configuration.setServices(ImmutableList.of(new File("exploded-war/")));
     configuration.setHost("host");
     configuration.setPort(8090);
@@ -100,7 +99,7 @@ public class CloudSdkAppEngineDevServerTest {
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
     List<String> expected = ImmutableList
-        .of("app.yaml", "--host=host", "--port=8090", "--admin_host=adminHost",
+        .of("exploded-war", "--host=host", "--port=8090", "--admin_host=adminHost",
             "--admin_port=8000", "--auth_domain=example.com", "--storage_path=" + fakeStoragePath,
             "--log_level=debug", "--max_module_instances=3", "--use_mtime_file_watcher=true",
             "--threadsafe_override=default:False,backend:True", "--python_startup_script=script.py",
@@ -115,7 +114,7 @@ public class CloudSdkAppEngineDevServerTest {
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.<String, Integer>of("getServices", 0, "getAppYamls", 3));
+        ImmutableMap.<String, Integer>of("getServices", 3));
 
   }
 
@@ -123,7 +122,7 @@ public class CloudSdkAppEngineDevServerTest {
   public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
 
-    configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
     configuration.setUseMtimeFileWatcher(false);
     configuration.setAllowSkippedFiles(false);
     configuration.setAutomaticRestart(false);
@@ -131,7 +130,7 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setClearDatastore(false);
 
     List<String> expected = ImmutableList
-        .of("app.yaml", "--use_mtime_file_watcher=false", "--allow_skipped_files=false",
+        .of("exploded-war", "--use_mtime_file_watcher=false", "--allow_skipped_files=false",
             "--automatic_restart=false", "--skip_sdk_update_check=false",
             "--clear_datastore=false");
 
@@ -143,9 +142,9 @@ public class CloudSdkAppEngineDevServerTest {
   public void testPrepareCommand_noFlags() throws AppEngineException, ProcessRunnerException {
 
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
 
-    List<String> expected = ImmutableList.of("app.yaml");
+    List<String> expected = ImmutableList.of("exploded-war");
 
     devServer.run(configuration);
 

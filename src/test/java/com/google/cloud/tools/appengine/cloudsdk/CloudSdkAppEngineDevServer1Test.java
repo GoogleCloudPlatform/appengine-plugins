@@ -104,7 +104,6 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setClearDatastore(true);
 
     // these params are not used by devappserver1 and will log warnings
-    configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
     configuration.setAdminHost("adminHost");
     configuration.setAdminPort(8000);
     configuration.setAuthDomain("example.com");
@@ -141,8 +140,7 @@ public class CloudSdkAppEngineDevServer1Test {
         .verifyDeclaredGetters(ImmutableMap.of("getServices", 4, "getJavaHomeDir", 2, "getJvmFlags", 2));
 
     // verify we are checking and ignoring these parameters
-    verify(devServer, times(18)).checkAndWarnIgnored(Mockito.any(), Mockito.anyString());
-    verify(devServer).checkAndWarnIgnored(configuration.getAppYamls(), "appYamls");
+    verify(devServer, times(17)).checkAndWarnIgnored(Mockito.any(), Mockito.anyString());
     verify(devServer).checkAndWarnIgnored(configuration.getAdminHost(), "adminHost");
     verify(devServer).checkAndWarnIgnored(configuration.getAdminPort(), "adminPort");
     verify(devServer).checkAndWarnIgnored(configuration.getAuthDomain(), "authDomain");

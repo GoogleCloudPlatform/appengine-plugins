@@ -25,9 +25,8 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +36,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -80,7 +78,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("default_gcs_bucket", config.getDefaultGcsBucketName()));
 
     // Arguments ignored by dev appserver 1
-    checkAndWarnIgnored(config.getAppYamls(), "appYamls");
     checkAndWarnIgnored(config.getAdminHost(), "adminHost");
     checkAndWarnIgnored(config.getAdminPort(), "adminPort");
     checkAndWarnIgnored(config.getAuthDomain(), "authDomain");

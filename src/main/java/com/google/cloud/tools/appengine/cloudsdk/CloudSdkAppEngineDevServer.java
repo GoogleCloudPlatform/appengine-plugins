@@ -23,8 +23,6 @@ import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +31,6 @@ import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Cloud SDK based implementation of {@link AppEngineDevServer}.
@@ -60,12 +57,12 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
   @Override
   public void run(RunConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getAppYamls());
-    Preconditions.checkArgument(config.getAppYamls().size() > 0); 
+    Preconditions.checkNotNull(config.getServices());
+    Preconditions.checkArgument(config.getServices().size() > 0);
 
     List<String> arguments = new ArrayList<>();
-    for (File appYaml : config.getAppYamls()) {
-      arguments.add(appYaml.toPath().toString());
+    for (File serviceDirectory : config.getServices()) {
+      arguments.add(serviceDirectory.toPath().toString());
     }
 
     arguments.addAll(DevAppServerArgs.get("host", config.getHost()));

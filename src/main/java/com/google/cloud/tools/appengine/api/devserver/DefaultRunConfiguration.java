@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class DefaultRunConfiguration implements RunConfiguration {
 
-  private List<File> appYamls;
   private List<File> services;
   private String host;
   private Integer port;
@@ -49,16 +48,6 @@ public class DefaultRunConfiguration implements RunConfiguration {
   private String defaultGcsBucketName;
   private Boolean clearDatastore;
   private File datastorePath;
-
-  @Override
-  public List<File> getAppYamls() {
-    return appYamls;
-  }
-
-  public void setAppYamls(List<File> appYamls) {
-    this.appYamls = appYamls;
-  }
-
 
   @Override
   public List<File> getServices() {
