@@ -22,11 +22,11 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.DefaultProcess
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ExitCodeRecorderProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.StringBuilderProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.WaitingProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
+import com.google.cloud.tools.appengine.cloudsdk.process.StringBuilderProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.annotations.VisibleForTesting;

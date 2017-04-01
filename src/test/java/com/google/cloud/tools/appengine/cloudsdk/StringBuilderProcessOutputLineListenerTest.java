@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal.process;
+package com.google.cloud.tools.appengine.cloudsdk;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+
+import com.google.cloud.tools.appengine.cloudsdk.process.StringBuilderProcessOutputLineListener;
 
 import static org.junit.Assert.assertEquals;
 
 /**
  * Unit tests for {@link StringBuilderProcessOutputLineListener}
  */
-@RunWith(MockitoJUnitRunner.class)
 public class StringBuilderProcessOutputLineListenerTest {
 
   private StringBuilderProcessOutputLineListener listener;
