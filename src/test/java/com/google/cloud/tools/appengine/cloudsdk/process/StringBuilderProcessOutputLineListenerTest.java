@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.cloudsdk.process;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.cloud.tools.appengine.cloudsdk.process.StringBuilderProcessOutputLineListener;
 
 import static org.junit.Assert.assertEquals;
 
