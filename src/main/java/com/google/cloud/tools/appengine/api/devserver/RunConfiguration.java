@@ -17,7 +17,6 @@
 package com.google.cloud.tools.appengine.api.devserver;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ public interface RunConfiguration {
    *  List of all the service web output directories (1 or more) that need to be run with 
    *  the local devappserver. Such directory needs to include WEB-INF/appengine-web.xml.
    */
-  List<Path> getServices();
+  List<File> getServices();
 
   String getHost();
 

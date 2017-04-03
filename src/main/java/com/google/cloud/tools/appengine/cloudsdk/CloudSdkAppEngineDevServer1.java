@@ -108,8 +108,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
           .toAbsolutePath().toString();
       jvmArguments.add("-javaagent:" + appengineAgentJar);
     }
-    for (Path service : config.getServices()) {
-      arguments.add(service.toString());
+    for (File service : config.getServices()) {
+      arguments.add(service.toPath().toString());
     }
     try {
       sdk.runDevAppServer1Command(jvmArguments, arguments);
@@ -173,11 +173,11 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    *         module is found (i.e. pure java8 or mixed java7/java8)
    */
   @VisibleForTesting
-  boolean isJava8(List<Path> services) {
+  boolean isJava8(List<File> services) {
     boolean java8Detected = false;
     boolean java7Detected = false;
-    for (Path serviceDirectory : services) {
-      Path appengineWebXml = serviceDirectory.resolve("WEB-INF/appengine-web.xml");
+    for (File serviceDirectory : services) {
+      Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
       try (InputStream is = Files.newInputStream(appengineWebXml)) {
         if (AppEngineDescriptor.parse(is).isJava8()) {
           java8Detected = true;

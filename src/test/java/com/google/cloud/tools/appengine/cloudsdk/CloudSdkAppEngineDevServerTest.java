@@ -71,7 +71,7 @@ public class CloudSdkAppEngineDevServerTest {
   public void testPrepareCommand_allFlags() throws Exception {
 
     DefaultRunConfiguration configuration = Mockito.spy(new DefaultRunConfiguration());
-    configuration.setServices(ImmutableList.of(Paths.get("exploded-war/")));
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
     configuration.setHost("host");
     configuration.setPort(8090);
     configuration.setAdminHost("adminHost");
@@ -122,7 +122,7 @@ public class CloudSdkAppEngineDevServerTest {
   public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
 
-    configuration.setServices(ImmutableList.of(Paths.get("exploded-war/")));
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
     configuration.setUseMtimeFileWatcher(false);
     configuration.setAllowSkippedFiles(false);
     configuration.setAutomaticRestart(false);
@@ -142,7 +142,7 @@ public class CloudSdkAppEngineDevServerTest {
   public void testPrepareCommand_noFlags() throws AppEngineException, ProcessRunnerException {
 
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(Paths.get("exploded-war/")));
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
 
     List<String> expected = ImmutableList.of("exploded-war");
 

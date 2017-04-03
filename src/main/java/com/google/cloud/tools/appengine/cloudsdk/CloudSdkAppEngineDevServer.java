@@ -24,11 +24,11 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,8 +61,8 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     Preconditions.checkArgument(config.getServices().size() > 0);
 
     List<String> arguments = new ArrayList<>();
-    for (Path serviceDirectory : config.getServices()) {
-      arguments.add(serviceDirectory.toString());
+    for (File serviceDirectory : config.getServices()) {
+      arguments.add(serviceDirectory.toPath().toString());
     }
 
     arguments.addAll(DevAppServerArgs.get("host", config.getHost()));
