@@ -17,6 +17,8 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
+import com.google.cloud.tools.appengine.api.devserver.DefaultStopConfiguration;
+import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.test.utils.LogStoringHandler;
 import com.google.cloud.tools.test.utils.SpyVerifier;
@@ -80,9 +82,21 @@ public class CloudSdkAppEngineDevServer1Test {
 
     testHandler = LogStoringHandler.getForLogger(CloudSdkAppEngineDevServer1.class.getName());
   }
+  
+  @Test
+  public void testStop() {
+    DefaultStopConfiguration configuration = new DefaultStopConfiguration();
+    configuration.setAdminPort(7777);
+    try {
+      devServer.stop(configuration);
+      Assert.fail();
+    } catch (AppEngineException ex) {
+      Assert.assertEquals(ex.getMessage(), "Error connecting to http://localhost:7777/_ah/admin/quit");
+    }
+  }
 
   @Test
-  public void tesNullSdk() {
+  public void testNullSdk() {
     try {
       new CloudSdkAppEngineDevServer1(null);
       Assert.fail("Allowed null SDK");

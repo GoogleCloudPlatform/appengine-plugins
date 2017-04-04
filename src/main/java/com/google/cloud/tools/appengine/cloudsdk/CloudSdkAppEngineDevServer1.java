@@ -125,13 +125,13 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   public void stop(StopConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     HttpURLConnection connection = null;
+    String adminHost =
+        configuration.getAdminHost() != null ? configuration.getAdminHost() : DEFAULT_HOST;
+    int adminPort =
+        configuration.getAdminPort() != null ? configuration.getAdminPort() : DEFAULT_PORT;
+    URL adminServerUrl = null;
     try {
-      URL adminServerUrl = new URL(
-              "http",
-              configuration.getAdminHost() != null
-              ? configuration.getAdminHost() : DEFAULT_HOST,
-              DEFAULT_PORT,
-              "/_ah/admin/quit");
+      adminServerUrl = new URL("http", adminHost, adminPort, "/_ah/admin/quit");
       connection = (HttpURLConnection) adminServerUrl.openConnection();
       connection.setDoOutput(true);
       connection.setDoInput(true);
@@ -142,10 +142,10 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       int responseCode = connection.getResponseCode();
       if (responseCode < 200 || responseCode > 299) {
         throw new AppEngineException(
-                "The development server responded with " + connection.getResponseMessage() + ".");
+            adminServerUrl + " responded with " + connection.getResponseMessage() + ".");
       }
-    } catch (IOException e) {
-      throw new AppEngineException(e);
+    } catch (IOException ex) {
+      throw new AppEngineException("Error connecting to " + adminServerUrl, ex);
     } finally {
       if (connection != null) {
         try {
