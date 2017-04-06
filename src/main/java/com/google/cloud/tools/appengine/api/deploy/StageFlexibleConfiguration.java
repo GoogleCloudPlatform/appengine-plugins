@@ -23,13 +23,19 @@ import java.io.File;
  */
 public interface StageFlexibleConfiguration {
 
-  /** Directory containing {@code app.yaml}. */
+  /**
+   * Directory containing {@code app.yaml}.
+   */
   File getAppEngineDirectory();
 
-  /** Directory containing {@code Dockerfile} and other resources used by it. */
+  /**
+   * Directory containing {@code Dockerfile} and other resources used by it.
+   */
   File getDockerDirectory();
 
-  /** Artifact to deploy such as WAR or JAR */
+  /**
+   * Artifact to deploy such as WAR or JAR.
+   */
   File getArtifact();
 
   /**
