@@ -16,12 +16,11 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import org.junit.Test;
-
-import java.io.File;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import java.io.File;
+import org.junit.Test;
 
 public class DefaultStageFlexibleConfigurationTest {
 
