@@ -40,7 +40,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -114,37 +116,37 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setPort(8090);
     configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
     configuration.setDefaultGcsBucketName("buckets");
-    configuration.setDatastorePath(fakeDatastorePath);
-    configuration.setClearDatastore(true);
 
     // these params are not used by devappserver1 and will log warnings
     configuration.setAdminHost("adminHost");
     configuration.setAdminPort(8000);
     configuration.setAuthDomain("example.com");
-    configuration.setStoragePath(fakeStoragePath);
-    configuration.setLogLevel("debug");
-    configuration.setMaxModuleInstances(3);
-    configuration.setUseMtimeFileWatcher(true);
-    configuration.setThreadsafeOverride("default:False,backend:True");
-    configuration.setPythonStartupScript("script.py");
-    configuration.setPythonStartupArgs("arguments");
-    configuration.setRuntime("someRuntime");
-    configuration.setCustomEntrypoint("entrypoint");
     configuration.setAllowSkippedFiles(true);
     configuration.setApiPort(8091);
     configuration.setAutomaticRestart(false);
+    configuration.setClearDatastore(true);
+    configuration.setCustomEntrypoint("entrypoint");
+    configuration.setDatastorePath(fakeDatastorePath);
     configuration.setDevAppserverLogLevel("info");
+    configuration.setLogLevel("debug");
+    configuration.setMaxModuleInstances(3);
+    configuration.setPythonStartupScript("script.py");
+    configuration.setPythonStartupArgs("arguments");
+    configuration.setRuntime("someRuntime");
+    configuration.setStoragePath(fakeStoragePath);
     configuration.setSkipSdkUpdateCheck(true);
+    configuration.setThreadsafeOverride("default:False,backend:True");
+    configuration.setUseMtimeFileWatcher(true);
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
-    List<String> expectedFlags = ImmutableList.of("--address=host", "--port=8090",
-        "--default_gcs_bucket=buckets", "--allow_remote_shutdown", "--disable_update_check",
-        "--no_java_agent", pathToJava8Service.toString());
+    List<String> expectedFlags = ImmutableList
+        .of("--address=host", "--port=8090", "--default_gcs_bucket=buckets",
+            "--allow_remote_shutdown", "--disable_update_check", "--no_java_agent",
+            pathToJava8Service.toString());
 
     List<String> expectedJvmArgs = ImmutableList.of("-Dflag1", "-Dflag2",
-        "-Ddatastore.backing_store=" + fakeDatastorePath, "-Duse_jetty9_runtime=true",
-        "-D--enable_all_permissions=true");
+        "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     devServer.run(configuration);
 
@@ -154,24 +156,34 @@ public class CloudSdkAppEngineDevServer1Test {
         .verifyDeclaredGetters(ImmutableMap.of("getServices", 4, "getJavaHomeDir", 2, "getJvmFlags", 2));
 
     // verify we are checking and ignoring these parameters
-    verify(devServer, times(17)).checkAndWarnIgnored(Mockito.any(), Mockito.anyString());
-    verify(devServer).checkAndWarnIgnored(configuration.getAdminHost(), "adminHost");
-    verify(devServer).checkAndWarnIgnored(configuration.getAdminPort(), "adminPort");
-    verify(devServer).checkAndWarnIgnored(configuration.getAuthDomain(), "authDomain");
-    verify(devServer).checkAndWarnIgnored(configuration.getStoragePath(), "storagePath");
-    verify(devServer).checkAndWarnIgnored(configuration.getLogLevel(), "logLevel");
-    verify(devServer).checkAndWarnIgnored(configuration.getMaxModuleInstances(), "maxModuleInstances");
-    verify(devServer).checkAndWarnIgnored(configuration.getUseMtimeFileWatcher(), "useMtimeFileWatcher");
-    verify(devServer).checkAndWarnIgnored(configuration.getThreadsafeOverride(), "threadsafeOverride");
-    verify(devServer).checkAndWarnIgnored(configuration.getPythonStartupScript(), "pythonStartupScript");
-    verify(devServer).checkAndWarnIgnored(configuration.getPythonStartupArgs(), "pythonStartupArgs");
-    verify(devServer).checkAndWarnIgnored(configuration.getRuntime(), "runtime");
-    verify(devServer).checkAndWarnIgnored(configuration.getCustomEntrypoint(), "customEntrypoint");
-    verify(devServer).checkAndWarnIgnored(configuration.getAllowSkippedFiles(), "allowSkippedFiles");
-    verify(devServer).checkAndWarnIgnored(configuration.getApiPort(), "apiPort");
-    verify(devServer).checkAndWarnIgnored(configuration.getAutomaticRestart(), "automaticRestart");
-    verify(devServer).checkAndWarnIgnored(configuration.getDevAppserverLogLevel(), "devAppserverLogLevel");
-    verify(devServer).checkAndWarnIgnored(configuration.getSkipSdkUpdateCheck(), "skipSdkUpdateCheck");
+    Map<String, Object> paramWarnings = new HashMap<>();
+    paramWarnings.put("adminHost", configuration.getAdminHost());
+    paramWarnings.put("adminPort", configuration.getAdminPort());
+    paramWarnings.put("allowSkippedFiles", configuration.getAllowSkippedFiles());
+    paramWarnings.put("apiPort", configuration.getApiPort());
+    paramWarnings.put("authDomain", configuration.getAuthDomain());
+    paramWarnings.put("automaticRestart", configuration.getAutomaticRestart());
+    paramWarnings.put("clearDatastore", configuration.getClearDatastore());
+    paramWarnings.put("customEntrypoint", configuration.getCustomEntrypoint());
+    paramWarnings.put("datastorePath", configuration.getDatastorePath());
+    paramWarnings.put("devAppserverLogLevel", configuration.getDevAppserverLogLevel());
+    paramWarnings.put("logLevel", configuration.getLogLevel());
+    paramWarnings.put("maxModuleInstances", configuration.getMaxModuleInstances());
+    paramWarnings.put("pythonStartupArgs", configuration.getPythonStartupArgs());
+    paramWarnings.put("pythonStartupScript", configuration.getPythonStartupScript());
+    paramWarnings.put("runtime", configuration.getRuntime());
+    paramWarnings.put("skipSdkUpdateCheck", configuration.getSkipSdkUpdateCheck());
+    paramWarnings.put("storagePath", configuration.getStoragePath());
+    paramWarnings.put("threadsafeOverride", configuration.getThreadsafeOverride());
+    paramWarnings.put("useMtimeFileWatcher", configuration.getUseMtimeFileWatcher());
+
+    for (String key : paramWarnings.keySet()) {
+      verify(devServer).checkAndWarnIgnored(paramWarnings.get(key), key);
+    }
+
+    // verify that we're verifying all the ignored parameters (by counting)
+    verify(devServer, times(paramWarnings.size()))
+        .checkAndWarnIgnored(Mockito.any(), Mockito.anyString());
   }
 
   @Test
@@ -291,70 +303,5 @@ public class CloudSdkAppEngineDevServer1Test {
     LogRecord logRecord = testHandler.getLogs().get(0);
     Assert.assertEquals("Mixed runtimes java7/java8 detected, will use java8 settings", logRecord.getMessage());
     Assert.assertEquals(Level.WARNING, logRecord.getLevel());
-  }
-
-  @Test
-  public void testHandleDatastoreFlags_setAndDoNotClear() {
-    List<String> jvmArgs = new ArrayList<>();
-    Assert.assertTrue(fakeDatastorePath.exists());
-
-    devServer.handleDatastoreFlags(jvmArgs, fakeDatastorePath, false);
-
-    Assert.assertEquals(jvmArgs, ImmutableList.of("-Ddatastore.backing_store=" + fakeDatastorePath));
-    Assert.assertTrue(fakeDatastorePath.exists());
-  }
-
-  @Test
-  public void testHandleDatastoreFlags_setAndNullClear() {
-    List<String> jvmArgs = new ArrayList<>();
-    Assert.assertTrue(fakeDatastorePath.exists());
-    devServer.handleDatastoreFlags(jvmArgs, fakeDatastorePath, null);
-
-    Assert.assertEquals(jvmArgs, ImmutableList.of("-Ddatastore.backing_store=" + fakeDatastorePath));
-    Assert.assertTrue(fakeDatastorePath.exists());
-  }
-
-  @Test
-  public void testHandleDatastoreFlags_setAndClear() {
-    List<String> jvmArgs = new ArrayList<>();
-    Assert.assertTrue(fakeDatastorePath.exists());
-
-    devServer.handleDatastoreFlags(jvmArgs, fakeDatastorePath, true);
-
-    Assert.assertEquals(jvmArgs, ImmutableList.of("-Ddatastore.backing_store=" + fakeDatastorePath));
-    Assert.assertFalse(fakeDatastorePath.exists());
-  }
-
-  @Test
-  public void testHandleDatastoreFlags_unSetandClear() {
-    List<String> jvmArgs = new ArrayList<>();
-    devServer.handleDatastoreFlags(jvmArgs, null, false);
-    Assert.assertEquals(0, jvmArgs.size());
-
-    Assert.assertEquals(1, testHandler.getLogs().size());
-    LogRecord logRecord = testHandler.getLogs().get(0);
-    Assert.assertEquals("'clearDatastore' flag does not apply unless 'datastorePath' is specified for Dev Appserver v1", logRecord.getMessage());
-    Assert.assertEquals(Level.WARNING, logRecord.getLevel());
-  }
-
-  @Test
-  public void testHandleDatastoreFlags_unSetandDoNotClear() {
-    List<String> jvmArgs = new ArrayList<>();
-    devServer.handleDatastoreFlags(jvmArgs, null, false);
-    Assert.assertEquals(0, jvmArgs.size());
-
-    Assert.assertEquals(1, testHandler.getLogs().size());
-    LogRecord logRecord = testHandler.getLogs().get(0);
-    Assert.assertEquals("'clearDatastore' flag does not apply unless 'datastorePath' is specified for Dev Appserver v1", logRecord.getMessage());
-    Assert.assertEquals(Level.WARNING, logRecord.getLevel());
-  }
-
-  @Test
-  public void testHandleDatastoreFlags_unSetandNullClear() {
-    List<String> jvmArgs = new ArrayList<>();
-    devServer.handleDatastoreFlags(jvmArgs, null, null);
-    Assert.assertEquals(0, jvmArgs.size());
-
-    Assert.assertEquals(0, testHandler.getLogs().size());
   }
 }

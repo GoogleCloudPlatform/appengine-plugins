@@ -73,28 +73,29 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       jvmArguments.addAll(config.getJvmFlags());
     }
 
-    handleDatastoreFlags(jvmArguments, config.getDatastorePath(), config.getClearDatastore());
 
     arguments.addAll(DevAppServerArgs.get("default_gcs_bucket", config.getDefaultGcsBucketName()));
 
     // Arguments ignored by dev appserver 1
     checkAndWarnIgnored(config.getAdminHost(), "adminHost");
     checkAndWarnIgnored(config.getAdminPort(), "adminPort");
-    checkAndWarnIgnored(config.getAuthDomain(), "authDomain");
-    checkAndWarnIgnored(config.getStoragePath(), "storagePath");
-    checkAndWarnIgnored(config.getLogLevel(), "logLevel");
-    checkAndWarnIgnored(config.getMaxModuleInstances(), "maxModuleInstances");
-    checkAndWarnIgnored(config.getUseMtimeFileWatcher(), "useMtimeFileWatcher");
-    checkAndWarnIgnored(config.getThreadsafeOverride(), "threadsafeOverride");
-    checkAndWarnIgnored(config.getPythonStartupScript(), "pythonStartupScript");
-    checkAndWarnIgnored(config.getPythonStartupArgs(), "pythonStartupArgs");
-    checkAndWarnIgnored(config.getRuntime(), "runtime");
-    checkAndWarnIgnored(config.getCustomEntrypoint(), "customEntrypoint");
     checkAndWarnIgnored(config.getAllowSkippedFiles(), "allowSkippedFiles");
     checkAndWarnIgnored(config.getApiPort(), "apiPort");
+    checkAndWarnIgnored(config.getAuthDomain(), "authDomain");
     checkAndWarnIgnored(config.getAutomaticRestart(), "automaticRestart");
+    checkAndWarnIgnored(config.getClearDatastore(), "clearDatastore");
+    checkAndWarnIgnored(config.getCustomEntrypoint(), "customEntrypoint");
+    checkAndWarnIgnored(config.getDatastorePath(), "datastorePath");
     checkAndWarnIgnored(config.getDevAppserverLogLevel(), "devAppserverLogLevel");
+    checkAndWarnIgnored(config.getLogLevel(), "logLevel");
+    checkAndWarnIgnored(config.getMaxModuleInstances(), "maxModuleInstances");
+    checkAndWarnIgnored(config.getPythonStartupArgs(), "pythonStartupArgs");
+    checkAndWarnIgnored(config.getPythonStartupScript(), "pythonStartupScript");
+    checkAndWarnIgnored(config.getRuntime(), "runtime");
     checkAndWarnIgnored(config.getSkipSdkUpdateCheck(), "skipSdkUpdateCheck");
+    checkAndWarnIgnored(config.getStoragePath(), "storagePath");
+    checkAndWarnIgnored(config.getThreadsafeOverride(), "threadsafeOverride");
+    checkAndWarnIgnored(config.getUseMtimeFileWatcher(), "useMtimeFileWatcher");
 
     arguments.add("--allow_remote_shutdown");
     arguments.add("--disable_update_check");
@@ -192,32 +193,5 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       log.warning("Mixed runtimes java7/java8 detected, will use java8 settings");
     }
     return java8Detected;
-  }
-
-  /**
-   * Datastore related work is full of shenanigans:
-   * 1. Map datastorePath to jvm argument
-   * 2. Only clearDatastore if user specifies path
-   * 3. We don't want to guess where the path is, and can provide no guarantees on
-   *    the behavior if the file is not specified somewhere.
-   */
-  @VisibleForTesting
-  void handleDatastoreFlags(List<String> modifiableJvmArgs, File datastoreFile,
-      Boolean clearDatastore) {
-    if (datastoreFile != null) {
-      Path datastorePath = datastoreFile.toPath();
-      modifiableJvmArgs.add("-Ddatastore.backing_store=" + datastorePath);
-
-      if (Boolean.TRUE == clearDatastore) {
-        try {
-          Files.deleteIfExists(datastoreFile.toPath());
-        } catch (IOException e) {
-          log.warning("Could not clear datastore : " + e.getMessage());
-        }
-      }
-    } else if (clearDatastore != null) { // and datastoreFile == null
-      log.warning("'clearDatastore' flag does not apply unless 'datastorePath'"
-          + " is specified for Dev Appserver v1");
-    }
   }
 }
