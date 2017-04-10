@@ -25,7 +25,7 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
 
   private File appEngineDirectory;
   private File dockerDirectory;
-  private File setArtifact;
+  private File artifact;
   private File stagingDirectory;
 
   @Override
@@ -48,11 +48,11 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
 
   @Override
   public File getArtifact() {
-    return setArtifact;
+    return artifact;
   }
 
-  public void setArtifact(File setArtifact) {
-    this.setArtifact = setArtifact;
+  public void setArtifact(File artifact) {
+    this.artifact = artifact;
   }
 
   @Override
