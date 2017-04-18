@@ -1,0 +1,49 @@
+/*
+ * Copyright 2016 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.cloud.tools.app.deploy.process;
+
+import java.io.InputStream;
+import java.util.Scanner;
+
+public class StreamConsumer {
+  private final InputStream stream;
+  private final OutputHandler outputHandler;
+
+  private StreamConsumer(InputStream stream, OutputHandler outputHandler) {
+    this.stream = stream;
+    this.outputHandler = outputHandler;
+  }
+
+  private void start() {
+    final Scanner scanner = new Scanner(stream);
+    Thread resultThread = new Thread("stream-reader:" + stream.toString()) {
+      @Override
+      public void run() {
+        while (scanner.hasNextLine() && !Thread.interrupted()) {
+          String line = scanner.nextLine();
+          outputHandler.handleLine(line);
+        }
+      }
+    };
+    resultThread.setDaemon(true);
+    resultThread.start();
+  }
+
+  public static void startNewConsumer(InputStream stream, OutputHandler handler) {
+      new StreamConsumer(stream, handler).start();
+  }
+}
