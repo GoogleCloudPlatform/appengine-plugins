@@ -122,6 +122,9 @@ public class AppEngineDescriptor {
     return null;
   }
 
+  /**
+   * @return a map formed from the attributes of the nodes contained with the parent node.
+   */
   private static Map<String, String> getAttributeMap(Node parent, String nodeName, String key,
                                                      String value) {
     if (parent != null) {
