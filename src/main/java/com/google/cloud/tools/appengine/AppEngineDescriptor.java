@@ -105,6 +105,9 @@ public class AppEngineDescriptor {
             && getRuntime().startsWith("java8");
   }
 
+  /**
+   * @return a map representing the environment variable settings in the appengine-web.xml
+   */
   public Map<String, String> getEnvironment() {
     Node environmentParentNode = getTargetNode(document, "appengine-web-app", "env-variables");
     return getAttributeMap(environmentParentNode, "env-var", "name", "value");
