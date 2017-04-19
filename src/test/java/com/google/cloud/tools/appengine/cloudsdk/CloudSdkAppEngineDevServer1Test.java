@@ -153,7 +153,7 @@ public class CloudSdkAppEngineDevServer1Test {
     verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags, environment);
 
     SpyVerifier.newVerifier(configuration)
-        .verifyDeclaredGetters(ImmutableMap.of("getServices", 4, "getJavaHomeDir", 2, "getJvmFlags", 2));
+        .verifyDeclaredGetters(ImmutableMap.of("getServices", 5, "getJavaHomeDir", 2, "getJvmFlags", 2));
 
     // verify we are checking and ignoring these parameters
     Map<String, Object> paramWarnings = new HashMap<>();
