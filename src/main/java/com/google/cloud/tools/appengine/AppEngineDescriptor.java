@@ -67,7 +67,7 @@ public class AppEngineDescriptor {
    *         if it is missing
    */
   public String getProjectId()  {
-    return getText(getTargetNode(document, "appengine-web-app", "application"));
+    return getText(getNode(document, "appengine-web-app", "application"));
   }
 
   /**
@@ -75,14 +75,14 @@ public class AppEngineDescriptor {
    *         if it is missing
    */
   public String getRuntime()  {
-    return getText(getTargetNode(document, "appengine-web-app", "runtime"));
+    return getText(getNode(document, "appengine-web-app", "runtime"));
   }
   /**
    * @return project version from the &lt;version&gt; element of the appengine-web.xml or
    *         null if it is missing
    */
   public String getProjectVersion() {
-    return getText(getTargetNode(document, "appengine-web-app", "version"));
+    return getText(getNode(document, "appengine-web-app", "version"));
   }
 
   /**
@@ -90,11 +90,11 @@ public class AppEngineDescriptor {
    *         null if it is missing. Will also look at module ID.
    */
   public String getServiceId() {
-    String serviceId = getText(getTargetNode(document, "appengine-web-app", "service"));
+    String serviceId = getText(getNode(document, "appengine-web-app", "service"));
     if (serviceId != null) {
       return serviceId;
     }
-    return getText(getTargetNode(document, "appengine-web-app", "module"));
+    return getText(getNode(document, "appengine-web-app", "module"));
   }
 
   /**
@@ -109,7 +109,7 @@ public class AppEngineDescriptor {
    * @return a map representing the environment variable settings in the appengine-web.xml
    */
   public Map<String, String> getEnvironment() {
-    Node environmentParentNode = getTargetNode(document, "appengine-web-app", "env-variables");
+    Node environmentParentNode = getNode(document, "appengine-web-app", "env-variables");
     return getAttributeMap(environmentParentNode, "env-var", "name", "value");
   }
 
@@ -147,7 +147,7 @@ public class AppEngineDescriptor {
               Node valueNode = attributeMap.getNamedItem(valueAttributeName);
               try {
                 nameValueAttributeMap.put(keyNode.getNodeValue(), valueNode.getNodeValue());
-              } catch(DOMException ex) {
+              } catch (DOMException ex) {
                 // this shouldn't happen barring a very funky DOM implementation
               }
             }
@@ -161,7 +161,10 @@ public class AppEngineDescriptor {
     return null;
   }
 
-  private static Node getTargetNode(Document doc, String parentNodeName, String targetNodeName) {
+  /**
+   * @return the first node found matching the given name contained within the parent node
+   */
+  private static Node getNode(Document doc, String parentNodeName, String targetNodeName) {
     NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentNodeName);
     if (parentElements.getLength() > 0) {
       Node parent = parentElements.item(0);
