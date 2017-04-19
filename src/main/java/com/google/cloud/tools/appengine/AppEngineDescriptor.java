@@ -106,7 +106,7 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * @return a map representing the environment variable settings in the appengine-web.xml
+   * @return a map representing the environment variable settings in the appengine-web.xml.
    */
   public Map<String, String> getEnvironment() {
     Node environmentParentNode = getNode(document, "appengine-web-app", "env-variables");
@@ -162,7 +162,7 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * @return the first node found matching the given name contained within the parent node
+   * @return first node found matching the given name contained within the parent node.
    */
   private static Node getNode(Document doc, String parentNodeName, String targetNodeName) {
     NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentNodeName);
