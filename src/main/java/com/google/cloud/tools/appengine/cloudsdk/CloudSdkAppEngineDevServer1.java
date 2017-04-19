@@ -116,7 +116,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       arguments.add(service.toPath().toString());
     }
 
-    Map<String, String> appEngineEnvironment = getAllAppEngineEnvironment(config.getServices());
+    Map<String, String> appEngineEnvironment
+        = getAllAppEngineWebXmlEnvironmentVariables(config.getServices());
 
     try {
       sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment);
@@ -201,8 +202,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     return java8Detected;
   }
 
-  @VisibleForTesting
-  Map<String, String> getAllAppEngineEnvironment(List<File> services) {
+  private Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(List<File> services) {
     Map<String, String> allAppEngineEnvironment = Maps.newHashMap();
     for (File serviceDirectory : services) {
       Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");

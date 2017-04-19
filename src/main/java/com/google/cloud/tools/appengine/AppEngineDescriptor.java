@@ -138,7 +138,7 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * @return a map formed from the attributes of the nodes contained within the parent node.
+   * Returns a map formed from the attributes of the nodes contained within the parent node.
    */
   private static Map<String, String> getAttributeMap(Node parent,
                                                      String nodeName,
@@ -175,7 +175,7 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * @return first node found matching the given name contained within the parent node.
+   * Returns the first node found matching the given name contained within the parent node.
    */
   private static Node getNode(Document doc, String parentNodeName, String targetNodeName) {
     NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentNodeName);
