@@ -36,6 +36,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -208,6 +209,10 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       try (InputStream is = Files.newInputStream(appengineWebXml)) {
         Map<String, String> appEngineEnvironment = AppEngineDescriptor.parse(is).getEnvironment();
         if (appEngineEnvironment != null) {
+          if (!Collections.disjoint(
+              allAppEngineEnvironment.keySet(), appEngineEnvironment.keySet())) {
+            log.warning("Found duplicated environment keys between appengine-web.xml files.");
+          }
           allAppEngineEnvironment.putAll(appEngineEnvironment);
         }
       } catch (IOException e) {
