@@ -26,5 +26,6 @@
     <env-variables>
         <env-var name="key1" value="val1" />
         <env-var name="key2" value="val2" />
+        <ignored-var name="key3" value="val3" />
     </env-variables>
 </appengine-web-app>
