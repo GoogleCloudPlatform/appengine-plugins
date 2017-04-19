@@ -158,7 +158,7 @@ public class AppEngineDescriptor {
             if (keyNode != null) {
               Node valueNode = attributeMap.getNamedItem(valueAttributeName);
               try {
-                nameValueAttributeMap.put(keyNode.getNodeValue(), valueNode.getNodeValue());
+                nameValueAttributeMap.put(keyNode.getTextContent(), valueNode.getTextContent());
               } catch (DOMException ex) {
                 throw new AppEngineException("Failed to parse value from attribute node "
                     + keyNode.getNodeName());
