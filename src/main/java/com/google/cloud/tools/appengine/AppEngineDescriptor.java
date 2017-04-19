@@ -128,7 +128,8 @@ public class AppEngineDescriptor {
   /**
    * @return a map formed from the attributes of the nodes contained within the parent node.
    */
-  private static Map<String, String> getAttributeMap(Node parent, String nodeName,
+  private static Map<String, String> getAttributeMap(Node parent,
+                                                     String nodeName,
                                                      String keyAttributeName,
                                                      String valueAttributeName) {
     if (parent != null) {
