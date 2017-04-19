@@ -126,10 +126,11 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * @return a map formed from the attributes of the nodes contained with the parent node.
+   * @return a map formed from the attributes of the nodes contained within the parent node.
    */
-  private static Map<String, String> getAttributeMap(Node parent, String nodeName, String key,
-                                                     String value) {
+  private static Map<String, String> getAttributeMap(Node parent, String nodeName,
+                                                     String keyAttributeName,
+                                                     String valueAttributeName) {
     if (parent != null) {
       Map<String, String> nameValueAttributeMap = Maps.newHashMap();
 
@@ -139,10 +140,10 @@ public class AppEngineDescriptor {
           NamedNodeMap attributeMap = child.getAttributes();
 
           if (nodeName.equals(child.getNodeName()) && attributeMap != null) {
-            Node keyNode = attributeMap.getNamedItem(key);
+            Node keyNode = attributeMap.getNamedItem(keyAttributeName);
 
             if (keyNode != null) {
-              Node valueNode = attributeMap.getNamedItem(value);
+              Node valueNode = attributeMap.getNamedItem(valueAttributeName);
               try {
                 nameValueAttributeMap.put(keyNode.getNodeValue(), valueNode.getNodeValue());
               } catch(DOMException ex) {
