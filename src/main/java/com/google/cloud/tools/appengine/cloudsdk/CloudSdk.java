@@ -520,6 +520,38 @@ public class CloudSdk {
     return runDevAppServerWaitListener;
   }
 
+  /**
+   * Validate the current instance.
+   * 
+   * @throws CloudSdkConfigurationException if invalid
+   */
+  public void validate() throws CloudSdkConfigurationException {
+    if (sdkPath == null) {
+      throw new CloudSdkConfigurationException("Validation Error : Sdk path is null");
+    }
+    if (!sdkPath.toFile().isDirectory()) {
+      throw new CloudSdkConfigurationException(
+          "Validation Error : Sdk directory '" + sdkPath + "' is not valid");
+    }
+    if (!getGCloudPath().toFile().isFile()) {
+      throw new CloudSdkConfigurationException(
+          "Validation Error : gcloud path '" + getGCloudPath() + "' is not valid");
+    }
+    if (!getDevAppServerPath().toFile().isFile()) {
+      throw new CloudSdkConfigurationException(
+          "Validation Error : dev_appserver.py path '" + getDevAppServerPath() + "' is not valid");
+    }
+    if (!getJavaAppEngineSdkPath().toFile().isFile()) {
+      throw new CloudSdkConfigurationException("Validation Error : Java App Engine SDK path '"
+          + getJavaAppEngineSdkPath() + "' is not valid");
+    }
+    if (!getJavaToolsJar().toFile().isFile()) {
+      throw new CloudSdkConfigurationException(
+          "Validation Error : Java Tools jar path '" + getJavaToolsJar() + "' is not valid");
+    }
+  }
+
+
   public static class Builder {
     private Path sdkPath;
     private String appCommandMetricsEnvironment;
