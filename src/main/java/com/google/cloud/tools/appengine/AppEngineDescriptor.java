@@ -162,18 +162,18 @@ public class AppEngineDescriptor {
   }
 
   private static Node getTargetNode(Document doc, String parentNodeName, String targetNodeName) {
-      NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentNodeName);
-      if (parentElements.getLength() > 0) {
-        Node parent = parentElements.item(0);
-        if (parent.hasChildNodes()) {
-          for (int i = 0; i < parent.getChildNodes().getLength(); ++i) {
-            Node child = parent.getChildNodes().item(i);
-            if (child.getNodeName().equals(targetNodeName)) {
-              return child;
-            }
+    NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentNodeName);
+    if (parentElements.getLength() > 0) {
+      Node parent = parentElements.item(0);
+      if (parent.hasChildNodes()) {
+        for (int i = 0; i < parent.getChildNodes().getLength(); ++i) {
+          Node child = parent.getChildNodes().item(i);
+          if (child.getNodeName().equals(targetNodeName)) {
+            return child;
           }
         }
       }
-      return null;
+    }
+    return null;
   }
 }
