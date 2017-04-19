@@ -16,15 +16,21 @@
 
 package com.google.cloud.tools.appengine;
 
-import java.io.IOException;
-import java.io.InputStream;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import com.google.common.collect.Maps;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Utilities to obtain information from appengine-web.xml.
@@ -61,7 +67,7 @@ public class AppEngineDescriptor {
    *         if it is missing
    */
   public String getProjectId()  {
-    return getTopLevelValue(document, "appengine-web-app", "application");
+    return getText(getTargetNode(document, "appengine-web-app", "application"));
   }
 
   /**
@@ -69,14 +75,14 @@ public class AppEngineDescriptor {
    *         if it is missing
    */
   public String getRuntime()  {
-    return getTopLevelValue(document, "appengine-web-app", "runtime");
+    return getText(getTargetNode(document, "appengine-web-app", "runtime"));
   }
   /**
    * @return project version from the &lt;version&gt; element of the appengine-web.xml or
    *         null if it is missing
    */
   public String getProjectVersion() {
-    return getTopLevelValue(document, "appengine-web-app", "version");
+    return getText(getTargetNode(document, "appengine-web-app", "version"));
   }
 
   /**
@@ -84,13 +90,13 @@ public class AppEngineDescriptor {
    *         null if it is missing. Will also look at module ID.
    */
   public String getServiceId() {
-    String serviceId = getTopLevelValue(document, "appengine-web-app", "service");
+    String serviceId = getText(getTargetNode(document, "appengine-web-app", "service"));
     if (serviceId != null) {
       return serviceId;
     }
-    return getTopLevelValue(document, "appengine-web-app", "module");
+    return getText(getTargetNode(document, "appengine-web-app", "module"));
   }
-  
+
   /**
    * @return true if the runtime specified by the user is Java8.
    */
@@ -99,7 +105,46 @@ public class AppEngineDescriptor {
             && getRuntime().startsWith("java8");
   }
 
-  private static String getTopLevelValue(Document doc, String parentTagName, String childTagName) {
+  public Map<String, String> getEnvironment() {
+    Node environmentParentNode = getTargetNode(document, "appengine-web-app", "env-variables");
+    return getAttributeMap(environmentParentNode, "name", "value");
+  }
+
+  private static String getText(Node node) {
+    if (node != null) {
+      return node.getTextContent();
+    }
+
+    return null;
+  }
+
+  private static Map<String, String> getAttributeMap(Node node, String key, String value) {
+    if (node != null) {
+      Map<String, String> nameValueAttributeMap = Maps.newHashMap();
+
+      if (node.hasChildNodes()) {
+        for (int i = 0; i < node.getChildNodes().getLength(); ++i) {
+          Node child = node.getChildNodes().item(i);
+          NamedNodeMap attributeMap = child.getAttributes();
+
+          if (attributeMap != null) {
+            Node keyNode = attributeMap.getNamedItem(key);
+
+            if (keyNode != null) {
+              Node valueNode = attributeMap.getNamedItem(value);
+              nameValueAttributeMap.put(keyNode.getNodeValue(), valueNode.getNodeValue());
+            }
+          }
+        }
+      }
+
+      return nameValueAttributeMap;
+    }
+
+    return null;
+  }
+
+  private static Node getTargetNode(Document doc, String parentTagName, String targetTagName) {
     try {
       NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentTagName);
       if (parentElements.getLength() > 0) {
@@ -107,8 +152,8 @@ public class AppEngineDescriptor {
         if (parent.hasChildNodes()) {
           for (int i = 0; i < parent.getChildNodes().getLength(); ++i) {
             Node child = parent.getChildNodes().item(i);
-            if (child.getNodeName().equals(childTagName)) {
-              return child.getTextContent();
+            if (child.getNodeName().equals(targetTagName)) {
+              return child;
             }
           }
         }

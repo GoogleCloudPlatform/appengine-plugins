@@ -25,6 +25,7 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 
 import java.io.File;
@@ -36,6 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -112,8 +114,11 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     for (File service : config.getServices()) {
       arguments.add(service.toPath().toString());
     }
+
+    Map<String, String> appengineEnvironment = getAllAppEngineEnvironment(config.getServices());
+
     try {
-      sdk.runDevAppServer1Command(jvmArguments, arguments);
+      sdk.runDevAppServer1Command(jvmArguments, arguments, appengineEnvironment);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
@@ -194,4 +199,22 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
     return java8Detected;
   }
+
+  @VisibleForTesting
+  Map<String, String> getAllAppEngineEnvironment(List<File> services) {
+    Map<String, String> allAppEngineEnvironment = Maps.newHashMap();
+    for (File serviceDirectory : services) {
+      Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
+      try (InputStream is = Files.newInputStream(appengineWebXml)) {
+        Map<String, String> appEngineEnvironment = AppEngineDescriptor.parse(is).getEnvironment();
+        if (appEngineEnvironment != null) {
+          allAppEngineEnvironment.putAll(appEngineEnvironment);
+        }
+      } catch (IOException e) {
+        throw new AppEngineException(e);
+      }
+    }
+    return allAppEngineEnvironment;
+  }
+
 }

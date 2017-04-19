@@ -273,7 +273,8 @@ public class CloudSdk {
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
    * @throws AppEngineException when dev appserver cannot be found
    */
-  public void runDevAppServer1Command(List<String> jvmArgs, List<String> args)
+  public void runDevAppServer1Command(List<String> jvmArgs, List<String> args,
+                                      Map<String, String> environment)
           throws ProcessRunnerException {
     validateAppEngineJavaComponents();
     validateJdk();
@@ -292,7 +293,6 @@ public class CloudSdk {
 
     logCommand(command);
 
-    Map<String, String> environment = Maps.newHashMap();
     environment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
     processRunner.setEnvironment(environment);
     processRunner.run(command.toArray(new String[command.size()]));
