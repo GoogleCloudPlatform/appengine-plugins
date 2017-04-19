@@ -106,6 +106,16 @@ public class AppEngineDescriptor {
   }
 
   /**
+   * Given the following structure:
+   * <pre>
+   * {@code
+   * <env-variables>
+   *   <env-var name="key" value="val" />
+   * </env-variables>
+   * }
+   * </pre>
+   * This will construct a map of the form {[key, val], ...}
+   *
    * @return a map representing the environment variable settings in the appengine-web.xml.
    */
   public Map<String, String> getEnvironment() {
