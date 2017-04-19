@@ -107,32 +107,41 @@ public class AppEngineDescriptor {
 
   public Map<String, String> getEnvironment() {
     Node environmentParentNode = getTargetNode(document, "appengine-web-app", "env-variables");
-    return getAttributeMap(environmentParentNode, "name", "value");
+    return getAttributeMap(environmentParentNode, "env-var", "name", "value");
   }
 
   private static String getText(Node node) {
     if (node != null) {
-      return node.getTextContent();
+      try {
+        return node.getTextContent();
+      } catch (DOMException ex) {
+        // this shouldn't happen barring a very funky DOM implementation
+      }
     }
 
     return null;
   }
 
-  private static Map<String, String> getAttributeMap(Node node, String key, String value) {
-    if (node != null) {
+  private static Map<String, String> getAttributeMap(Node parent, String nodeName, String key,
+                                                     String value) {
+    if (parent != null) {
       Map<String, String> nameValueAttributeMap = Maps.newHashMap();
 
-      if (node.hasChildNodes()) {
-        for (int i = 0; i < node.getChildNodes().getLength(); ++i) {
-          Node child = node.getChildNodes().item(i);
+      if (parent.hasChildNodes()) {
+        for (int i = 0; i < parent.getChildNodes().getLength(); ++i) {
+          Node child = parent.getChildNodes().item(i);
           NamedNodeMap attributeMap = child.getAttributes();
 
-          if (attributeMap != null) {
+          if (nodeName.equals(child.getNodeName()) && attributeMap != null) {
             Node keyNode = attributeMap.getNamedItem(key);
 
             if (keyNode != null) {
               Node valueNode = attributeMap.getNamedItem(value);
-              nameValueAttributeMap.put(keyNode.getNodeValue(), valueNode.getNodeValue());
+              try {
+                nameValueAttributeMap.put(keyNode.getNodeValue(), valueNode.getNodeValue());
+              } catch(DOMException ex) {
+                // this shouldn't happen barring a very funky DOM implementation
+              }
             }
           }
         }
@@ -145,7 +154,6 @@ public class AppEngineDescriptor {
   }
 
   private static Node getTargetNode(Document doc, String parentTagName, String targetTagName) {
-    try {
       NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentTagName);
       if (parentElements.getLength() > 0) {
         Node parent = parentElements.item(0);
@@ -159,9 +167,5 @@ public class AppEngineDescriptor {
         }
       }
       return null;
-    } catch (DOMException ex) {
-      // this shouldn't happen barring a very funky DOM implementation
-      return null;
-    }
   }
 }
