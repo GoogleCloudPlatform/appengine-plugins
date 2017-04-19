@@ -270,7 +270,6 @@ public class CloudSdkAppEngineDevServer1Test {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags, expectedEnvironment);
-
   }
 
   @Test
