@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.common.collect.Maps;
 
 import org.w3c.dom.DOMException;
@@ -128,7 +129,8 @@ public class AppEngineDescriptor {
       try {
         return node.getTextContent();
       } catch (DOMException ex) {
-        // this shouldn't happen barring a very funky DOM implementation
+        throw new AppEngineException("Failed to parse text content from node "
+            + node.getNodeName());
       }
     }
 
@@ -158,7 +160,8 @@ public class AppEngineDescriptor {
               try {
                 nameValueAttributeMap.put(keyNode.getNodeValue(), valueNode.getNodeValue());
               } catch (DOMException ex) {
-                // this shouldn't happen barring a very funky DOM implementation
+                throw new AppEngineException("Failed to parse value from attribute node "
+                    + keyNode.getNodeName());
               }
             }
           }
