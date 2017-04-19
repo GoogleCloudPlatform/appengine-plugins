@@ -70,6 +70,8 @@ public class CloudSdkAppEngineDevServer1Test {
   private final File java8Service = pathToJava8Service.toFile();
   private final Path pathToJava7Service = Paths.get("src/test/resources/projects/EmptyStandard7Project");
   private final File java7Service = pathToJava7Service.toFile();
+  private final Path pathToJava8ServiceWithEnvVars = Paths.get("src/test/resources/projects/Standard8ProjectEnvironmentVariables");
+  private final File java8ServiceEnvVars = pathToJava8ServiceWithEnvVars.toFile();
   private final Map<String, String> environment = Maps.newHashMap();
 
 
@@ -250,6 +252,25 @@ public class CloudSdkAppEngineDevServer1Test {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags, environment);
+  }
+
+  @Test
+  public void testPrepareCommand_environmentVariables() throws AppEngineException, ProcessRunnerException {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    configuration.setServices(ImmutableList.of(java8ServiceEnvVars));
+
+    List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
+        "--disable_update_check", "--no_java_agent", pathToJava8ServiceWithEnvVars.toString());
+
+    List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
+            "-D--enable_all_permissions=true");
+
+    Map<String, String> expectedEnvironment = ImmutableMap.of("key1", "val1", "key2", "val2");
+
+    devServer.run(configuration);
+
+    verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags, expectedEnvironment);
+
   }
 
   @Test
