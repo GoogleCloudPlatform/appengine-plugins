@@ -226,7 +226,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
                                                         String service) {
     for (String key : newEnvironment.keySet()) {
       if (existingEnvironment.containsKey(key)) {
-        log.warning(String.format("Found duplicated environment variable key '%s' across "
+        log.warning(String.format("Found duplicate environment variable key '%s' across "
             + "appengine-web.xml files in the following service: %s", key, service));
       }
     }
