@@ -16,10 +16,13 @@
   -->
 
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <application>my-app</application>
     <threadsafe>true</threadsafe>
     <sessions-enabled>true</sessions-enabled>
     <module>default</module>
     <runtime>java8</runtime>
+    <service>my-service</service>
+    <version>9</version>
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
     </system-properties>
