@@ -235,7 +235,7 @@ public class CloudSdk {
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
    * @throws AppEngineException when dev_appserver.py cannot be found
    */
-  public void runDevAppServerCommand(List<String> args)
+  void runDevAppServerCommand(List<String> args)
       throws ProcessRunnerException {
     validateCloudSdk();
 
