@@ -212,11 +212,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
           checkAndWarnDuplicateEnvironmentVariables(
               appEngineEnvironment, allAppEngineEnvironment, serviceDirectory.getName());
 
-          if (!Collections.disjoint(
-              allAppEngineEnvironment.keySet(), appEngineEnvironment.keySet())) {
-            log.warning("Found duplicated environment keys between appengine-web.xml files.");
-          }
-
           allAppEngineEnvironment.putAll(appEngineEnvironment);
         }
       } catch (IOException e) {
