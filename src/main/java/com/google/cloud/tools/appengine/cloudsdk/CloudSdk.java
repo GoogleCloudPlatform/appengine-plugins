@@ -273,7 +273,7 @@ public class CloudSdk {
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
    * @throws AppEngineException when dev appserver cannot be found
    */
-  public void runDevAppServer1Command(List<String> jvmArgs, List<String> args,
+  void runDevAppServer1Command(List<String> jvmArgs, List<String> args,
                                       Map<String, String> environment)
           throws ProcessRunnerException {
     validateAppEngineJavaComponents();
