@@ -209,10 +209,14 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       try (InputStream is = Files.newInputStream(appengineWebXml)) {
         Map<String, String> appEngineEnvironment = AppEngineDescriptor.parse(is).getEnvironment();
         if (appEngineEnvironment != null) {
+          checkAndWarnDuplicateEnvironmentVariables(
+              appEngineEnvironment, allAppEngineEnvironment, serviceDirectory.getName());
+
           if (!Collections.disjoint(
               allAppEngineEnvironment.keySet(), appEngineEnvironment.keySet())) {
             log.warning("Found duplicated environment keys between appengine-web.xml files.");
           }
+
           allAppEngineEnvironment.putAll(appEngineEnvironment);
         }
       } catch (IOException e) {
@@ -220,6 +224,17 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       }
     }
     return allAppEngineEnvironment;
+  }
+
+  private void checkAndWarnDuplicateEnvironmentVariables(Map<String, String> newEnvironment,
+                                                        Map<String, String> existingEnvironment,
+                                                        String service) {
+    for (String key : newEnvironment.keySet()) {
+      if (existingEnvironment.containsKey(key)) {
+        log.warning(String.format("Found duplicated key '%s' across appengine-web.xml files " +
+            "in the following service: %s", key, service));
+      }
+    }
   }
 
 }
