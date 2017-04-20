@@ -70,8 +70,10 @@ public class CloudSdkAppEngineDevServer1Test {
   private final File java8Service = pathToJava8Service.toFile();
   private final Path pathToJava7Service = Paths.get("src/test/resources/projects/EmptyStandard7Project");
   private final File java7Service = pathToJava7Service.toFile();
-  private final Path pathToJava8ServiceWithEnvVars = Paths.get("src/test/resources/projects/Standard8ProjectEnvironmentVariables");
-  private final File java8ServiceEnvVars = pathToJava8ServiceWithEnvVars.toFile();
+  private final Path pathToJava8Service1WithEnvVars = Paths.get("src/test/resources/projects/Standard8Project1EnvironmentVariables");
+  private final File java8Service1EnvVars = pathToJava8Service1WithEnvVars.toFile();
+  private final Path pathToJava8Service2WithEnvVars = Paths.get("src/test/resources/projects/Standard8Project2EnvironmentVariables");
+  private final File java8Service2EnvVars = pathToJava8Service2WithEnvVars.toFile();
   private final Map<String, String> environment = Maps.newHashMap();
 
 
@@ -257,15 +259,35 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testPrepareCommand_environmentVariables() throws AppEngineException, ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java8ServiceEnvVars));
+    configuration.setServices(ImmutableList.of(java8Service1EnvVars));
 
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
-        "--disable_update_check", "--no_java_agent", pathToJava8ServiceWithEnvVars.toString());
+        "--disable_update_check", "--no_java_agent", pathToJava8Service1WithEnvVars.toString());
 
     List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
             "-D--enable_all_permissions=true");
 
     Map<String, String> expectedEnvironment = ImmutableMap.of("key1", "val1", "key2", "val2");
+
+    devServer.run(configuration);
+
+    verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags, expectedEnvironment);
+  }
+
+  @Test
+  public void testPrepareCommand_multipleServicesDuplicateEnvironmentVariables() throws AppEngineException, ProcessRunnerException {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    configuration.setServices(ImmutableList.of(java8Service1EnvVars, java8Service2EnvVars));
+
+    List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
+        "--disable_update_check", "--no_java_agent", pathToJava8Service1WithEnvVars.toString(),
+        pathToJava8Service2WithEnvVars.toString());
+
+    List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
+            "-D--enable_all_permissions=true");
+
+    Map<String, String> expectedEnvironment = ImmutableMap.of(
+        "key1", "val1", "keya", "vala", "key2", "duplicated-key", "keyc", "valc");
 
     devServer.run(configuration);
 
