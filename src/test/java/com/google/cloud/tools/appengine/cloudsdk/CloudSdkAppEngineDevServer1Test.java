@@ -258,7 +258,7 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testPrepareCommand_environmentVariables() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_AppEngineWebXmlEnvironmentVariables() throws AppEngineException, ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service1EnvVars));
 
@@ -276,7 +276,7 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testPrepareCommand_multipleServicesDuplicateEnvironmentVariables() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_multipleServicesDuplicateAppEngineWebXmlEnvironmentVariables() throws AppEngineException, ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service1EnvVars, java8Service2EnvVars));
 
