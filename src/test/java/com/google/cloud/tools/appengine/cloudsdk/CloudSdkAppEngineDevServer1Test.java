@@ -120,6 +120,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setPort(8090);
     configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
     configuration.setDefaultGcsBucketName("buckets");
+    configuration.setEnvironment(null);
 
     // these params are not used by devappserver1 and will log warnings
     configuration.setAdminHost("adminHost");
@@ -141,7 +142,6 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setSkipSdkUpdateCheck(true);
     configuration.setThreadsafeOverride("default:False,backend:True");
     configuration.setUseMtimeFileWatcher(true);
-    configuration.setEnvironment(null);
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
