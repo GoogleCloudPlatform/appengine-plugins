@@ -155,4 +155,19 @@ public class CloudSdkAppEngineDevServerTest {
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(environment));
   }
 
+  @Test
+  public void testPrepareCommand_clientEnvVars() throws AppEngineException, ProcessRunnerException {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
+
+    Map<String, String> clientEnvVars = ImmutableMap.of("myKey", "myVal");
+    configuration.setEnvironment(clientEnvVars);
+
+    List<String> expectedArgs = ImmutableList.of("exploded-war");
+
+    devServer.run(configuration);
+
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expectedArgs), eq(clientEnvVars));
+  }
+
 }
