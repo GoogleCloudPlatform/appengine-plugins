@@ -141,6 +141,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setSkipSdkUpdateCheck(true);
     configuration.setThreadsafeOverride("default:False,backend:True");
     configuration.setUseMtimeFileWatcher(true);
+    configuration.setEnvironment(null);
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
