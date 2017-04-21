@@ -296,6 +296,48 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
+  public void testPrepareCommand_clientSuppliedEnvironmentVariables() throws AppEngineException, ProcessRunnerException {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    configuration.setServices(ImmutableList.of(java7Service));
+
+    Map<String, String> clientEnvironmentVariables = ImmutableMap.of("mykey1", "myval1", "mykey2", "myval2");
+    configuration.setEnvironment(clientEnvironmentVariables);
+
+    List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
+        "--disable_update_check", pathToJava7Service.toString());
+    List<String> expectedJvmArgs = ImmutableList
+        .of("-javaagent:" + fakeJavaSdkHome.resolve("agent/appengine-agent.jar").toAbsolutePath()
+            .toString());
+
+    devServer.run(configuration);
+
+    verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags, clientEnvironmentVariables);
+  }
+
+  @Test
+  public void testPrepareCommand_clientSuppliedAndAppEngineWebXmlEnvironmentVariables() throws AppEngineException, ProcessRunnerException {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    configuration.setServices(ImmutableList.of(java8Service1EnvVars));
+
+    Map<String, String> clientEnvironmentVariables = ImmutableMap.of("mykey1", "myval1", "mykey2", "myval2");
+    configuration.setEnvironment(clientEnvironmentVariables);
+
+    List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
+        "--disable_update_check", "--no_java_agent", pathToJava8Service1WithEnvVars.toString());
+
+    List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
+            "-D--enable_all_permissions=true");
+
+    Map<String, String> appEngineEnvironment = ImmutableMap.of("key1", "val1", "key2", "val2");
+    Map<String, String> expectedEnvironment = Maps.newHashMap(appEngineEnvironment);
+    expectedEnvironment.putAll(clientEnvironmentVariables);
+
+    devServer.run(configuration);
+
+    verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags, expectedEnvironment);
+  }
+
+  @Test
   public void testCheckAndWarnIgnored_withSetValue() {
     devServer.checkAndWarnIgnored(new Object(), "testName");
 
