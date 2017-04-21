@@ -30,6 +30,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -94,7 +95,10 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     arguments .addAll(DevAppServerArgs.get("datastore_path", config.getDatastorePath()));
 
     try {
-      sdk.runDevAppServerCommand(arguments);
+      sdk.runDevAppServerCommand(arguments,
+          config.getEnvironment() == null
+              ? new HashMap<String, String>()
+              : config.getEnvironment());
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

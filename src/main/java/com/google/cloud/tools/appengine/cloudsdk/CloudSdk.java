@@ -235,7 +235,7 @@ public class CloudSdk {
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
    * @throws AppEngineException when dev_appserver.py cannot be found
    */
-  void runDevAppServerCommand(List<String> args)
+  void runDevAppServerCommand(List<String> args, Map<String, String> environment)
       throws ProcessRunnerException {
     validateCloudSdk();
 
@@ -250,7 +250,6 @@ public class CloudSdk {
 
     logCommand(command);
 
-    Map<String, String> environment = Maps.newHashMap();
     environment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
     // set quiet mode and consequently auto-install of app-engine-java component
     environment.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
