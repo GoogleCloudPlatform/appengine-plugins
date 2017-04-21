@@ -119,6 +119,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     Map<String, String> appEngineEnvironment
         = getAllAppEngineWebXmlEnvironmentVariables(config.getServices());
 
+    appEngineEnvironment.putAll(config.getEnvironment());
+
     try {
       sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment);
     } catch (ProcessRunnerException e) {

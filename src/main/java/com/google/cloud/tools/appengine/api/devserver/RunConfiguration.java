@@ -18,6 +18,7 @@ package com.google.cloud.tools.appengine.api.devserver;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Configuration of running local Development Server.
@@ -78,4 +79,6 @@ public interface RunConfiguration {
   Boolean getClearDatastore();
 
   File getDatastorePath();
+
+  Map<String, String> getEnvironment();
 }

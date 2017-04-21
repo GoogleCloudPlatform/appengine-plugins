@@ -18,6 +18,7 @@ package com.google.cloud.tools.appengine.api.devserver;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Plain Java bean implementation of {@link RunConfiguration}.
@@ -48,6 +49,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   private String defaultGcsBucketName;
   private Boolean clearDatastore;
   private File datastorePath;
+  private Map<String, String> environment;
 
   @Override
   public List<File> getServices() {
@@ -263,5 +265,14 @@ public class DefaultRunConfiguration implements RunConfiguration {
 
   public void setDatastorePath(File datastorePath) {
     this.datastorePath = datastorePath;
+  }
+
+  @Override
+  public Map<String, String> getEnvironment() {
+    return environment;
+  }
+
+  public void setEnvironment(Map<String, String> environment) {
+    this.environment = environment;
   }
 }
