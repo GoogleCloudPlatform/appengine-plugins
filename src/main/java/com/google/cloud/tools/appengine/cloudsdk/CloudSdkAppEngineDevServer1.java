@@ -36,7 +36,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -119,7 +118,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     Map<String, String> appEngineEnvironment
         = getAllAppEngineWebXmlEnvironmentVariables(config.getServices());
 
-    appEngineEnvironment.putAll(config.getEnvironment());
+    if (config.getEnvironment() != null) {
+      appEngineEnvironment.putAll(config.getEnvironment());
+    }
 
     try {
       sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment);
