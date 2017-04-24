@@ -24,6 +24,7 @@ import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
@@ -117,6 +118,10 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
 
     Map<String, String> appEngineEnvironment
         = getAllAppEngineWebXmlEnvironmentVariables(config.getServices());
+    if (!appEngineEnvironment.isEmpty()) {
+      log.info("Setting appengine-web.xml configured environment variables: "
+          + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
+    }
 
     try {
       sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment);
