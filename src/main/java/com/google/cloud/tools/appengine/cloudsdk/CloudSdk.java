@@ -295,7 +295,7 @@ public class CloudSdk {
 
     Map<String, String> devServerEnvironment = Maps.newHashMap(environment);
     if (!devServerEnvironment.isEmpty()) {
-      logger.info("Setting user supplied environment variables: "
+      logger.info("Setting appengine-web.xml configured environment variables: "
           + Joiner.on(",").withKeyValueSeparator("=").join(devServerEnvironment));
     }
 
