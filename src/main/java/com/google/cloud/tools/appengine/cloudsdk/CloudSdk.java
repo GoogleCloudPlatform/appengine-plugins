@@ -294,6 +294,11 @@ public class CloudSdk {
     logCommand(command);
 
     Map<String, String> devServerEnvironment = Maps.newHashMap(environment);
+    if (!devServerEnvironment.isEmpty()) {
+      logger.info("Setting user supplied environment variables: "
+          + Joiner.on(",").withKeyValueSeparator("=").join(devServerEnvironment));
+    }
+
     devServerEnvironment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
     processRunner.setEnvironment(devServerEnvironment);
     processRunner.run(command.toArray(new String[command.size()]));
