@@ -293,8 +293,9 @@ public class CloudSdk {
 
     logCommand(command);
 
-    environment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
-    processRunner.setEnvironment(environment);
+    Map<String, String> devServerEnvironment = Maps.newHashMap(environment);
+    devServerEnvironment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
+    processRunner.setEnvironment(devServerEnvironment);
     processRunner.run(command.toArray(new String[command.size()]));
 
     // wait for start if configured
