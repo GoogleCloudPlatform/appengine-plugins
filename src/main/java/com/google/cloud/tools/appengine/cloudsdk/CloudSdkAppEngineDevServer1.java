@@ -36,7 +36,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -207,10 +206,11 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     for (File serviceDirectory : services) {
       Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
       try (InputStream is = Files.newInputStream(appengineWebXml)) {
-        Map<String, String> appEngineEnvironment = AppEngineDescriptor.parse(is).getEnvironment();
+        AppEngineDescriptor appEngineDescriptor = AppEngineDescriptor.parse(is);
+        Map<String, String> appEngineEnvironment = appEngineDescriptor.getEnvironment();
         if (appEngineEnvironment != null) {
           checkAndWarnDuplicateEnvironmentVariables(
-              appEngineEnvironment, allAppEngineEnvironment, serviceDirectory.getName());
+              appEngineEnvironment, allAppEngineEnvironment, appEngineDescriptor.getServiceId());
 
           allAppEngineEnvironment.putAll(appEngineEnvironment);
         }
