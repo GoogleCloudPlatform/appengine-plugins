@@ -77,7 +77,7 @@ public class GcloudArgs {
    * @return {@code [key1=value1,key2=value2,...]}, {@code []} if keyValueMapping=empty/null
    */
   public static List<String> get(Map<?, ?> keyValueMapping) {
-    return Args.keyValues(keyValueMapping);
+    return Args.keyValueString(keyValueMapping);
   }
 
   /**

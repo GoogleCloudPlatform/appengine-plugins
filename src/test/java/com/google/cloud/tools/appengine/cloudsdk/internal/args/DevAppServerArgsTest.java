@@ -68,7 +68,7 @@ public class DevAppServerArgsTest {
   }
 
   @Test
-  public void testGet_namedKeyValues() {
+  public void testGet_flaggedKeyValues() {
     Map<String, String> keyValues = ImmutableMap.of("key1", "val1", "key2", "val2");
 
     assertEquals(Arrays.asList("--name", "key1=val1", "--name", "key2=val2"),

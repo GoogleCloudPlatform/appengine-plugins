@@ -16,9 +16,8 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
-import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
 import java.io.File;
@@ -27,8 +26,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 /**
  * Command Line argument helper.
@@ -124,38 +121,39 @@ class Args {
   }
 
   /**
-   * Produces a key/value pair list from a {@link Map}.
+   * Produces a single element list with a key/value pair comma separated string from a {@link Map}.
    *
-   * @return {@code [key1=value1, key2=value2, ...]} or {@code []} if keyValueMapping=empty/null
+   * @return {@code "key1=value1,key2=value2,..."} or {@code []} if keyValueMapping=empty/null
    */
-  static List<String> keyValues(Map<?, ?> keyValueMapping) {
+  static List<String> keyValueString(Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
     if (keyValueMapping != null && keyValueMapping.size() > 0) {
       for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
-        String keyValue = entry.getKey() + "=" + entry.getValue();
-        result.add(keyValue);
+        result.add(entry.getKey() + "=" + entry.getValue());
       }
-      return result;
+      Joiner joiner = Joiner.on(",");
+      return Collections.singletonList(joiner.join(result));
     }
 
     return Collections.emptyList();
   }
 
   /**
-   * Produces a named key/value pair list given a name and a {@link Map}.
+   * Produces a flagged key/value pair list given a flag name and a {@link Map}.
    *
-   * @return {@code [--name, key1=value1, --name, key2=value2, ...]} or {@code []}
+   * @return {@code [--flagName, key1=value1, --flagName, key2=value2, ...]} or {@code []}
    *        if keyValueMapping=empty/null
    */
   static List<String> flaggedKeyValues(final String flagName, Map<?, ?> keyValueMapping) {
-    List<String> keyValues = keyValues(keyValueMapping);
-
-    return FluentIterable.from(keyValues).transformAndConcat(new Function<String, List<String>>() {
-      @Nullable
-      @Override
-      public List<String> apply(@Nullable String keyValue) {
-        return string(flagName, keyValue);
+    List<String> result = Lists.newArrayList();
+    if (keyValueMapping != null && keyValueMapping.size() > 0) {
+      for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
+        result.addAll(string(flagName, entry.getKey() + "=" + entry.getValue()));
       }
-    }).toList();
+
+      return result;
+    }
+
+    return Collections.emptyList();
   }
 }
