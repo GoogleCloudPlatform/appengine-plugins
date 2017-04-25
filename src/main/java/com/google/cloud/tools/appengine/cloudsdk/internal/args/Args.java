@@ -16,7 +16,9 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
+import com.google.common.base.Function;
 import com.google.common.base.Strings;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
 import java.io.File;
@@ -25,6 +27,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 /**
  * Command Line argument helper.
@@ -125,7 +129,17 @@ class Args {
    * @return {@code [key1=value1, key2=value2, ...]} or {@code []} if keyValueMapping=empty/null
    */
   public static List<String> keyValues(Map<?, ?> keyValueMapping) {
-    return namedKeyValues("", keyValueMapping);
+    List<String> result = Lists.newArrayList();
+    if (keyValueMapping != null && keyValueMapping.size() > 0) {
+      for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
+
+        String keyValue = entry.getKey() + "=" + entry.getValue();
+        result.add(keyValue);
+      }
+      return result;
+    }
+
+    return Collections.emptyList();
   }
 
   /**
@@ -134,21 +148,15 @@ class Args {
    * @return {@code [--name, key1=value1, --name, key2=value2, ...]} or {@code []}
    *        if keyValueMapping=empty/null
    */
-  public static List<String> namedKeyValues(String name, Map<?, ?> keyValueMapping) {
-    List<String> result = Lists.newArrayList();
-    if (keyValueMapping != null && keyValueMapping.size() > 0) {
-      for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
+  public static List<String> flaggedKeyValues(final String flagName, Map<?, ?> keyValueMapping) {
+    List<String> keyValues = keyValues(keyValueMapping);
 
-        String keyValue = entry.getKey() + "=" + entry.getValue();
-        if (name != null && !name.isEmpty()) {
-          result.addAll(string(name, keyValue));
-        } else {
-          result.add(keyValue);
-        }
+    return FluentIterable.from(keyValues).transformAndConcat(new Function<String, List<String>>() {
+      @Nullable
+      @Override
+      public List<String> apply(@Nullable String keyValue) {
+        return string(flagName, keyValue);
       }
-      return result;
-    }
-
-    return Collections.emptyList();
+    }).toList();
   }
 }

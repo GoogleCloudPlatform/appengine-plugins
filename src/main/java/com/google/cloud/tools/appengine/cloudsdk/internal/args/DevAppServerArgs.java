@@ -78,6 +78,6 @@ public class DevAppServerArgs {
    *      keyValues=empty/null.
    */
   public static List<String> get(String name, Map<String, String> keyValues) {
-    return Args.namedKeyValues(name, keyValues);
+    return Args.flaggedKeyValues(name, keyValues);
   }
 }
