@@ -29,28 +29,28 @@ import java.util.Map;
 public class DevAppServerArgs {
 
   /**
-   * @return {@code [--name=value]} or {@code []} if value=null.
+   * Returns {@code [--name=value]} or {@code []} if value=null.
    */
   public static List<String> get(String name, String value) {
     return Args.stringWithEq(name, value);
   }
 
   /**
-   * @return {@code [--name=value1, --name=value2, ...]} or {@code []} if value=null.
+   * Returns {@code [--name=value1, --name=value2, ...]} or {@code []} if value=null.
    */
   public static List<String> get(String name, List<String> values) {
     return Args.stringsWithEq(name, values);
   }
 
   /**
-   * @return {@code [--name=value]} or {@code []} if value=null.
+   * Returns {@code [--name=value]} or {@code []} if value=null.
    */
   public static List<String> get(String name, Integer value) {
     return Args.integerWithEq(name, value);
   }
 
   /**
-   * @return {@code [--name=true]} if value=true, {@code [--name=false]} if value=false,
+   * Returns {@code [--name=true]} if value=true, {@code [--name=false]} if value=false,
    *     {@code []} if value=null.
    */
   public static List<String> get(String name, Boolean value) {
@@ -61,7 +61,7 @@ public class DevAppServerArgs {
   }
 
   /**
-   * @return {@code [--name=filePath]} or {@code []} if file=null.
+   * Returns {@code [--name=filePath]} or {@code []} if file=null.
    */
   public static List<String> get(String name, File file) {
     if (file != null) {
@@ -74,7 +74,7 @@ public class DevAppServerArgs {
   }
 
   /**
-   * @return {@code [--name, key1=val1, --name, key2=val2, ...]} or {@code []} if
+   * Returns {@code [--name, key1=val1, --name, key2=val2, ...]} or {@code []} if
    *      keyValues=empty/null.
    */
   public static List<String> get(String name, Map<String, String> keyValues) {
