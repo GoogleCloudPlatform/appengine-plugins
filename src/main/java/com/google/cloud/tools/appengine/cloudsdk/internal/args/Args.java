@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
@@ -126,13 +125,27 @@ class Args {
    * @return [key1=value1,key2=value2,...], [] if keyValueMapping=empty/null
    */
   public static List<String> keyValues(Map<?, ?> keyValueMapping) {
+    return namedKeyValues("", keyValueMapping);
+  }
+
+  /**
+   * Produces a named key/value pair list given a name and a {@link Map}.
+   *
+   * @return [--name, key1=value1, --name, key2=value2,...], [] if keyValueMapping=empty/null
+   */
+  public static List<String> namedKeyValues(String name, Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
     if (keyValueMapping != null && keyValueMapping.size() > 0) {
       for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
-        result.add(entry.getKey() + "=" + entry.getValue());
+
+        String keyValue = entry.getKey() + "=" + entry.getValue();
+        if (name != null && !name.isEmpty()) {
+          result.addAll(string(name, keyValue));
+        } else {
+          result.add(keyValue);
+        }
       }
-      Joiner joiner = Joiner.on(",");
-      return Collections.singletonList(joiner.join(result));
+      return result;
     }
 
     return Collections.emptyList();

@@ -115,7 +115,7 @@ public class CloudSdkAppEngineDevServerTest {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(environment));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
         ImmutableMap.of("getServices", 3));
@@ -139,7 +139,7 @@ public class CloudSdkAppEngineDevServerTest {
             "--clear_datastore=false");
 
     devServer.run(configuration);
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(environment));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
   }
 
   @Test
@@ -152,7 +152,7 @@ public class CloudSdkAppEngineDevServerTest {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(environment));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
   }
 
   @Test
@@ -160,14 +160,15 @@ public class CloudSdkAppEngineDevServerTest {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(new File("exploded-war/")));
 
-    Map<String, String> clientEnvVars = ImmutableMap.of("myKey", "myVal");
+    Map<String, String> clientEnvVars = ImmutableMap.of("key1", "val1", "key2", "val2");
     configuration.setEnvironment(clientEnvVars);
 
-    List<String> expectedArgs = ImmutableList.of("exploded-war");
+    List<String> expectedArgs = ImmutableList
+        .of("exploded-war", "--env_var", "key1=val1", "--env_var", "key2=val2");
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expectedArgs), eq(clientEnvVars));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expectedArgs));
   }
 
 }

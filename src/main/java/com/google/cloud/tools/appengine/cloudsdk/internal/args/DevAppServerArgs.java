@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Command Line argument helper for dev_appserver based command.
@@ -70,5 +71,13 @@ public class DevAppServerArgs {
       }
     }
     return Collections.emptyList();
+  }
+
+  /**
+   * @return {@code [--name, key1=val1, --name, key2=val2, ...]} or {@code []} if
+   *      keyValues=empty/null.
+   */
+  public static List<String> get(String name, Map<String, String> keyValues) {
+    return Args.namedKeyValues(name, keyValues);
   }
 }

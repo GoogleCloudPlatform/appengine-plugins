@@ -91,14 +91,12 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("skip_sdk_update_check", config.getSkipSdkUpdateCheck()));
     arguments
         .addAll(DevAppServerArgs.get("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
-    arguments .addAll(DevAppServerArgs.get("clear_datastore", config.getClearDatastore()));
-    arguments .addAll(DevAppServerArgs.get("datastore_path", config.getDatastorePath()));
+    arguments.addAll(DevAppServerArgs.get("clear_datastore", config.getClearDatastore()));
+    arguments.addAll(DevAppServerArgs.get("datastore_path", config.getDatastorePath()));
+    arguments.addAll(DevAppServerArgs.get("env_var", config.getEnvironment()));
 
     try {
-      sdk.runDevAppServerCommand(arguments,
-          config.getEnvironment() == null
-              ? new HashMap<String, String>()
-              : config.getEnvironment());
+      sdk.runDevAppServerCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
