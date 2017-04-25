@@ -16,6 +16,9 @@
 
 package com.google.cloud.tools.appengine.api.devserver;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -174,7 +177,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   public void setJvmFlags(List<String> jvmFlags) {
-    this.jvmFlags = jvmFlags;
+    this.jvmFlags = ImmutableList.copyOf(jvmFlags);
   }
 
   @Override
@@ -273,6 +276,6 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   public void setEnvironment(Map<String, String> environment) {
-    this.environment = environment;
+    this.environment = ImmutableMap.copyOf(environment);
   }
 }
