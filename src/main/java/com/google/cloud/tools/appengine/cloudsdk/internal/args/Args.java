@@ -123,7 +123,7 @@ class Args {
   /**
    * Produces a single element list with a key/value pair comma separated string from a {@link Map}.
    *
-   * @return {@code "key1=value1,key2=value2,..."} or {@code []} if keyValueMapping=empty/null
+   * @return {@code ["key1=value1,key2=value2,..."]} or {@code []} if keyValueMapping=empty/null
    */
   static List<String> keyValueString(Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
