@@ -177,7 +177,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   public void setJvmFlags(List<String> jvmFlags) {
-    this.jvmFlags = ImmutableList.copyOf(jvmFlags);
+    this.jvmFlags = jvmFlags != null ? ImmutableList.copyOf(jvmFlags) : null;
   }
 
   @Override
@@ -276,6 +276,6 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   public void setEnvironment(Map<String, String> environment) {
-    this.environment = ImmutableMap.copyOf(environment);
+    this.environment = environment != null ? ImmutableMap.copyOf(environment) : null;
   }
 }
