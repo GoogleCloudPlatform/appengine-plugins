@@ -17,7 +17,6 @@
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
-import com.google.common.collect.ImmutableList;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -77,7 +76,7 @@ public class GcloudArgsTest {
     versionToTrafficSplitMapping.put("v2", 0.3);
     versionToTrafficSplitMapping.put("v3", 0.5);
 
-    assertEquals(ImmutableList.of("v1=0.2,v2=0.3,v3=0.5"),
+    assertEquals(Collections.singletonList("v1=0.2,v2=0.3,v3=0.5"),
         GcloudArgs.get(versionToTrafficSplitMapping));
 
     assertEquals(Collections.emptyList(), GcloudArgs.get(Collections.emptyMap()));
