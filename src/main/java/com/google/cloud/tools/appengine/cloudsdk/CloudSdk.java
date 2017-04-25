@@ -268,6 +268,7 @@ public class CloudSdk {
    * Uses the process runner to execute the classic Java SDK devappsever command.
    *
    * @param args the arguments to pass to devappserver
+   * @param environment the environment to set on the devappserver process
    * @throws ProcessRunnerException when process runner encounters an error
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
@@ -293,8 +294,9 @@ public class CloudSdk {
 
     logCommand(command);
 
-    environment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
-    processRunner.setEnvironment(environment);
+    Map<String, String> devServerEnvironment = Maps.newHashMap(environment);
+    devServerEnvironment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
+    processRunner.setEnvironment(devServerEnvironment);
     processRunner.run(command.toArray(new String[command.size()]));
 
     // wait for start if configured

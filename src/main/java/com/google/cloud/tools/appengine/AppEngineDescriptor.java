@@ -148,7 +148,7 @@ public class AppEngineDescriptor {
       Map<String, String> nameValueAttributeMap = Maps.newHashMap();
 
       if (parent.hasChildNodes()) {
-        for (int i = 0; i < parent.getChildNodes().getLength(); ++i) {
+        for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
           Node child = parent.getChildNodes().item(i);
           NamedNodeMap attributeMap = child.getAttributes();
 
@@ -182,7 +182,7 @@ public class AppEngineDescriptor {
     if (parentElements.getLength() > 0) {
       Node parent = parentElements.item(0);
       if (parent.hasChildNodes()) {
-        for (int i = 0; i < parent.getChildNodes().getLength(); ++i) {
+        for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
           Node child = parent.getChildNodes().item(i);
           if (child.getNodeName().equals(targetNodeName)) {
             return child;

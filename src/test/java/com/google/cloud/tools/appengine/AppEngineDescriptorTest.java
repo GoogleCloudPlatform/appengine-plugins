@@ -16,13 +16,17 @@
 
 package com.google.cloud.tools.appengine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import com.google.common.collect.ImmutableMap;
+
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import org.junit.Test;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class AppEngineDescriptorTest {
 
@@ -43,6 +47,7 @@ public class AppEngineDescriptorTest {
   private static final String SERVICE = "<service>" + TEST_ID + "</service>";
   private static final String MODULE = "<module>" + TEST_ID + "</module>";
   private static final String RUNTIME = "<runtime>" + RUNTIME_ID + "</runtime>";
+  private static final String ENVIRONMENT = "<env-variables><env-var name='keya' value='vala' /><env-var name='key2' value='val2' /><env-var name='keyc' value='valc' /></env-variables>";
   
   private static final String XML_WITHOUT_PROJECT_ID = ROOT_START_TAG + ROOT_END_TAG;
   private static final String XML_WITHOUT_VERSION = ROOT_START_TAG + PROJECT_ID + ROOT_END_TAG;
@@ -128,6 +133,15 @@ public class AppEngineDescriptorTest {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + RUNTIME + ROOT_END_TAG);
 
     assertEquals(RUNTIME_ID, descriptor.getRuntime());
+  }
+
+  @Test
+  public void testParseAttributeMapValues() throws IOException {
+    Map<String, String> environment = parse(ROOT_START_TAG + ENVIRONMENT + ROOT_END_TAG).getEnvironment();
+    Map<String, String> expectedEnvironment = ImmutableMap.of(
+        "keya", "vala", "key2", "val2", "keyc", "valc");
+
+    assertEquals(expectedEnvironment, environment);
   }
 
   private static AppEngineDescriptor parse(String xmlString) throws IOException {
