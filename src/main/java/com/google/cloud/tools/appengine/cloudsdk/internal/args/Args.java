@@ -128,7 +128,7 @@ class Args {
    *
    * @return {@code [key1=value1, key2=value2, ...]} or {@code []} if keyValueMapping=empty/null
    */
-  public static List<String> keyValues(Map<?, ?> keyValueMapping) {
+  static List<String> keyValues(Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
     if (keyValueMapping != null && keyValueMapping.size() > 0) {
       for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
@@ -147,7 +147,7 @@ class Args {
    * @return {@code [--name, key1=value1, --name, key2=value2, ...]} or {@code []}
    *        if keyValueMapping=empty/null
    */
-  public static List<String> flaggedKeyValues(final String flagName, Map<?, ?> keyValueMapping) {
+  static List<String> flaggedKeyValues(final String flagName, Map<?, ?> keyValueMapping) {
     List<String> keyValues = keyValues(keyValueMapping);
 
     return FluentIterable.from(keyValues).transformAndConcat(new Function<String, List<String>>() {
