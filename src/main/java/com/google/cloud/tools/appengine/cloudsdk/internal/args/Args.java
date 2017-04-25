@@ -132,7 +132,6 @@ class Args {
     List<String> result = Lists.newArrayList();
     if (keyValueMapping != null && keyValueMapping.size() > 0) {
       for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
-
         String keyValue = entry.getKey() + "=" + entry.getValue();
         result.add(keyValue);
       }
