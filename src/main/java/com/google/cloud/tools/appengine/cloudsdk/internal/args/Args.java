@@ -122,7 +122,7 @@ class Args {
   /**
    * Produces a key/value pair list from a {@link Map}.
    *
-   * @return [key1=value1,key2=value2,...], [] if keyValueMapping=empty/null
+   * @return {@code [key1=value1, key2=value2, ...]} or {@code []} if keyValueMapping=empty/null
    */
   public static List<String> keyValues(Map<?, ?> keyValueMapping) {
     return namedKeyValues("", keyValueMapping);
@@ -131,7 +131,8 @@ class Args {
   /**
    * Produces a named key/value pair list given a name and a {@link Map}.
    *
-   * @return [--name, key1=value1, --name, key2=value2,...], [] if keyValueMapping=empty/null
+   * @return {@code [--name, key1=value1, --name, key2=value2, ...]} or {@code []}
+   *        if keyValueMapping=empty/null
    */
   public static List<String> namedKeyValues(String name, Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
