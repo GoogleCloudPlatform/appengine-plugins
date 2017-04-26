@@ -35,14 +35,14 @@ import java.util.List;
 /**
  * Cloud SDK based implementation of {@link AppEngineDevServer}.
  */
-public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
+public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
 
   private final CloudSdk sdk;
 
   private static final String DEFAULT_ADMIN_HOST = "localhost";
   private static final int DEFAULT_ADMIN_PORT = 8000;
 
-  public CloudSdkAppEngineDevServer(CloudSdk sdk) {
+  public CloudSdkAppEngineDevServer2(CloudSdk sdk) {
     this.sdk = Preconditions.checkNotNull(sdk);
   }
 

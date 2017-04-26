@@ -41,27 +41,27 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit tests for {@link CloudSdkAppEngineDevServer}.
+ * Unit tests for {@link CloudSdkAppEngineDevServer2}.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineDevServerTest {
+public class CloudSdkAppEngineDevServer2Test {
 
   @Mock
   private CloudSdk sdk;
   private Path fakeStoragePath = Paths.get("storage/path");
   private Path fakeDatastorePath = Paths.get("datastore/path");
 
-  private CloudSdkAppEngineDevServer devServer;
+  private CloudSdkAppEngineDevServer2 devServer;
 
   @Before
   public void setUp() {
-    devServer = new CloudSdkAppEngineDevServer(sdk);
+    devServer = new CloudSdkAppEngineDevServer2(sdk);
   }
   
   @Test
   public void tesNullSdk() {
     try {
-      new CloudSdkAppEngineDevServer(null);
+      new CloudSdkAppEngineDevServer2(null);
       Assert.fail("Allowed null SDK");
     } catch (NullPointerException expected) {
     }
