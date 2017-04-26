@@ -54,7 +54,6 @@ public class CloudSdkAppEngineDevServer2Test {
   private Path fakeDatastorePath = Paths.get("datastore/path");
 
   private CloudSdkAppEngineDevServer2 devServer;
-  private final Map<String, String> environment = Maps.newHashMap();
 
   @Before
   public void setUp() {
