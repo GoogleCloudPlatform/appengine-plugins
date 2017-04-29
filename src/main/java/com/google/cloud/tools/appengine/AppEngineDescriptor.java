@@ -103,8 +103,8 @@ public class AppEngineDescriptor {
    * @return true if the runtime specified by the user is Java8.
    */
   public boolean isJava8() {
-    return (getRuntime() != null)
-            && getRuntime().startsWith("java8");
+    String runtime = getRuntime();
+    return runtime != null && runtime.startsWith("java8");
   }
 
   /**
