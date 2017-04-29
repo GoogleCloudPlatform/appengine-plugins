@@ -23,7 +23,6 @@ import com.google.common.collect.Sets;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
@@ -40,9 +39,6 @@ public class FileUtilTest {
 
   @Rule
   public TemporaryFolder testDir = new TemporaryFolder();
-
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
 
   @Test
   public void testCopyDirectory_nested() throws IOException {
@@ -96,14 +92,26 @@ public class FileUtilTest {
     Path dir = testDir.newFolder().toPath();
     Path file = testDir.newFile().toPath();
 
-    thrown.expect(IllegalArgumentException.class);
-    FileUtil.copyDirectory(dir, file);
+    try {
+      FileUtil.copyDirectory(dir, file);
+      Assert.fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
 
-    thrown.expect(IllegalArgumentException.class);
-    FileUtil.copyDirectory(file, dir);
-
-    thrown.expect(IllegalArgumentException.class);
-    FileUtil.copyDirectory(dir, dir);
+    try {
+      FileUtil.copyDirectory(file, dir);
+      Assert.fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
+    
+    try {
+      FileUtil.copyDirectory(dir, dir);
+      Assert.fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
   }
 
   @Test
@@ -111,18 +119,25 @@ public class FileUtilTest {
     Path src = testDir.newFolder().toPath();
     Path dest = Files.createDirectory(src.resolve("subdir"));
 
-    thrown.expect(IllegalArgumentException.class);
-    thrown.expectMessage("destination is child of source");
-    FileUtil.copyDirectory(src, dest);
+    try {
+      FileUtil.copyDirectory(src, dest);
+      Assert.fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertEquals("destination is child of source", ex.getMessage());
+    }
   }
   
   @Test
   public void testCopyDirectory_sameFile() throws IOException {
     Path src = testDir.newFolder().toPath();
     Path dest = Paths.get(src.toString(), "..", src.getFileName().toString());
-    thrown.expect(IllegalArgumentException.class);
-    thrown.expectMessage("Source and destination are the same");
-    FileUtil.copyDirectory(src, dest);
+    
+    try {
+      FileUtil.copyDirectory(src, dest);
+      Assert.fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertEquals("Source and destination are the same", ex.getMessage());
+    }
   }
   
   @Test

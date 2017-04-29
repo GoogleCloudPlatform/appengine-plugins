@@ -45,8 +45,8 @@ public class FileUtil {
   public static void copyDirectory(final Path source, final Path destination) throws IOException {
     Preconditions.checkNotNull(source);
     Preconditions.checkNotNull(destination);
-    Preconditions.checkArgument(Files.isDirectory(source));
-    Preconditions.checkArgument(Files.isDirectory(destination));
+    Preconditions.checkArgument(Files.isDirectory(source), "Source is not a directory");
+    Preconditions.checkArgument(Files.isDirectory(destination), "Destination is not a directory");
     Preconditions.checkArgument(!Files.isSameFile(source, destination),
         "Source and destination are the same");
     Preconditions.checkArgument(!destination.toAbsolutePath().startsWith(source.toAbsolutePath()), 
