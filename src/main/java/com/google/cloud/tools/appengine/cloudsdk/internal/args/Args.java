@@ -121,11 +121,11 @@ class Args {
   }
 
   /**
-   * Produces a key/value pair list from a {@link Map}.
+   * Produces a single element list with a key/value pair comma separated string from a {@link Map}.
    *
-   * @return [key1=value1,key2=value2,...], [] if keyValueMapping=empty/null
+   * @return {@code ["key1=value1,key2=value2,..."]} or {@code []} if keyValueMapping=empty/null
    */
-  public static List<String> keyValues(Map<?, ?> keyValueMapping) {
+  static List<String> keyValueString(Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
     if (keyValueMapping != null && keyValueMapping.size() > 0) {
       for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
@@ -133,6 +133,25 @@ class Args {
       }
       Joiner joiner = Joiner.on(",");
       return Collections.singletonList(joiner.join(result));
+    }
+
+    return Collections.emptyList();
+  }
+
+  /**
+   * Produces a flagged key/value pair list given a flag name and a {@link Map}.
+   *
+   * @return {@code [--flagName, key1=value1, --flagName, key2=value2, ...]} or {@code []}
+   *        if keyValueMapping=empty/null
+   */
+  static List<String> flaggedKeyValues(final String flagName, Map<?, ?> keyValueMapping) {
+    List<String> result = Lists.newArrayList();
+    if (keyValueMapping != null && keyValueMapping.size() > 0) {
+      for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
+        result.addAll(string(flagName, entry.getKey() + "=" + entry.getValue()));
+      }
+
+      return result;
     }
 
     return Collections.emptyList();

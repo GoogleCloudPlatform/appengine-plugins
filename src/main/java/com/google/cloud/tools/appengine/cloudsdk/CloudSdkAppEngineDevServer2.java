@@ -23,8 +23,6 @@ import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,19 +31,18 @@ import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Cloud SDK based implementation of {@link AppEngineDevServer}.
  */
-public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
+public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
 
   private final CloudSdk sdk;
 
   private static final String DEFAULT_ADMIN_HOST = "localhost";
   private static final int DEFAULT_ADMIN_PORT = 8000;
 
-  public CloudSdkAppEngineDevServer(CloudSdk sdk) {
+  public CloudSdkAppEngineDevServer2(CloudSdk sdk) {
     this.sdk = Preconditions.checkNotNull(sdk);
   }
 
@@ -60,17 +57,12 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
   @Override
   public void run(RunConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getAppYamls());
-    Preconditions.checkArgument(config.getAppYamls().size() > 0); 
+    Preconditions.checkNotNull(config.getServices());
+    Preconditions.checkArgument(config.getServices().size() > 0);
 
     List<String> arguments = new ArrayList<>();
-    for (File appYaml : config.getAppYamls()) {
-      arguments.add(appYaml.toPath().toString());
-    }
-
-    Map<String,String> env = Maps.newHashMap();
-    if (!Strings.isNullOrEmpty(config.getJavaHomeDir())) {
-      env.put("JAVA_HOME", config.getJavaHomeDir());
+    for (File serviceDirectory : config.getServices()) {
+      arguments.add(serviceDirectory.toPath().toString());
     }
 
     arguments.addAll(DevAppServerArgs.get("host", config.getHost()));
@@ -98,11 +90,12 @@ public class CloudSdkAppEngineDevServer implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("skip_sdk_update_check", config.getSkipSdkUpdateCheck()));
     arguments
         .addAll(DevAppServerArgs.get("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
-    arguments
-        .addAll(DevAppServerArgs.get("clear_datastore", config.getClearDatastore()));
+    arguments.addAll(DevAppServerArgs.get("clear_datastore", config.getClearDatastore()));
+    arguments.addAll(DevAppServerArgs.get("datastore_path", config.getDatastorePath()));
+    arguments.addAll(DevAppServerArgs.get("env_var", config.getEnvironment()));
 
     try {
-      sdk.runDevAppServerCommand(arguments, env);
+      sdk.runDevAppServerCommand(arguments);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }

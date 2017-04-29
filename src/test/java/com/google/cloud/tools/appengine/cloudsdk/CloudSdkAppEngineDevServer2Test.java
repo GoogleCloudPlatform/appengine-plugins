@@ -19,17 +19,22 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -38,41 +43,43 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit tests for {@link CloudSdkAppEngineDevServer}.
+ * Unit tests for {@link CloudSdkAppEngineDevServer2}.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineDevServerTest {
+public class CloudSdkAppEngineDevServer2Test {
 
   @Mock
   private CloudSdk sdk;
+  private Path fakeStoragePath = Paths.get("storage/path");
+  private Path fakeDatastorePath = Paths.get("datastore/path");
 
-  private CloudSdkAppEngineDevServer devServer;
+  private CloudSdkAppEngineDevServer2 devServer;
 
   @Before
   public void setUp() {
-    devServer = new CloudSdkAppEngineDevServer(sdk);
+    devServer = new CloudSdkAppEngineDevServer2(sdk);
   }
   
   @Test
   public void tesNullSdk() {
     try {
-      new CloudSdkAppEngineDevServer(null);
+      new CloudSdkAppEngineDevServer2(null);
       Assert.fail("Allowed null SDK");
     } catch (NullPointerException expected) {
     }
   }
 
   @Test
-  public void testPrepareCommand_allFlags() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_allFlags() throws Exception {
 
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
+    DefaultRunConfiguration configuration = Mockito.spy(new DefaultRunConfiguration());
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
     configuration.setHost("host");
     configuration.setPort(8090);
     configuration.setAdminHost("adminHost");
     configuration.setAdminPort(8000);
     configuration.setAuthDomain("example.com");
-    configuration.setStoragePath("storage/path");
+    configuration.setStoragePath(fakeStoragePath.toFile());
     configuration.setLogLevel("debug");
     configuration.setMaxModuleInstances(3);
     configuration.setUseMtimeFileWatcher(true);
@@ -88,32 +95,37 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setDevAppserverLogLevel("info");
     configuration.setSkipSdkUpdateCheck(true);
     configuration.setDefaultGcsBucketName("buckets");
-    configuration.setJavaHomeDir("/usr/lib/jvm/default-java");
     configuration.setClearDatastore(true);
+    configuration.setDatastorePath(fakeDatastorePath.toFile());
+    configuration.setEnvironment(null);
+
+    SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
     List<String> expected = ImmutableList
-        .of("app.yaml", "--host=host", "--port=8090", "--admin_host=adminHost",
-            "--admin_port=8000", "--auth_domain=example.com", "--storage_path=storage/path",
+        .of("exploded-war", "--host=host", "--port=8090", "--admin_host=adminHost",
+            "--admin_port=8000", "--auth_domain=example.com", "--storage_path=" + fakeStoragePath,
             "--log_level=debug", "--max_module_instances=3", "--use_mtime_file_watcher=true",
             "--threadsafe_override=default:False,backend:True", "--python_startup_script=script.py",
             "--python_startup_args=arguments", "--jvm_flag=-Dflag1", "--jvm_flag=-Dflag2",
             "--custom_entrypoint=entrypoint", "--runtime=java", "--allow_skipped_files=true",
             "--api_port=8091", "--automatic_restart=false", "--dev_appserver_log_level=info",
             "--skip_sdk_update_check=true", "--default_gcs_bucket_name=buckets",
-            "--clear_datastore=true");
-
-    Map<String,String> expectedEnv = ImmutableMap.of("JAVA_HOME", "/usr/lib/jvm/default-java");
+            "--clear_datastore=true", "--datastore_path=" + fakeDatastorePath);
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+
+    SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
+        ImmutableMap.of("getServices", 3));
+
   }
 
   @Test
   public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
 
-    configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
     configuration.setUseMtimeFileWatcher(false);
     configuration.setAllowSkippedFiles(false);
     configuration.setAutomaticRestart(false);
@@ -121,27 +133,41 @@ public class CloudSdkAppEngineDevServerTest {
     configuration.setClearDatastore(false);
 
     List<String> expected = ImmutableList
-        .of("app.yaml", "--use_mtime_file_watcher=false", "--allow_skipped_files=false",
+        .of("exploded-war", "--use_mtime_file_watcher=false", "--allow_skipped_files=false",
             "--automatic_restart=false", "--skip_sdk_update_check=false",
             "--clear_datastore=false");
-    Map<String,String> expectedEnv = ImmutableMap.of();
 
     devServer.run(configuration);
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
   }
 
   @Test
   public void testPrepareCommand_noFlags() throws AppEngineException, ProcessRunnerException {
 
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setAppYamls(ImmutableList.of(new File("app.yaml")));
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
 
-    List<String> expected = ImmutableList.of("app.yaml");
-    Map<String,String> expectedEnv = ImmutableMap.of();
+    List<String> expected = ImmutableList.of("exploded-war");
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected), eq(expectedEnv));
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+  }
+
+  @Test
+  public void testPrepareCommand_clientEnvVars() throws AppEngineException, ProcessRunnerException {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
+
+    Map<String, String> clientEnvVars = ImmutableMap.of("key1", "val1", "key2", "val2");
+    configuration.setEnvironment(clientEnvVars);
+
+    List<String> expectedArgs = ImmutableList
+        .of("exploded-war", "--env_var", "key1=val1", "--env_var", "key2=val2");
+
+    devServer.run(configuration);
+
+    verify(sdk, times(1)).runDevAppServerCommand(eq(expectedArgs));
   }
 
 }

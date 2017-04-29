@@ -7,7 +7,7 @@
 
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-plugins-core</artifactId>
-  <version>0.2.9-SNAPSHOT</version>
+  <version>0.3.3-SNAPSHOT</version>
 
   <name>App Engine Plugins Core Library</name>
   <description>
@@ -108,8 +108,8 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>2.0.2-beta</version>
+      <artifactId>mockito-core</artifactId>
+      <version>2.7.17</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -247,6 +247,42 @@
         </executions>
       </plugin>
     </plugins>
+     
+    <pluginManagement>
+      <plugins>
+        <!-- m2eclipe does not support errorprone -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <versionRange>[3.3,)</versionRange>
+                    <goals>
+                      <goal>compile</goal>
+                      <goal>testCompile</goal>
+                    </goals>
+                    <parameters>
+                      <compilerId>javac-with-errorprone</compilerId>
+                    </parameters>
+                  </pluginExecutionFilter>
+                  <action>
+                    <configurator>
+                      <id>org.eclipse.m2e.jdt.javaConfigurator</id>
+                    </configurator>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>    
+      </plugins>
+    </pluginManagement> 
   </build>
 
   <profiles>

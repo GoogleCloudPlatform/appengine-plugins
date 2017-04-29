@@ -16,15 +16,22 @@
 
 package com.google.cloud.tools.appengine;
 
-import java.io.IOException;
-import java.io.InputStream;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.common.collect.Maps;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Utilities to obtain information from appengine-web.xml.
@@ -61,7 +68,7 @@ public class AppEngineDescriptor {
    *         if it is missing
    */
   public String getProjectId()  {
-    return getTopLevelValue(document, "appengine-web-app", "application");
+    return getText(getNode(document, "appengine-web-app", "application"));
   }
 
   /**
@@ -69,14 +76,14 @@ public class AppEngineDescriptor {
    *         if it is missing
    */
   public String getRuntime()  {
-    return getTopLevelValue(document, "appengine-web-app", "runtime");
+    return getText(getNode(document, "appengine-web-app", "runtime"));
   }
   /**
    * @return project version from the &lt;version&gt; element of the appengine-web.xml or
    *         null if it is missing
    */
   public String getProjectVersion() {
-    return getTopLevelValue(document, "appengine-web-app", "version");
+    return getText(getNode(document, "appengine-web-app", "version"));
   }
 
   /**
@@ -84,13 +91,13 @@ public class AppEngineDescriptor {
    *         null if it is missing. Will also look at module ID.
    */
   public String getServiceId() {
-    String serviceId = getTopLevelValue(document, "appengine-web-app", "service");
+    String serviceId = getText(getNode(document, "appengine-web-app", "service"));
     if (serviceId != null) {
       return serviceId;
     }
-    return getTopLevelValue(document, "appengine-web-app", "module");
+    return getText(getNode(document, "appengine-web-app", "module"));
   }
-  
+
   /**
    * @return true if the runtime specified by the user is Java8.
    */
@@ -99,24 +106,90 @@ public class AppEngineDescriptor {
             && getRuntime().startsWith("java8");
   }
 
-  private static String getTopLevelValue(Document doc, String parentTagName, String childTagName) {
-    try {
-      NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentTagName);
-      if (parentElements.getLength() > 0) {
-        Node parent = parentElements.item(0);
-        if (parent.hasChildNodes()) {
-          for (int i = 0; i < parent.getChildNodes().getLength(); ++i) {
-            Node child = parent.getChildNodes().item(i);
-            if (child.getNodeName().equals(childTagName)) {
-              return child.getTextContent();
+  /**
+   * Given the following structure:
+   * <pre>
+   * {@code
+   * <env-variables>
+   *   <env-var name="key" value="val" />
+   * </env-variables>
+   * }
+   * </pre>
+   * This will construct a map of the form {[key, val], ...}
+   *
+   * @return a map representing the environment variable settings in the appengine-web.xml.
+   */
+  public Map<String, String> getEnvironment() {
+    Node environmentParentNode = getNode(document, "appengine-web-app", "env-variables");
+    return getAttributeMap(environmentParentNode, "env-var", "name", "value");
+  }
+
+  private static String getText(Node node) {
+    if (node != null) {
+      try {
+        return node.getTextContent();
+      } catch (DOMException ex) {
+        throw new AppEngineException("Failed to parse text content from node "
+            + node.getNodeName());
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Returns a map formed from the attributes of the nodes contained within the parent node.
+   */
+  private static Map<String, String> getAttributeMap(Node parent,
+                                                     String nodeName,
+                                                     String keyAttributeName,
+                                                     String valueAttributeName) {
+    if (parent != null) {
+      Map<String, String> nameValueAttributeMap = Maps.newHashMap();
+
+      if (parent.hasChildNodes()) {
+        for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
+          Node child = parent.getChildNodes().item(i);
+          NamedNodeMap attributeMap = child.getAttributes();
+
+          if (nodeName.equals(child.getNodeName()) && attributeMap != null) {
+            Node keyNode = attributeMap.getNamedItem(keyAttributeName);
+
+            if (keyNode != null) {
+              Node valueNode = attributeMap.getNamedItem(valueAttributeName);
+              try {
+                nameValueAttributeMap.put(keyNode.getTextContent(), valueNode.getTextContent());
+              } catch (DOMException ex) {
+                throw new AppEngineException("Failed to parse value from attribute node "
+                    + keyNode.getNodeName());
+              }
             }
           }
         }
       }
-      return null;
-    } catch (DOMException ex) {
-      // this shouldn't happen barring a very funky DOM implementation
-      return null;
+
+      return nameValueAttributeMap;
     }
+
+    return null;
+  }
+
+  /**
+   * Returns the first node found matching the given name contained within the parent node.
+   */
+  private static Node getNode(Document doc, String parentNodeName, String targetNodeName) {
+    NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentNodeName);
+    if (parentElements.getLength() > 0) {
+      Node parent = parentElements.item(0);
+      if (parent.hasChildNodes()) {
+        for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
+          Node child = parent.getChildNodes().item(i);
+          if (child.getNodeName().equals(targetNodeName)) {
+            return child;
+          }
+        }
+      }
+    }
+    return null;
   }
 }

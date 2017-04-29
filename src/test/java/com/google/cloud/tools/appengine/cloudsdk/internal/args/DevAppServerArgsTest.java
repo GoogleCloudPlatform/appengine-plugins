@@ -16,11 +16,14 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -62,5 +65,13 @@ public class DevAppServerArgsTest {
     assertEquals(Arrays.asList("--name2=2"), DevAppServerArgs.get("name2", 2));
 
     assertEquals(Arrays.asList("--port=8080"), DevAppServerArgs.get("port", 8080));
+  }
+
+  @Test
+  public void testGet_flaggedKeyValues() {
+    Map<String, String> keyValues = ImmutableMap.of("key1", "val1", "key2", "val2");
+
+    assertEquals(Arrays.asList("--name", "key1=val1", "--name", "key2=val2"),
+        DevAppServerArgs.get("name", keyValues));
   }
 }

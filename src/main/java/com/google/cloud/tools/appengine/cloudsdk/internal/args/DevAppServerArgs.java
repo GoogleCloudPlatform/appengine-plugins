@@ -16,9 +16,12 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Command Line argument helper for dev_appserver based command.
@@ -26,28 +29,28 @@ import java.util.List;
 public class DevAppServerArgs {
 
   /**
-   * @return {@code [--name=value]} or {@code []} if value=null.
+   * Returns {@code [--name=value]} or {@code []} if value=null.
    */
   public static List<String> get(String name, String value) {
     return Args.stringWithEq(name, value);
   }
 
   /**
-   * @return {@code [--name=value1, --name=value2, ...]} or {@code []} if value=null.
+   * Returns {@code [--name=value1, --name=value2, ...]} or {@code []} if value=null.
    */
   public static List<String> get(String name, List<String> values) {
     return Args.stringsWithEq(name, values);
   }
 
   /**
-   * @return {@code [--name=value]} or {@code []} if value=null.
+   * Returns {@code [--name=value]} or {@code []} if value=null.
    */
   public static List<String> get(String name, Integer value) {
     return Args.integerWithEq(name, value);
   }
 
   /**
-   * @return {@code [--name=true]} if value=true, {@code [--name=false]} if value=false,
+   * Returns {@code [--name=true]} if value=true, {@code [--name=false]} if value=false,
    *     {@code []} if value=null.
    */
   public static List<String> get(String name, Boolean value) {
@@ -55,5 +58,26 @@ public class DevAppServerArgs {
       return Collections.emptyList();
     }
     return Arrays.asList("--" + name + "=" + value.toString());
+  }
+
+  /**
+   * Returns {@code [--name=filePath]} or {@code []} if file=null.
+   */
+  public static List<String> get(String name, File file) {
+    if (file != null) {
+      Path path = file.toPath();
+      if (!path.toString().isEmpty()) {
+        return Arrays.asList("--" + name + "=" + path.toString());
+      }
+    }
+    return Collections.emptyList();
+  }
+
+  /**
+   * Returns {@code [--name, key1=val1, --name, key2=val2, ...]} or {@code []} if
+   *      keyValues=empty/null.
+   */
+  public static List<String> get(String name, Map<String, String> keyValues) {
+    return Args.flaggedKeyValues(name, keyValues);
   }
 }

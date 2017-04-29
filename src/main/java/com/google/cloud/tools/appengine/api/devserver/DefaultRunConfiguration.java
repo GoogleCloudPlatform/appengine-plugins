@@ -16,22 +16,25 @@
 
 package com.google.cloud.tools.appengine.api.devserver;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Plain Java bean implementation of {@link RunConfiguration}.
  */
 public class DefaultRunConfiguration implements RunConfiguration {
 
-  private List<File> appYamls;
   private List<File> services;
   private String host;
   private Integer port;
   private String adminHost;
   private Integer adminPort;
   private String authDomain;
-  private String storagePath;
+  private File storagePath;
   private String logLevel;
   private Integer maxModuleInstances;
   private Boolean useMtimeFileWatcher;
@@ -47,18 +50,9 @@ public class DefaultRunConfiguration implements RunConfiguration {
   private String devAppserverLogLevel;
   private Boolean skipSdkUpdateCheck;
   private String defaultGcsBucketName;
-  private String javaHomeDir;
   private Boolean clearDatastore;
-
-  @Override
-  public List<File> getAppYamls() {
-    return appYamls;
-  }
-
-  public void setAppYamls(List<File> appYamls) {
-    this.appYamls = appYamls;
-  }
-
+  private File datastorePath;
+  private Map<String, String> environment;
 
   @Override
   public List<File> getServices() {
@@ -115,11 +109,11 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
-  public String getStoragePath() {
+  public File getStoragePath() {
     return storagePath;
   }
 
-  public void setStoragePath(String storagePath) {
+  public void setStoragePath(File storagePath) {
     this.storagePath = storagePath;
   }
 
@@ -183,7 +177,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   public void setJvmFlags(List<String> jvmFlags) {
-    this.jvmFlags = jvmFlags;
+    this.jvmFlags = jvmFlags != null ? ImmutableList.copyOf(jvmFlags) : null;
   }
 
   @Override
@@ -259,20 +253,29 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
-  public String getJavaHomeDir() {
-    return javaHomeDir;
-  }
-
-  public void setJavaHomeDir(String javaHomeDir) {
-    this.javaHomeDir = javaHomeDir;
-  }
-
-  @Override
   public Boolean getClearDatastore() {
     return clearDatastore;
   }
 
   public void setClearDatastore(Boolean clearDatastore) {
     this.clearDatastore = clearDatastore;
+  }
+
+  @Override
+  public File getDatastorePath() {
+    return datastorePath;
+  }
+
+  public void setDatastorePath(File datastorePath) {
+    this.datastorePath = datastorePath;
+  }
+
+  @Override
+  public Map<String, String> getEnvironment() {
+    return environment;
+  }
+
+  public void setEnvironment(Map<String, String> environment) {
+    this.environment = environment != null ? ImmutableMap.copyOf(environment) : null;
   }
 }

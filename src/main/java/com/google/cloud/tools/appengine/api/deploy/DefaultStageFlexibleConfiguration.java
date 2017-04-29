@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,18 +23,18 @@ import java.io.File;
  */
 public class DefaultStageFlexibleConfiguration implements StageFlexibleConfiguration {
 
-  private File appYaml;
+  private File appEngineDirectory;
   private File dockerDirectory;
   private File artifact;
   private File stagingDirectory;
 
   @Override
   public File getAppEngineDirectory() {
-    return appYaml;
+    return appEngineDirectory;
   }
 
-  public void setAppYaml(File appYaml) {
-    this.appYaml = appYaml;
+  public void setAppEngineDirectory(File appEngineDirectory) {
+    this.appEngineDirectory = appEngineDirectory;
   }
 
   @Override

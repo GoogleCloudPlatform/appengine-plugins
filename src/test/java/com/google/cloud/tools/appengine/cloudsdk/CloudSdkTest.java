@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -35,9 +35,13 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.core.AnyOf.anyOf;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
@@ -111,10 +115,11 @@ public class CloudSdkTest {
   public void testValidateAppEngineJavaComponents() {
     new CloudSdk.Builder().build().validateAppEngineJavaComponents();
   }
-  
+
   @Test
   public void testGetWindowsPythonPath() {
-    assertEquals("python", builder.build().getWindowsPythonPath().toString());
+    assertThat(builder.build().getWindowsPythonPath().toString(),
+        anyOf(is("python"), endsWith("python.exe")));
   }
 
   @Test
@@ -183,10 +188,8 @@ public class CloudSdkTest {
     when(r1.getCloudSdkPath()).thenReturn(Paths.get("/r1"));
     CloudSdkResolver r2 = Mockito.mock(CloudSdkResolver.class, "r2");
     when(r2.getRank()).thenReturn(10);
-    when(r2.getCloudSdkPath()).thenReturn(Paths.get("/r2"));
     CloudSdkResolver r3 = Mockito.mock(CloudSdkResolver.class, "r3");
     when(r3.getRank()).thenReturn(100);
-    when(r3.getCloudSdkPath()).thenReturn(Paths.get("/r3"));
 
     Builder builder = new CloudSdk.Builder().resolvers(Arrays.asList(r3, r2, r1));
     List<CloudSdkResolver> resolvers = builder.getResolvers();
@@ -214,5 +217,13 @@ public class CloudSdkTest {
 
     CloudSdk sdk = builder.build();
     assertEquals("r1 should not resolve", r2.getCloudSdkPath(), sdk.getSdkPath());
+  }
+
+  @Test
+  public void testGetJavaBinary() {
+    CloudSdk sdk = new CloudSdk.Builder().javaHome(Paths.get("java", "path")).build();
+    assertEquals(Paths.get("java", "path", "bin",
+        System.getProperty("os.name").contains("Windows") ? "java.exe" : "java").toAbsolutePath(),
+        sdk.getJavaExecutablePath());
   }
 }

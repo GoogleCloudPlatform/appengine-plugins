@@ -16,6 +16,9 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -33,7 +36,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +63,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   private LogStoringHandler handler;
   private File stagingDirectory;
   private File dockerDirectory;
+  private File appEngineDirectory;
 
   @Before
   public void setUp() {
@@ -156,6 +160,49 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
   }
 
+  @Test
+  public void testCopyAppEngineContext_nonExistentAppEngineDirectory() throws Exception {
+    new FlexibleStagingContext().withNonExistentAppEngineDirectory();
+
+    exception.expect(AppEngineException.class);
+    exception.expectMessage("app.yaml not found in the App Engine directory.");
+
+    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_emptyAppEngineDirectory() throws Exception {
+    new FlexibleStagingContext().withAppEngineDirectory();
+
+    exception.expect(AppEngineException.class);
+    exception.expectMessage("app.yaml not found in the App Engine directory.");
+
+    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_appYamlInAppEngineDirectory() throws Exception {
+    new FlexibleStagingContext()
+        .withStagingDirectory()
+        .withAppEngineDirectory()
+        .withFileInAppEngineDirectory("app.yaml");
+
+    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(0, logs.size());
+    verify(copyService).copyFileAndReplace(appEngineDirectory.toPath().resolve("app.yaml"),
+        stagingDirectory.toPath().resolve("app.yaml"));
+  }
+
   /**
    * Private class for creating test file system structures, it will
    * write to the test class members
@@ -168,7 +215,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     }
     private FlexibleStagingContext withNonExistantDockerDirectory() {
       dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
-      assert !dockerDirectory.exists();
+      assertFalse(dockerDirectory.exists());
       when(config.getDockerDirectory()).thenReturn(dockerDirectory);
       return this;
     }
@@ -178,10 +225,32 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       return this;
     }
     private FlexibleStagingContext withDockerFile() throws IOException {
-      // needs withDockerDirectory to be called first
+      Assert.assertNotNull("needs withDockerDirectory to be called first", dockerDirectory);
+      assertTrue("needs withDockerDirectory to be called first", dockerDirectory.exists());
       File dockerFile = new File(dockerDirectory, "Dockerfile");
       if (!dockerFile.createNewFile()) {
         throw new IOException("Could not create Dockerfile for test");
+      }
+      return this;
+    }
+    private FlexibleStagingContext withNonExistentAppEngineDirectory() throws IOException {
+      appEngineDirectory = new File(temporaryFolder.getRoot(), "non-existent-directory");
+      assertFalse(appEngineDirectory.exists());
+      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
+      return this;
+    }
+    private FlexibleStagingContext withAppEngineDirectory() throws IOException {
+      appEngineDirectory = temporaryFolder.newFolder();
+      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
+      return this;
+    }
+    private FlexibleStagingContext withFileInAppEngineDirectory(String fileName) throws IOException {
+      Assert.assertNotNull("needs withAppEngineDirectory to be called first", appEngineDirectory);
+      assertTrue("needs withAppEngineDirectory to be called first", appEngineDirectory.exists());
+
+      File file = new File(appEngineDirectory, fileName);
+      if (!file.createNewFile()) {
+        throw new IOException("Could not create " + fileName + " for test");
       }
       return this;
     }

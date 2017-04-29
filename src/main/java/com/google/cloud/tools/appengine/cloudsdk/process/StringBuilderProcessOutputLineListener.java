@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal.process;
-
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
+package com.google.cloud.tools.appengine.cloudsdk.process;
 
 /**
  * A ProcessOutputLineListener that uses a StringBuffer to store the contents of all lines.
