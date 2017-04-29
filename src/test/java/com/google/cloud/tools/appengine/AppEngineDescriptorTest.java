@@ -19,6 +19,7 @@ package com.google.cloud.tools.appengine;
 import com.google.common.collect.ImmutableMap;
 
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -42,12 +43,15 @@ public class AppEngineDescriptorTest {
   private static final String PROJECT_ID = "<application>" + TEST_ID + "</application>";
   private static final String VERSION = "<version>" + TEST_VERSION + "</version>";
   private static final String COMMENT = "<!-- this is a test comment -->";
-  private static final String COMMENT_AFTER_VERSION = "<version>" + TEST_VERSION + COMMENT + "</version>";
-  private static final String COMMENT_BEFORE_VERSION = "<version>" + COMMENT + TEST_VERSION + "</version>";
+  private static final String COMMENT_AFTER_VERSION =
+      "<version>" + TEST_VERSION + COMMENT + "</version>";
+  private static final String COMMENT_BEFORE_VERSION =
+      "<version>" + COMMENT + TEST_VERSION + "</version>";
   private static final String SERVICE = "<service>" + TEST_ID + "</service>";
   private static final String MODULE = "<module>" + TEST_ID + "</module>";
   private static final String RUNTIME = "<runtime>" + RUNTIME_ID + "</runtime>";
-  private static final String ENVIRONMENT = "<env-variables><env-var name='keya' value='vala' /><env-var name='key2' value='val2' /><env-var name='keyc' value='valc' /></env-variables>";
+  private static final String ENVIRONMENT =
+      "<env-variables><env-var name='keya' value='vala' /><env-var name='key2' value='val2' /><env-var name='keyc' value='valc' /></env-variables>";
   
   private static final String XML_WITHOUT_PROJECT_ID = ROOT_START_TAG + ROOT_END_TAG;
   private static final String XML_WITHOUT_VERSION = ROOT_START_TAG + PROJECT_ID + ROOT_END_TAG;
@@ -61,14 +65,14 @@ public class AppEngineDescriptorTest {
       ROOT_START_TAG_WITH_INVALID_NS + PROJECT_ID + VERSION + ROOT_END_TAG;
 
   @Test
-  public void testParse_noProjectId() throws IOException {
+  public void testParse_noProjectId() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITHOUT_PROJECT_ID);
 
     assertNull(descriptor.getProjectId());
   }
 
   @Test
-  public void testParse_noVersion() throws IOException {
+  public void testParse_noVersion() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITHOUT_VERSION);
 
     assertEquals(TEST_ID, descriptor.getProjectId());
@@ -76,7 +80,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testParse_properXml() throws IOException {
+  public void testParse_properXml() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITH_VERSION_AND_PROJECT_ID);
 
     assertEquals(TEST_ID, descriptor.getProjectId());
@@ -84,7 +88,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testParse_xmlWithCommentBeforeValue() throws IOException {
+  public void testParse_xmlWithCommentBeforeValue() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITH_COMMENT_BEFORE_VERSION);
 
     assertEquals(TEST_ID, descriptor.getProjectId());
@@ -92,7 +96,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testParse_xmlWithCommentAfterValue() throws IOException {
+  public void testParse_xmlWithCommentAfterValue() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITH_COMMENT_AFTER_VERSION);
 
     assertEquals(TEST_ID, descriptor.getProjectId());
@@ -100,7 +104,7 @@ public class AppEngineDescriptorTest {
   }
   
   @Test
-  public void testParse_xmlWithInvalidNamespace() throws IOException {
+  public void testParse_xmlWithInvalidNamespace() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITH_VERSION_AND_PROJECT_ID_WRONG_NS);
 
     assertNull(descriptor.getProjectId());
@@ -108,43 +112,44 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testService_noContent() throws IOException {
+  public void testService_noContent() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + ROOT_END_TAG);
 
     assertNull(descriptor.getServiceId());
   }
 
   @Test
-  public void testService_service() throws IOException {
+  public void testService_service() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + SERVICE + ROOT_END_TAG);
 
     assertEquals(TEST_ID, descriptor.getServiceId());
   }
 
   @Test
-  public void testService_module() throws IOException {
+  public void testService_module() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + MODULE + ROOT_END_TAG);
 
     assertEquals(TEST_ID, descriptor.getServiceId());
   }
 
   @Test
-  public void testService_runtime() throws IOException {
+  public void testService_runtime() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + RUNTIME + ROOT_END_TAG);
 
     assertEquals(RUNTIME_ID, descriptor.getRuntime());
   }
 
   @Test
-  public void testParseAttributeMapValues() throws IOException {
-    Map<String, String> environment = parse(ROOT_START_TAG + ENVIRONMENT + ROOT_END_TAG).getEnvironment();
+  public void testParseAttributeMapValues() throws IOException, SAXException {
+    Map<String, String> environment =
+        parse(ROOT_START_TAG + ENVIRONMENT + ROOT_END_TAG).getEnvironment();
     Map<String, String> expectedEnvironment = ImmutableMap.of(
         "keya", "vala", "key2", "val2", "keyc", "valc");
 
     assertEquals(expectedEnvironment, environment);
   }
 
-  private static AppEngineDescriptor parse(String xmlString) throws IOException {
+  private static AppEngineDescriptor parse(String xmlString) throws IOException, SAXException {
     return AppEngineDescriptor
         .parse(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
   }

@@ -52,14 +52,15 @@ public class AppEngineDescriptor {
    * @param in the contents of appengine-web.xml
    * @return a fully parsed object that can be queried 
    * @throws IOException if parsing fails for any reason including malformed XML
+   * @throws SAXException malformed XML
    */
-  public static AppEngineDescriptor parse(InputStream in) throws IOException {
+  public static AppEngineDescriptor parse(InputStream in) throws IOException, SAXException {
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilderFactory.setNamespaceAware(true);
       return new AppEngineDescriptor(documentBuilderFactory.newDocumentBuilder().parse(in));
-    } catch (SAXException | ParserConfigurationException exception) {
-      throw new IOException("Cannot parse appengine-web.xml", exception);
+    } catch (ParserConfigurationException exception) {
+      throw new SAXException("Cannot parse appengine-web.xml", exception);
     }
   }
 

@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.xml.sax.SAXException;
+
 /**
  * Classic Java SDK based implementation of {@link AppEngineDevServer}.
  */
@@ -200,8 +202,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
         } else {
           java7Detected = true;
         }
-      } catch (IOException e) {
-        throw new AppEngineException(e);
+      } catch (IOException | SAXException ex) {
+        throw new AppEngineException(ex);
       }
     }
     if (java8Detected && java7Detected) {
@@ -210,7 +212,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     return java8Detected;
   }
 
-  private Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(List<File> services) {
+  private static Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(
+      List<File> services) {
     Map<String, String> allAppEngineEnvironment = Maps.newHashMap();
     for (File serviceDirectory : services) {
       Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
@@ -223,16 +226,15 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
 
           allAppEngineEnvironment.putAll(appEngineEnvironment);
         }
-      } catch (IOException e) {
-        throw new AppEngineException(e);
+      } catch (IOException | SAXException ex) {
+        throw new AppEngineException(ex);
       }
     }
     return allAppEngineEnvironment;
   }
 
-  private void checkAndWarnDuplicateEnvironmentVariables(Map<String, String> newEnvironment,
-                                                        Map<String, String> existingEnvironment,
-                                                        String service) {
+  private static void checkAndWarnDuplicateEnvironmentVariables(Map<String, String> newEnvironment,
+      Map<String, String> existingEnvironment, String service) {
     for (String key : newEnvironment.keySet()) {
       if (existingEnvironment.containsKey(key)) {
         log.warning(String.format("Found duplicate environment variable key '%s' across "
