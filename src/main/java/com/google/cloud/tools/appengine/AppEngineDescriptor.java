@@ -40,7 +40,7 @@ public class AppEngineDescriptor {
 
   private static final String APP_ENGINE_NAMESPACE = "http://appengine.google.com/ns/1.0";
   private final Document document;
-  
+
   // private to force use of parse method
   private AppEngineDescriptor(Document document) {
     this.document = document;
@@ -48,10 +48,10 @@ public class AppEngineDescriptor {
 
   /**
    * Parses an appengine-web.xml file.
-   * 
+   *
    * @param in the contents of appengine-web.xml
-   * @return a fully parsed object that can be queried 
-   * @throws IOException if parsing fails for any reason including malformed XML
+   * @return a fully parsed object that can be queried
+   * @throws IOException if parsing fails due to IO errors
    * @throws SAXException malformed XML
    */
   public static AppEngineDescriptor parse(InputStream in) throws IOException, SAXException {
