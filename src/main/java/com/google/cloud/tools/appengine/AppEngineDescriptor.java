@@ -51,7 +51,7 @@ public class AppEngineDescriptor {
    *
    * @param in the contents of appengine-web.xml
    * @return a fully parsed object that can be queried
-   * @throws IOException if parsing fails due to IO errors
+   * @throws IOException if parsing fails due to I/O errors
    * @throws SAXException malformed XML
    */
   public static AppEngineDescriptor parse(InputStream in) throws IOException, SAXException {
