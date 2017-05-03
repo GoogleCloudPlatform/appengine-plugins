@@ -227,8 +227,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyAppEngineContext_includeDispatchYaml()
-      throws Exception {
+  public void testCopyAppEngineContext_includeDispatchYaml() throws Exception {
     verifyOptionalConfigurationFileStaged("dispatch.yaml", true /* includeSet */);
   }
 
@@ -238,8 +237,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyAppEngineContext_includeIndexYaml()
-      throws Exception {
+  public void testCopyAppEngineContext_includeIndexYaml() throws Exception {
     verifyOptionalConfigurationFileStaged("index.yaml", true /* includeSet */);
   }
 
@@ -249,8 +247,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyAppEngineContext_includeQueueYaml()
-      throws Exception {
+  public void testCopyAppEngineContext_includeQueueYaml() throws Exception {
     verifyOptionalConfigurationFileStaged("queue.yaml", true /* includeSet */);
   }
 
