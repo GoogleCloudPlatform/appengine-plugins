@@ -16,6 +16,9 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -34,7 +37,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -57,9 +59,6 @@ public class CloudSdkAppEngineDeploymentTest {
 
   @Rule
   public TemporaryFolder tmpDir = new TemporaryFolder();
-
-  @Rule
-  public final ExpectedException exception = ExpectedException.none();
 
   private File appYaml1;
   private File appYaml2;
@@ -212,13 +211,13 @@ public class CloudSdkAppEngineDeploymentTest {
 
   /**
    * This test uses a fake config.yaml on purpose, In the real world, that means it will
-   * be interpretted as an app.yaml. The method under test has no knowledge of what
-   * configs are valid and what aren't.
+   * be interpreted as an app.yaml. The method under test has no knowledge of which
+   * configs are valid and which aren't.
    */
   @Test
   public void testDeployConfig() throws Exception {
-
-    DefaultDeployProjectConfigurationConfiguration configuration = new DefaultDeployProjectConfigurationConfiguration();
+    DefaultDeployProjectConfigurationConfiguration configuration =
+        new DefaultDeployProjectConfigurationConfiguration();
     File testConfigYaml = tmpDir.newFile("testconfig.yaml");
     configuration.setAppEngineDirectory(tmpDir.getRoot());
     configuration.setProject("project");
@@ -232,16 +231,17 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testDeployConfig_doesNotExist() throws Exception {
-
-    DefaultDeployProjectConfigurationConfiguration configuration = new DefaultDeployProjectConfigurationConfiguration();
+  public void testDeployConfig_doesNotExist() {
+    DefaultDeployProjectConfigurationConfiguration configuration =
+        new DefaultDeployProjectConfigurationConfiguration();
     File testConfigYaml = new File(tmpDir.getRoot(), "testconfig.yaml");
-    assert !testConfigYaml.exists();
+    assertFalse(testConfigYaml.exists());
     configuration.setAppEngineDirectory(tmpDir.getRoot());
-
-    exception.expect(IllegalArgumentException.class);
-    exception.expectMessage(testConfigYaml.toString() + " does not exist");
-
-    deployment.deployConfig("testconfig.yaml", configuration);
+    try {
+      deployment.deployConfig("testconfig.yaml", configuration);
+      fail();
+    } catch (IllegalArgumentException ex) {
+      assertEquals(testConfigYaml.toString() + " does not exist.", ex.getMessage());
+    }
   }
 }
