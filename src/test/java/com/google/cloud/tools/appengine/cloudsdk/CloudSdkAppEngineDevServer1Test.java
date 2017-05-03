@@ -49,7 +49,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit tests for {@link CloudSdkAppEngineDevServer}.
+ * Unit tests for {@link CloudSdkAppEngineDevServer1}.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineDevServer1Test {
@@ -88,7 +88,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
     testHandler = LogStoringHandler.getForLogger(CloudSdkAppEngineDevServer1.class.getName());
   }
-  
+
   @Test
   public void testStop() {
     DefaultStopConfiguration configuration = new DefaultStopConfiguration();
