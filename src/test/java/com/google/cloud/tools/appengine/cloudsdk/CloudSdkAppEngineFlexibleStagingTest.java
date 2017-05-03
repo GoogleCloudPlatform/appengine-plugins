@@ -26,7 +26,6 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging.CopyService;
 import com.google.cloud.tools.test.utils.LogStoringHandler;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,7 +35,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -92,7 +90,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     Assert.assertEquals(logs.get(0).getMessage(),
         "WARNING: 'runtime 'java' detected, any docker configuration in "
             + config.getDockerDirectory() + " will be ignored. If you wish to specify "
-            + "docker configuration, please use 'runtime: custom'");
+            + "a docker configuration, please use 'runtime: custom'");
 
     verifyZeroInteractions(copyService);
   }

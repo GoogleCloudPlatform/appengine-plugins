@@ -25,7 +25,6 @@ import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -95,7 +94,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       if (runtime != null && runtime.equals("java")) {
         log.warning("WARNING: 'runtime 'java' detected, any docker configuration in "
             + config.getDockerDirectory() + " will be ignored. If you wish to specify "
-            + "docker configuration, please use 'runtime: custom'");
+            + "a docker configuration, please use 'runtime: custom'");
       } else {
         // Copy docker context to staging
         if (!Files.isRegularFile(config.getDockerDirectory().toPath().resolve("Dockerfile"))) {
