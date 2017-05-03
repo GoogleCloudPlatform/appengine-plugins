@@ -24,6 +24,7 @@ import java.io.File;
 public class DefaultStageFlexibleConfiguration implements StageFlexibleConfiguration {
 
   private File appEngineDirectory;
+  private boolean includeOptionalConfigurationFiles;
   private File dockerDirectory;
   private File artifact;
   private File stagingDirectory;
@@ -35,6 +36,15 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
 
   public void setAppEngineDirectory(File appEngineDirectory) {
     this.appEngineDirectory = appEngineDirectory;
+  }
+
+  @Override
+  public boolean getIncludeOptionalConfigurationFiles() {
+    return includeOptionalConfigurationFiles;
+  }
+
+  public void setIncludeOptionalConfigurationFiles(boolean includeOptionalConfigurationFiles) {
+    this.includeOptionalConfigurationFiles = includeOptionalConfigurationFiles;
   }
 
   @Override

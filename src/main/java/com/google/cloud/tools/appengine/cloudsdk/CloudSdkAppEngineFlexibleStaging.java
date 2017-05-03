@@ -26,6 +26,7 @@ import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,6 +41,11 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       .getLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
 
   private static final String APP_YAML = "app.yaml";
+  private static final String CRON_YAML = "cron.yaml";
+  private static final String DOS_YAML = "dos.yaml";
+  private static final String DISPATCH_YAML = "dispatch.yaml";
+  private static final String INDEX_YAML = "index.yaml";
+  private static final String QUEUE_YAML = "queue.yaml";
 
   /**
    * Stages a Java JAR/WAR App Engine Flexible Environment application to be deployed.
@@ -112,12 +118,30 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   @VisibleForTesting
   static void copyAppEngineContext(StageFlexibleConfiguration config, CopyService copyService)
       throws IOException {
-    Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
+    Path fromDirectory = config.getAppEngineDirectory().toPath();
+    Path appYaml = fromDirectory.resolve(APP_YAML);
     if (!appYaml.toFile().exists()) {
       throw new AppEngineException(APP_YAML + " not found in the App Engine directory.");
     }
-    copyService.copyFileAndReplace(appYaml, 
-        config.getStagingDirectory().toPath().resolve(APP_YAML));
+    Path toDirectory = config.getStagingDirectory().toPath();
+    copyService.copyFileAndReplace(appYaml, toDirectory.resolve(APP_YAML));
+
+    if (config.getIncludeOptionalConfigurationFiles()) {
+      copyFileAndReplaceIfFileExists(fromDirectory, toDirectory, CRON_YAML, copyService);
+      copyFileAndReplaceIfFileExists(fromDirectory, toDirectory, DOS_YAML, copyService);
+      copyFileAndReplaceIfFileExists(fromDirectory, toDirectory, DISPATCH_YAML, copyService);
+      copyFileAndReplaceIfFileExists(fromDirectory, toDirectory, INDEX_YAML, copyService);
+      copyFileAndReplaceIfFileExists(fromDirectory, toDirectory, QUEUE_YAML, copyService);
+    }
+  }
+
+  @VisibleForTesting
+  static void copyFileAndReplaceIfFileExists(Path fromDirectory, Path toDirectory,
+        String filename, CopyService copyService) throws IOException {
+    Path file = fromDirectory.resolve(filename);
+    if (file.toFile().exists()) {
+      copyService.copyFileAndReplace(file, toDirectory.resolve(filename));
+    }
   }
 
   private static void copyArtifact(StageFlexibleConfiguration config, CopyService copyService)
