@@ -16,8 +16,10 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -30,7 +32,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -48,9 +49,6 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
 
   @Mock
   public StageFlexibleConfiguration config;
@@ -99,11 +97,13 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   public void testCopyDockerContext_runtimeNotJavaNoDockerfile() throws Exception {
     new FlexibleStagingContext().withDockerDirectory();
 
-    exception.expect(AppEngineException.class);
-    exception.expectMessage("Docker directory " + config.getDockerDirectory().toPath()
-        + " does not contain Dockerfile");
-
-    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
+    try {
+      CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
+      fail();
+    } catch (AppEngineException ex) {
+      assertEquals("Docker directory " + config.getDockerDirectory().toPath()
+          + " does not contain Dockerfile", ex.getMessage());
+    }
 
     List<LogRecord> logs = handler.getLogs();
     Assert.assertEquals(0, logs.size());
@@ -127,15 +127,17 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyDockerContext_runtimeNullNoDockerfile() throws Exception {
+  public void testCopyDockerContext_runtimeNullNoDockerfile() throws IOException {
     new FlexibleStagingContext().withDockerDirectory();
 
-    exception.expect(AppEngineException.class);
-    exception.expectMessage("Docker directory " + config.getDockerDirectory().toPath()
-        + " does not contain Dockerfile");
-
-    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
-
+    try {
+      CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
+      fail();
+    } catch (AppEngineException ex) {
+      assertEquals("Docker directory " + config.getDockerDirectory().toPath()
+          + " does not contain Dockerfile", ex.getMessage());
+    }
+   
     List<LogRecord> logs = handler.getLogs();
     Assert.assertEquals(0, logs.size());
 
@@ -158,28 +160,30 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyAppEngineContext_nonExistentAppEngineDirectory() throws Exception {
+  public void testCopyAppEngineContext_nonExistentAppEngineDirectory() throws IOException {
     new FlexibleStagingContext().withNonExistentAppEngineDirectory();
 
-    exception.expect(AppEngineException.class);
-    exception.expectMessage("app.yaml not found in the App Engine directory.");
-
-    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
-
+    try {
+      CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+      fail();
+    } catch (AppEngineException ex) {
+      assertEquals("app.yaml not found in the App Engine directory.", ex.getMessage());
+    }
     List<LogRecord> logs = handler.getLogs();
     Assert.assertEquals(0, logs.size());
     verifyZeroInteractions(copyService);
   }
 
   @Test
-  public void testCopyAppEngineContext_emptyAppEngineDirectory() throws Exception {
+  public void testCopyAppEngineContext_emptyAppEngineDirectory() throws IOException {
     new FlexibleStagingContext().withAppEngineDirectory();
 
-    exception.expect(AppEngineException.class);
-    exception.expectMessage("app.yaml not found in the App Engine directory.");
-
-    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
-
+    try {
+      CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+      fail();
+    } catch (AppEngineException ex) {
+      assertEquals("app.yaml not found in the App Engine directory.", ex.getMessage());
+    }
     List<LogRecord> logs = handler.getLogs();
     Assert.assertEquals(0, logs.size());
     verifyZeroInteractions(copyService);
@@ -201,8 +205,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   /**
-   * Private class for creating test file system structures, it will
-   * write to the test class members
+   * Private class for creating test file system structures. It
+   * writes to the test class members.
    */
   private class FlexibleStagingContext {
     private FlexibleStagingContext withStagingDirectory() throws IOException {
