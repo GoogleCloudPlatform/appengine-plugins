@@ -89,7 +89,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     Assert.assertEquals(1, logs.size());
     Assert.assertEquals(logs.get(0).getMessage(),
         "WARNING: 'runtime 'java' detected, any docker configuration in "
-            + config.getDockerDirectory() + " will be ignored. If you wish to specify"
+            + config.getDockerDirectory() + " will be ignored. If you wish to specify "
             + "docker configuration, please use 'runtime: custom'");
 
     verifyZeroInteractions(copyService);
