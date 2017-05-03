@@ -94,7 +94,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
     if (config.getDockerDirectory() != null && config.getDockerDirectory().exists()) {
       if (runtime != null && runtime.equals("java")) {
         log.warning("WARNING: 'runtime 'java' detected, any docker configuration in "
-            + config.getDockerDirectory() + " will be ignored. If you wish to specify"
+            + config.getDockerDirectory() + " will be ignored. If you wish to specify "
             + "docker configuration, please use 'runtime: custom'");
       } else {
         // Copy docker context to staging
