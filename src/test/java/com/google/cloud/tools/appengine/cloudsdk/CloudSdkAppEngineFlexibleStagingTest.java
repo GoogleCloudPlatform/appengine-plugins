@@ -18,6 +18,8 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -36,9 +38,11 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.verification.VerificationMode;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.LogRecord;
 
@@ -60,9 +64,9 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   public CopyService copyService;
 
   private LogStoringHandler handler;
-  private File stagingDirectory;
-  private File dockerDirectory;
-  private File appEngineDirectory;
+  private Path stagingDirectory;
+  private Path dockerDirectory;
+  private Path appEngineDirectory;
 
   @Before
   public void setUp() {
@@ -125,7 +129,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     List<LogRecord> logs = handler.getLogs();
     Assert.assertEquals(0, logs.size());
 
-    verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+    verify(copyService).copyDirectory(dockerDirectory, stagingDirectory);
   }
 
   @Test
@@ -156,7 +160,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     List<LogRecord> logs = handler.getLogs();
     Assert.assertEquals(0, logs.size());
 
-    verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+    verify(copyService).copyDirectory(dockerDirectory, stagingDirectory);
   }
 
   @Test
@@ -198,8 +202,101 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
     List<LogRecord> logs = handler.getLogs();
     Assert.assertEquals(0, logs.size());
-    verify(copyService).copyFileAndReplace(appEngineDirectory.toPath().resolve("app.yaml"),
-        stagingDirectory.toPath().resolve("app.yaml"));
+    verify(copyService).copyFileAndReplace(appEngineDirectory.resolve("app.yaml"),
+        stagingDirectory.resolve("app.yaml"));
+  }
+
+  @Test
+  public void testCopyAppEngineContext_includeCronYaml() throws Exception {
+    verifyOptionalConfigurationFileStaged("cron.yaml", true /* includeSet */);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_doNotIncludeCronYaml() throws Exception {
+    verifyOptionalConfigurationFileStaged("cron.yaml", false /* includeSet */);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_includeDosYaml() throws Exception {
+    verifyOptionalConfigurationFileStaged("cron.yaml", true /* includeSet */);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_doNotIncludeDosYaml() throws Exception {
+    verifyOptionalConfigurationFileStaged("cron.yaml", false /* includeSet */);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_includeDispatchYaml()
+      throws Exception {
+    verifyOptionalConfigurationFileStaged("dispatch.yaml", true /* includeSet */);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_doNotIncludeDispatchYaml() throws Exception {
+    verifyOptionalConfigurationFileStaged("dispatch.yaml", false /* includeSet */);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_includeIndexYaml()
+      throws Exception {
+    verifyOptionalConfigurationFileStaged("index.yaml", true /* includeSet */);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_doNotIncludeIndexYaml() throws Exception {
+    verifyOptionalConfigurationFileStaged("index.yaml", false /* includeSet */);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_includeQueueYaml()
+      throws Exception {
+    verifyOptionalConfigurationFileStaged("queue.yaml", true /* includeSet */);
+  }
+
+  @Test
+  public void testCopyAppEngineContext_doNotIncludeQueueYaml() throws Exception {
+    verifyOptionalConfigurationFileStaged("queue.yaml", false /* includeSet */);
+  }
+
+  private void verifyOptionalConfigurationFileStaged(String filename, boolean includeSet)
+      throws IOException {
+    new FlexibleStagingContext().withStagingDirectory().withAppEngineDirectory()
+        .withFileInAppEngineDirectory("app.yaml")
+        .withFileInAppEngineDirectory(filename);
+    when(config.getIncludeOptionalConfigurationFiles()).thenReturn(includeSet);
+
+    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+
+    assertTrue(handler.getLogs().isEmpty());
+    verify(copyService, times(1)).copyFileAndReplace(
+        appEngineDirectory.resolve("app.yaml"), stagingDirectory.resolve("app.yaml"));
+    VerificationMode mode = includeSet ? times(1) : never();
+    verify(copyService, mode).copyFileAndReplace(
+        appEngineDirectory.resolve(filename), stagingDirectory.resolve(filename));
+  }
+
+  @Test
+  public void testCopyFileAndReplaceIfSourceFileExists_fileExists() throws IOException {
+    temporaryFolder.newFile("concrete-file");
+    Path fromDirectory = temporaryFolder.getRoot().toPath();
+    Path toDirectory = temporaryFolder.newFolder().toPath();
+    CloudSdkAppEngineFlexibleStaging.copyFileAndReplaceIfFileExists(
+        fromDirectory, toDirectory, "concrete-file", copyService);
+
+    verify(copyService).copyFileAndReplace(fromDirectory.resolve("concrete-file"),
+        toDirectory.resolve("concrete-file"));
+  }
+
+  @Test
+  public void testCopyFileAndReplaceIfSourceFileExists_fileDoesNotExist() throws IOException {
+    Path fromDirectory = temporaryFolder.getRoot().toPath();
+    Path toDirectory = temporaryFolder.newFolder().toPath();
+    CloudSdkAppEngineFlexibleStaging.copyFileAndReplaceIfFileExists(
+        fromDirectory, toDirectory, "non-existing-file", copyService);
+
+    verify(copyService, never()).copyFileAndReplace(fromDirectory.resolve("non-existing-file"),
+        toDirectory.resolve("non-existing-file"));
   }
 
   /**
@@ -208,46 +305,48 @@ public class CloudSdkAppEngineFlexibleStagingTest {
    */
   private class FlexibleStagingContext {
     private FlexibleStagingContext withStagingDirectory() throws IOException {
-      stagingDirectory = temporaryFolder.newFolder();
-      when(config.getStagingDirectory()).thenReturn(stagingDirectory);
+      stagingDirectory = temporaryFolder.newFolder().toPath();
+      when(config.getStagingDirectory()).thenReturn(stagingDirectory.toFile());
       return this;
     }
     private FlexibleStagingContext withNonExistantDockerDirectory() {
-      dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
-      assertFalse(dockerDirectory.exists());
-      when(config.getDockerDirectory()).thenReturn(dockerDirectory);
+      dockerDirectory = temporaryFolder.getRoot().toPath().resolve("hopefully-made-up-dir");
+      assertFalse(dockerDirectory.toFile().exists());
+      when(config.getDockerDirectory()).thenReturn(dockerDirectory.toFile());
       return this;
     }
     private FlexibleStagingContext withDockerDirectory() throws IOException {
-      dockerDirectory = temporaryFolder.newFolder();
-      when(config.getDockerDirectory()).thenReturn(dockerDirectory);
+      dockerDirectory = temporaryFolder.newFolder().toPath();
+      when(config.getDockerDirectory()).thenReturn(dockerDirectory.toFile());
       return this;
     }
     private FlexibleStagingContext withDockerFile() throws IOException {
       Assert.assertNotNull("needs withDockerDirectory to be called first", dockerDirectory);
-      assertTrue("needs withDockerDirectory to be called first", dockerDirectory.exists());
-      File dockerFile = new File(dockerDirectory, "Dockerfile");
+      assertTrue("needs withDockerDirectory to be called first", dockerDirectory.toFile().exists());
+      File dockerFile = dockerDirectory.resolve("Dockerfile").toFile();
       if (!dockerFile.createNewFile()) {
         throw new IOException("Could not create Dockerfile for test");
       }
       return this;
     }
     private FlexibleStagingContext withNonExistentAppEngineDirectory() throws IOException {
-      appEngineDirectory = new File(temporaryFolder.getRoot(), "non-existent-directory");
-      assertFalse(appEngineDirectory.exists());
-      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
+      appEngineDirectory = temporaryFolder.getRoot().toPath().resolve("non-existent-directory");
+      assertFalse(appEngineDirectory.toFile().exists());
+      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory.toFile());
       return this;
     }
     private FlexibleStagingContext withAppEngineDirectory() throws IOException {
-      appEngineDirectory = temporaryFolder.newFolder();
-      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
+      appEngineDirectory = temporaryFolder.newFolder().toPath();
+      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory.toFile());
       return this;
     }
-    private FlexibleStagingContext withFileInAppEngineDirectory(String fileName) throws IOException {
+    private FlexibleStagingContext withFileInAppEngineDirectory(String fileName)
+        throws IOException {
       Assert.assertNotNull("needs withAppEngineDirectory to be called first", appEngineDirectory);
-      assertTrue("needs withAppEngineDirectory to be called first", appEngineDirectory.exists());
+      assertTrue("needs withAppEngineDirectory to be called first",
+          appEngineDirectory.toFile().exists());
 
-      File file = new File(appEngineDirectory, fileName);
+      File file = appEngineDirectory.resolve(fileName).toFile();
       if (!file.createNewFile()) {
         throw new IOException("Could not create " + fileName + " for test");
       }

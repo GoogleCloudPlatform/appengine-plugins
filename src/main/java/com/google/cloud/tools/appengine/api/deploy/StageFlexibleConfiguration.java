@@ -24,9 +24,17 @@ import java.io.File;
 public interface StageFlexibleConfiguration {
 
   /**
-   * Directory containing {@code app.yaml}.
+   * Directory containing {@code app.yaml} and other optional configuration files.
+   *
+   * @see #getIncludeOptionalConfigurationFiles()
    */
   File getAppEngineDirectory();
+
+  /**
+   * Whether to copy {@code cron.yaml}, {@code dos.yaml}, {@code dispatch.yaml}, {@code index.yaml},
+   * and {@code queue.yaml} from the App Engine directory if they exist.
+   */
+  boolean getIncludeOptionalConfigurationFiles();
 
   /**
    * Directory containing {@code Dockerfile} and other resources used by it.
@@ -39,8 +47,8 @@ public interface StageFlexibleConfiguration {
   File getArtifact();
 
   /**
-   * Directory where {@code app.yaml}, files in docker directory, and the artifact to deploy will
-   * be copied for deploying.
+   * Directory where {@code app.yaml}, optional configuration files, files in docker directory, and
+   * the artifact to deploy will be copied for deploying.
    */
   File getStagingDirectory();
 

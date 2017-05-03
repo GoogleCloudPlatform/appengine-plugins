@@ -17,7 +17,9 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import org.junit.Test;
@@ -28,6 +30,7 @@ public class DefaultStageFlexibleConfigurationTest {
   public void testInitialValues() {
     DefaultStageFlexibleConfiguration configuration = new DefaultStageFlexibleConfiguration();
     assertNull(configuration.getAppEngineDirectory());
+    assertFalse(configuration.getIncludeOptionalConfigurationFiles());
     assertNull(configuration.getArtifact());
     assertNull(configuration.getDockerDirectory());
     assertNull(configuration.getStagingDirectory());
@@ -39,6 +42,13 @@ public class DefaultStageFlexibleConfigurationTest {
     DefaultStageFlexibleConfiguration configuration = new DefaultStageFlexibleConfiguration();
     configuration.setAppEngineDirectory(file);
     assertEquals(file, configuration.getAppEngineDirectory());
+  }
+
+  @Test
+  public void testSetIncludeOptionalConfigurationFiles() {
+    DefaultStageFlexibleConfiguration configuration = new DefaultStageFlexibleConfiguration();
+    configuration.setIncludeOptionalConfigurationFiles(true);
+    assertTrue(configuration.getIncludeOptionalConfigurationFiles());
   }
 
   @Test
