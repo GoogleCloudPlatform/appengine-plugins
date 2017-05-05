@@ -21,7 +21,9 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -35,12 +37,12 @@ public class AppYaml {
   private static final String RUNTIME_KEY = "runtime";
 
   /**
-   * @param appYaml A valid existing app.yaml
+   * @param appYaml the app.yaml file
    * @throws IOException if reading app.yaml fails due to I/O errors
    */
   public AppYaml(Path appYaml) throws IOException {
-    try (Reader reader = new FileReader(appYaml.toFile())) {
-      yamlMap = (Map<String, ?>) new Yaml().load(reader);
+    try (InputStream in = Files.newInputStream(appYaml)) {
+      yamlMap = (Map<String, ?>) new Yaml().load(in);
     }
   }
 
