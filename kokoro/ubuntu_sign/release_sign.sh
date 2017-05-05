@@ -8,7 +8,7 @@ set -x
 cd $KOKORO_GFILE_DIR
 mkdir signed && chmod 777 signed
 
-# find the latest directory under prod/app-maven-plugin/gcp_ubuntu/release/
+# find the latest directory under prod/appengine-plugins-core/gcp_ubuntu/release/
 LAST_BUILD=$(ls prod/appengine-plugins-core/gcp_ubuntu/release/ | sort -rV | head -1)
 
 # find the jars and the pom in the latest build artifact directory
