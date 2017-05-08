@@ -100,7 +100,7 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * @return true if the runtime specified by the user is Java8
+   * @return true if the runtime read from appengine-web.xml is Java8
    */
   public boolean isJava8() {
     String runtime = getRuntime();
