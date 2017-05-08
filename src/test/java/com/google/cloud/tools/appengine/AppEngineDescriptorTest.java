@@ -27,13 +27,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class AppEngineDescriptorTest {
 
   private static final String TEST_VERSION = "fooVersion";
   private static final String TEST_ID = "fooId";
-  private static final String RUNTIME_ID = "java9";
+  private static final String RUNTIME_ID = "java8";
 
   private static final String ROOT_END_TAG = "</appengine-web-app>";
   private static final String ROOT_START_TAG =
@@ -133,12 +135,55 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testService_runtime() throws IOException, SAXException {
+  public void testJava8Runtime() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + RUNTIME + ROOT_END_TAG);
 
     assertEquals(RUNTIME_ID, descriptor.getRuntime());
+    assertTrue(descriptor.isJava8());
   }
 
+  @Test
+  public void testUnknownRuntime() throws IOException, SAXException {
+    AppEngineDescriptor descriptor =
+        parse("<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
+            + "<runtime>java9</runtime>" + "</appengine-web-app>");
+
+    assertEquals("java9", descriptor.getRuntime());
+    assertFalse(descriptor.isJava8());
+  }
+
+  @Test
+  public void testJava81() throws IOException, SAXException {
+    AppEngineDescriptor descriptor =
+        parse("<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
+            + "<runtime>java8h</runtime>" + "</appengine-web-app>");
+
+    assertEquals("java8h", descriptor.getRuntime());
+    assertFalse(descriptor.isJava8());
+  }
+  
+  @Test
+  public void testInternalRuntime() throws IOException, SAXException {
+    AppEngineDescriptor descriptor =
+        parse("<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
+            + "<runtime>java8g</runtime>" + "</appengine-web-app>");
+
+    assertEquals("java8g", descriptor.getRuntime());
+    assertTrue(descriptor.isJava8());
+  }
+
+
+  @Test
+  public void testJava6Runtime() throws IOException, SAXException {
+    AppEngineDescriptor descriptor =
+        parse("<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
+            + "<runtime>java</runtime>" + "</appengine-web-app>");
+
+    assertEquals("java", descriptor.getRuntime());
+    assertFalse(descriptor.isJava8());
+  }
+
+  
   @Test
   public void testParseAttributeMapValues() throws IOException, SAXException {
     Map<String, String> environment =
