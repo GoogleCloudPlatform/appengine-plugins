@@ -89,9 +89,9 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     List<LogRecord> logs = handler.getLogs();
     assertEquals(1, logs.size());
     assertEquals(logs.get(0).getMessage(),
-        "WARNING: 'runtime 'java' detected, any docker configuration in "
+        "WARNING: runtime 'java' detected, any docker configuration in "
             + config.getDockerDirectory() + " will be ignored. If you wish to specify "
-            + "a docker configuration, please use 'runtime: custom'");
+            + "a docker configuration, please use 'runtime: custom'.");
 
     verifyZeroInteractions(copyService);
   }
@@ -105,7 +105,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       fail();
     } catch (AppEngineException ex) {
       assertEquals("Docker directory " + config.getDockerDirectory().toPath()
-          + " does not contain Dockerfile", ex.getMessage());
+          + " does not contain Dockerfile.", ex.getMessage());
     }
 
     List<LogRecord> logs = handler.getLogs();
@@ -138,7 +138,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       fail();
     } catch (AppEngineException ex) {
       assertEquals("Docker directory " + config.getDockerDirectory().toPath()
-          + " does not contain Dockerfile", ex.getMessage());
+          + " does not contain Dockerfile.", ex.getMessage());
     }
    
     List<LogRecord> logs = handler.getLogs();
