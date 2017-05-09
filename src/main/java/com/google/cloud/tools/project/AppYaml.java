@@ -40,7 +40,7 @@ public class AppYaml {
    * @param appYaml the app.yaml file
    * @throws IOException if reading app.yaml fails due to I/O errors
    * @throws org.yaml.snakeyaml.scanner.ScannerException if parsing fails due to malformed YAML
-   *     (undocumented {@code RuntimeException} from {@link Yaml#load})
+   *     (undocumented {@link RuntimeException} from {@link Yaml#load})
    */
   public AppYaml(Path appYaml) throws IOException {
     try (InputStream in = Files.newInputStream(appYaml)) {
