@@ -5,6 +5,8 @@ set -e
 # Display commands to stderr.
 set -x
 
+/escalated_sign/escalated_sign.py
+
 cd github/appengine-plugins-core
 sudo /opt/google-cloud-sdk/bin/gcloud components update
 sudo /opt/google-cloud-sdk/bin/gcloud components install app-engine-java
