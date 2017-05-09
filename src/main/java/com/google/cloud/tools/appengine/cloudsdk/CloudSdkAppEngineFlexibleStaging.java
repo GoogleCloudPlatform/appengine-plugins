@@ -94,7 +94,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   static void copyDockerContext(StageFlexibleConfiguration config, CopyService copyService,
       String runtime) throws IOException {
     if (config.getDockerDirectory() != null && config.getDockerDirectory().exists()) {
-      if (runtime != null && runtime.equals("java")) {
+      if ("java".equals(runtime)) {
         log.warning("WARNING: 'runtime 'java' detected, any docker configuration in "
             + config.getDockerDirectory() + " will be ignored. If you wish to specify "
             + "a docker configuration, please use 'runtime: custom'");
