@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -46,7 +47,12 @@ public class AppYaml {
    */
   public AppYaml(Path appYaml) throws IOException {
     try (InputStream in = Files.newInputStream(appYaml)) {
-      yamlMap = (Map<String, ?>) new Yaml().load(in);
+      Object loaded = new Yaml().load(in);
+      if (loaded == null) {
+        yamlMap = Collections.emptyMap();
+      } else {
+        yamlMap = (Map<String, ?>) loaded;
+      }
     }
   }
 

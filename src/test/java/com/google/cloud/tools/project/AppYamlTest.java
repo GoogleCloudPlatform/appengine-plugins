@@ -52,6 +52,13 @@ public class AppYamlTest {
     Assert.assertNull(new AppYaml(appYaml).getRuntime());
   }
 
+  // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/405
+  @Test
+  public void testGetRuntime_noNullPointerExceptionIfEmptyAppYaml() throws IOException {
+    Path appYaml = writeFile("");
+    Assert.assertNull(new AppYaml(appYaml).getRuntime());
+  }
+
   private Path writeFile(String contents) throws IOException {
     File destination = temporaryFolder.newFile();
     return Files.write(destination.toPath(), contents.getBytes());
