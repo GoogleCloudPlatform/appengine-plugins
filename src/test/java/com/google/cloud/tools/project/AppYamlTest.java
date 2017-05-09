@@ -54,7 +54,7 @@ public class AppYamlTest {
 
   // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/405
   @Test
-  public void testGetRuntime_noNullPointerExceptionIfEmptyAppYaml() throws IOException {
+  public void testGetRuntime_emptyAppYaml() throws IOException {
     Path appYaml = writeFile("");
     Assert.assertNull(new AppYaml(appYaml).getRuntime());
   }
