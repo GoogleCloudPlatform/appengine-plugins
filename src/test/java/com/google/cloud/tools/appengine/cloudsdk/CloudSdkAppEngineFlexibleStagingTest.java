@@ -212,7 +212,11 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     new FlexibleStagingContext().withAppEngineDirectory()
         .withFileInAppEngineDirectory("app.yaml", ": m a l f o r m e d !");
 
-    assertNull(CloudSdkAppEngineFlexibleStaging.findRuntime(config));
+    try {
+      assertNull(CloudSdkAppEngineFlexibleStaging.findRuntime(config));
+    } catch (AppEngineException ex) {
+      assertEquals("Malformed 'app.yaml'.", ex.getMessage());
+    }
   }
 
   /**
