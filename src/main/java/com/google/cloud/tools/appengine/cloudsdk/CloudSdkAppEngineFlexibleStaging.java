@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
+import org.yaml.snakeyaml.parser.ParserException;
+import org.yaml.snakeyaml.scanner.ScannerException;
 
 /**
  * Cloud SDK based implementation of {@link AppEngineFlexibleStaging}.
@@ -73,7 +75,8 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
     }
   }
 
-  private static String findRuntime(StageFlexibleConfiguration config) {
+  @VisibleForTesting
+  static String findRuntime(StageFlexibleConfiguration config) {
     // verification for app.yaml that contains runtime:java
     Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
     String runtime = null;
@@ -81,8 +84,8 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       if (Files.isRegularFile(appYaml)) {
         runtime = new AppYaml(appYaml).getRuntime();
       }
-    } catch (IOException e) {
-      log.warning("Unable to determine runtime: error parsing app.yaml : " + e.getMessage());
+    } catch (IOException | ScannerException | ParserException ex) {
+      log.warning("Unable to determine runtime: error parsing app.yaml : " + ex.getMessage());
     }
     return runtime;
   }
