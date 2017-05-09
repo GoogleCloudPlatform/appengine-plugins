@@ -23,6 +23,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -61,7 +62,7 @@ public class AppYamlTest {
 
   private Path writeFile(String contents) throws IOException {
     File destination = temporaryFolder.newFile();
-    return Files.write(destination.toPath(), contents.getBytes());
+    return Files.write(destination.toPath(), contents.getBytes(StandardCharsets.UTF_8));
   }
 
 }
