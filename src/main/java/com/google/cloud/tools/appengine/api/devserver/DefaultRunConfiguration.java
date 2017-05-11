@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.api.devserver;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +52,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   private Boolean clearDatastore;
   private File datastorePath;
   private Map<String, String> environment;
+  private File workingDirectory;
 
   @Override
   public List<File> getServices() {
@@ -277,5 +277,14 @@ public class DefaultRunConfiguration implements RunConfiguration {
 
   public void setEnvironment(Map<String, String> environment) {
     this.environment = environment != null ? ImmutableMap.copyOf(environment) : null;
+  }
+
+  @Override
+  public File getWorkingDirectory() {
+    return workingDirectory;
+  }
+
+  public void setWorkingDirectory(File workingDirectory) {
+    this.workingDirectory = workingDirectory;
   }
 }

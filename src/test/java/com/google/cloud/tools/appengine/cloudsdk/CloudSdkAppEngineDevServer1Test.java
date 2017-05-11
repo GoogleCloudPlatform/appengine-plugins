@@ -16,6 +16,7 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -32,7 +33,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,6 +128,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
     configuration.setDefaultGcsBucketName("buckets");
     configuration.setEnvironment(null);
+    configuration.setWorkingDirectory(null);
 
     // these params are not used by devappserver1 and will log warnings
     configuration.setAdminHost("adminHost");
@@ -166,7 +167,7 @@ public class CloudSdkAppEngineDevServer1Test {
         java8Service /* workingDirectory */);
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.of("getServices", 6, "getJavaHomeDir", 2, "getJvmFlags", 2));
+        ImmutableMap.of("getServices", 7, "getJavaHomeDir", 2, "getJvmFlags", 2));
 
     // verify we are checking and ignoring these parameters
     Map<String, Object> paramWarnings = new HashMap<>();
@@ -269,7 +270,7 @@ public class CloudSdkAppEngineDevServer1Test {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServer1Command(
-        expectedJvmArgs, expectedFlags, environment, java7Service /* workingDirectory */);
+        expectedJvmArgs, expectedFlags, environment, null /* workingDirectory */);
   }
 
   @Test
@@ -311,7 +312,7 @@ public class CloudSdkAppEngineDevServer1Test {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags,
-        expectedEnvironment, java8Service1EnvVars /* workingDirectory */);
+        expectedEnvironment, null /* workingDirectory */);
   }
 
   @Test
@@ -419,38 +420,37 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testGetDefaultService_emptyServiceList() {
-    try {
-      CloudSdkAppEngineDevServer1.getDefaultService(new ArrayList<File>());
-    } catch (IllegalArgumentException ex) {
-      Assert.assertEquals("empty service list", ex.getMessage());
-    }
+  public void testWorkingDirectory() throws ProcessRunnerException {
+    File root = new File("/");
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    configuration.setServices(ImmutableList.of(java8Service));
+    configuration.setWorkingDirectory(root);
+
+    devServer.run(configuration);
+
+    verify(sdk).runDevAppServer1Command(any(List.class), any(List.class), any(Map.class),
+        eq(root) /* workingDirectory */);
   }
 
   @Test
-  public void testGetDefaultService_firstServiceIfAllCustomIds() {
-    File serviceIdAlice = new File("src/test/resources/projects/ServiceId-alice");
-    File serviceIdBob = new File("src/test/resources/projects/ServiceId-bob");
+  public void testNullWorkingDirectory_fallbackIfOneProject() throws ProcessRunnerException {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    configuration.setServices(ImmutableList.of(java8Service));
 
-    Assert.assertEquals(serviceIdAlice, CloudSdkAppEngineDevServer1.getDefaultService(
-        ImmutableList.of(serviceIdAlice, serviceIdBob)));
+    devServer.run(configuration);
+
+    verify(sdk).runDevAppServer1Command(any(List.class), any(List.class), any(Map.class),
+        eq(java8Service) /* workingDirectory */);
   }
 
   @Test
-  public void testGetDefaultService_nullService() {
-    File serviceIdNull = new File("src/test/resources/projects/ServiceId-null");
-    File serviceIdAlice = new File("src/test/resources/projects/ServiceId-alice");
+  public void testNullWorkingDirectory_noFallbackIfManyProjects() throws ProcessRunnerException {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    configuration.setServices(ImmutableList.of(java8Service, java8Service));
 
-    Assert.assertEquals(serviceIdNull, CloudSdkAppEngineDevServer1.getDefaultService(
-        ImmutableList.of(serviceIdAlice, serviceIdNull)));
-  }
+    devServer.run(configuration);
 
-  @Test
-  public void testGetDefaultService_defaultService() {
-    File serviceIdAlice = new File("src/test/resources/projects/ServiceId-alice");
-    File serviceIdDefault = new File("src/test/resources/projects/ServiceId-default");
-
-    Assert.assertEquals(serviceIdDefault, CloudSdkAppEngineDevServer1.getDefaultService(
-        ImmutableList.of(serviceIdAlice, serviceIdDefault)));
+    verify(sdk).runDevAppServer1Command(any(List.class), any(List.class), any(Map.class),
+        eq((File) null) /* workingDirectory */);
   }
 }

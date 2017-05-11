@@ -34,7 +34,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -128,30 +127,14 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
 
     try {
-      File workingDirectory = getDefaultService(config.getServices());
+      File workingDirectory = config.getWorkingDirectory();
+      if (workingDirectory == null && config.getServices().size() == 1) {
+        workingDirectory = config.getServices().get(0);
+      }
       sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment, workingDirectory);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
-  }
-
-  @VisibleForTesting
-  static File getDefaultService(List<File> services) {
-    Preconditions.checkArgument(!services.isEmpty(), "empty service list");
-
-    for (File service : services) {
-      Path appengineWebXml = Paths.get(service + "/WEB-INF/appengine-web.xml");
-      try (InputStream in = Files.newInputStream(appengineWebXml)) {
-        String serviceId = AppEngineDescriptor.parse(in).getServiceId();
-        if (serviceId == null  // Missing ID implies "default".
-            || serviceId.equals("default")) {
-          return service;
-        }
-      } catch (IOException | SAXException ex) {
-        throw new AppEngineException(ex);
-      }
-    }
-    return services.get(0);  // fallback
   }
 
   /**
