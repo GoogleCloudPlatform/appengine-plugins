@@ -27,8 +27,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,11 +34,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -130,10 +128,30 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
 
     try {
-      sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment);
+      File workingDirectory = getDefaultService(config.getServices());
+      sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment, workingDirectory);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
+  }
+
+  @VisibleForTesting
+  static File getDefaultService(List<File> services) {
+    Preconditions.checkArgument(!services.isEmpty(), "empty service list");
+
+    for (File service : services) {
+      Path appengineWebXml = Paths.get(service + "/WEB-INF/appengine-web.xml");
+      try (InputStream in = Files.newInputStream(appengineWebXml)) {
+        String serviceId = AppEngineDescriptor.parse(in).getServiceId();
+        if (serviceId == null  // Missing ID implies "default".
+            || serviceId.equals("default")) {
+          return service;
+        }
+      } catch (IOException | SAXException ex) {
+        throw new AppEngineException(ex);
+      }
+    }
+    return services.get(0);  // fallback
   }
 
   /**
@@ -155,7 +173,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       connection.setDoInput(true);
       connection.setRequestMethod("POST");
       connection.getOutputStream().write('\n');
-      byte[] responses = ByteStreams.toByteArray(connection.getInputStream());
       connection.disconnect();
       int responseCode = connection.getResponseCode();
       if (responseCode < 200 || responseCode > 299) {
