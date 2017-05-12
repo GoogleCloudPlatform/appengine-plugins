@@ -100,11 +100,11 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * @return true if the runtime specified by the user is Java8.
+   * @return true if the runtime read from appengine-web.xml is Java8
    */
   public boolean isJava8() {
     String runtime = getRuntime();
-    return runtime != null && runtime.startsWith("java8");
+    return "java8".equals(runtime) || "java8g".equals(runtime);
   }
 
   /**
@@ -118,7 +118,7 @@ public class AppEngineDescriptor {
    * </pre>
    * This will construct a map of the form {[key, val], ...}
    *
-   * @return a map representing the environment variable settings in the appengine-web.xml.
+   * @return a map representing the environment variable settings in the appengine-web.xml
    */
   public Map<String, String> getEnvironment() {
     Node environmentParentNode = getNode(document, "appengine-web-app", "env-variables");
