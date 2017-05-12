@@ -35,7 +35,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -52,7 +51,6 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -116,7 +114,7 @@ public class CloudSdk {
    * @param args the arguments to pass to gcloud command
    * @throws ProcessRunnerException when there is an issue running the gcloud process
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   public void runAppCommand(List<String> args) throws ProcessRunnerException {
     runGcloudCommand(args, null, "app");
@@ -143,7 +141,7 @@ public class CloudSdk {
    *        gen-repo-info-file --output_directory [OUTPUT_DIRECTORY] etc.
    * @throws ProcessRunnerException when there is an issue running the gcloud process
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   public void runSourceCommand(List<String> args) throws ProcessRunnerException {
     runDebugCommand(args, "source");
@@ -232,7 +230,7 @@ public class CloudSdk {
    * @throws InvalidPathException when Python can't be located
    * @throws ProcessRunnerException when process runner encounters an error
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    * @throws AppEngineException when dev_appserver.py cannot be found
    */
   void runDevAppServerCommand(List<String> args)
@@ -263,7 +261,7 @@ public class CloudSdk {
       runDevAppServerWaitListener.await();
     }
   }
-  
+
   /**
    * Uses the process runner to execute the classic Java SDK devappsever command.
    *
@@ -271,11 +269,11 @@ public class CloudSdk {
    * @param environment the environment to set on the devappserver process
    * @throws ProcessRunnerException when process runner encounters an error
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    * @throws AppEngineException when dev appserver cannot be found
    */
   void runDevAppServer1Command(List<String> jvmArgs, List<String> args,
-                                      Map<String, String> environment)
+                               Map<String, String> environment, File workingDirectory)
           throws ProcessRunnerException {
     validateAppEngineJavaComponents();
     validateJdk();
@@ -297,6 +295,7 @@ public class CloudSdk {
     Map<String, String> devServerEnvironment = Maps.newHashMap(environment);
     devServerEnvironment.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
     processRunner.setEnvironment(devServerEnvironment);
+    processRunner.setWorkingDirectory(workingDirectory);
     processRunner.run(command.toArray(new String[command.size()]));
 
     // wait for start if configured
@@ -304,7 +303,7 @@ public class CloudSdk {
       runDevAppServerWaitListener.await();
     }
   }
-  
+
   /**
    * Executes an App Engine SDK CLI command.
    *
