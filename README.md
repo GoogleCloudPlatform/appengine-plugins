@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/GoogleCloudPlatform/appengine-plugins-core.svg?branch=master)](https://travis-ci.org/GoogleCloudPlatform/appengine-plugins-core)
 
 # Google App Engine Plugins Core Library
-
+ 
 IMPORTANT:
 This library is used by Google internal plugin development teams to share App Engine
 related code.  It's use for any other purpose is highly discouraged and unsupported. Visit our
