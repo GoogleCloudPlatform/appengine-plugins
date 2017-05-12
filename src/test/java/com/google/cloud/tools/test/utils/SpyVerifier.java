@@ -17,11 +17,6 @@
 package com.google.cloud.tools.test.utils;
 
 import com.google.common.base.Preconditions;
-
-import org.mockito.Mockito;
-import org.mockito.exceptions.base.MockitoAssertionError;
-import org.mockito.invocation.Invocation;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -29,10 +24,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.mockito.Mockito;
+import org.mockito.exceptions.base.MockitoAssertionError;
+import org.mockito.invocation.Invocation;
 
 public class SpyVerifier {
   private final Object objectToInspect;
-  private final Class classToInspectAs;
+  private final Class<?> classToInspectAs;
 
   public static SpyVerifier newVerifier(Object objectUnderInspection) {
     return new SpyVerifier(objectUnderInspection);
@@ -40,8 +38,8 @@ public class SpyVerifier {
 
   private SpyVerifier(Object objectUnderInspection) {
     Preconditions.checkArgument(Mockito.mockingDetails(objectUnderInspection).isSpy());
-    this.objectToInspect = objectUnderInspection;
-    this.classToInspectAs = Mockito.mockingDetails(objectToInspect).getMockCreationSettings()
+    objectToInspect = objectUnderInspection;
+    classToInspectAs = Mockito.mockingDetails(objectToInspect).getMockCreationSettings()
         .getTypeToMock();
   }
 
@@ -50,7 +48,7 @@ public class SpyVerifier {
    * to ensure that configurations are fully built and we can ensure our handling is being
    * properly tested.
    */
-  public SpyVerifier verifyDeclaredSetters() throws Exception {
+  public SpyVerifier verifyDeclaredSetters() {
     // extract all invocations of getters by inspecting the spy
     List<Method> knownSetters = Arrays.asList(classToInspectAs.getDeclaredMethods());
 
@@ -68,7 +66,7 @@ public class SpyVerifier {
       }
     }
 
-    // compare setter invocations against our expections
+    // compare setter invocations against our expectations
     for (Method m : knownSetters) {
       if (isSetter(m)) {
         Integer invocationCount = methodInvocationCount.get(m);
@@ -83,10 +81,18 @@ public class SpyVerifier {
     return this;
   }
 
-  private boolean isSetter(Method m) {
-    return !m.isSynthetic() && Modifier.isPublic(m.getModifiers()) && m.getName().startsWith("set");
+  private static boolean isSetter(Method method) {
+    return isPublicWithPrefix(method, "set");
   }
 
+  private static boolean isGetter(Method method) {
+    return isPublicWithPrefix(method, "get");
+  }
+
+  private static boolean isPublicWithPrefix(Method method, String prefix) {
+    return !method.isSynthetic() && Modifier.isPublic(method.getModifiers())
+        && method.getName().startsWith(prefix);
+  }
 
   public SpyVerifier verifyDeclaredGetters() throws Exception {
     return verifyDeclaredGetters(Collections.<String, Integer>emptyMap());
@@ -99,8 +105,7 @@ public class SpyVerifier {
   public SpyVerifier verifyDeclaredGetters(Map<String, Integer> overrides) throws Exception {
     Method[] methods = classToInspectAs.getDeclaredMethods();
     for (Method m : methods) {
-      if (!m.isSynthetic() && Modifier.isPublic(m.getModifiers())
-          && m.getName().startsWith("get")) {
+      if (isGetter(m)) {
         Integer times = overrides.get(m.getName());
         times = (times == null) ? 1 : times;
         Mockito.verify(objectToInspect, Mockito.times(times)).getClass().getMethod(m.getName())
