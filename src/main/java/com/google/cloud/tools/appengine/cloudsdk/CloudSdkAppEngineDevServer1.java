@@ -127,8 +127,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
 
     try {
-      File workingDirectory = config.getWorkingDirectory();
-      if (workingDirectory == null && config.getServices().size() == 1) {
+      File workingDirectory = null;
+      if (config.getServices().size() == 1) {
         workingDirectory = config.getServices().get(0);
       }
       sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment, workingDirectory);

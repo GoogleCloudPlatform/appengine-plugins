@@ -23,6 +23,7 @@ import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -47,7 +48,7 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
 
   /**
    * Starts the local development server, synchronously or asynchronously.
-   *
+   * 
    * @throws InvalidPathException when Python can't be located
    * @throws CloudSdkNotFoundException when Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when Cloud SDK is out of date
@@ -58,11 +59,6 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getServices());
     Preconditions.checkArgument(config.getServices().size() > 0);
-
-    if (config.getWorkingDirectory() != null) {
-      throw new UnsupportedOperationException(
-          "dev_appserver2 behavior with setWorkingDirectory() not finalized.");
-    }
 
     List<String> arguments = new ArrayList<>();
     for (File serviceDirectory : config.getServices()) {

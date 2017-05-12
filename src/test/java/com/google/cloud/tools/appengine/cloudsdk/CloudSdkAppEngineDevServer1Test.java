@@ -128,7 +128,6 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
     configuration.setDefaultGcsBucketName("buckets");
     configuration.setEnvironment(null);
-    configuration.setWorkingDirectory(null);
 
     // these params are not used by devappserver1 and will log warnings
     configuration.setAdminHost("adminHost");
@@ -420,20 +419,7 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testWorkingDirectory() throws ProcessRunnerException {
-    File root = new File("/");
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java8Service));
-    configuration.setWorkingDirectory(root);
-
-    devServer.run(configuration);
-
-    verify(sdk).runDevAppServer1Command(any(List.class), any(List.class), any(Map.class),
-        eq(root) /* workingDirectory */);
-  }
-
-  @Test
-  public void testNullWorkingDirectory_fallbackIfOneProject() throws ProcessRunnerException {
+  public void testWorkingDirectory_fallbackIfOneProject() throws ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service));
 
@@ -444,7 +430,7 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testNullWorkingDirectory_noFallbackIfManyProjects() throws ProcessRunnerException {
+  public void testWorkingDirectory_noFallbackIfManyProjects() throws ProcessRunnerException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service, java8Service));
 

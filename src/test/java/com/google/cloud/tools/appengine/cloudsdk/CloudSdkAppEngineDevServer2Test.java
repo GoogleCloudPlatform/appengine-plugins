@@ -16,21 +16,14 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +31,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for {@link CloudSdkAppEngineDevServer2}.
@@ -56,7 +59,7 @@ public class CloudSdkAppEngineDevServer2Test {
   public void setUp() {
     devServer = new CloudSdkAppEngineDevServer2(sdk);
   }
-
+  
   @Test
   public void tesNullSdk() {
     try {
@@ -95,7 +98,6 @@ public class CloudSdkAppEngineDevServer2Test {
     configuration.setClearDatastore(true);
     configuration.setDatastorePath(fakeDatastorePath.toFile());
     configuration.setEnvironment(null);
-    configuration.setWorkingDirectory(null);
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
@@ -115,21 +117,8 @@ public class CloudSdkAppEngineDevServer2Test {
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.of("getServices", 3, "getWorkingDirectory", 1));
+        ImmutableMap.of("getServices", 3));
 
-  }
-
-  @Test
-  public void testWorkingDirectory() {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    try {
-      configuration.setWorkingDirectory(new File("exploded-war/"));
-      configuration.setServices(ImmutableList.of(new File("exploded-war/")));
-      devServer.run(configuration);
-      Assert.fail();
-    } catch (UnsupportedOperationException ex) {
-      Assert.assertNotNull(ex.getMessage());
-    }
   }
 
   @Test
