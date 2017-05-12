@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
+import org.yaml.snakeyaml.parser.ParserException;
+import org.yaml.snakeyaml.scanner.ScannerException;
 
 /**
  * Cloud SDK based implementation of {@link AppEngineFlexibleStaging}.
@@ -44,8 +46,6 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
    * Stages a Java JAR/WAR App Engine Flexible Environment application to be deployed.
    *
    * <p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
-   *
-   * <p>If app.yaml or Dockerfile do not exist, gcloud cloud will create them during deployment.
    */
   @Override
   public void stageFlexible(StageFlexibleConfiguration config) throws AppEngineException {
@@ -62,8 +62,8 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
           + config.getStagingDirectory().toPath());
     }
 
-    String runtime = findRuntime(config);
     try {
+      String runtime = findRuntime(config);
       CopyService copyService = new CopyService();
       copyDockerContext(config, copyService, runtime);
       copyAppEngineContext(config, copyService);
@@ -73,33 +73,30 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
     }
   }
 
-  private static String findRuntime(StageFlexibleConfiguration config) {
-    // verification for app.yaml that contains runtime:java
-    Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
-    String runtime = null;
+  @VisibleForTesting
+  static String findRuntime(StageFlexibleConfiguration config) throws IOException {
     try {
-      if (Files.isRegularFile(appYaml)) {
-        runtime = new AppYaml(appYaml).getRuntime();
-      }
-    } catch (IOException e) {
-      log.warning("Unable to determine runtime: error parsing app.yaml : " + e.getMessage());
+      // verification for app.yaml that contains runtime:java
+      Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
+      return new AppYaml(appYaml).getRuntime();
+    } catch (ScannerException | ParserException ex) {
+      throw new AppEngineException("Malformed 'app.yaml'.", ex);
     }
-    return runtime;
   }
 
   @VisibleForTesting
   static void copyDockerContext(StageFlexibleConfiguration config, CopyService copyService,
       String runtime) throws IOException {
     if (config.getDockerDirectory() != null && config.getDockerDirectory().exists()) {
-      if (runtime != null && runtime.equals("java")) {
-        log.warning("WARNING: 'runtime 'java' detected, any docker configuration in "
+      if ("java".equals(runtime)) {
+        log.warning("WARNING: runtime 'java' detected, any docker configuration in "
             + config.getDockerDirectory() + " will be ignored. If you wish to specify "
-            + "a docker configuration, please use 'runtime: custom'");
+            + "a docker configuration, please use 'runtime: custom'.");
       } else {
         // Copy docker context to staging
         if (!Files.isRegularFile(config.getDockerDirectory().toPath().resolve("Dockerfile"))) {
           throw new AppEngineException("Docker directory " + config.getDockerDirectory().toPath()
-              + " does not contain Dockerfile");
+              + " does not contain Dockerfile.");
         } else {
           copyService.copyDirectory(config.getDockerDirectory().toPath(),
               config.getStagingDirectory().toPath());
@@ -128,7 +125,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       copyService.copyFileAndReplace(config.getArtifact().toPath(), destination);
     } else {
       throw new AppEngineException("Artifact doesn't exist at '" + config.getArtifact().getPath()
-          + "'");
+          + "'.");
     }
   }
 

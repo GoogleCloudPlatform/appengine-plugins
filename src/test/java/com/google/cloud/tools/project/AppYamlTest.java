@@ -16,15 +16,15 @@
 
 package com.google.cloud.tools.project;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * Tests for AppYaml parsing
@@ -52,9 +52,16 @@ public class AppYamlTest {
     Assert.assertNull(new AppYaml(appYaml).getRuntime());
   }
 
+  // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/405
+  @Test
+  public void testGetRuntime_emptyAppYaml() throws IOException {
+    Path appYaml = writeFile("");
+    Assert.assertNull(new AppYaml(appYaml).getRuntime());
+  }
+
   private Path writeFile(String contents) throws IOException {
     File destination = temporaryFolder.newFile();
-    return Files.write(destination.toPath(), contents.getBytes());
+    return Files.write(destination.toPath(), contents.getBytes(StandardCharsets.UTF_8));
   }
 
 }
