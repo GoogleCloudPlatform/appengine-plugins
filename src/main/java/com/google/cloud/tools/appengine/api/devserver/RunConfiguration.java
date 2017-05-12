@@ -83,7 +83,7 @@ public interface RunConfiguration {
   Map<String, String> getEnvironment();
 
   /**
-   * Valid only for dev_appserver1.
+   * Working directory of a local server process.
    */
   File getWorkingDirectory();
 }

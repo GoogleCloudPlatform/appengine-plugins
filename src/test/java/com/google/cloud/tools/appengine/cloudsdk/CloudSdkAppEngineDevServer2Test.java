@@ -115,8 +115,21 @@ public class CloudSdkAppEngineDevServer2Test {
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.of("getServices", 3, "getWorkingDirectory", 0));
+        ImmutableMap.of("getServices", 3, "getWorkingDirectory", 1));
 
+  }
+
+  @Test
+  public void testWorkingDirectory() {
+    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
+    try {
+      configuration.setWorkingDirectory(new File("exploded-war/"));
+      configuration.setServices(ImmutableList.of(new File("exploded-war/")));
+      devServer.run(configuration);
+      Assert.fail();
+    } catch (UnsupportedOperationException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
   }
 
   @Test
