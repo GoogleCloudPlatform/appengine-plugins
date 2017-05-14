@@ -662,6 +662,8 @@ public class CloudSdk {
     /**
      * Create a new instance of {@link CloudSdk}.
      * If {@code sdkPath} is not set, this method looks for the SDK in known install locations.
+     * 
+     * @throws CloudSdkNotFoundException if Cloud SDK is not found
      */
     public CloudSdk build() {
 
@@ -723,6 +725,8 @@ public class CloudSdk {
           // prevent interference from exceptions in other resolvers
           logger.log(Level.SEVERE, resolver.getClass().getName()
               + ": exception thrown when searching for Google Cloud SDK", ex);
+          throw new CloudSdkNotFoundException(
+              "Exception thrown when searching for Google Cloud SDK.", ex);
         }
       }
       throw new CloudSdkNotFoundException("The Google Cloud SDK could not be found in the customary"
