@@ -27,8 +27,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -130,7 +127,11 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
 
     try {
-      sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment);
+      File workingDirectory = null;
+      if (config.getServices().size() == 1) {
+        workingDirectory = config.getServices().get(0);
+      }
+      sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment, workingDirectory);
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
@@ -155,7 +156,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       connection.setDoInput(true);
       connection.setRequestMethod("POST");
       connection.getOutputStream().write('\n');
-      byte[] responses = ByteStreams.toByteArray(connection.getInputStream());
       connection.disconnect();
       int responseCode = connection.getResponseCode();
       if (responseCode < 200 || responseCode > 299) {

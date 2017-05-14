@@ -16,16 +16,13 @@
 
 package com.google.cloud.tools.project;
 
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Map;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  * Tools for reading app.yaml
@@ -39,10 +36,19 @@ public class AppYaml {
   /**
    * @param appYaml the app.yaml file
    * @throws IOException if reading app.yaml fails due to I/O errors
+   * @throws org.yaml.snakeyaml.scanner.ScannerException if reading app.yaml fails while scanning
+   *     due to malformed YAML (undocumented {@link RuntimeException} from {@link Yaml#load})
+   * @throws org.yaml.snakeyaml.parser.ParserException if reading app.yaml fails while parsing
+   *     due to malformed YAML (undocumented {@link RuntimeException} from {@link Yaml#load})
    */
   public AppYaml(Path appYaml) throws IOException {
     try (InputStream in = Files.newInputStream(appYaml)) {
-      yamlMap = (Map<String, ?>) new Yaml().load(in);
+      Object loaded = new Yaml().load(in);
+      if (loaded == null) {
+        yamlMap = Collections.emptyMap();
+      } else {
+        yamlMap = (Map<String, ?>) loaded;
+      }
     }
   }
 
