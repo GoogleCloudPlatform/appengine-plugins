@@ -48,6 +48,9 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
   /**
    * Starts serving a specific version or versions.
+   * 
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void start(VersionsSelectionConfiguration configuration) throws AppEngineException {
@@ -66,6 +69,9 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
   /**
    * Stops serving a specific version or versions.
+   * 
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void stop(VersionsSelectionConfiguration configuration) throws AppEngineException {
@@ -84,6 +90,9 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
   /**
    * Deletes a specified version or versions.
+   * 
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void delete(VersionsSelectionConfiguration configuration) throws AppEngineException {
@@ -101,6 +110,9 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
   /**
    * Lists the versions for a service, or every version of every service if no service is specified.
+   *
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void list(VersionsListConfiguration configuration) throws AppEngineException {
