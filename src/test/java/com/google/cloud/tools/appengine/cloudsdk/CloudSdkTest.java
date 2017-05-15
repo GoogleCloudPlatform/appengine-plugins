@@ -80,12 +80,11 @@ public class CloudSdkTest {
   public void testGetVersion_fileNotExists() {
     try {
       builder.build().getVersion();
+      fail();
     } catch (CloudSdkVersionFileException e) {
       assertEquals("Cloud SDK version file not found at " + root.resolve("VERSION"),
           e.getMessage());
-      return;
     }
-    fail();
   }
 
   @Test
