@@ -82,7 +82,7 @@ public class FileUtilTest {
   }
 
   @Test
-  public void testCopyDirectory_aclPermissions() throws IOException {
+  public void testCopyDirectory_aclPermissions() {
     assumeTrue(System.getProperty("os.name").startsWith("Windows"));
     // TODO : write windows tests
   }

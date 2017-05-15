@@ -33,7 +33,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.util.concurrent.Future;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkRequestTest {

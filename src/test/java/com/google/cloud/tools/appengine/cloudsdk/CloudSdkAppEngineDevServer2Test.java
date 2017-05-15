@@ -22,7 +22,6 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -23,7 +23,6 @@ import com.google.cloud.tools.appengine.experimental.internal.process.CliProcess
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * The CloudSdkRequest template, all requests will essentially be instances of this class
