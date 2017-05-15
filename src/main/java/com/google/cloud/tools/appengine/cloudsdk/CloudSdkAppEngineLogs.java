@@ -33,8 +33,7 @@ public class CloudSdkAppEngineLogs implements AppEngineLogs {
 
   private CloudSdk sdk;
 
-  public CloudSdkAppEngineLogs(
-      CloudSdk sdk) {
+  public CloudSdkAppEngineLogs(CloudSdk sdk) {
     this.sdk = sdk;
   }
 
@@ -48,6 +47,9 @@ public class CloudSdkAppEngineLogs implements AppEngineLogs {
 
   /**
    * Read log entries.
+   * 
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void read(LogsConfiguration configuration) {

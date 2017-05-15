@@ -33,8 +33,7 @@ public class CloudSdkAppEngineServices implements AppEngineServices {
 
   private CloudSdk sdk;
 
-  public CloudSdkAppEngineServices(
-      CloudSdk sdk) {
+  public CloudSdkAppEngineServices(CloudSdk sdk) {
     this.sdk = sdk;
   }
 
@@ -48,6 +47,9 @@ public class CloudSdkAppEngineServices implements AppEngineServices {
 
   /**
    * Set the traffic splitting.
+   *
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void setTraffic(TrafficSplitConfiguration configuration) throws AppEngineException {

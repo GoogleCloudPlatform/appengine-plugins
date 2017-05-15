@@ -60,6 +60,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    * Starts the local development server, synchronously or asynchronously.
    *
    * @throws AppEngineException I/O error in the Java dev server
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void run(RunConfiguration config) throws AppEngineException {
@@ -186,7 +188,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   /**
    * This method tries to guess the runtime based on the appengine-web.xml of all
    * services that are expected to run.
-   * @param services a list of appengine standard service directories
+   * @param services a list of app engine standard service directories
    * @return {@code false} if only java7 modules are found or {@code true} is at least one java8
    *         module is found (i.e. pure java8 or mixed java7/java8)
    */
