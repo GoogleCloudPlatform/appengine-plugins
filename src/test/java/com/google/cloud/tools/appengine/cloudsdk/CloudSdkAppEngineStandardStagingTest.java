@@ -107,8 +107,7 @@ public class CloudSdkAppEngineStandardStagingTest {
   }
 
   @Test
-  public void testCheckFlags_booleanFlags()
-      throws IOException, AppEngineException, ProcessRunnerException {
+  public void testCheckFlags_booleanFlags() throws AppEngineException, ProcessRunnerException {
 
     DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
     configuration.setSourceDirectory(source);
@@ -130,8 +129,7 @@ public class CloudSdkAppEngineStandardStagingTest {
   }
 
   @Test
-  public void testCheckFlags_noFlags()
-      throws IOException, AppEngineException, ProcessRunnerException {
+  public void testCheckFlags_noFlags() throws AppEngineException, ProcessRunnerException {
 
     DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
     configuration.setSourceDirectory(source);

@@ -78,15 +78,14 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileNotExists() throws IOException {
+  public void testGetVersion_fileNotExists() {
     try {
       builder.build().getVersion();
+      fail();
     } catch (CloudSdkVersionFileException e) {
       assertEquals("Cloud SDK version file not found at " + root.resolve("VERSION"),
           e.getMessage());
-      return;
     }
-    fail();
   }
 
   @Test
@@ -95,13 +94,11 @@ public class CloudSdkTest {
     writeVersionFile(fileContents);
     try {
       builder.build().getVersion();
+      fail();
     } catch (CloudSdkVersionFileException ex) {
       assertEquals("Pattern found in the Cloud SDK version file could not be parsed: "
           + fileContents, ex.getMessage());
-
-      return;
     }
-    fail();
   }
 
   @Test
