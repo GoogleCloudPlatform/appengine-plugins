@@ -33,8 +33,7 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
 
   private CloudSdk sdk;
 
-  public CloudSdkAppEngineInstances(
-      CloudSdk sdk) {
+  public CloudSdkAppEngineInstances(CloudSdk sdk) {
     this.sdk = sdk;
   }
 
@@ -48,6 +47,9 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
 
   /**
    * Enable debug on the instance.
+   * 
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void enableDebug(InstancesSelectionConfiguration configuration)
@@ -58,6 +60,9 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
 
   /**
    * Disable debug on the instance.
+   * 
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void disableDebug(InstancesSelectionConfiguration configuration)
