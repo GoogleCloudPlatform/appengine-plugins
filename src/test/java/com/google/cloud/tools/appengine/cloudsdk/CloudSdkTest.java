@@ -94,13 +94,11 @@ public class CloudSdkTest {
     writeVersionFile(fileContents);
     try {
       builder.build().getVersion();
+      fail();
     } catch (CloudSdkVersionFileException ex) {
       assertEquals("Pattern found in the Cloud SDK version file could not be parsed: "
           + fileContents, ex.getMessage());
-
-      return;
     }
-    fail();
   }
 
   @Test
@@ -172,7 +170,7 @@ public class CloudSdkTest {
 
   public void testNewCloudSdk_inheritOutputAndOutListener() {
     try {
-      builder.inheritProcessOutput(true).addStdOutLineListener(outputListener).build();
+      builder.inheritProcessOutput(true).addStdOutLineListener(outputListener);
       fail();
     } catch (IllegalStateException ex) {
       assertNotNull(ex.getMessage());
@@ -181,7 +179,7 @@ public class CloudSdkTest {
 
   public void testNewCloudSdk_inheritOutputAndErrListener() {
     try {
-      builder.inheritProcessOutput(true).addStdErrLineListener(outputListener).build();
+      builder.inheritProcessOutput(true).addStdErrLineListener(outputListener);
       fail();
     } catch (IllegalStateException ex) {
       assertNotNull(ex.getMessage());
@@ -190,7 +188,7 @@ public class CloudSdkTest {
   
   public void testNewCloudSdk_ErrListenerAndInheritOutput() {
     try {
-      builder.addStdErrLineListener(outputListener).inheritProcessOutput(true).build();
+      builder.addStdErrLineListener(outputListener).inheritProcessOutput(true);
       fail();
     } catch (IllegalStateException ex) {
       assertNotNull(ex.getMessage());
