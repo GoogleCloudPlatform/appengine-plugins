@@ -28,6 +28,7 @@ public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfi
 
   private File appEngineDirectory;
 
+  @Override
   public File getAppEngineDirectory() {
     return appEngineDirectory;
   }

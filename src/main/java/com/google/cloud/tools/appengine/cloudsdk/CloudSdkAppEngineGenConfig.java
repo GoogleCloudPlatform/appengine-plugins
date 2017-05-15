@@ -35,7 +35,7 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
 
   public CloudSdkAppEngineGenConfig(
       CloudSdk sdk) {
-    this.sdk = Preconditions.checkNotNull(sdk);;
+    this.sdk = Preconditions.checkNotNull(sdk);
   }
 
   /**
