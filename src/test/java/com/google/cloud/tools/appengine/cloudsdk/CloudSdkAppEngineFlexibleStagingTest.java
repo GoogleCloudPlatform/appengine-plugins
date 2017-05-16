@@ -229,17 +229,20 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       when(config.getStagingDirectory()).thenReturn(stagingDirectory);
       return this;
     }
+    
     private FlexibleStagingContext withNonExistantDockerDirectory() {
       dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
       assertFalse(dockerDirectory.exists());
       when(config.getDockerDirectory()).thenReturn(dockerDirectory);
       return this;
     }
+    
     private FlexibleStagingContext withDockerDirectory() throws IOException {
       dockerDirectory = temporaryFolder.newFolder();
       when(config.getDockerDirectory()).thenReturn(dockerDirectory);
       return this;
     }
+    
     private FlexibleStagingContext withDockerFile() throws IOException {
       Assert.assertNotNull("needs withDockerDirectory to be called first", dockerDirectory);
       assertTrue("needs withDockerDirectory to be called first", dockerDirectory.exists());
@@ -249,17 +252,20 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       }
       return this;
     }
-    private FlexibleStagingContext withNonExistentAppEngineDirectory() throws IOException {
+    
+    private FlexibleStagingContext withNonExistentAppEngineDirectory()  {
       appEngineDirectory = new File(temporaryFolder.getRoot(), "non-existent-directory");
       assertFalse(appEngineDirectory.exists());
       when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
       return this;
     }
+    
     private FlexibleStagingContext withAppEngineDirectory() throws IOException {
       appEngineDirectory = temporaryFolder.newFolder();
       when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
       return this;
     }
+    
     private FlexibleStagingContext withFileInAppEngineDirectory(String fileName, String contents)
         throws IOException {
       Assert.assertNotNull("needs withAppEngineDirectory to be called first", appEngineDirectory);

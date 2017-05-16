@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.common.io.Files;
@@ -78,15 +77,14 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileNotExists() throws IOException {
+  public void testGetVersion_fileNotExists() {
     try {
       builder.build().getVersion();
+      fail();
     } catch (CloudSdkVersionFileException e) {
       assertEquals("Cloud SDK version file not found at " + root.resolve("VERSION"),
           e.getMessage());
-      return;
     }
-    fail();
   }
 
   @Test
@@ -95,13 +93,11 @@ public class CloudSdkTest {
     writeVersionFile(fileContents);
     try {
       builder.build().getVersion();
+      fail();
     } catch (CloudSdkVersionFileException ex) {
       assertEquals("Pattern found in the Cloud SDK version file could not be parsed: "
           + fileContents, ex.getMessage());
-
-      return;
     }
-    fail();
   }
 
   @Test
@@ -171,14 +167,31 @@ public class CloudSdkTest {
     assertEquals(1, builder.getExitListeners().size());
   }
 
-  @Test(expected = AppEngineException.class)
   public void testNewCloudSdk_inheritOutputAndOutListener() {
-    builder.inheritProcessOutput(true).addStdOutLineListener(outputListener).build();
+    try {
+      builder.inheritProcessOutput(true).addStdOutLineListener(outputListener);
+      fail();
+    } catch (IllegalStateException ex) {
+      assertNotNull(ex.getMessage());
+    }
   }
 
-  @Test(expected = AppEngineException.class)
   public void testNewCloudSdk_inheritOutputAndErrListener() {
-    builder.inheritProcessOutput(true).addStdErrLineListener(outputListener).build();
+    try {
+      builder.inheritProcessOutput(true).addStdErrLineListener(outputListener);
+      fail();
+    } catch (IllegalStateException ex) {
+      assertNotNull(ex.getMessage());
+    }
+  }
+  
+  public void testNewCloudSdk_ErrListenerAndInheritOutput() {
+    try {
+      builder.addStdErrLineListener(outputListener).inheritProcessOutput(true);
+      fail();
+    } catch (IllegalStateException ex) {
+      assertNotNull(ex.getMessage());
+    }
   }
 
   @Test

@@ -597,6 +597,12 @@ public class CloudSdk {
      * parent process.
      */
     public Builder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
+      // Verify there aren't listeners if subprocess inherits output.
+      // If output is inherited, then listeners won't receive anything.
+      if (inheritProcessOutput) {
+        throw new IllegalStateException(
+            "You cannot specify subprocess output inheritance and output listeners.");
+      }
       this.stdOutLineListeners.add(stdOutLineListener);
       return this;
     }
@@ -606,6 +612,12 @@ public class CloudSdk {
      * process.
      */
     public Builder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
+      // Verify there aren't listeners if subprocess inherits output.
+      // If output is inherited, then listeners won't receive anything.
+      if (inheritProcessOutput) {
+        throw new IllegalStateException(
+            "You cannot specify subprocess output inheritance and output listeners.");
+      }
       this.stdErrLineListeners.add(stdErrLineListener);
       return this;
     }
@@ -647,6 +659,13 @@ public class CloudSdk {
      * @param inheritProcessOutput if true, stdout and stderr are redirected to the parent process
      */
     public Builder inheritProcessOutput(boolean inheritProcessOutput) {
+      // Verify there aren't listeners if subprocess inherits output.
+      // If output is inherited, then listeners won't receive anything.
+      if (inheritProcessOutput
+          && (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0)) {
+        throw new IllegalStateException(
+            "You cannot specify subprocess output inheritance and output listeners.");
+      }
       this.inheritProcessOutput = inheritProcessOutput;
       return this;
     }
@@ -668,14 +687,6 @@ public class CloudSdk {
       // Default SDK path
       if (sdkPath == null) {
         sdkPath = discoverSdkPath();
-      }
-
-      // Verify there aren't listeners if subprocess inherits output.
-      // If output is inherited, then listeners won't receive anything.
-      if (inheritProcessOutput
-          && (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0)) {
-        throw new AppEngineException(
-            "You cannot specify subprocess output inheritance and output listeners.");
       }
 
       // Construct process runner.
