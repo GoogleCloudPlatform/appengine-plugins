@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
+import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.parser.ParserException;
 import org.yaml.snakeyaml.scanner.ScannerException;
 
@@ -42,7 +43,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
 
   private static final String APP_YAML = "app.yaml";
 
-  /**
+  /** 
    * Stages a Java JAR/WAR App Engine Flexible Environment application to be deployed.
    *
    * <p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
@@ -68,8 +69,8 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       copyDockerContext(config, copyService, runtime);
       copyAppEngineContext(config, copyService);
       copyArtifact(config, copyService);
-    } catch (IOException e) {
-      throw new AppEngineException(e);
+    } catch (IOException | YAMLException ex) {
+      throw new AppEngineException(ex);
     }
   }
 
