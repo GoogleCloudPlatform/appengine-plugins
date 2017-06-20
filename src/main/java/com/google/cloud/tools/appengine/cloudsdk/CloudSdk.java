@@ -79,15 +79,18 @@ public class CloudSdk {
   private final ProcessRunner processRunner;
   private final String appCommandMetricsEnvironment;
   private final String appCommandMetricsEnvironmentVersion;
-  @Nullable
   private final File appCommandCredentialFile;
   private final String appCommandOutputFormat;
+  private final String appCommandShowStructuredLogs;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
-  private CloudSdk(Path sdkPath, Path javaHomePath, String appCommandMetricsEnvironment,
-                   String appCommandMetricsEnvironmentVersion,
+  private CloudSdk(Path sdkPath, Path javaHomePath,
+                   @Nullable String appCommandMetricsEnvironment,
+                   @Nullable String appCommandMetricsEnvironmentVersion,
                    @Nullable File appCommandCredentialFile,
-                   String appCommandOutputFormat, ProcessRunner processRunner,
+                   @Nullable String appCommandOutputFormat,
+                   @Nullable String appCommandShowStructuredLogs,
+                   ProcessRunner processRunner,
                    WaitingProcessOutputLineListener runDevAppServerWaitListener) {
     this.sdkPath = sdkPath;
     this.javaHomePath = javaHomePath;
@@ -95,6 +98,7 @@ public class CloudSdk {
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
     this.appCommandCredentialFile = appCommandCredentialFile;
     this.appCommandOutputFormat = appCommandOutputFormat;
+    this.appCommandShowStructuredLogs = appCommandShowStructuredLogs;
     this.processRunner = processRunner;
     this.runDevAppServerWaitListener = runDevAppServerWaitListener;
 
@@ -175,6 +179,9 @@ public class CloudSdk {
     }
     if (appCommandMetricsEnvironmentVersion != null) {
       environment.put("CLOUDSDK_METRICS_ENVIRONMENT_VERSION", appCommandMetricsEnvironmentVersion);
+    }
+    if (appCommandShowStructuredLogs != null) {
+      environment.put("CLOUDSDK_SHOW_STRUCTURED_LOGS", appCommandShowStructuredLogs);
     }
     // This is to ensure IDE credentials get correctly passed to the gcloud commands, in Windows.
     // It's a temporary workaround until a fix is released.
@@ -525,9 +532,9 @@ public class CloudSdk {
     private Path sdkPath;
     private String appCommandMetricsEnvironment;
     private String appCommandMetricsEnvironmentVersion;
-    @Nullable
     private File appCommandCredentialFile;
     private String appCommandOutputFormat;
+    private String appCommandShowStructuredLogs;
     private boolean async = false;
     private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
     private List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
@@ -581,6 +588,11 @@ public class CloudSdk {
      */
     public Builder appCommandOutputFormat(String appCommandOutputFormat) {
       this.appCommandOutputFormat = appCommandOutputFormat;
+      return this;
+    }
+
+    public Builder appCommandShowStructuredLogs(String appCommandShowStructuredLogs) {
+      this.appCommandShowStructuredLogs = appCommandShowStructuredLogs;
       return this;
     }
 
@@ -713,7 +725,7 @@ public class CloudSdk {
 
       return new CloudSdk(sdkPath, javaHomePath, appCommandMetricsEnvironment,
           appCommandMetricsEnvironmentVersion, appCommandCredentialFile, appCommandOutputFormat,
-          processRunner, runDevAppServerWaitListener);
+          appCommandShowStructuredLogs, processRunner, runDevAppServerWaitListener);
     }
 
     /**
