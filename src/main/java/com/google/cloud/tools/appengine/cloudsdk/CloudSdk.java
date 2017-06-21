@@ -181,7 +181,7 @@ public class CloudSdk {
       environment.put("CLOUDSDK_METRICS_ENVIRONMENT_VERSION", appCommandMetricsEnvironmentVersion);
     }
     if (appCommandShowStructuredLogs != null) {
-      environment.put("CLOUDSDK_SHOW_STRUCTURED_LOGS", appCommandShowStructuredLogs);
+      environment.put("CLOUDSDK_CORE_SHOW_STRUCTURED_LOGS", appCommandShowStructuredLogs);
     }
     // This is to ensure IDE credentials get correctly passed to the gcloud commands, in Windows.
     // It's a temporary workaround until a fix is released.
