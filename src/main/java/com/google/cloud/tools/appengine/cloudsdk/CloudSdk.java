@@ -591,6 +591,10 @@ public class CloudSdk {
       return this;
     }
 
+    /**
+     * Sets structured json logs for the stderr output. Supported values include 'never' (default),
+     * 'always', 'terminal', etc.
+     */
     public Builder appCommandShowStructuredLogs(String appCommandShowStructuredLogs) {
       this.appCommandShowStructuredLogs = appCommandShowStructuredLogs;
       return this;
