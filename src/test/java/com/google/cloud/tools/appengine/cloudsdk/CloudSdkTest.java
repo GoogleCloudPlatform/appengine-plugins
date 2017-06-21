@@ -16,24 +16,6 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
-import com.google.common.io.Files;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
@@ -42,7 +24,26 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
+import com.google.common.io.Files;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Unit tests for {@link CloudSdk}.
@@ -238,5 +239,21 @@ public class CloudSdkTest {
     assertEquals(Paths.get("java", "path", "bin",
         System.getProperty("os.name").contains("Windows") ? "java.exe" : "java").toAbsolutePath(),
         sdk.getJavaExecutablePath());
+  }
+
+  @Test
+  public void testGcloudCommandEnvironment() {
+    builder.appCommandShowStructuredLogs("always");
+    builder.appCommandCredentialFile(mock(File.class));
+    builder.appCommandMetricsEnvironment("intellij");
+    builder.appCommandMetricsEnvironmentVersion("99");
+    CloudSdk sdk = builder.build();
+
+    Map<String, String> env = sdk.getGcloudCommandEnvironment();
+    assertEquals("0", env.get("CLOUDSDK_APP_USE_GSUTIL"));
+    assertEquals("always", env.get("CLOUDSDK_CORE_SHOW_STRUCTURED_LOGS"));
+    assertEquals("intellij", env.get("CLOUDSDK_METRICS_ENVIRONMENT"));
+    assertEquals("99", env.get("CLOUDSDK_METRICS_ENVIRONMENT_VERSION"));
+    assertEquals("1", env.get("CLOUDSDK_CORE_DISABLE_PROMPTS"));
   }
 }

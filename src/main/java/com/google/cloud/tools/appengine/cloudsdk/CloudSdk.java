@@ -169,9 +169,20 @@ public class CloudSdk {
     command.addAll(args);
     command.addAll(GcloudArgs.get("format", appCommandOutputFormat));
 
-    Map<String, String> environment = Maps.newHashMap();
     if (appCommandCredentialFile != null) {
       command.addAll(GcloudArgs.get("credential-file-override", appCommandCredentialFile));
+    }
+
+    logCommand(command);
+    processRunner.setEnvironment(getGcloudCommandEnvironment());
+    processRunner.setWorkingDirectory(workingDirectory);
+    processRunner.run(command.toArray(new String[command.size()]));
+  }
+
+  @VisibleForTesting
+  Map<String, String> getGcloudCommandEnvironment() {
+    Map<String, String> environment = Maps.newHashMap();
+    if (appCommandCredentialFile != null) {
       environment.put("CLOUDSDK_APP_USE_GSUTIL", "0");
     }
     if (appCommandMetricsEnvironment != null) {
@@ -192,10 +203,7 @@ public class CloudSdk {
 
     environment.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
 
-    logCommand(command);
-    processRunner.setEnvironment(environment);
-    processRunner.setWorkingDirectory(workingDirectory);
-    processRunner.run(command.toArray(new String[command.size()]));
+    return environment;
   }
 
   // Runs a gcloud command synchronously, with a new ProcessRunner. This method is intended to be
