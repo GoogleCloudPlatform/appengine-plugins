@@ -84,7 +84,8 @@ public class CloudSdk {
   private final String appCommandShowStructuredLogs;
   private final WaitingProcessOutputLineListener runDevAppServerWaitListener;
 
-  private CloudSdk(Path sdkPath, Path javaHomePath,
+  private CloudSdk(Path sdkPath,
+                   @Nullable Path javaHomePath,
                    @Nullable String appCommandMetricsEnvironment,
                    @Nullable String appCommandMetricsEnvironmentVersion,
                    @Nullable File appCommandCredentialFile,
