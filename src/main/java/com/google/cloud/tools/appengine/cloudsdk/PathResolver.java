@@ -85,7 +85,7 @@ public class PathResolver implements CloudSdkResolver {
   }
 
   private static List<String> getLocationsFromPath() {
-	List<String> possiblePaths = new ArrayList<>();
+    List<String> possiblePaths = new ArrayList<>();
     String pathEnv = System.getenv("PATH");
 
     if (pathEnv != null) {
