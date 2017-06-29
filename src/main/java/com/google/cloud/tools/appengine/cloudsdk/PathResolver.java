@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.Nullable;
+
 /**
  * Resolve paths with CloudSdk and Python defaults.
  */
@@ -72,6 +74,7 @@ public class PathResolver implements CloudSdkResolver {
   /** 
    * The default location for a single-user install of Cloud SDK on Windows.
    */
+  @Nullable
   private static String getLocalAppDataLocation() {
     String localAppData = System.getenv("LOCALAPPDATA");
     if (localAppData != null) {
@@ -128,6 +131,7 @@ public class PathResolver implements CloudSdkResolver {
 
   }
 
+  @Nullable
   private static String getProgramFilesLocation() {
     String programFiles = System.getenv("ProgramFiles");
     if (programFiles == null) {
@@ -140,6 +144,7 @@ public class PathResolver implements CloudSdkResolver {
     }
   }
 
+  @Nullable
   private static Path searchPaths(List<String> possiblePaths) {
     for (String pathString : possiblePaths) {
       if (pathString != null) {
