@@ -20,6 +20,7 @@ import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -41,10 +42,9 @@ public class PathResolver implements CloudSdkResolver {
    */
   @Override
   public Path getCloudSdkPath() {
-    List<String> possiblePaths = new ArrayList<>();
 
     // search system environment PATH
-    getLocationsFromPath(possiblePaths);
+	List<String> possiblePaths = getLocationsFromPath();
 
     // try environment variable GOOGLE_CLOUD_SDK_HOME
     possiblePaths.add(System.getenv("GOOGLE_CLOUD_SDK_HOME"));
@@ -81,7 +81,8 @@ public class PathResolver implements CloudSdkResolver {
     }
   }
 
-  private static void getLocationsFromPath(List<String> possiblePaths) {
+  private static List<String> getLocationsFromPath() {
+	List<String> possiblePaths = new ArrayList<>();
     String pathEnv = System.getenv("PATH");
 
     if (pathEnv != null) {
@@ -94,12 +95,17 @@ public class PathResolver implements CloudSdkResolver {
           possiblePaths.add(path.substring(0, path.length() - 4));
         }
 
-        Path possibleLink = Paths.get(path, "gcloud");
-        if (Files.isSymbolicLink(possibleLink)) {
-          getLocationsFromLink(possiblePaths, possibleLink);
+        try {
+          Path possibleLink = Paths.get(path, "gcloud");
+          if (Files.isSymbolicLink(possibleLink)) {
+            getLocationsFromLink(possiblePaths, possibleLink);
+          }
+        } catch (InvalidPathException ex) {
+          // not a possible path
         }
       }
     }
+    return possiblePaths;
   }
 
   // resolve symlinks to a path that could be the bin directory of the cloud sdk
@@ -137,9 +143,13 @@ public class PathResolver implements CloudSdkResolver {
   private static Path searchPaths(List<String> possiblePaths) {
     for (String pathString : possiblePaths) {
       if (pathString != null) {
-        Path path = Paths.get(pathString);
-        if (Files.exists(path)) {
-          return path;
+        try {
+          Path path = Paths.get(pathString);
+          if (Files.exists(path)) {
+            return path;
+          }
+        } catch (InvalidPathException ex) {
+          // ignore
         }
       }
     }
