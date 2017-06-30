@@ -40,13 +40,13 @@ public class PathResolver implements CloudSdkResolver {
   /**
    * Attempts to find the path to Google Cloud SDK.
    *
-   * @return Path to Google Cloud SDK or null
+   * @return path to Google Cloud SDK or null
    */
   @Override
   public Path getCloudSdkPath() {
 
     // search system environment PATH
-	List<String> possiblePaths = getLocationsFromPath();
+    List<String> possiblePaths = getLocationsFromPath();
 
     // try environment variable GOOGLE_CLOUD_SDK_HOME
     possiblePaths.add(System.getenv("GOOGLE_CLOUD_SDK_HOME"));
