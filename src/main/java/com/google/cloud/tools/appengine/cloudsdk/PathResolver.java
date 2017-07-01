@@ -31,11 +31,12 @@ import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
 /**
- * Resolve paths with CloudSdk and Python defaults.
+ * Resolve paths with Google Cloud SDK and Python defaults.
  */
 public class PathResolver implements CloudSdkResolver {
 
   private static final Logger logger = Logger.getLogger(PathResolver.class.getName());
+  private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
 
   /**
    * Attempts to find the path to Google Cloud SDK.
@@ -43,16 +44,16 @@ public class PathResolver implements CloudSdkResolver {
    * @return path to Google Cloud SDK or null
    */
   @Override
+  @Nullable
   public Path getCloudSdkPath() {
-
     // search system environment PATH
-    List<String> possiblePaths = getLocationsFromPath();
+    List<String> possiblePaths = getLocationsFromPath(System.getenv("PATH"));
 
     // try environment variable GOOGLE_CLOUD_SDK_HOME
     possiblePaths.add(System.getenv("GOOGLE_CLOUD_SDK_HOME"));
 
     // search program files
-    if (System.getProperty("os.name").contains("Windows")) {
+    if (IS_WINDOWS) {
       possiblePaths.add(getLocalAppDataLocation());
       possiblePaths.add(getProgramFilesLocation());
     } else {
@@ -84,12 +85,17 @@ public class PathResolver implements CloudSdkResolver {
     }
   }
 
-  private static List<String> getLocationsFromPath() {
+  @VisibleForTesting
+  static List<String> getLocationsFromPath(String pathEnv) {
     List<String> possiblePaths = new ArrayList<>();
-    String pathEnv = System.getenv("PATH");
 
     if (pathEnv != null) {
       for (String path : pathEnv.split(File.pathSeparator)) {
+        // Windows sometimes quotes paths so we need to strip these. 
+        // However quotes are legal in Unix paths.
+        if (IS_WINDOWS) {
+          path = unquote(path);
+        }
         // strip out trailing path separator
         if (path.endsWith(File.separator)) {
           path = path.substring(0, path.length() - 1);
@@ -109,6 +115,17 @@ public class PathResolver implements CloudSdkResolver {
       }
     }
     return possiblePaths;
+  }
+
+  @VisibleForTesting
+  static String unquote(String path) {
+    if (path.startsWith("\"")) {
+      path = path.substring(1, path.length() - 1);
+    }
+    if (path.endsWith("\"")) {
+      path = path.substring(0, path.length() - 1);
+    }
+    return path;
   }
 
   // resolve symlinks to a path that could be the bin directory of the cloud sdk

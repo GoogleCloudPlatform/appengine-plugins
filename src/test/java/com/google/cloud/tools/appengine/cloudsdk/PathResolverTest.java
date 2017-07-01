@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -64,9 +65,23 @@ public class PathResolverTest {
 
   @Test
   public void testGetRank() {
-    Assert.assertTrue(resolver.getRank() > 0);
+    Assert.assertTrue(resolver.getRank() > 10000);
+  }
+  
+  @Test
+  public void testGetLocationsFromPath() {
+    List<String> paths = PathResolver.getLocationsFromPath(
+        "\\my music & videos" + "google-cloud-sdk" + File.separator + "bin");
+    Assert.assertEquals(1, paths.size());
+    Assert.assertEquals("\\my music & videosgoogle-cloud-sdk", paths.get(0));
   }
 
+  @Test
+  public void testUnquote() {
+    String actual = PathResolver.unquote("\"only remove \"\" end quotes\"");
+    Assert.assertEquals("only remove \"\" end quotes", actual);
+  }
+  
   @Test
   public void testGetLocationFromLink_valid() throws IOException {
     Assume.assumeNoException(symlinkException);
