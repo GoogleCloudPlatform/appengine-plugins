@@ -103,6 +103,11 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
 
     arguments.add("--allow_remote_shutdown");
     arguments.add("--disable_update_check");
+    List<String> additionalArguments = config.getAdditionalArguments();
+    if (additionalArguments != null) {
+      arguments.addAll(additionalArguments);
+    }
+
     if (isJava8(config.getServices())) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
       jvmArguments.add("-D--enable_all_permissions=true");

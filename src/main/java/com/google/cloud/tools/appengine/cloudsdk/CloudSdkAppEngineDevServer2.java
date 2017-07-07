@@ -23,7 +23,6 @@ import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -93,6 +92,11 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("clear_datastore", config.getClearDatastore()));
     arguments.addAll(DevAppServerArgs.get("datastore_path", config.getDatastorePath()));
     arguments.addAll(DevAppServerArgs.get("env_var", config.getEnvironment()));
+
+    List<String> additionalArguments = config.getAdditionalArguments();
+    if (additionalArguments != null) {
+      arguments.addAll(additionalArguments);
+    }
 
     try {
       sdk.runDevAppServerCommand(arguments);

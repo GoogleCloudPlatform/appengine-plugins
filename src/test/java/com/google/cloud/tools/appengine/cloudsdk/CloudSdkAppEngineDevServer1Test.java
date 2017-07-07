@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,13 +150,14 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setSkipSdkUpdateCheck(true);
     configuration.setThreadsafeOverride("default:False,backend:True");
     configuration.setUseMtimeFileWatcher(true);
+    configuration.setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
     List<String> expectedFlags = ImmutableList
         .of("--address=host", "--port=8090", "--default_gcs_bucket=buckets",
-            "--allow_remote_shutdown", "--disable_update_check", "--no_java_agent",
-            pathToJava8Service.toString());
+            "--allow_remote_shutdown", "--disable_update_check", "--ARG1", "--ARG2",
+            "--no_java_agent", pathToJava8Service.toString());
 
     List<String> expectedJvmArgs = ImmutableList.of("-Dflag1", "-Dflag2",
         "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");

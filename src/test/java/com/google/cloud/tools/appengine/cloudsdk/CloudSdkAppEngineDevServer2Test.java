@@ -16,13 +16,22 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,16 +39,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * Unit tests for {@link CloudSdkAppEngineDevServer2}.
@@ -97,6 +96,7 @@ public class CloudSdkAppEngineDevServer2Test {
     configuration.setClearDatastore(true);
     configuration.setDatastorePath(fakeDatastorePath.toFile());
     configuration.setEnvironment(null);
+    configuration.setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
@@ -109,7 +109,8 @@ public class CloudSdkAppEngineDevServer2Test {
             "--custom_entrypoint=entrypoint", "--runtime=java", "--allow_skipped_files=true",
             "--api_port=8091", "--automatic_restart=false", "--dev_appserver_log_level=info",
             "--skip_sdk_update_check=true", "--default_gcs_bucket_name=buckets",
-            "--clear_datastore=true", "--datastore_path=" + fakeDatastorePath);
+            "--clear_datastore=true", "--datastore_path=" + fakeDatastorePath,
+            "--ARG1", "--ARG2");
 
     devServer.run(configuration);
 

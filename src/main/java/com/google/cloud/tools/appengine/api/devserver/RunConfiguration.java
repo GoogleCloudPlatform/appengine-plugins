@@ -81,4 +81,10 @@ public interface RunConfiguration {
   File getDatastorePath();
 
   Map<String, String> getEnvironment();
+
+  /**
+   * Any additional arguments to be passed to the appserver. These arguments are neither parsed nor
+   * validated.
+   */
+  List<String> getAdditionalArguments();
 }
