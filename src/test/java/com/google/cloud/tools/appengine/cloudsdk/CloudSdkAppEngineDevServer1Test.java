@@ -129,6 +129,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
     configuration.setDefaultGcsBucketName("buckets");
     configuration.setEnvironment(null);
+    configuration.setAutomaticRestart(true);
 
     // these params are not used by devappserver1 and will log warnings
     configuration.setAdminHost("adminHost");
@@ -136,7 +137,6 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setAuthDomain("example.com");
     configuration.setAllowSkippedFiles(true);
     configuration.setApiPort(8091);
-    configuration.setAutomaticRestart(false);
     configuration.setClearDatastore(true);
     configuration.setCustomEntrypoint("entrypoint");
     configuration.setDatastorePath(fakeDatastorePath);
@@ -159,8 +159,8 @@ public class CloudSdkAppEngineDevServer1Test {
             "--allow_remote_shutdown", "--disable_update_check", "--ARG1", "--ARG2",
             "--no_java_agent", pathToJava8Service.toString());
 
-    List<String> expectedJvmArgs = ImmutableList.of("-Dflag1", "-Dflag2",
-        "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+    List<String> expectedJvmArgs = ImmutableList.of("-Dappengine.fullscan.seconds=1", "-Dflag1",
+        "-Dflag2", "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     devServer.run(configuration);
 
@@ -177,7 +177,6 @@ public class CloudSdkAppEngineDevServer1Test {
     paramWarnings.put("allowSkippedFiles", configuration.getAllowSkippedFiles());
     paramWarnings.put("apiPort", configuration.getApiPort());
     paramWarnings.put("authDomain", configuration.getAuthDomain());
-    paramWarnings.put("automaticRestart", configuration.getAutomaticRestart());
     paramWarnings.put("clearDatastore", configuration.getClearDatastore());
     paramWarnings.put("customEntrypoint", configuration.getCustomEntrypoint());
     paramWarnings.put("datastorePath", configuration.getDatastorePath());

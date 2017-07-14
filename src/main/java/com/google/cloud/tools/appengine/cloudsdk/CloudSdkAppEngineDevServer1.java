@@ -73,6 +73,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     List<String> jvmArguments = new ArrayList<>();
     arguments.addAll(DevAppServerArgs.get("address", config.getHost()));
     arguments.addAll(DevAppServerArgs.get("port", config.getPort()));
+    if (Boolean.TRUE.equals(config.getAutomaticRestart())) {
+      jvmArguments.add("-Dappengine.fullscan.seconds=1");
+    }
     if (config.getJvmFlags() != null) {
       jvmArguments.addAll(config.getJvmFlags());
     }
@@ -86,7 +89,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     checkAndWarnIgnored(config.getAllowSkippedFiles(), "allowSkippedFiles");
     checkAndWarnIgnored(config.getApiPort(), "apiPort");
     checkAndWarnIgnored(config.getAuthDomain(), "authDomain");
-    checkAndWarnIgnored(config.getAutomaticRestart(), "automaticRestart");
     checkAndWarnIgnored(config.getClearDatastore(), "clearDatastore");
     checkAndWarnIgnored(config.getCustomEntrypoint(), "customEntrypoint");
     checkAndWarnIgnored(config.getDatastorePath(), "datastorePath");
