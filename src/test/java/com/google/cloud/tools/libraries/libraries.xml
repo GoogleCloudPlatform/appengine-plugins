@@ -1,0 +1,22 @@
+<?xml version="1.0">
+<!-- Warning: non-normative. Probably not even correct. -->
+<libraries>
+
+  <library name="BigQuery API v2"
+    site="https://developers.google.com/api-client-library/java/apis/bigquery/v2"
+    apidoc="https://developers.google.com/resources/api-libraries/documentation/bigquery/v2/java/latest/"
+    revision="352"
+    version="1.22.0"
+    status="release"    
+    source="https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery"
+    java="1.7.0"
+    appengine-standard="true"
+    android="6.0">
+      <dependency xmlns="http://maven.apache.org/POM/4.0.0">
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-bigquery</artifactId>
+        <version>v2-rev352-1.22.0</version>
+      </dependency>
+    </library>
+
+</libraries>
