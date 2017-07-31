@@ -15,7 +15,6 @@
       status="release"    
       source="https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery"
       languageLevel="1.7.0"
-      appengine-standard="true"
       android="6.0">
         <dependency xmlns="http://maven.apache.org/POM/4.0.0">
           <groupId>com.google.apis</groupId>
@@ -36,7 +35,6 @@
       status="release"    
       source="https://github.com/GoogleCloudPlatform/google-cloud-dotnet/tree/master/apis/Google.Cloud.BigQuery.V2"
       languageLevel="4.0"
-      appengine-standard="true"
       package="Google.Apis.bigquery">
         <platforms>
           <platform>.NET Framework 4.5+</platform>
