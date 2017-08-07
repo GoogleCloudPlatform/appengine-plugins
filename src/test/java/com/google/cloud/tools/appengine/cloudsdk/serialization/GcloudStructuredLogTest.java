@@ -45,43 +45,29 @@ public class GcloudStructuredLogTest {
       + " 'timestamp': '2017-08-04T18:49:50.917Z',"
       + " 'message': '(gcloud.app.deploy) Could not copy [/tmp/tmpAqUB6m/src.tgz]' }";
 
-  private static final String noVersionSampleJson = "{ 'verbosity': 'ERROR',"
-      + " 'timestamp': '2017-08-04T18:49:50.917Z',"
-      + " 'message': '(gcloud.app.deploy) Could not copy [/tmp/tmpAqUB6m/src.tgz]' }";
-
-  private static final String noVerbositySampleJson = "{ 'version': '0.0.1',"
-      + " 'timestamp': '2017-08-04T18:49:50.917Z',"
-      + " 'message': '(gcloud.app.deploy) Could not copy [/tmp/tmpAqUB6m/src.tgz]' }";
-
-  private static final String noTimestampSampleJson = "{ 'version': '0.0.1', 'verbosity': 'ERROR',"
-      + " 'message': '(gcloud.app.deploy) Could not copy [/tmp/tmpAqUB6m/src.tgz]' }";
-
-  private static final String noMessageSampleJson = "{ 'version': '0.0.1', 'verbosity': 'ERROR',"
-      + " 'timestamp': '2017-08-04T18:49:50.917Z' }";
-
   @Test
   public void testParse_fullJson() {
-    GcloudStructuredLog error = GcloudStructuredLog.parse(sampleJson);
-    assertEquals("semantic version of the message format, e.g. 0.0.1", error.version);
+    GcloudStructuredLog log = GcloudStructuredLog.parse(sampleJson);
+    assertEquals("semantic version of the message format, e.g. 0.0.1", log.getVersion());
     assertEquals("logging level: e.g. debug, info, warn, error, critical, exception",
-        error.verbosity);
+        log.getVerbosity());
     assertEquals("time event logged in UTC log file format: %Y-%m-%dT%H:%M:%S.%3f%Ez",
-        error.timestamp);
-    assertEquals("log/error message string", error.message);
+        log.getTimestamp());
+    assertEquals("log/error message string", log.getMessage());
     assertEquals("exception or error raised (if logged message has actual exception data)",
-        error.error.type);
-    assertEquals("stacktrace or error if available", error.error.stacktrace);
-    assertEquals("any additional error details", error.error.details);
+        log.getError().getType());
+    assertEquals("stacktrace or error if available", log.getError().getStacktrace());
+    assertEquals("any additional error details", log.getError().getDetails());
   }
 
   @Test
   public void testParse_errorNotPresent() {
-    GcloudStructuredLog error = GcloudStructuredLog.parse(noErrorSampleJson);
-    assertEquals("0.0.1", error.version);
-    assertEquals("ERROR", error.verbosity);
-    assertEquals("2017-08-04T18:49:50.917Z", error.timestamp);
-    assertEquals("(gcloud.app.deploy) Could not copy [/tmp/tmpAqUB6m/src.tgz]", error.message);
-    assertNull(error.error);
+    GcloudStructuredLog log = GcloudStructuredLog.parse(noErrorSampleJson);
+    assertEquals("0.0.1", log.getVersion());
+    assertEquals("ERROR", log.getVerbosity());
+    assertEquals("2017-08-04T18:49:50.917Z", log.getTimestamp());
+    assertEquals("(gcloud.app.deploy) Could not copy [/tmp/tmpAqUB6m/src.tgz]", log.getMessage());
+    assertNull(log.getError());
   }
 
   @Test

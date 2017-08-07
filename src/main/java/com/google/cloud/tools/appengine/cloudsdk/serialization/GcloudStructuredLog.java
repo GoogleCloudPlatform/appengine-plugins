@@ -28,16 +28,48 @@ import com.google.gson.JsonSyntaxException;
 public class GcloudStructuredLog {
 
   public static class Error {
-    String type;
-    String stacktrace;
-    String details;
+    private String type;
+    private String stacktrace;
+    private String details;
+
+    public String getType() {
+      return type;
+    }
+
+    public String getStacktrace() {
+      return stacktrace;
+    }
+
+    public String getDetails() {
+      return details;
+    }
   }
 
-  public String version;
-  public String verbosity;
-  public String timestamp;
-  public String message;
-  public Error error;
+  private String version;
+  private String verbosity;
+  private String timestamp;
+  private String message;
+  private Error error;
+
+  public String getVersion() {
+    return version;
+  }
+
+  public String getVerbosity() {
+    return verbosity;
+  }
+
+  public String getTimestamp() {
+    return timestamp;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public Error getError() {
+    return error;
+  }
 
   private GcloudStructuredLog() {}  // empty private constructor
 
