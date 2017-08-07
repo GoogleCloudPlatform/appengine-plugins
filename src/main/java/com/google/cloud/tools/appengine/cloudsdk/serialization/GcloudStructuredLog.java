@@ -16,9 +16,9 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
+import com.google.cloud.tools.appengine.cloudsdk.JsonParseException;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
 /**
@@ -74,20 +74,17 @@ public class GcloudStructuredLog {
   private GcloudStructuredLog() {}  // empty private constructor
 
   /**
-   * Parses a JSON string representing gcloud structured log output.
+   * Parses a JSON string representing {@code gcloud} structured log output.
    *
    * @return parsed JSON; never {@code null}
-   * @throws JsonSyntaxException if {@code jsonString} has syntax errors
-   * @throws JsonParseException if {@code jsonString} has semantic errors
-   *     (e.g., missing 'timestamp' property)
+   * @throws JsonParseException if {@code jsonString} has syntax errors or malformed JSON elements
    */
-  public static GcloudStructuredLog parse(String jsonString) {
+  public static GcloudStructuredLog parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);
-    GcloudStructuredLog json = new Gson().fromJson(jsonString, GcloudStructuredLog.class);
-    if (json.version == null || json.verbosity == null || json.timestamp == null
-        || json.message == null) {
-      throw new JsonParseException("cannot parse gcloud structured log entry: " + jsonString);
+    try {
+      return new Gson().fromJson(jsonString, GcloudStructuredLog.class);
+    } catch (JsonSyntaxException e) {
+      throw new JsonParseException(e);
     }
-    return json;
   }
 }

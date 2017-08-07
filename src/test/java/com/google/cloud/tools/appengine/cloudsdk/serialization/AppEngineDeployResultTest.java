@@ -16,13 +16,10 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
+import com.google.cloud.tools.appengine.cloudsdk.JsonParseException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -67,7 +64,7 @@ public class AppEngineDeployResultTest {
       "}";
 
   @Test
-  public void testParse_oneVersion() {
+  public void testParse_oneVersion() throws JsonParseException {
     AppEngineDeployResult json = AppEngineDeployResult.parse(ONE_VERSION);
     Assert.assertEquals("20160429t112518", json.getVersion(0));
     Assert.assertEquals("display-service", json.getService(0));
@@ -75,7 +72,7 @@ public class AppEngineDeployResultTest {
   }
 
   @Test
-  public void testParse_twoVersions() {
+  public void testParse_twoVersions() throws JsonParseException {
     AppEngineDeployResult json = AppEngineDeployResult.parse(TWO_VERSIONS);
     Assert.assertEquals("20160429t112518", json.getVersion(0));
     Assert.assertEquals("display-service", json.getService(0));
@@ -87,22 +84,11 @@ public class AppEngineDeployResultTest {
   }
 
   @Test
-  public void testParse_deprecatedFormat() {
-    String deprecatedFormat = "{ 'default': 'https://springboot-maven-project.appspot.com' }";
-    try {
-      AppEngineDeployResult.parse(deprecatedFormat);
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud app deploy result output: "));
-    }
-  }
-
-  @Test
   public void testParse_malformedInput() {
     try {
       AppEngineDeployResult.parse("non-JSON");
       fail();
-    } catch (JsonSyntaxException e) {
+    } catch (JsonParseException e) {
       assertNotNull(e.getMessage());
     }
   }
@@ -112,59 +98,34 @@ public class AppEngineDeployResultTest {
     try {
       AppEngineDeployResult.parse("{ 'versions' : 'non-array' }");
       fail();
-    } catch (JsonSyntaxException e) {
+    } catch (JsonParseException e) {
       assertNotNull(e.getMessage());
     }
   }
 
   @Test
-  public void testParse_versionsMissing() {
-    try {
-      AppEngineDeployResult.parse("{}");
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud app deploy result output: "));
-    }
+  public void testParse_noErrorWhenVersionsMissing() throws JsonParseException {
+    AppEngineDeployResult.parse("{}");
   }
 
   @Test
-  public void testParse_emptyVersions() {
-    try {
-      AppEngineDeployResult.parse("{ 'versions' : [] }");
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud app deploy result output: "));
-    }
+  public void testParse_noErrorWhenEmptyVersions() throws JsonParseException {
+    AppEngineDeployResult.parse("{ 'versions' : [] }");
   }
 
   @Test
-  public void testParse_versionIdMissing() {
-    try {
-      AppEngineDeployResult.parse(
-          "{'versions': [ {'service': 'a-service', 'project': 'a-project'} ]}");
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud app deploy result output: "));
-    }
+  public void testParse_noErrorWhenVersionIdMissing() throws JsonParseException {
+    AppEngineDeployResult.parse(
+        "{'versions': [ {'service': 'a-service', 'project': 'a-project'} ]}");
   }
 
   @Test
-  public void testParse_versionServiceMissing() {
-    try {
-      AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'project': 'a-project'} ]}");
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud app deploy result output: "));
-    }
+  public void testParse_noErrorWhenVersionServiceMissing() throws JsonParseException {
+    AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'project': 'a-project'} ]}");
   }
 
   @Test
-  public void testParse_versionProjectMissing() {
-    try {
-      AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'service': 'a-service'} ]}");
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud app deploy result output: "));
-    }
+  public void testParse_noErrorWhenVersionProjectMissing() throws JsonParseException {
+    AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'service': 'a-service'} ]}");
   }
 }

@@ -16,15 +16,12 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
+import com.google.cloud.tools.appengine.cloudsdk.JsonParseException;
 import org.junit.Test;
 
 public class GcloudStructuredLogTest {
@@ -46,7 +43,7 @@ public class GcloudStructuredLogTest {
       + " 'message': '(gcloud.app.deploy) Could not copy [/tmp/tmpAqUB6m/src.tgz]' }";
 
   @Test
-  public void testParse_fullJson() {
+  public void testParse_fullJson() throws JsonParseException {
     GcloudStructuredLog log = GcloudStructuredLog.parse(sampleJson);
     assertEquals("semantic version of the message format, e.g. 0.0.1", log.getVersion());
     assertEquals("logging level: e.g. debug, info, warn, error, critical, exception",
@@ -61,7 +58,7 @@ public class GcloudStructuredLogTest {
   }
 
   @Test
-  public void testParse_errorNotPresent() {
+  public void testParse_errorNotPresent() throws JsonParseException {
     GcloudStructuredLog log = GcloudStructuredLog.parse(noErrorSampleJson);
     assertEquals("0.0.1", log.getVersion());
     assertEquals("ERROR", log.getVerbosity());
@@ -75,52 +72,32 @@ public class GcloudStructuredLogTest {
     try {
       GcloudStructuredLog.parse("non-JSON");
       fail();
-    } catch (JsonSyntaxException e) {
+    } catch (JsonParseException e) {
       assertNotNull(e.getMessage());
     }
   }
 
   @Test
-  public void testParse_versionMissing() {
-    try {
-      GcloudStructuredLog.parse(
-          "{'verbosity': 'INFO', 'timestamp': 'a-timestamp', 'message': 'info message'}");
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud structured log entry: "));
-    }
+  public void testParse_noErrorWhenVersionMissing() throws JsonParseException {
+    GcloudStructuredLog.parse(
+        "{'verbosity': 'INFO', 'timestamp': 'a-timestamp', 'message': 'info message'}");
   }
 
   @Test
-  public void testParse_verbosityMissing() {
-    try {
-      GcloudStructuredLog.parse(
-          "{'version': '0.0.1', 'timestamp': 'a-timestamp', 'message': 'info message'}");
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud structured log entry: "));
-    }
+  public void testParse_noErrorWhenVerbosityMissing() throws JsonParseException {
+    GcloudStructuredLog.parse(
+        "{'version': '0.0.1', 'timestamp': 'a-timestamp', 'message': 'info message'}");
   }
 
   @Test
-  public void testParse_timestampMissing() {
-    try {
-      GcloudStructuredLog.parse(
-          "{'version': '0.0.1', 'verbosity': 'INFO', 'message': 'info message'}");
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud structured log entry: "));
-    }
+  public void testParse_noErrorWhenTimestampMissing() throws JsonParseException {
+    GcloudStructuredLog.parse(
+        "{'version': '0.0.1', 'verbosity': 'INFO', 'message': 'info message'}");
   }
 
   @Test
-  public void testParse_messageMissing() {
-    try {
-      GcloudStructuredLog.parse(
-          "{'version': '0.0.1', 'verbosity': 'INFO', 'timestamp': 'a-timestamp'}");
-      fail();
-    } catch (JsonParseException e) {
-      assertThat(e.getMessage(), startsWith("cannot parse gcloud structured log entry: "));
-    }
+  public void testParse_noErrorWhenMessageMissing() throws JsonParseException {
+    GcloudStructuredLog.parse(
+        "{'version': '0.0.1', 'verbosity': 'INFO', 'timestamp': 'a-timestamp'}");
   }
 }

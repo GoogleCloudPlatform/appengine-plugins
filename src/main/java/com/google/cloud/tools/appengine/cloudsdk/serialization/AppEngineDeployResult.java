@@ -16,9 +16,9 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
+import com.google.cloud.tools.appengine.cloudsdk.JsonParseException;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import java.util.List;
 
@@ -72,21 +72,14 @@ public class AppEngineDeployResult {
    * Parses a JSON string representing successful {@code gcloud app deploy} result.
    *
    * @return parsed JSON; never {@code null}
-   * @throws JsonSyntaxException if {@code jsonString} has syntax errors
-   * @throws JsonParseException if {@code jsonString} has semantic errors (e.g., missing or empty
-   *     'versions' property)
+   * @throws JsonParseException if {@code jsonString} has syntax errors or malformed JSON elements
    */
-  public static AppEngineDeployResult parse(String jsonString) {
+  public static AppEngineDeployResult parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);
-    AppEngineDeployResult json = new Gson().fromJson(jsonString, AppEngineDeployResult.class);
-    if (json == null || json.versions == null || json.versions.isEmpty()) {
-      throw new JsonParseException("cannot parse gcloud app deploy result output: " + jsonString);
+    try {
+      return new Gson().fromJson(jsonString, AppEngineDeployResult.class);
+    } catch (JsonSyntaxException e) {
+      throw new JsonParseException(e);
     }
-    for (Version version : json.versions) {
-      if (version.id == null || version.service == null || version.project == null) {
-        throw new JsonParseException("cannot parse gcloud app deploy result output: " + jsonString);
-      }
-    }
-    return json;
   }
 }
