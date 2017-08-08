@@ -24,10 +24,10 @@ import com.google.gson.JsonSyntaxException;
 /**
  * Holds de-serialized JSON of a single instance of structured log output from {@code gcloud}.
  */
-// Don't change the field names because Gson uses them for automatic de-serialization.
 public class GcloudStructuredLog {
 
   public static class Error {
+    // Don't change the field names because Gson uses them for automatic de-serialization.
     private String type;
     private String stacktrace;
     private String details;
@@ -45,6 +45,7 @@ public class GcloudStructuredLog {
     }
   }
 
+  // Don't change the field names because Gson uses them for automatic de-serialization.
   private String version;
   private String verbosity;
   private String timestamp;
@@ -77,7 +78,8 @@ public class GcloudStructuredLog {
    * Parses a JSON string representing {@code gcloud} structured log output.
    *
    * @return parsed JSON; never {@code null}
-   * @throws JsonParseException if {@code jsonString} has syntax errors or malformed JSON elements
+   * @throws JsonParseException if {@code jsonString} has syntax errors or incompatible JSON
+   *     element type
    */
   public static GcloudStructuredLog parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);

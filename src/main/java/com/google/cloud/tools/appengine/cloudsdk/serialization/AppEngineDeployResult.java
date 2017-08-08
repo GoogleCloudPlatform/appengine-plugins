@@ -25,15 +25,16 @@ import java.util.List;
 /**
  * Holds de-serialized JSON result output of {@code gcloud app deploy}.
  */
-// Don't change the field names because Gson uses them for automatic de-serialization.
 public class AppEngineDeployResult {
 
   private static class Version {
-    String id;
-    String service;
-    String project;
+    // Don't change the field names because Gson uses them for automatic de-serialization.
+    private String id;
+    private String service;
+    private String project;
   }
 
+  // Don't change the field names because Gson uses them for automatic de-serialization.
   private List<Version> versions;
 
   private AppEngineDeployResult() {}  // empty private constructor
@@ -72,7 +73,8 @@ public class AppEngineDeployResult {
    * Parses a JSON string representing successful {@code gcloud app deploy} result.
    *
    * @return parsed JSON; never {@code null}
-   * @throws JsonParseException if {@code jsonString} has syntax errors or malformed JSON elements
+   * @throws JsonParseException if {@code jsonString} has syntax errors or incompatible JSON
+   *     element type
    */
   public static AppEngineDeployResult parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);

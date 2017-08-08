@@ -16,6 +16,13 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+/**
+ * Signals that there have been problems when parsing JSON input.
+ *
+ * <p>May signal general problems, including syntactic or semantic errors. However, the main reason
+ * that this exception was introduced in the library is to wrap the {@link
+ * com.google.gson.JsonSyntaxException} {@link RuntimeException} and make it a checked exception.
+ */
 public class JsonParseException extends Exception {
 
   public JsonParseException(Throwable cause) {
