@@ -470,7 +470,6 @@ public class CloudSdk {
       throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException {
     validateCloudSdkLocation();
     validateCloudSdkVersion();
-    validateJdk();
   }
 
   private void validateCloudSdkVersion()
