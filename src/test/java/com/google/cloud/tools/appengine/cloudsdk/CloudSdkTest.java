@@ -79,9 +79,8 @@ public class CloudSdkTest {
 
   @Test
   public void testValidateCloudSdk_doesNotThrowInvalidJdkException() {
-    CloudSdk sdk = new CloudSdk.Builder().javaHome(Paths.get("/fake/path")).build();
     try {
-      sdk.validateCloudSdk();
+      new CloudSdk.Builder().javaHome(Paths.get("/fake/path")).build().validateCloudSdk();
     } catch (InvalidJavaSdkException ijse) {
       fail("Cloud SDK validation should not validate jdk");
     }
