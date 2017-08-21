@@ -5,6 +5,7 @@
   <api name="BigQuery API v2"
       definition="https://www.googleapis.com/discovery/v1/apis/bigquery/v2/rest"
       documentation="https://cloud.google.com/bigquery/docs/reference/rest/v2/"
+      transport="http"
     >
     
     <client language="java"
@@ -12,10 +13,9 @@
       apireference="https://developers.google.com/resources/api-libraries/documentation/bigquery/v2/java/latest/"
       revision="352"
       version="1.22.0"
-      status="release"    
+      status="GA"    
       source="https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery"
-      languageLevel="1.7.0"
-      status="stable">
+      languageLevel="1.7.0">
         <dependency xmlns="http://maven.apache.org/POM/4.0.0">
           <groupId>com.google.apis</groupId>
           <artifactId>google-api-services-bigquery</artifactId>
@@ -28,25 +28,6 @@
           <platform>Java 7</platform>
         </platforms>
     </client>
-      
-    <client language="c#"
-      site="https://developers.google.com/api-client-library/dotnet/apis/bigquery/v2"
-      apireference="https://developers.google.com/resources/api-libraries/documentation/bigquery/v2/csharp/latest/"
-      status="release"    
-      source="https://github.com/GoogleCloudPlatform/google-cloud-dotnet/tree/master/apis/Google.Cloud.BigQuery.V2"
-      languageLevel="4.0"
-      package="Google.Apis.bigquery"
-      status="deprecated">
-        <platforms>
-          <platform>.NET Framework 4.5+</platform>
-          <platform>NetStandard1.3</platform>
-          <platform>.NET Framework 4.0</platform>
-          <platform>Windows 8 </platform>
-          <platform>Windows Phone 8.1</platform>
-          <platform>Windows Phone Silverlight 8.0</platform>
-         </platforms>
-    </client>
-
   </api>
 
 </apis>
