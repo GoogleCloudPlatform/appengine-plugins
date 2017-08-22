@@ -3,7 +3,6 @@
 <apis>
 
   <api name="Google BigQuery API"
-      definition="????"
       documentation="https://cloud.google.com/bigquery/docs/reference/rest/v2/"
       transport="http"
       icon="http://google.tieto.com/images/services/google-cloud-platform/BigQuery_500px-1f2fdb56.png"
