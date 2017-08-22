@@ -1,22 +1,25 @@
 [
   {
-    "name": "BigQuery API v2",
-    "definition": "https://www.googleapis.com/discovery/v1/apis/bigquery/v2/rest",
+    "name": "Google BigQuery API",
+    "definition": "????",
     "documentation": "https://cloud.google.com/bigquery/docs/reference/rest/v2/",
     "transport": "http",
+    "icon":"http://google.tieto.com/images/services/google-cloud-platform/BigQuery_500px-1f2fdb56.png",
     "clients": [
       {
       "language":"java",
-      "site":"https://developers.google.com/api-client-library/java/apis/bigquery/v2",
-      "apireference":"https://developers.google.com/resources/api-libraries/documentation/bigquery/v2/java/latest/",
-      "revision":"352",
-      "version" : "1.22.0",
-      "status" : "GA",  
+      "site":"https://cloud.google.com/bigquery/docs/reference/libraries",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/0.22.0/apidocs/com/google/cloud/bigquery/package-summary.html",
+      "version" : "0.22.0",
+      "description":"The com.google.cloud.bigquery packages",
+      "status" : "beta",  
       "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
       "languageLevel" : "1.7.0",
-      "groupId" : "com.google.apis",
-      "artifactId" : "google-api-services-bigquery",
-      "version" : "v2-rev352-1.22.0",
+      "mavencoordinates" : {
+		 "groupId" : "com.google.cloud",
+		 "artifactId" : "google-cloud-bigquery",
+	     "version" : "0.22.0-beta"
+      },
       "platforms" : [
           "Android",
           "AES-7",
