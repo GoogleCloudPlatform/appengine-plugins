@@ -19,7 +19,7 @@
          "artifactId" : "google-cloud-bigquery",
          "version" : "0.22.0-beta"
       },
-      "platforms" : [
+      "compatible" : [
           "Android",
           "AES-7",
           "AES-8",

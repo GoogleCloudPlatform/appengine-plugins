@@ -22,12 +22,12 @@
           <artifactId>google-cloud-bigquery</artifactId>
           <version>0.22.0-beta</version>
         </dependency>
-        <platforms>
+        <compatibility>
           <platform>Android</platform>
           <platform>AES-7</platform>
           <platform>AES-8</platform>
           <platform>Java 7</platform>
-        </platforms>
+        </compatibility>
     </client>
   </api>
 
