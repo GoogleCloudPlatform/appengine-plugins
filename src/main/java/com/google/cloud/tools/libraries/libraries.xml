@@ -6,6 +6,7 @@
       documentation="https://cloud.google.com/bigquery/docs/reference/rest/v2/"
       transport="http"
       icon="http://google.tieto.com/images/services/google-cloud-platform/BigQuery_500px-1f2fdb56.png"
+      description="Google's fully managed, petabyte scale, serverless data warehouse for analytics"
     >
     
     <client language="java"
@@ -13,7 +14,7 @@
       apireference="https://googlecloudplatform.github.io/google-cloud-java/0.22.0/apidocs/com/google/cloud/bigquery/package-summary.html"
       version="0.22.0"
       status="beta"
-      description="The com.google.cloud.bigquery packages"
+      infotip="The com.google.cloud.bigquery packages"
       issuetracker="https://github.com/GoogleCloudPlatform/google-cloud-java/issues"
       source="https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery"
       languageLevel="1.7.0">
