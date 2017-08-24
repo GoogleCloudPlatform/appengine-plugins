@@ -4,7 +4,7 @@
     "documentation": "https://cloud.google.com/bigquery/docs/reference/libraries",
     "description":"Google's fully managed, petabyte scale, serverless data warehouse for analytics",
     "transport": "http",
-    "icon":"http://google.tieto.com/images/services/google-cloud-platform/BigQuery_500px-1f2fdb56.png",
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/bigquery.svg",
     "clients": [
       {
       "language":"java",
