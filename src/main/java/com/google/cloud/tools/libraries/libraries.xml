@@ -3,14 +3,14 @@
 <apis>
 
   <api name="Google BigQuery API"
-      documentation="https://cloud.google.com/bigquery/docs/reference/rest/v2/"
+      documentation="https://cloud.google.com/bigquery/docs/reference/libraries"
       transport="http"
       icon="http://google.tieto.com/images/services/google-cloud-platform/BigQuery_500px-1f2fdb56.png"
       description="Google's fully managed, petabyte scale, serverless data warehouse for analytics"
     >
     
     <client language="java"
-      site="https://cloud.google.com/bigquery/docs/reference/libraries"
+      site="https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-java"
       apireference="https://googlecloudplatform.github.io/google-cloud-java/0.22.0/apidocs/com/google/cloud/bigquery/package-summary.html"
       version="0.22.0"
       status="beta"
