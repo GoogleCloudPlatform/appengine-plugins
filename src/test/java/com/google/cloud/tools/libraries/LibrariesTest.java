@@ -84,13 +84,11 @@ public class LibrariesTest {
     for (int i = 0; i < clients.size(); i++) {
       JsonObject client = (JsonObject) clients.get(i);
       String status = client.getString("status");
-      
       Assert.assertThat(statuses, hasItemInArray(status));
       new URI(client.getString("apireference"));
       new URI(client.getString("site"));
       Assert.assertTrue(client.getString("languageLevel").matches("1\\.\\d+\\.\\d+"));
-      String versionString = client.getString("version");
-      Assert.assertTrue(versionString.matches("\\d+\\.\\d+\\.\\d+"));
+      Assert.assertFalse(client.getString("name").isEmpty());
       Assert.assertNotNull(client.getJsonObject("mavenCoordinates"));
       if (client.getString("source") != null) {
         new URI(client.getString("source"));
