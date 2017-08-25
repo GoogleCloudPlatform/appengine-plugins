@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.json.Json;
@@ -34,16 +33,27 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonReaderFactory;
-import javax.json.JsonValue;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 public class LibrariesTest {
+
+  private JsonObject[] apis;
+
+  @Before
+  public void parseJson() throws FileNotFoundException {    
+    JsonReaderFactory factory = Json.createReaderFactory(null);
+    InputStream in =
+        new FileInputStream("src/main/java/com/google/cloud/tools/libraries/libraries.json");
+    JsonReader reader = factory.createReader(in); 
+    apis = reader.readArray().toArray(new JsonObject[0]); 
+  }
 
   @Test
   public void testWellFormed() throws ParserConfigurationException, SAXException, IOException {
@@ -55,16 +65,10 @@ public class LibrariesTest {
   }
   
   @Test
-  public void testJson() throws FileNotFoundException, URISyntaxException {
-    JsonReaderFactory factory = Json.createReaderFactory(null);
-    InputStream in =
-        new FileInputStream("src/main/java/com/google/cloud/tools/libraries/libraries.json");
-    JsonReader reader = factory.createReader(in); 
-    Iterator<JsonValue> apis = reader.readArray().iterator();
-    Assert.assertTrue(apis.hasNext());
-    while (apis.hasNext()) { 
-      JsonObject api = (JsonObject) apis.next();
-      assertApi(api);
+  public void testJson() throws URISyntaxException {
+    Assert.assertTrue(apis.length > 0);
+    for (int i = 0; i < apis.length; i++) { 
+      assertApi(apis[i]);
     }
   }
 
@@ -97,17 +101,11 @@ public class LibrariesTest {
   }
   
   @Test
-  public void testDuplicates() throws FileNotFoundException, URISyntaxException {
-    JsonReaderFactory factory = Json.createReaderFactory(null);
-    InputStream in =
-        new FileInputStream("src/main/java/com/google/cloud/tools/libraries/libraries.json");
-    JsonReader reader = factory.createReader(in); 
-    Iterator<JsonValue> apis = reader.readArray().iterator();
-    Assert.assertTrue(apis.hasNext());
-    
+  public void testDuplicates() throws URISyntaxException {
+
     Map<String, String> apiCoordinates = new HashMap<>();
-    while (apis.hasNext()) { 
-      JsonObject api = (JsonObject) apis.next();
+    for (int i = 0; i < apis.length; i++) { 
+      JsonObject api = apis[i];
       String name = api.getString("name");
       if (apiCoordinates.containsKey(name)) {
         Assert.fail(name + " is defined twice");
