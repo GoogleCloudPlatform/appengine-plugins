@@ -64,13 +64,13 @@ public class LibrariesTest {
     Assert.assertTrue(apis.hasNext());
     while (apis.hasNext()) { 
       JsonObject api = (JsonObject) apis.next();
-      verifyApi(api);
+      assertApi(api);
     }
   }
 
   private static final String[] statuses = {"alpha", "beta", "GA"};
 
-  private static void verifyApi(JsonObject api) throws URISyntaxException {
+  private static void assertApi(JsonObject api) throws URISyntaxException {
     Assert.assertFalse(api.getString("name").isEmpty());
     Assert.assertFalse(api.getString("description").isEmpty());
     String transport = api.getString("transport");
@@ -99,7 +99,7 @@ public class LibrariesTest {
   }
   
   @Test
-  public void testMavenCoordinates() throws FileNotFoundException, URISyntaxException {
+  public void testDuplicates() throws FileNotFoundException, URISyntaxException {
     JsonReaderFactory factory = Json.createReaderFactory(null);
     InputStream in =
         new FileInputStream("src/main/java/com/google/cloud/tools/libraries/libraries.json");
@@ -107,21 +107,21 @@ public class LibrariesTest {
     Iterator<JsonValue> apis = reader.readArray().iterator();
     Assert.assertTrue(apis.hasNext());
     
-    Map<String, String> map = new HashMap<>();
+    Map<String, String> apiCoordinates = new HashMap<>();
     while (apis.hasNext()) { 
       JsonObject api = (JsonObject) apis.next();
       String name = api.getString("name");
-      if (map.containsKey(name)) {
+      if (apiCoordinates.containsKey(name)) {
         Assert.fail(name + " is defined twice");
       }
       JsonObject coordinates =
           ((JsonObject) api.getJsonArray("clients").get(0)).getJsonObject("mavenCoordinates");
       String mavenCoordinates = 
           coordinates.getString("groupId") + ":" + coordinates.getString("artifactId");
-      if (map.containsValue(mavenCoordinates)) {
+      if (apiCoordinates.containsValue(mavenCoordinates)) {
         Assert.fail(mavenCoordinates + " is defined twice");
       }
-      map.put(name, mavenCoordinates);
+      apiCoordinates.put(name, mavenCoordinates);
     }
   }
 
