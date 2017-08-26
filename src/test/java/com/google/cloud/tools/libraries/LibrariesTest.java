@@ -78,7 +78,8 @@ public class LibrariesTest {
     Assert.assertFalse(api.getString("name").isEmpty());
     Assert.assertFalse(api.getString("description").isEmpty());
     String transport = api.getString("transport");
-    Assert.assertTrue("http".equals(transport) || "grpc".equals(transport));
+    Assert.assertTrue(transport + " is not a recognized transport",
+        "http".equals(transport) || "grpc".equals(transport));
     new URI(api.getString("documentation"));
     if (api.getString("icon") != null) {
       new URI(api.getString("icon"));
@@ -102,7 +103,6 @@ public class LibrariesTest {
   
   @Test
   public void testDuplicates() throws URISyntaxException {
-
     Map<String, String> apiCoordinates = new HashMap<>();
     for (int i = 0; i < apis.length; i++) { 
       JsonObject api = apis[i];
