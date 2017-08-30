@@ -3,7 +3,7 @@
     "name": "Google BigQuery API",
     "documentation": "https://cloud.google.com/bigquery/docs/reference/libraries",
     "description":"Google's fully managed, petabyte scale, serverless data warehouse for analytics",
-    "transport": "http",
+    "transport": ["http"],
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/bigquery.svg",
     "clients": [
       {
@@ -27,7 +27,7 @@
     "name": "Google Cloud Datastore",
     "documentation": "https://cloud.google.com/datastore/docs/reference/libraries",
     "description":"Google Cloud Datastore is a NoSQL key-value database built for automatic scaling.",
-    "transport": "http",
+    "transport": ["http"],
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/datastore.svg",
     "clients": [
       {
@@ -51,7 +51,7 @@
     "name": "Google Cloud Storage",
     "documentation": "https://cloud.google.com/storage/docs/reference/libraries",
     "description":"Unified BLOB storage for developers and enterprises, from live data serving to data analytics/ML to data archiving.",
-    "transport": "http",
+    "transport": ["http"],
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/storage.svg",
     "clients": [
       {
