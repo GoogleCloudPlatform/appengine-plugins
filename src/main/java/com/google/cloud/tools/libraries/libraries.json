@@ -12,7 +12,7 @@
       "site":"https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/bigquery/package-summary.html",
       "infotip":"The com.google.cloud.bigquery packages",
-      "status" : "beta",  
+      "launchStage" : "beta",  
       "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
       "languageLevel" : "1.7.0",
       "mavenCoordinates" : {
@@ -36,7 +36,7 @@
       "site":"https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/datastore/package-summary.html",
       "infotip":"The com.google.cloud.datastore packages",
-      "status" : "GA",  
+      "launchStage" : "GA",  
       "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
       "languageLevel" : "1.7.0",
       "mavenCoordinates" : {
@@ -60,7 +60,7 @@
       "site":"https://cloud.google.com/storage/docs/reference/libraries#client-libraries-install-java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/storage/package-summary.html",
       "infotip":"The com.google.cloud.storage packages for client side access to GCS",
-      "status" : "GA",  
+      "launchStage" : "GA",  
       "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-storage",
       "languageLevel" : "1.7.0",
       "mavenCoordinates" : {

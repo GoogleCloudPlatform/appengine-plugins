@@ -72,7 +72,7 @@ public class LibrariesTest {
     }
   }
 
-  private static final String[] statuses = {"alpha", "beta", "GA"};
+  private static final String[] statuses = {"early access", "alpha", "beta", "GA", "deprecated"};
 
   private static void assertApi(JsonObject api) throws URISyntaxException {
     Assert.assertFalse(api.getString("name").isEmpty());
@@ -88,8 +88,8 @@ public class LibrariesTest {
     Assert.assertFalse(clients.isEmpty());
     for (int i = 0; i < clients.size(); i++) {
       JsonObject client = (JsonObject) clients.get(i);
-      String status = client.getString("status");
-      Assert.assertThat(statuses, hasItemInArray(status));
+      String launchStage = client.getString("launchStage");
+      Assert.assertThat(statuses, hasItemInArray(launchStage));
       new URI(client.getString("apireference"));
       new URI(client.getString("site"));
       Assert.assertTrue(client.getString("languageLevel").matches("1\\.\\d+\\.\\d+"));
