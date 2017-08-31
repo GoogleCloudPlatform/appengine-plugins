@@ -77,7 +77,7 @@ public class LibrariesTest {
   private static void assertApi(JsonObject api) throws URISyntaxException {
     Assert.assertFalse(api.getString("name").isEmpty());
     Assert.assertFalse(api.getString("description").isEmpty());
-    String transport = api.getJsonArray("transport").getString(0);
+    String transport = api.getJsonArray("transports").getString(0);
     Assert.assertTrue(transport + " is not a recognized transport",
         "http".equals(transport) || "grpc".equals(transport));
     new URI(api.getString("documentation"));
