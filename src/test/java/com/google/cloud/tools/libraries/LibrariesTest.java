@@ -23,8 +23,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public class LibrariesTest {
   }
   
   @Test
-  public void testJson() throws URISyntaxException {
+  public void testJson() throws IOException {
     Assert.assertTrue(apis.length > 0);
     for (int i = 0; i < apis.length; i++) { 
       assertApi(apis[i]);
@@ -74,15 +75,15 @@ public class LibrariesTest {
 
   private static final String[] statuses = {"early access", "alpha", "beta", "GA", "deprecated"};
 
-  private static void assertApi(JsonObject api) throws URISyntaxException {
+  private static void assertApi(JsonObject api) throws IOException {
     Assert.assertFalse(api.getString("name").isEmpty());
     Assert.assertFalse(api.getString("description").isEmpty());
     String transports = api.getJsonArray("transports").getString(0);
     Assert.assertTrue(transports + " is not a recognized transport",
         "http".equals(transports) || "grpc".equals(transports));
-    new URI(api.getString("documentation"));
+    assertReachable(api.getString("documentation"));
     if (api.getString("icon") != null) {
-      new URI(api.getString("icon"));
+      assertReachable(api.getString("icon"));
     }
     JsonArray clients = api.getJsonArray("clients");
     Assert.assertFalse(clients.isEmpty());
@@ -90,15 +91,20 @@ public class LibrariesTest {
       JsonObject client = (JsonObject) clients.get(i);
       String launchStage = client.getString("launchStage");
       Assert.assertThat(statuses, hasItemInArray(launchStage));
-      new URI(client.getString("apireference"));
-      new URI(client.getString("site"));
+      assertReachable(client.getString("apireference"));
+      assertReachable(client.getString("site"));
       Assert.assertTrue(client.getString("languageLevel").matches("1\\.\\d+\\.\\d+"));
       Assert.assertFalse(client.getString("name").isEmpty());
       Assert.assertNotNull(client.getJsonObject("mavenCoordinates"));
       if (client.getString("source") != null) {
-        new URI(client.getString("source"));
+        assertReachable(client.getString("source"));
       }
     }
+  }
+
+  private static void assertReachable(String url) throws IOException {
+    HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+    Assert.assertEquals(200, connection.getResponseCode());
   }
   
   @Test
