@@ -73,5 +73,30 @@
        }
       }
     ]
+  },
+  {
+    "name": "Google Cloud Translation",
+    "documentation": "https://cloud.google.com/translate/docs/reference/libraries",
+    "description":"A simple programmatic interface for detecting the language of arbitrary strings and translating them into dozens of languages using Neural Machine Translation.",
+    "transports": ["http"],
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/translate.svg",
+    "clients": [
+      {
+      "name":"Google Cloud Translation Client Library for Java",
+      "language":"java",
+      "site":"https://cloud.google.com/translate/docs/reference/libraries#client-libraries-install-java",
+      "apireference" : "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/translate/package-summary.html",
+      "packages" : ["com.google.cloud.translate"],
+      "infotip":"The com.google.cloud.translate packages for client side access to GCS",
+      "launchStage" : "GA",  
+      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-translate",
+      "languageLevel" : "1.7.0",
+      "mavenCoordinates" : {
+         "groupId" : "com.google.cloud",
+         "artifactId" : "google-cloud-translate",
+         "version" : "1.4.0"
+       }
+      }
+    ]
   }
 ]
