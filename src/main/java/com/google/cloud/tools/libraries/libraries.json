@@ -1,5 +1,30 @@
 [
   {
+    "name": "Google Cloud Spanner",
+    "documentation": "https://cloud.google.com/spanner/docs/reference/libraries",
+    "description":"Cloud Spanner is a fully managed, relational database service built for transactional consistency, high availability, and global scale.",
+    "transports": ["grpc"],
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/spanner.svg",
+    "clients": [
+      {
+      "name":"Google Java Client for Cloud Spanner",
+      "language":"java",
+      "site":"https://cloud.google.com/spanner/docs/reference/libraries#client-libraries-install-java",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/spanner/package-summary.html",
+      "infotip":"The com.google.cloud.spanner packages",
+      "launchStage" : "beta",  
+      "packages" : ["com.google.cloud.spanner"],
+      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-spanner",
+      "languageLevel" : "1.7.0",
+      "mavenCoordinates" : {
+         "groupId" : "com.google.cloud",
+         "artifactId" : "google-cloud-spanner",
+         "version" : "0.22.0-beta"
+       }
+      }
+    ]
+  },
+  {
     "name": "Google Cloud Pub/Sub",
     "documentation": "https://cloud.google.com/pubsub/docs/reference/libraries",
     "description":"Google Cloud Pub/Sub provides reliable, many-to-many, asynchronous messaging between applications. Publisher applications can send messages to a topic and other applications can subscribe to that topic to receive the messages.",
