@@ -1,5 +1,30 @@
 [
   {
+    "name": "Google Cloud Pub/Sub",
+    "documentation": "https://cloud.google.com/pubsub/docs/reference/libraries",
+    "description":"Google Cloud Pub/Sub provides reliable, many-to-many, asynchronous messaging between applications. Publisher applications can send messages to a topic and other applications can subscribe to that topic to receive the messages.",
+    "transports": ["grpc"],
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/pubsub.svg",
+    "clients": [
+      {
+      "name":"Google Cloud Java Client for Pub/Sub",
+      "language":"java",
+      "site":"https://cloud.google.com/pubsub/docs/reference/libraries#client-libraries-install-java",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/pubsub/package-summary.html",
+      "infotip":"The com.google.cloud.pubsub.v1 packages",
+      "launchStage" : "beta",  
+      "packages" : ["com.google.cloud.pubsub.v1"],
+      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-pubsub",
+      "languageLevel" : "1.7.0",
+      "mavenCoordinates" : {
+         "groupId" : "com.google.cloud",
+         "artifactId" : "google-cloud-pubsub",
+         "version" : "0.22.0-beta"
+       }
+      }
+    ]
+  },
+  {
     "name": "Google BigQuery API",
     "documentation": "https://cloud.google.com/bigquery/docs/reference/libraries",
     "description":"Google's fully managed, petabyte scale, serverless data warehouse for analytics",
