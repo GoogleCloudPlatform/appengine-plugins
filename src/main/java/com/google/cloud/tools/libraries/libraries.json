@@ -98,5 +98,30 @@
        }
       }
     ]
+  },
+  {
+    "name": "Stackdriver Logging",
+    "documentation": "https://cloud.google.com/logging/docs/reference/libraries",
+    "description":"Stackdriver Logging enables you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services in real-time.",
+    "transports": ["grpc"],
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/logging.svg",
+    "clients": [
+      {
+      "name":"Idiomatic Java Client for Stackdriver Logging",
+      "language":"java",
+      "site":"https://cloud.google.com/logging/docs/reference/libraries#client-libraries-install-java",
+      "apireference" : "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/logging/package-summary.html",
+      "packages" : ["com.google.cloud.logging"],
+      "infotip":"The com.google.cloud.logging packages for controlling Stackdriver logging",
+      "launchStage" : "GA",  
+      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-translate",
+      "languageLevel" : "1.7.0",
+      "mavenCoordinates" : {
+         "groupId" : "com.google.cloud",
+         "artifactId" : "google-cloud-logging",
+         "version" : "1.4.0"
+       }
+      }
+    ]
   }
 ]
