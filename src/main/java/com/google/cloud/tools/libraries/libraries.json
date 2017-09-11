@@ -7,7 +7,7 @@
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/vision.svg",
     "clients": [
       {
-      "name":"Google Java Client for Cloud Natural vision",
+      "name":"Google Java Client for Cloud Vision",
       "vision":"java",
       "site":"https://cloud.google.com/vision/docs/reference/libraries#client-libraries-install-java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/vision/package-summary.html",
@@ -15,7 +15,7 @@
       "launchStage" : "beta",  
       "packages" : ["com.google.cloud.vision.v1"],
       "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-vision",
-      "visionLevel" : "1.7.0",
+      "languageLevel" : "1.7.0",
       "mavenCoordinates" : {
          "groupId" : "com.google.cloud",
          "artifactId" : "google-cloud-vision",
