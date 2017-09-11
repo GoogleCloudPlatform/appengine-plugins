@@ -7,7 +7,7 @@
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/vision.svg",
     "clients": [
       {
-      "name":"Google Java Client for Cloud Vision",
+      "name":"Java Client Libraries for the Google Cloud Vision API",
       "vision":"java",
       "site":"https://cloud.google.com/vision/docs/reference/libraries#client-libraries-install-java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/vision/package-summary.html",
@@ -32,7 +32,7 @@
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/language.svg",
     "clients": [
       {
-      "name":"Google Java Client for Cloud Natural Language",
+      "name":"Java Client Libraries for the Google Cloud Natural Language API",
       "language":"java",
       "site":"https://cloud.google.com/language/docs/reference/libraries#client-libraries-install-java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/language/package-summary.html",
@@ -82,7 +82,7 @@
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/pubsub.svg",
     "clients": [
       {
-      "name":"Google Cloud Java Client for Pub/Sub",
+      "name":"Java Client Libraries for the Google Cloud Pub/Sub API",
       "language":"java",
       "site":"https://cloud.google.com/pubsub/docs/reference/libraries#client-libraries-install-java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/pubsub/package-summary.html",
@@ -207,7 +207,7 @@
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/logging.svg",
     "clients": [
       {
-      "name":"Idiomatic Java Client for Stackdriver Logging",
+      "name":"Java Client Libraries for the Stackdriver Logging API.",
       "language":"java",
       "site":"https://cloud.google.com/logging/docs/reference/libraries#client-libraries-install-java",
       "apireference" : "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/logging/package-summary.html",
