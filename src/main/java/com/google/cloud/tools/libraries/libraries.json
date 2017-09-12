@@ -27,7 +27,7 @@
   {
     "name": "Google Cloud Resource Manager",
     "documentation": "https://cloud.google.com/resource-manager/docs/reference/libraries",
-    "description":"Google Cloud Speech API converts audio to text in over 100 languages.",
+    "description":"The Google Cloud Resource Manager service enables you to programmatically manage hierarchical resource containers such as organizations, folders, and projects.",
     "transports": ["http"],
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/resourcemanager/resourcemanager.svg",
     "clients": [
