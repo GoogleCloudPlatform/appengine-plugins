@@ -49,6 +49,30 @@
       }
     ]
   },
+  {
+    "name": "Stackdriver Error Reporting",
+    "documentation": "https://cloud.google.com/errorreporting/docs/reference/libraries",
+    "description":"Stackdriver Error Reporting counts, analyzes and aggregates the crashes in your running cloud services.",
+    "transports": ["http"],
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/errorreporting.svg",
+    "clients": [
+      {
+      "name":"Java Client Libraries for the Google Compute Engine API",
+      "compute":"java",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/errorreporting/v1beta1/package-summary.html",
+      "infotip":"The com.google.cloud.errorreporting.v1beta1 packages",
+      "launchStage" : "alpha",  
+      "packages" : ["com.google.cloud.errorreporting.v1beta1"],
+      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-compute",
+      "languageLevel" : "1.7.0",
+      "mavenCoordinates" : {
+         "groupId" : "com.google.cloud",
+         "artifactId" : "google-cloud-errorreporting",
+         "version" : "0.23.0-alpha"
+       }
+      }
+    ]
+  },
  {
     "name": "Cloud DNS",
     "documentation": "https://cloud.google.com/dns/docs/reference/libraries",
