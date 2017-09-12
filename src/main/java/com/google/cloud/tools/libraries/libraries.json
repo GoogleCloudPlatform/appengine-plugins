@@ -97,6 +97,30 @@
       }
     ]
   },
+  {
+    "name": "Stackdriver Trace",
+    "documentation": "https://cloud.google.com/trace/docs/reference/libraries",
+    "description":"A distributed tracing system that collects latency data from App Engine applications.",
+    "transports": ["grpc"],
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/trace.svg",
+    "clients": [
+      {
+      "name":"Java Client Libraries for the Stackdriver Trace API",
+      "compute":"java",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/trace/v1/package-summary.html",
+      "infotip":"The com.google.cloud.trace.v1 packages",
+      "launchStage" : "alpha",  
+      "packages" : ["com.google.cloud.trace.v1"],
+      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-trace",
+      "languageLevel" : "1.7.0",
+      "mavenCoordinates" : {
+         "groupId" : "com.google.cloud",
+         "artifactId" : "google-cloud-trace",
+         "version" : "0.23.0-alpha"
+       }
+      }
+    ]
+  },
  {
     "name": "Cloud DNS",
     "documentation": "https://cloud.google.com/dns/docs/reference/libraries",
