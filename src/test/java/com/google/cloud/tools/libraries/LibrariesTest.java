@@ -116,8 +116,7 @@ public class LibrariesTest {
   @Test
   public void testDuplicates() throws URISyntaxException {
     Map<String, String> apiCoordinates = new HashMap<>();
-    for (int i = 0; i < apis.length; i++) { 
-      JsonObject api = apis[i];
+    for (JsonObject api : apis) {
       String name = api.getString("name");
       if (apiCoordinates.containsKey(name)) {
         Assert.fail(name + " is defined twice");

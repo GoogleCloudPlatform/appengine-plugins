@@ -225,7 +225,7 @@
       "name":"Java Client Libraries for the Google Cloud Vision API",
       "vision":"java",
       "site":"https://cloud.google.com/vision/docs/reference/libraries#client-libraries-install-java",
-      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/vision/package-summary.html",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/vision/v1/package-summary.html",
       "infotip":"The com.google.cloud.vision.v1 packages",
       "launchStage" : "beta",  
       "packages" : ["com.google.cloud.vision.v1"],
@@ -241,16 +241,16 @@
   },
   {
     "name": "Google Cloud Natural Language",
-    "documentation": "https://cloud.google.com/language/docs/reference/libraries",
+    "documentation": "https://cloud.google.com/natural-language/docs/reference/libraries",
     "description":"The Google Cloud Natural Language API provides natural language understanding technologies including sentiment analysis, entity analysis, and syntax analysis.",
     "transports": ["grpc"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/language.svg",
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/natural-language.svg",
     "clients": [
       {
       "name":"Java Client Libraries for the Google Cloud Natural Language API",
       "language":"java",
-      "site":"https://cloud.google.com/language/docs/reference/libraries#client-libraries-install-java",
-      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/language/package-summary.html",
+      "site":"https://cloud.google.com/natural-language/docs/reference/libraries#client-libraries-install-java",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/language/v1/package-summary.html",
       "infotip":"The com.google.cloud.language.v1 packages",
       "launchStage" : "beta",  
       "packages" : ["com.google.cloud.language.v1"],
@@ -300,7 +300,7 @@
       "name":"Java Client Libraries for the Google Cloud Pub/Sub API",
       "language":"java",
       "site":"https://cloud.google.com/pubsub/docs/reference/libraries#client-libraries-install-java",
-      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/pubsub/package-summary.html",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/pubsub/v1/package-summary.html",
       "infotip":"The com.google.cloud.pubsub.v1 packages",
       "launchStage" : "beta",  
       "packages" : ["com.google.cloud.pubsub.v1"],
@@ -394,7 +394,6 @@
     "documentation": "https://cloud.google.com/translate/docs/reference/libraries",
     "description":"A simple programmatic interface for detecting the language of arbitrary strings and translating them into dozens of languages using Neural Machine Translation.",
     "transports": ["http"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/translate.svg",
     "clients": [
       {
       "name":"Google Cloud Translation Client Library for Java",
