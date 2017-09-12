@@ -56,9 +56,9 @@
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/dlp.svg",
     "clients": [
       {
-      "name":"Java Client Libraries for the Google Compute Engine API",
+      "name":"Java Client Libraries for the Data Loss Prevention API",
       "compute":"java",
-      "site":"https://cloud.google.com/compute/docs/reference/libraries#client-libraries-install-java",
+      "site":"https://cloud.google.com/dlp/docs/reference/libraries#client-libraries-install-java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/dlp/v2beta1/apidocs/com/google/cloud/compute/package-summary.html",
       "infotip":"The com.google.cloud.dlp.v2beta1 packages",
       "launchStage" : "alpha",  
