@@ -91,7 +91,11 @@ public class LibrariesTest {
       String launchStage = client.getString("launchStage");
       Assert.assertThat(statuses, hasItemInArray(launchStage));
       new URI(client.getString("apireference"));
-      new URI(client.getString("site"));
+      try {
+        new URI(client.getString("site"));
+      } catch (NullPointerException ex) {
+        // no site element to test
+      }
       Assert.assertTrue(client.getString("languageLevel").matches("1\\.\\d+\\.\\d+"));
       Assert.assertFalse(client.getString("name").isEmpty());
       Assert.assertNotNull(client.getJsonObject("mavenCoordinates"));
