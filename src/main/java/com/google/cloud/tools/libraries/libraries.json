@@ -4,13 +4,12 @@
     "documentation": "https://cloud.google.com/speech/docs/reference/libraries",
     "description":"Google Cloud Speech API converts audio to text in over 100 languages.",
     "transports": ["grpc"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/speech.svg",
     "clients": [
       {
       "name":"Java Client Libraries for the Google Cloud Speech API",
-      "compute":"java",
+      "language":"java",
       "site":"https://cloud.google.com/speech/docs/reference/libraries#client-libraries-install-java",
-      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/speech/v1/apidocs/com/google/cloud/compute/package-summary.html",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/speech/v1beta1/package-summary.html",
       "infotip":"The com.google.cloud.speech.v1 packages",
       "launchStage" : "alpha",  
       "packages" : ["com.google.cloud.speech.v1"],
@@ -26,16 +25,15 @@
   },
   {
     "name": "Google Cloud Resource Manager",
-    "documentation": "https://cloud.google.com/resource-manager/docs/reference/libraries",
+    "documentation": "https://cloud.google.com/resource-manager/docs/",
     "description":"The Google Cloud Resource Manager service enables you to programmatically manage hierarchical resource containers such as organizations, folders, and projects.",
     "transports": ["http"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/resourcemanager/resourcemanager.svg",
     "clients": [
       {
       "name":"Java Client Libraries for the Google Cloud Resource Manager API",
-      "compute":"java",
+      "language":"java",
       "site":"https://cloud.google.com/speech/docs/reference/libraries#client-libraries-install-java",
-      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/resourcemanager/apidocs/com/google/cloud/compute/package-summary.html",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/?com/google/cloud/resourcemanager/package-summary.html",
       "infotip":"The com.google.cloud.speech.resourcemanager packages",
       "launchStage" : "alpha",  
       "packages" : ["com.google.cloud.resourcemanager"],
@@ -57,9 +55,9 @@
     "clients": [
       {
       "name":"Java Client Libraries for the Data Loss Prevention API",
-      "compute":"java",
+      "language":"java",
       "site":"https://cloud.google.com/dlp/docs/reference/libraries#client-libraries-install-java",
-      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/dlp/v2beta1/apidocs/com/google/cloud/compute/package-summary.html",
+      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/dlp/v2beta1/package-summary.html",
       "infotip":"The com.google.cloud.dlp.v2beta1 packages",
       "launchStage" : "alpha",  
       "packages" : ["com.google.cloud.dlp.v2beta1"],
@@ -78,16 +76,15 @@
     "documentation": "https://cloud.google.com/video-intelligence/docs/",
     "description":"The Google Cloud Video Intelligence API enables developers to annotate videos stored in Google Cloud Storage with video and frame-level (1 fps) contextual information. The API supports common video formats including .mov, .mp4, and .avi.",
     "transports": ["grpc"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/video-intelligence.svg",
     "clients": [
       {
       "name":"A client to the Google Cloud Video Intelligence API.",
-      "compute":"java",
+      "language":"java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/videointelligence/v1beta1/package-summary.html",
       "infotip":"The com.google.cloud.videointelligence.v1beta1 packages",
       "launchStage" : "alpha",  
       "packages" : ["com.google.cloud.videointelligence.v1beta1"],
-      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-videointelligence",
+      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-video-intelligence",
       "languageLevel" : "1.7.0",
       "mavenCoordinates" : {
          "groupId" : "com.google.cloud",
@@ -99,15 +96,15 @@
   },
   {
     "name": "Compute Engine",
-    "documentation": "https://cloud.google.com/compute/docs/reference/libraries",
+    "documentation": "https://cloud.google.com/compute/docs/apis",
     "description":"Google Compute Engine lets you create and run virtual machines on Google infrastructure.",
     "transports": ["http"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/compute.svg",
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/compute-engine.svg",
     "clients": [
       {
       "name":"Java Client Libraries for the Google Compute Engine API",
-      "compute":"java",
-      "site":"https://cloud.google.com/compute/docs/reference/libraries#client-libraries-install-java",
+      "language":"java",
+      "site":"https://cloud.google.com/compute/docs/api/libraries#google_apis_java_client_library",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/compute/package-summary.html",
       "infotip":"The com.google.cloud.compute packages",
       "launchStage" : "alpha",  
@@ -127,11 +124,11 @@
     "documentation": "https://cloud.google.com/monitoring/docs/reference/libraries",
     "description":"Stackdriver Monitoring provides visibility into the performance, uptime, and overall health of cloud-powered applications.",
     "transports": ["grpc"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/monitoring.svg",
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/stackdriver.svg",
     "clients": [
       {
       "name":"Java Client Libraries for the Stackdriver Monitoring API",
-      "compute":"java",
+      "language":"java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/monitoring/v3/package-summary.html",
       "infotip":"The com.google.cloud.monitoring.v3 packages",
       "launchStage" : "alpha",  
@@ -148,19 +145,19 @@
   },
  {
     "name": "Stackdriver Error Reporting",
-    "documentation": "https://cloud.google.com/errorreporting/docs/reference/libraries",
+    "documentation": "https://cloud.google.com/error-reporting/reference/",
     "description":"Stackdriver Error Reporting counts, analyzes and aggregates the crashes in your running cloud services.",
     "transports": ["http"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/errorreporting.svg",
+    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/stackdriver.svg",
     "clients": [
       {
-      "name":"Java Client Libraries for the Google Compute Engine API",
-      "compute":"java",
+      "name":"Java Client Libraries for Stackdriver Error Reporting",
+      "language":"java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/errorreporting/v1beta1/package-summary.html",
       "infotip":"The com.google.cloud.errorreporting.v1beta1 packages",
       "launchStage" : "alpha",  
       "packages" : ["com.google.cloud.errorreporting.v1beta1"],
-      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-compute",
+      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-errorreporting",
       "languageLevel" : "1.7.0",
       "mavenCoordinates" : {
          "groupId" : "com.google.cloud",
@@ -172,14 +169,14 @@
   },
   {
     "name": "Stackdriver Trace",
-    "documentation": "https://cloud.google.com/trace/docs/reference/libraries",
+    "documentation": "https://cloud.google.com/trace/docs/reference/",
     "description":"A distributed tracing system that collects latency data from App Engine applications.",
     "transports": ["grpc"],
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/trace.svg",
     "clients": [
       {
       "name":"Java Client Libraries for the Stackdriver Trace API",
-      "compute":"java",
+      "language":"java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/trace/v1/package-summary.html",
       "infotip":"The com.google.cloud.trace.v1 packages",
       "launchStage" : "alpha",  
@@ -196,7 +193,7 @@
   },
  {
     "name": "Cloud DNS",
-    "documentation": "https://cloud.google.com/dns/docs/reference/libraries",
+    "documentation": "https://cloud.google.com/dns/docs/apis",
     "description":"Google Cloud DNS is a managed authoritative Domain Name System (DNS) service running on Google infrastructure. Cloud DNS translates domain names such as www.google.com into IP addresses such as 74.125.29.101.",
     "transports": ["http"],
     "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/dns.svg",
@@ -204,7 +201,6 @@
       {
       "name":"Java Client Libraries for the Google dns Engine API",
       "dns":"java",
-      "site":"https://cloud.google.com/dns/docs/reference/libraries#client-libraries-install-java",
       "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/dns/package-summary.html",
       "infotip":"The com.google.cloud.dns packages",
       "launchStage" : "alpha",  
@@ -224,7 +220,6 @@
     "documentation": "https://cloud.google.com/vision/docs/reference/libraries",
     "description":"The Google Cloud Vision API provides vision features including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content.",
     "transports": ["grpc"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/vision.svg",
     "clients": [
       {
       "name":"Java Client Libraries for the Google Cloud Vision API",
