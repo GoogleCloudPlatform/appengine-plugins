@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.when;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.common.io.Files;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -75,6 +77,12 @@ public class CloudSdkTest {
   @Test
   public void testValidateCloudSdk() {
     new CloudSdk.Builder().build().validateCloudSdk();
+  }
+
+  @Test
+  public void testMinimumCloudSdkVersion() {
+    // 160.0 through 170.0 have serious bugs on Windows
+    assertTrue(CloudSdk.MINIMUM_VERSION.getMajorVersion() > 170);
   }
 
   @Test
