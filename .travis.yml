@@ -9,7 +9,7 @@ cache:
 install: 
   # download Cloud SDK
   - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-135.0.0-linux-x86_64.tar.gz
-  - tar -xzf google-cloud-sdk-135.0.0-linux-x86_64.tar.gz -C /home/travis
+  - tar -xzf google-cloud-sdk-171.0.0-linux-x86_64.tar.gz -C /home/travis
   # update all Cloud SDK components
   - /home/travis/google-cloud-sdk/bin/gcloud components update --quiet
   # add App Engine component to Cloud SDK
