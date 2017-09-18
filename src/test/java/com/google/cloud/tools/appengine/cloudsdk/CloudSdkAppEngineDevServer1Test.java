@@ -28,7 +28,6 @@ import com.google.cloud.tools.test.utils.LogStoringHandler;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -81,7 +80,11 @@ public class CloudSdkAppEngineDevServer1Test {
       Paths.get("src/test/resources/projects/Standard8Project2EnvironmentVariables");
   private final File java8Service2EnvVars = pathToJava8Service2WithEnvVars.toFile();
 
-  private final Map<String, String> environment = Maps.newHashMap();
+  // Environment variables included in running the dev server for Java 7/8 runtimes.
+  private final Map<String, String> expectedJava7Environment =
+      ImmutableMap.of("GAE_ENV", "localdev", "GAE_RUNTIME", "java7");
+  private final Map<String, String> expectedJava8Environment =
+      ImmutableMap.of("GAE_ENV", "localdev", "GAE_RUNTIME", "java8");
 
 
   @Before
@@ -164,11 +167,11 @@ public class CloudSdkAppEngineDevServer1Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags, environment,
+    verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags, expectedJava8Environment,
         java8Service /* workingDirectory */);
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.of("getServices", 7, "getJavaHomeDir", 2, "getJvmFlags", 2));
+        ImmutableMap.of("getServices", 8, "getJavaHomeDir", 2, "getJvmFlags", 2));
 
     // verify we are checking and ignoring these parameters
     Map<String, Object> paramWarnings = new HashMap<>();
@@ -212,7 +215,7 @@ public class CloudSdkAppEngineDevServer1Test {
             "-D--enable_all_permissions=true");
     devServer.run(configuration);
     verify(sdk, times(1)).runDevAppServer1Command(
-        expectedJvmArgs, expectedFlags, environment, java8Service /* workingDirectory */);
+        expectedJvmArgs, expectedFlags, expectedJava8Environment, java8Service /* workingDirectory */);
   }
 
   @Test
@@ -231,7 +234,7 @@ public class CloudSdkAppEngineDevServer1Test {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServer1Command(
-        expectedJvmArgs, expectedFlags, environment, java8Service /* workingDirectory */);
+        expectedJvmArgs, expectedFlags, expectedJava8Environment, java8Service /* workingDirectory */);
   }
 
   @Test
@@ -250,7 +253,7 @@ public class CloudSdkAppEngineDevServer1Test {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServer1Command(
-        expectedJvmArgs, expectedFlags, environment, java7Service /* workingDirectory */);
+        expectedJvmArgs, expectedFlags, expectedJava7Environment, java7Service /* workingDirectory */);
   }
 
   @Test
@@ -270,7 +273,7 @@ public class CloudSdkAppEngineDevServer1Test {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServer1Command(
-        expectedJvmArgs, expectedFlags, environment, null /* workingDirectory */);
+        expectedJvmArgs, expectedFlags, expectedJava8Environment, null /* workingDirectory */);
   }
 
   @Test
@@ -285,7 +288,12 @@ public class CloudSdkAppEngineDevServer1Test {
     List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
             "-D--enable_all_permissions=true");
 
-    Map<String, String> expectedEnvironment = ImmutableMap.of("key1", "val1", "key2", "val2");
+    Map<String, String> expectedConfigurationEnvironment =
+        ImmutableMap.of("key1", "val1", "key2", "val2");
+    Map<String, String> expectedEnvironment = ImmutableMap.<String, String>builder()
+        .putAll(expectedConfigurationEnvironment)
+        .putAll(expectedJava8Environment)
+        .build();
 
     devServer.run(configuration);
 
@@ -306,8 +314,12 @@ public class CloudSdkAppEngineDevServer1Test {
     List<String> expectedJvmArgs = ImmutableList.of("-Duse_jetty9_runtime=true",
             "-D--enable_all_permissions=true");
 
-    Map<String, String> expectedEnvironment = ImmutableMap.of(
+    Map<String, String> expectedConfigurationEnvironment = ImmutableMap.of(
         "key1", "val1", "keya", "vala", "key2", "duplicated-key", "keyc", "valc");
+    Map<String, String> expectedEnvironment = ImmutableMap.<String, String>builder()
+        .putAll(expectedConfigurationEnvironment)
+        .putAll(expectedJava8Environment)
+        .build();
 
     devServer.run(configuration);
 
@@ -325,6 +337,10 @@ public class CloudSdkAppEngineDevServer1Test {
         ImmutableMap.of("mykey1", "myval1", "mykey2", "myval2");
     configuration.setEnvironment(clientEnvironmentVariables);
 
+    Map<String, String> expectedEnvironment = ImmutableMap.<String, String>builder()
+        .putAll(expectedJava7Environment)
+        .putAll(clientEnvironmentVariables)
+        .build();
     List<String> expectedFlags = ImmutableList.of("--allow_remote_shutdown",
         "--disable_update_check", pathToJava7Service.toString());
     List<String> expectedJvmArgs = ImmutableList
@@ -334,7 +350,7 @@ public class CloudSdkAppEngineDevServer1Test {
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServer1Command(expectedJvmArgs, expectedFlags,
-        clientEnvironmentVariables, java7Service /* workingDirectory */);
+        expectedEnvironment, java7Service /* workingDirectory */);
   }
 
   @Test
@@ -354,8 +370,11 @@ public class CloudSdkAppEngineDevServer1Test {
             "-D--enable_all_permissions=true");
 
     Map<String, String> appEngineEnvironment = ImmutableMap.of("key1", "val1", "key2", "val2");
-    Map<String, String> expectedEnvironment = Maps.newHashMap(appEngineEnvironment);
-    expectedEnvironment.putAll(clientEnvironmentVariables);
+    Map<String, String> expectedEnvironment = ImmutableMap.<String, String>builder()
+        .putAll(appEngineEnvironment)
+        .putAll(expectedJava8Environment)
+        .putAll(clientEnvironmentVariables)
+        .build();
 
     devServer.run(configuration);
 
