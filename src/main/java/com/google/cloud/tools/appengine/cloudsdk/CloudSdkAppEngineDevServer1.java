@@ -131,7 +131,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
           + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
     }
 
-    String gaeRuntime = getGaeRuntime(isJava8(config.getServices()));
+    String gaeRuntime = getGaeRuntimeJava(isJava8(config.getServices()));
     appEngineEnvironment.putAll(getLocalAppEngineEnvironmentVariables(gaeRuntime));
 
     if (config.getEnvironment() != null) {
@@ -263,11 +263,11 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   }
 
   /**
-   *
+   * Gets the App Engine runtime ID for Java runtimes.
    * @param isJava8 if {@code true}, use Java 8; otherwise, use Java 7
    * @return "java8" if {@code isJava8} is true; otherwise, returns "java7"
    */
-  private static String getGaeRuntime(boolean isJava8) {
+  private static String getGaeRuntimeJava(boolean isJava8) {
     return isJava8 ? "java8" : "java7";
   }
 
