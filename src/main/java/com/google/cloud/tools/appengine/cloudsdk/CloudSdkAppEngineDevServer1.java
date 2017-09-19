@@ -131,8 +131,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
           + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
     }
 
-    appEngineEnvironment.putAll(
-        getLocalAppEngineEnvironmentVariables(isJava8(config.getServices())));
+    String gaeRuntime = getGaeRuntime(isJava8(config.getServices()));
+    appEngineEnvironment.putAll(getLocalAppEngineEnvironmentVariables(gaeRuntime));
 
     if (config.getEnvironment() != null) {
       appEngineEnvironment.putAll(config.getEnvironment());
@@ -249,18 +249,26 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    * Gets a {@code Map<String, String>} of the environment variables for running the {@link
    * AppEngineDevServer}.
    *
-   * @param isJava8 if {@code true}, uses java8 as the GAE_RUNTIME; otherwise, uses java7
+   * @param gaeRuntime the runtime ID to set the environment variable GAE_RUNTIME to
    * @return {@code Map<String, String>} that maps from the environment variable name to its value
    */
-  private static Map<String, String> getLocalAppEngineEnvironmentVariables(boolean isJava8) {
+  private static Map<String, String> getLocalAppEngineEnvironmentVariables(String gaeRuntime) {
     Map<String, String> environment = Maps.newHashMap();
 
     String gaeEnv = "localdev";
-    String gaeRuntime = isJava8 ? "java8" : "java7";
     environment.put("GAE_ENV", gaeEnv);
     environment.put("GAE_RUNTIME", gaeRuntime);
 
     return environment;
+  }
+
+  /**
+   *
+   * @param isJava8 if {@code true}, use Java 8; otherwise, use Java 7
+   * @return "java8" if {@code isJava8} is true; otherwise, returns "java7"
+   */
+  private static String getGaeRuntime(boolean isJava8) {
+    return isJava8 ? "java8" : "java7";
   }
 
   private static void checkAndWarnDuplicateEnvironmentVariables(Map<String, String> newEnvironment,
