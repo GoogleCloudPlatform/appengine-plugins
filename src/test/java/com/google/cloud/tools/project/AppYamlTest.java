@@ -26,13 +26,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-/**
- * Tests for AppYaml parsing
- */
+/** Tests for AppYaml parsing */
 public class AppYamlTest {
 
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Test
   public void testGetRuntime_success() throws IOException {
@@ -63,5 +60,4 @@ public class AppYamlTest {
     File destination = temporaryFolder.newFile();
     return Files.write(destination.toPath(), contents.getBytes(StandardCharsets.UTF_8));
   }
-
 }

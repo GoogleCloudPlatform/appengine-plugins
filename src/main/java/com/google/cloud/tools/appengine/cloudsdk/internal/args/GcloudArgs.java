@@ -18,35 +18,28 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
 import com.google.cloud.tools.appengine.api.Configuration;
 import com.google.common.collect.Lists;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Command Line argument helper for gcloud based commands.
- */
+/** Command Line argument helper for gcloud based commands. */
 public class GcloudArgs {
 
-  /**
-   * @return {@code [--name, value]} or {@code []} if value is null.
-   */
+  /** Return {@code [--name, value]} or {@code []} if value is null. */
   public static List<String> get(String name, String value) {
     return Args.string(name, value);
   }
 
-  /**
-   * @return {@code [--name, value]} or {@code []} if value is null.
-   */
+  /** Return {@code [--name, value]} or {@code []} if value is null. */
   public static List<String> get(String name, Integer value) {
     return Args.integer(name, value);
   }
 
   /**
-   * @return {@code [--name]} if value is true, {@code [--no-name]} if value is false,
-   *     {@code []} if value is null.
+   * Return {@code [--name]} if value is true, {@code [--no-name]} if value is false, {@code []} if
+   * value is null.
    */
   public static List<String> get(String name, Boolean value) {
     if (value != null) {
@@ -58,31 +51,25 @@ public class GcloudArgs {
     return Collections.emptyList();
   }
 
-  /**
-   * @return {@code [--name, file.toPath().toString()]} or {@code []} if file is null.
-   */
+  /** Return {@code [--name, file.toPath().toString()]} or {@code []} if file is null. */
   public static List<String> get(String name, File file) {
     return Args.filePath(name, file);
   }
 
   /**
-   * @return {@code [--name, path.toString()]} or {@code []} if path is null, or its representation
-   *     is empty.
+   * Return {@code [--name, path.toString()]} or {@code []} if path is null, or its representation
+   * is empty.
    */
   public static List<String> get(String name, Path path) {
     return Args.path(name, path);
   }
 
-  /**
-   * @return {@code [key1=value1,key2=value2,...]}, {@code []} if keyValueMapping=empty/null
-   */
+  /** Return {@code [key1=value1,key2=value2,...]}, {@code []} if keyValueMapping=empty/null. */
   public static List<String> get(Map<?, ?> keyValueMapping) {
     return Args.keyValueString(keyValueMapping);
   }
 
-  /**
-   * @return list of args for the common arguments in {@link Configuration}.
-   */
+  /** Return list of args for the common arguments in {@link Configuration}. */
   public static List<String> get(Configuration configuration) {
     List<String> result = Lists.newArrayList();
     result.addAll(get("project", configuration.getProject()));

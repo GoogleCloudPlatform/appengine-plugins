@@ -31,7 +31,6 @@ import static org.mockito.Mockito.when;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.common.io.Files;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -47,22 +46,19 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- * Unit tests for {@link CloudSdk}.
- */
+/** Unit tests for {@link CloudSdk}. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkTest {
-  
+
   private Path root;
   private CloudSdk.Builder builder;
 
-  @Mock
-  private ProcessOutputLineListener outputListener;
+  @Mock private ProcessOutputLineListener outputListener;
 
   @Before
   public void setup() {
-   root = Paths.get(Files.createTempDir().toString());
-   builder = new CloudSdk.Builder().sdkPath(root);
+    root = Paths.get(Files.createTempDir().toString());
+    builder = new CloudSdk.Builder().sdkPath(root);
   }
 
   private void writeVersionFile(String contents) throws IOException {
@@ -73,7 +69,7 @@ public class CloudSdkTest {
   public void testGetSdkPath() {
     assertEquals(root, builder.build().getSdkPath());
   }
-  
+
   @Test
   public void testValidateCloudSdk() {
     new CloudSdk.Builder().build().validateCloudSdk();
@@ -91,8 +87,8 @@ public class CloudSdkTest {
       builder.build().getVersion();
       fail();
     } catch (CloudSdkVersionFileException e) {
-      assertEquals("Cloud SDK version file not found at " + root.resolve("VERSION"),
-          e.getMessage());
+      assertEquals(
+          "Cloud SDK version file not found at " + root.resolve("VERSION"), e.getMessage());
     }
   }
 
@@ -104,8 +100,9 @@ public class CloudSdkTest {
       builder.build().getVersion();
       fail();
     } catch (CloudSdkVersionFileException ex) {
-      assertEquals("Pattern found in the Cloud SDK version file could not be parsed: "
-          + fileContents, ex.getMessage());
+      assertEquals(
+          "Pattern found in the Cloud SDK version file could not be parsed: " + fileContents,
+          ex.getMessage());
     }
   }
 
@@ -123,32 +120,35 @@ public class CloudSdkTest {
 
   @Test
   public void testGetWindowsPythonPath() {
-    assertThat(builder.build().getWindowsPythonPath().toString(),
+    assertThat(
+        builder.build().getWindowsPythonPath().toString(),
         anyOf(is("python"), endsWith("python.exe")));
   }
 
   @Test
   public void testGetJavaAppEngineSdkPath() {
-    assertEquals(root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
+    assertEquals(
+        root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
         builder.build().getJavaAppEngineSdkPath());
   }
 
   @Test
   public void testGetJarPathJavaTools() {
-    assertEquals(root.resolve("platform/google_appengine/google/appengine"
-        + "/tools/java/lib/appengine-tools-api.jar"),
+    assertEquals(
+        root.resolve(
+            "platform/google_appengine/google/appengine"
+                + "/tools/java/lib/appengine-tools-api.jar"),
         builder.build().getJarPath("appengine-tools-api.jar"));
   }
 
   @Test
   public void testNewCloudSdk_nullWaitingOutputListener() {
-    CloudSdk sdk = builder
-        .addStdOutLineListener(outputListener).runDevAppServerWait(10).async(false).build();
+    CloudSdk sdk =
+        builder.addStdOutLineListener(outputListener).runDevAppServerWait(10).async(false).build();
 
     assertNull(sdk.getRunDevAppServerWaitListener());
 
-    sdk = builder.addStdOutLineListener(outputListener)
-        .runDevAppServerWait(0).async(true).build();
+    sdk = builder.addStdOutLineListener(outputListener).runDevAppServerWait(0).async(true).build();
 
     assertNull(sdk.getRunDevAppServerWaitListener());
   }
@@ -193,7 +193,7 @@ public class CloudSdkTest {
       assertNotNull(ex.getMessage());
     }
   }
-  
+
   public void testNewCloudSdk_ErrListenerAndInheritOutput() {
     try {
       builder.addStdErrLineListener(outputListener).inheritProcessOutput(true);
@@ -244,8 +244,13 @@ public class CloudSdkTest {
   @Test
   public void testGetJavaBinary() {
     CloudSdk sdk = new CloudSdk.Builder().javaHome(Paths.get("java", "path")).build();
-    assertEquals(Paths.get("java", "path", "bin",
-        System.getProperty("os.name").contains("Windows") ? "java.exe" : "java").toAbsolutePath(),
+    assertEquals(
+        Paths.get(
+                "java",
+                "path",
+                "bin",
+                System.getProperty("os.name").contains("Windows") ? "java.exe" : "java")
+            .toAbsolutePath(),
         sdk.getJavaExecutablePath());
   }
 

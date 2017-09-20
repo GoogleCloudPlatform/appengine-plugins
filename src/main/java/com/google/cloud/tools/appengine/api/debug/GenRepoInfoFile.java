@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.appengine.api.debug;
 
-/**
- * Main interface for generating source context files, needed by the Cloud Debugger.
- */
+/** Main interface for generating source context files, needed by the Cloud Debugger. */
 public interface GenRepoInfoFile {
 
   void generate(GenRepoInfoFileConfiguration configuration);

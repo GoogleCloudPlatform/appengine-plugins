@@ -20,9 +20,7 @@ import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.experimental.deploy.DeployResult;
 import com.google.cloud.tools.appengine.experimental.internal.cloudsdk.CloudSdkRequest;
 
-/**
- * Interface to construct {@link AppEngineRequest}.
- */
+/** Interface to construct {@link AppEngineRequest}. */
 public interface AppEngineRequestFactory {
   CloudSdkRequest<DeployResult> newDeploymentRequest(DeployConfiguration deployConfiguration);
 }

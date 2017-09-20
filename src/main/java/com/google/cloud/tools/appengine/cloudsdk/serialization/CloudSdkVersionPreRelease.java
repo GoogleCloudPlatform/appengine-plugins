@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,9 +35,7 @@ class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRelease>
   private List<PreReleaseSegment> segments;
   private final String preRelease;
 
-  /**
-   * Constructs a new CloudSdkVersionPreRelease from a string representation.
-   */
+  /** Constructs a new CloudSdkVersionPreRelease from a string representation. */
   public CloudSdkVersionPreRelease(String preRelease) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(preRelease));
 
@@ -55,10 +52,10 @@ class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRelease>
    * Compares this to another CloudSdkVersionPreRelease.
    *
    * <p>Precedence for two pre-release versions MUST be determined by comparing each dot separated
-   * identifier from left to right until a difference  is found as follows: identifiers consisting
-   * of only digits are compared numerically and identifiers with letters or hyphens are compared
+   * identifier from left to right until a difference is found as follows: identifiers consisting of
+   * only digits are compared numerically and identifiers with letters or hyphens are compared
    * lexically in ASCII sort order. Numeric identifiers always have lower precedence than
-   * non-numeric identifiers.</p>
+   * non-numeric identifiers.
    */
   @Override
   public int compareTo(CloudSdkVersionPreRelease other) {
@@ -109,9 +106,7 @@ class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRelease>
     return preRelease;
   }
 
-  /**
-   * Represents a dot-separated segment of the pre-release string.
-   */
+  /** Represents a dot-separated segment of the pre-release string. */
   private static class PreReleaseSegment implements Comparable<PreReleaseSegment> {
 
     private final String segment;
@@ -179,6 +174,5 @@ class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRelease>
     private static boolean isNumericOnly(String num) {
       return num.matches("[0-9]+");
     }
-
   }
 }

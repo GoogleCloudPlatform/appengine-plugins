@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.appengine.experimental.internal.process.io;
 
-/**
- * Created by appu on 8/22/16.
- */
+/** Created by appu on 8/22/16. */
 public class DumbConverter implements StringResultConverter<String> {
 
   @Override

@@ -31,7 +31,10 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerE
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,22 +45,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * Unit tests for {@link CloudSdkAppEngineDeployment}.
- */
+/** Unit tests for {@link CloudSdkAppEngineDeployment}. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineDeploymentTest {
 
-  @Mock
-  private CloudSdk sdk;
+  @Mock private CloudSdk sdk;
 
-  @Rule
-  public TemporaryFolder tmpDir = new TemporaryFolder();
+  @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
   private File appYaml1;
   private File appYaml2;
@@ -65,10 +59,8 @@ public class CloudSdkAppEngineDeploymentTest {
 
   private CloudSdkAppEngineDeployment deployment;
 
-  @Mock
-  private CloudSdkAppEngineDeployment mockDeployment;
-  @Mock
-  private DeployProjectConfigurationConfiguration mockProjectConfigurationConfiguration;
+  @Mock private CloudSdkAppEngineDeployment mockDeployment;
+  @Mock private DeployProjectConfigurationConfiguration mockProjectConfigurationConfiguration;
 
   @Before
   public void setUp() throws IOException {
@@ -76,9 +68,8 @@ public class CloudSdkAppEngineDeploymentTest {
     appYaml2 = tmpDir.newFile("app2.yaml");
     stagingDirectory = tmpDir.newFolder("appengine-staging");
     deployment = new CloudSdkAppEngineDeployment(sdk);
-
   }
-  
+
   @Test
   public void testNullSdk() {
     try {
@@ -87,7 +78,7 @@ public class CloudSdkAppEngineDeploymentTest {
     } catch (NullPointerException expected) {
     }
   }
-  
+
   @Test
   public void testDeploy_allFlags() throws Exception {
 
@@ -105,14 +96,27 @@ public class CloudSdkAppEngineDeploymentTest {
 
     deployment.deploy(configuration);
 
-    List<String> expectedCommand = ImmutableList
-        .of("deploy", appYaml1.toString(), "--bucket", "gs://a-bucket", "--image-url", "imageUrl",
-            "--promote", "--server", "appengine.google.com", "--stop-previous-version", "--version",
-            "v1", "--project", "project");
+    List<String> expectedCommand =
+        ImmutableList.of(
+            "deploy",
+            appYaml1.toString(),
+            "--bucket",
+            "gs://a-bucket",
+            "--image-url",
+            "imageUrl",
+            "--promote",
+            "--server",
+            "appengine.google.com",
+            "--stop-previous-version",
+            "--version",
+            "v1",
+            "--project",
+            "project");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
 
-    SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(ImmutableMap.of("getDeployables", 5));
+    SpyVerifier.newVerifier(configuration)
+        .verifyDeclaredGetters(ImmutableMap.of("getDeployables", 5));
   }
 
   @Test
@@ -124,8 +128,9 @@ public class CloudSdkAppEngineDeploymentTest {
 
     deployment.deploy(configuration);
 
-    List<String> expectedCommand = ImmutableList
-        .of("deploy", appYaml1.toString(), "--no-promote", "--no-stop-previous-version");
+    List<String> expectedCommand =
+        ImmutableList.of(
+            "deploy", appYaml1.toString(), "--no-promote", "--no-stop-previous-version");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
@@ -153,65 +158,73 @@ public class CloudSdkAppEngineDeploymentTest {
 
     deployment.deploy(configuration);
 
-    verify(sdk, times(1)).runAppCommandInWorkingDirectory(
-        eq(expectedCommand), eq(stagingDirectory));
+    verify(sdk, times(1))
+        .runAppCommandInWorkingDirectory(eq(expectedCommand), eq(stagingDirectory));
   }
 
   @Test
-  public void testDeploy_multipleDeployables()
-      throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_multipleDeployables() throws AppEngineException, ProcessRunnerException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1, appYaml2));
 
     deployment.deploy(configuration);
 
-    List<String> expectedCommand = ImmutableList
-        .of("deploy", appYaml1.toString(), appYaml2.toString());
+    List<String> expectedCommand =
+        ImmutableList.of("deploy", appYaml1.toString(), appYaml2.toString());
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
-
   }
 
   @Test
   public void testDeployCron() throws Exception {
-    Mockito.doCallRealMethod().when(mockDeployment).deployCron(mockProjectConfigurationConfiguration);
+    Mockito.doCallRealMethod()
+        .when(mockDeployment)
+        .deployCron(mockProjectConfigurationConfiguration);
     mockDeployment.deployCron(mockProjectConfigurationConfiguration);
     verify(mockDeployment).deployConfig("cron.yaml", mockProjectConfigurationConfiguration);
   }
 
   @Test
   public void testDeployDispatch() throws Exception {
-    Mockito.doCallRealMethod().when(mockDeployment).deployDispatch(mockProjectConfigurationConfiguration);
+    Mockito.doCallRealMethod()
+        .when(mockDeployment)
+        .deployDispatch(mockProjectConfigurationConfiguration);
     mockDeployment.deployDispatch(mockProjectConfigurationConfiguration);
     verify(mockDeployment).deployConfig("dispatch.yaml", mockProjectConfigurationConfiguration);
   }
 
   @Test
   public void testDeployDos() throws Exception {
-    Mockito.doCallRealMethod().when(mockDeployment).deployDos(mockProjectConfigurationConfiguration);
+    Mockito.doCallRealMethod()
+        .when(mockDeployment)
+        .deployDos(mockProjectConfigurationConfiguration);
     mockDeployment.deployDos(mockProjectConfigurationConfiguration);
     verify(mockDeployment).deployConfig("dos.yaml", mockProjectConfigurationConfiguration);
   }
 
   @Test
   public void testDeployIndex() throws Exception {
-    Mockito.doCallRealMethod().when(mockDeployment).deployIndex(mockProjectConfigurationConfiguration);
+    Mockito.doCallRealMethod()
+        .when(mockDeployment)
+        .deployIndex(mockProjectConfigurationConfiguration);
     mockDeployment.deployIndex(mockProjectConfigurationConfiguration);
     verify(mockDeployment).deployConfig("index.yaml", mockProjectConfigurationConfiguration);
   }
 
   @Test
   public void testDeployQueue() throws Exception {
-    Mockito.doCallRealMethod().when(mockDeployment).deployQueue(mockProjectConfigurationConfiguration);
+    Mockito.doCallRealMethod()
+        .when(mockDeployment)
+        .deployQueue(mockProjectConfigurationConfiguration);
     mockDeployment.deployQueue(mockProjectConfigurationConfiguration);
     verify(mockDeployment).deployConfig("queue.yaml", mockProjectConfigurationConfiguration);
   }
 
   /**
-   * This test uses a fake config.yaml on purpose, In the real world, that means it will
-   * be interpreted as an app.yaml. The method under test has no knowledge of which
-   * configs are valid and which aren't.
+   * This test uses a fake config.yaml on purpose, In the real world, that means it will be
+   * interpreted as an app.yaml. The method under test has no knowledge of which configs are valid
+   * and which aren't.
    */
   @Test
   public void testDeployConfig() throws Exception {
@@ -223,8 +236,8 @@ public class CloudSdkAppEngineDeploymentTest {
 
     deployment.deployConfig("testconfig.yaml", configuration);
 
-    List<String> expectedCommand = ImmutableList
-        .of("deploy", testConfigYaml.toString(), "--project", "project");
+    List<String> expectedCommand =
+        ImmutableList.of("deploy", testConfigYaml.toString(), "--project", "project");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }

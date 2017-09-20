@@ -20,26 +20,29 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.List;
 
-/**
- * Representation of a CloudSdkComponent. Used for json serialzation/deserialization.
- */
+/** Representation of a CloudSdkComponent. Used for json serialzation/deserialization. */
 public class CloudSdkComponent {
 
   private String id;
   private String name;
+
   @SerializedName("current_version_string")
   private String currentVersion;
+
   @SerializedName("latest_version_string")
   private String latestVersion;
+
   @SerializedName("size")
   private Integer sizeInBytes;
+
   private State state;
+
   @SerializedName("is_configuration")
   private Boolean isConfiguration;
+
   @SerializedName("is_hidden")
   private Boolean isHidden;
 
@@ -54,7 +57,7 @@ public class CloudSdkComponent {
   }
 
   public static List<CloudSdkComponent> fromJsonList(String jsonList) throws JsonSyntaxException {
-    Type type = new TypeToken<List<CloudSdkComponent>>(){}.getType();
+    Type type = new TypeToken<List<CloudSdkComponent>>() {}.getType();
     return gson.fromJson(jsonList, type);
   }
 
@@ -136,6 +139,5 @@ public class CloudSdkComponent {
     public void setName(String name) {
       this.name = name;
     }
-
   }
 }

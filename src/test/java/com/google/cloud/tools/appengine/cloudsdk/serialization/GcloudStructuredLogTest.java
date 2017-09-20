@@ -26,32 +26,35 @@ import org.junit.Test;
 
 public class GcloudStructuredLogTest {
 
-  private static final String sampleJson = "{"
-      + "  'version': 'semantic version of the message format, e.g. 0.0.1',"
-      + "  'verbosity': 'logging level: e.g. debug, info, warn, error, critical, exception',"
-      + "  'timestamp': 'time event logged in UTC log file format: %Y-%m-%dT%H:%M:%S.%3f%Ez',"
-      + "  'message': 'log/error message string',"
-      + "  'error': {"
-      + "    'type': 'exception or error raised (if logged message has actual exception data)',"
-      + "    'stacktrace': 'stacktrace or error if available',"
-      + "    'details': 'any additional error details'"
-      + "  }"
-      + "}";
+  private static final String sampleJson =
+      "{"
+          + "  'version': 'semantic version of the message format, e.g. 0.0.1',"
+          + "  'verbosity': 'logging level: e.g. debug, info, warn, error, critical, exception',"
+          + "  'timestamp': 'time event logged in UTC log file format: %Y-%m-%dT%H:%M:%S.%3f%Ez',"
+          + "  'message': 'log/error message string',"
+          + "  'error': {"
+          + "    'type': 'exception or error raised (if logged message has actual exception data)',"
+          + "    'stacktrace': 'stacktrace or error if available',"
+          + "    'details': 'any additional error details'"
+          + "  }"
+          + "}";
 
-  private static final String noErrorSampleJson = "{ 'version': '0.0.1', 'verbosity': 'ERROR',"
-      + " 'timestamp': '2017-08-04T18:49:50.917Z',"
-      + " 'message': '(gcloud.app.deploy) Could not copy [/tmp/tmpAqUB6m/src.tgz]' }";
+  private static final String noErrorSampleJson =
+      "{ 'version': '0.0.1', 'verbosity': 'ERROR',"
+          + " 'timestamp': '2017-08-04T18:49:50.917Z',"
+          + " 'message': '(gcloud.app.deploy) Could not copy [/tmp/tmpAqUB6m/src.tgz]' }";
 
   @Test
   public void testParse_fullJson() throws JsonParseException {
     GcloudStructuredLog log = GcloudStructuredLog.parse(sampleJson);
     assertEquals("semantic version of the message format, e.g. 0.0.1", log.getVersion());
-    assertEquals("logging level: e.g. debug, info, warn, error, critical, exception",
-        log.getVerbosity());
-    assertEquals("time event logged in UTC log file format: %Y-%m-%dT%H:%M:%S.%3f%Ez",
-        log.getTimestamp());
+    assertEquals(
+        "logging level: e.g. debug, info, warn, error, critical, exception", log.getVerbosity());
+    assertEquals(
+        "time event logged in UTC log file format: %Y-%m-%dT%H:%M:%S.%3f%Ez", log.getTimestamp());
     assertEquals("log/error message string", log.getMessage());
-    assertEquals("exception or error raised (if logged message has actual exception data)",
+    assertEquals(
+        "exception or error raised (if logged message has actual exception data)",
         log.getError().getType());
     assertEquals("stacktrace or error if available", log.getError().getStacktrace());
     assertEquals("any additional error details", log.getError().getDetails());

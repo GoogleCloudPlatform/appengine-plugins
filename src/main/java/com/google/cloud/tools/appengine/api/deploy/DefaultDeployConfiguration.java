@@ -17,15 +17,11 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
-
 import java.io.File;
 import java.util.List;
 
-/**
- * Plain Java bean implementation of {@link DeployConfiguration}.
- */
-public class DefaultDeployConfiguration
-    extends DefaultConfiguration
+/** Plain Java bean implementation of {@link DeployConfiguration}. */
+public class DefaultDeployConfiguration extends DefaultConfiguration
     implements DeployConfiguration {
 
   private List<File> deployables;

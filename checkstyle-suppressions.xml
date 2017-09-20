@@ -22,4 +22,7 @@ limitations under the License.
   <suppress files=".*\.java" checks="JavadocParagraph" lines="1-12"/>
   <suppress files="ProjectIdValidator\.java" checks="JavadocParagraph"/>
   <suppress files=".*\.java" checks="CustomImportOrder"/>
+
+  <!-- clash with google java format -->
+  <suppress files=".*\.java" checks="SingleLineJavadoc"/>
 </suppressions>

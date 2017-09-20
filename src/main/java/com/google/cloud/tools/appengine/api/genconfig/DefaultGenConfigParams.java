@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.api.genconfig;
 
 import java.io.File;
 
-/**
- * Plain Java bean implementation of {@link GenConfigParams}.
- */
+/** Plain Java bean implementation of {@link GenConfigParams}. */
 public class DefaultGenConfigParams implements GenConfigParams {
 
   private File sourceDirectory;

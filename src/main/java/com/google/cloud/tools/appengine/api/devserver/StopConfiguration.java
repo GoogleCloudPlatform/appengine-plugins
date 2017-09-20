@@ -17,8 +17,8 @@
 package com.google.cloud.tools.appengine.api.devserver;
 
 /**
- * Configuration for stopping local Development Server.
- * {@link AppEngineDevServer#stop(StopConfiguration)}.
+ * Configuration for stopping local Development Server. {@link
+ * AppEngineDevServer#stop(StopConfiguration)}.
  */
 public interface StopConfiguration {
 

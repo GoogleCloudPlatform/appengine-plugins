@@ -19,9 +19,7 @@ package com.google.cloud.tools.appengine.experimental.internal.cloudsdk.deploy;
 import com.google.cloud.tools.appengine.experimental.deploy.DeployResult;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
 
-/**
- * Convert a string into a structured DeployResult.
- */
+/** Convert a string into a structured DeployResult. */
 public class DeployResultConverter implements StringResultConverter<DeployResult> {
 
   @Override

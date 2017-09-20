@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.appengine.api;
 
-/**
- * Common configuration elements.
- */
+/** Common configuration elements. */
 public interface Configuration {
 
   String getProject();

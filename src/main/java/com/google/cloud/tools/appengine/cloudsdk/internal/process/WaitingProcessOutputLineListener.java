@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -26,20 +25,21 @@ import java.util.concurrent.TimeUnit;
  * Provides a mechanism to wait for a successful start of a process by monitoring the process output
  * and checking for a specific message in it.
  */
-public class WaitingProcessOutputLineListener implements ProcessOutputLineListener,
-    ProcessExitListener {
+public class WaitingProcessOutputLineListener
+    implements ProcessOutputLineListener, ProcessExitListener {
   private final String message;
   private final int timeoutSeconds;
   private CountDownLatch waitLatch;
   private volatile boolean exited;
 
   /**
-   * @param message        The message to look for in the output of the process to consider it to be
-   *                       successfully started. If the message is not seen within the specified
-   *                       timeout, a {@link ProcessRunnerException} will be thrown. The message is
-   *                       assumed to be a regular expression.
+   * Constructor.
+   *
+   * @param message The message to look for in the output of the process to consider it to be
+   *     successfully started. If the message is not seen within the specified timeout, a {@link
+   *     ProcessRunnerException} will be thrown. The message is assumed to be a regular expression.
    * @param timeoutSeconds The maximum number of seconds to wait for the message to be seen until
-   *                       giving up. If set to 0, will skip waiting.
+   *     giving up. If set to 0, will skip waiting.
    */
   public WaitingProcessOutputLineListener(String message, int timeoutSeconds) {
     this.message = message;
@@ -47,9 +47,7 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
     this.waitLatch = new CountDownLatch(1);
   }
 
-  /**
-   * Prepares the internal latch for monitoring messages and waiting.
-   */
+  /** Prepares the internal latch for monitoring messages and waiting. */
   public void reset() {
     waitLatch.countDown();
     waitLatch = new CountDownLatch(1);
@@ -62,10 +60,11 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
    */
   public void await() throws ProcessRunnerException {
     try {
-      if (message != null && timeoutSeconds != 0
+      if (message != null
+          && timeoutSeconds != 0
           && !waitLatch.await(timeoutSeconds, TimeUnit.SECONDS)) {
-        throw new ProcessRunnerException("Timed out waiting for the success message: '"
-            + message + "'");
+        throw new ProcessRunnerException(
+            "Timed out waiting for the success message: '" + message + "'");
       }
       if (exited) {
         throw new ProcessRunnerException("Process exited before success message");
@@ -77,9 +76,7 @@ public class WaitingProcessOutputLineListener implements ProcessOutputLineListen
     }
   }
 
-  /**
-   * Monitors the output of the process to check whether the wait condition is satisfied.
-   */
+  /** Monitors the output of the process to check whether the wait condition is satisfied. */
   @Override
   public void onOutputLine(String line) {
     if (waitLatch.getCount() > 0 && message != null && line.matches(message)) {

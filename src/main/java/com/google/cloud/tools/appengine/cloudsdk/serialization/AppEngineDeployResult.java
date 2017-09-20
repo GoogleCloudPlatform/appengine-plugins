@@ -22,9 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import java.util.List;
 
-/**
- * Holds de-serialized JSON result output of {@code gcloud app deploy}.
- */
+/** Holds de-serialized JSON result output of {@code gcloud app deploy}. */
 public class AppEngineDeployResult {
 
   private static class Version {
@@ -37,7 +35,7 @@ public class AppEngineDeployResult {
   // Don't change the field names because Gson uses them for automatic de-serialization.
   private List<Version> versions;
 
-  private AppEngineDeployResult() {}  // empty private constructor
+  private AppEngineDeployResult() {} // empty private constructor
 
   /**
    * Returns the version of the deployed app.
@@ -73,8 +71,8 @@ public class AppEngineDeployResult {
    * Parses a JSON string representing successful {@code gcloud app deploy} result.
    *
    * @return parsed JSON; never {@code null}
-   * @throws JsonParseException if {@code jsonString} has syntax errors or incompatible JSON
-   *     element type
+   * @throws JsonParseException if {@code jsonString} has syntax errors or incompatible JSON element
+   *     type
    */
   public static AppEngineDeployResult parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);

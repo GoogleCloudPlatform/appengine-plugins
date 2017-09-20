@@ -19,26 +19,21 @@ package com.google.cloud.tools.io;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.common.collect.Sets;
-
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-/**
- * Test for {@link FileUtil}
- */
+/** Test for {@link FileUtil} */
 public class FileUtilTest {
 
-  @Rule
-  public TemporaryFolder testDir = new TemporaryFolder();
+  @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
   @Test
   public void testCopyDirectory_nested() throws IOException {
@@ -71,14 +66,16 @@ public class FileUtilTest {
     Path dest = testDir.newFolder("dest").toPath();
 
     Path rootFile = Files.createFile(src.resolve("root1.file"));
-    Assert.assertNotEquals("This test is useless - modified permissions are default permissions",
-        Files.getPosixFilePermissions(rootFile), permission);
+    Assert.assertNotEquals(
+        "This test is useless - modified permissions are default permissions",
+        Files.getPosixFilePermissions(rootFile),
+        permission);
     Files.setPosixFilePermissions(rootFile, permission);
 
     FileUtil.copyDirectory(src, dest);
 
-    Assert.assertEquals(permission,
-        Files.getPosixFilePermissions(dest.resolve(src.relativize(rootFile))));
+    Assert.assertEquals(
+        permission, Files.getPosixFilePermissions(dest.resolve(src.relativize(rootFile))));
   }
 
   @Test
@@ -105,7 +102,7 @@ public class FileUtilTest {
     } catch (IllegalArgumentException ex) {
       Assert.assertNotNull(ex.getMessage());
     }
-    
+
     try {
       FileUtil.copyDirectory(dir, dir);
       Assert.fail();
@@ -126,12 +123,12 @@ public class FileUtilTest {
       Assert.assertEquals("destination is child of source", ex.getMessage());
     }
   }
-  
+
   @Test
   public void testCopyDirectory_sameFile() throws IOException {
     Path src = testDir.newFolder().toPath();
     Path dest = Paths.get(src.toString(), "..", src.getFileName().toString());
-    
+
     try {
       FileUtil.copyDirectory(src, dest);
       Assert.fail();
@@ -139,7 +136,7 @@ public class FileUtilTest {
       Assert.assertEquals("Source and destination are the same", ex.getMessage());
     }
   }
-  
+
   @Test
   public void testWeirdNames() throws IOException {
     Path src = testDir.newFolder("funny").toPath();

@@ -16,15 +16,12 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
-import org.junit.Test;
-
-import java.util.Collections;
-
 import static org.junit.Assert.assertEquals;
 
-/**
- * Unit tests for {@link AppCfgArgs}
- */
+import java.util.Collections;
+import org.junit.Test;
+
+/** Unit tests for {@link AppCfgArgs} */
 public class AppCfgArgsTest {
 
   @Test

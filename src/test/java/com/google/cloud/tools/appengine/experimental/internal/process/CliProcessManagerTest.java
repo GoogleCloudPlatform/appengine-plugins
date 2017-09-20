@@ -16,16 +16,11 @@
 
 package com.google.cloud.tools.appengine.experimental.internal.process;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.cloud.tools.appengine.experimental.internal.process.io.DumbConverter;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
-
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,16 +30,17 @@ import java.util.Arrays;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
-import static org.junit.Assume.assumeTrue;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
 public class CliProcessManagerTest {
 
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
+  @Rule public ExpectedException exception = ExpectedException.none();
 
-  @Rule
-  public TemporaryFolder testRoot = new TemporaryFolder();
+  @Rule public TemporaryFolder testRoot = new TemporaryFolder();
 
   @Test
   public void testManage_linuxEcho() throws IOException, ExecutionException, InterruptedException {
@@ -52,7 +48,8 @@ public class CliProcessManagerTest {
 
     CliProcessManager<String> future = createTestProcess("echo 'stdout'; echo 'stderr' 1>&2;");
 
-    String output = CharStreams.toString(new InputStreamReader(future.getInputStream(), Charsets.UTF_8));
+    String output =
+        CharStreams.toString(new InputStreamReader(future.getInputStream(), Charsets.UTF_8));
     String result = future.get();
     String[] lines = output.split("\n");
 
@@ -66,12 +63,14 @@ public class CliProcessManagerTest {
       throws IOException, InterruptedException, ExecutionException {
     assumeTrue(!System.getProperty("os.name").startsWith("Windows"));
 
-    CliProcessManager<String> future = createTestProcess("echo 'stdout'; echo 'stderr' 1>&2; exit 1");
+    CliProcessManager<String> future =
+        createTestProcess("echo 'stdout'; echo 'stderr' 1>&2; exit 1");
 
     exception.expect(ExecutionException.class);
     exception.expectMessage("Process failed with exit code : 1");
     future.get();
-    String output = CharStreams.toString(new InputStreamReader(future.getInputStream(), Charsets.UTF_8));
+    String output =
+        CharStreams.toString(new InputStreamReader(future.getInputStream(), Charsets.UTF_8));
     String[] lines = output.split("\n");
 
     Assert.assertEquals(1, lines.length);
@@ -100,9 +99,10 @@ public class CliProcessManagerTest {
 
     Files.write(echo.toPath(), commandFileContents.getBytes(Charset.forName("UTF-8")));
 
-    ProcessBuilder pb = new ProcessBuilder()
-        .command(Arrays.asList("sh", echo.getName()))
-        .directory(testRoot.getRoot());
+    ProcessBuilder pb =
+        new ProcessBuilder()
+            .command(Arrays.asList("sh", echo.getName()))
+            .directory(testRoot.getRoot());
 
     return new CliProcessManager.Provider<String>().manage(pb.start(), new DumbConverter());
   }

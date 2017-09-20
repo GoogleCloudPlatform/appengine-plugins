@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 
-/**
- * A ProcessExitListener that records the most recent process exit code that it encountered.
- */
+/** A ProcessExitListener that records the most recent process exit code that it encountered. */
 public class ExitCodeRecorderProcessExitListener implements ProcessExitListener {
 
   private Integer mostRecentExitCode;
@@ -33,5 +31,4 @@ public class ExitCodeRecorderProcessExitListener implements ProcessExitListener 
   public Integer getMostRecentExitCode() {
     return mostRecentExitCode;
   }
-
 }

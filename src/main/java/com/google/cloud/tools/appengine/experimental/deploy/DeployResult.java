@@ -16,11 +16,8 @@
 
 package com.google.cloud.tools.appengine.experimental.deploy;
 
-/**
- * Structured data returned for DeployRequests.
- */
+/** Structured data returned for DeployRequests. */
 public class DeployResult {
   // This can be whatever you want it to be, structured info.
   public String data;
-
 }

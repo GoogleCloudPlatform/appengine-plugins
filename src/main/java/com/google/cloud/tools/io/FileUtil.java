@@ -18,7 +18,6 @@ package com.google.cloud.tools.io;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
-
 import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.FileVisitResult;
@@ -28,9 +27,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
-/**
- * File utilities. 
- */
+/** File utilities. */
 @Beta
 public class FileUtil {
 
@@ -39,42 +36,44 @@ public class FileUtil {
    *
    * @param source an existing source directory to copy from
    * @param destination an existing destination directory to copy to
-   * @throws IllegalArgumentException if source directory is same destination directory, 
-   *     either source or destination is not a directory, or destination is inside source
+   * @throws IllegalArgumentException if source directory is same destination directory, either
+   *     source or destination is not a directory, or destination is inside source
    */
   public static void copyDirectory(final Path source, final Path destination) throws IOException {
     Preconditions.checkNotNull(source);
     Preconditions.checkNotNull(destination);
     Preconditions.checkArgument(Files.isDirectory(source), "Source is not a directory");
     Preconditions.checkArgument(Files.isDirectory(destination), "Destination is not a directory");
-    Preconditions.checkArgument(!Files.isSameFile(source, destination),
-        "Source and destination are the same");
-    Preconditions.checkArgument(!destination.toAbsolutePath().startsWith(source.toAbsolutePath()), 
+    Preconditions.checkArgument(
+        !Files.isSameFile(source, destination), "Source and destination are the same");
+    Preconditions.checkArgument(
+        !destination.toAbsolutePath().startsWith(source.toAbsolutePath()),
         "destination is child of source");
 
-    Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
-      final CopyOption[] copyOptions = new CopyOption[] { StandardCopyOption.COPY_ATTRIBUTES };
+    Files.walkFileTree(
+        source,
+        new SimpleFileVisitor<Path>() {
+          final CopyOption[] copyOptions = new CopyOption[] {StandardCopyOption.COPY_ATTRIBUTES};
 
-      @Override
-      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-          throws IOException {
+          @Override
+          public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+              throws IOException {
 
-        if (dir.equals(source)) {
-          return FileVisitResult.CONTINUE;
-        }
+            if (dir.equals(source)) {
+              return FileVisitResult.CONTINUE;
+            }
 
-        Files.copy(dir, destination.resolve(source.relativize(dir)), copyOptions);
-        return FileVisitResult.CONTINUE;
-      }
+            Files.copy(dir, destination.resolve(source.relativize(dir)), copyOptions);
+            return FileVisitResult.CONTINUE;
+          }
 
-      @Override
-      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+          @Override
+          public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+              throws IOException {
 
-        Files.copy(file, destination.resolve(source.relativize(file)), copyOptions);
-        return FileVisitResult.CONTINUE;
-      }
-    });
-
+            Files.copy(file, destination.resolve(source.relativize(file)), copyOptions);
+            return FileVisitResult.CONTINUE;
+          }
+        });
   }
-
 }

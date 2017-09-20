@@ -40,14 +40,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- * Unit tests for {@link CloudSdkAppEngineDevServer2}.
- */
+/** Unit tests for {@link CloudSdkAppEngineDevServer2}. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineDevServer2Test {
 
-  @Mock
-  private CloudSdk sdk;
+  @Mock private CloudSdk sdk;
   private Path fakeStoragePath = Paths.get("storage/path");
   private Path fakeDatastorePath = Paths.get("datastore/path");
 
@@ -57,7 +54,7 @@ public class CloudSdkAppEngineDevServer2Test {
   public void setUp() {
     devServer = new CloudSdkAppEngineDevServer2(sdk);
   }
-  
+
   @Test
   public void tesNullSdk() {
     try {
@@ -100,25 +97,41 @@ public class CloudSdkAppEngineDevServer2Test {
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
-    List<String> expected = ImmutableList
-        .of("exploded-war", "--host=host", "--port=8090", "--admin_host=adminHost",
-            "--admin_port=8000", "--auth_domain=example.com", "--storage_path=" + fakeStoragePath,
-            "--log_level=debug", "--max_module_instances=3", "--use_mtime_file_watcher=true",
-            "--threadsafe_override=default:False,backend:True", "--python_startup_script=script.py",
-            "--python_startup_args=arguments", "--jvm_flag=-Dflag1", "--jvm_flag=-Dflag2",
-            "--custom_entrypoint=entrypoint", "--runtime=java", "--allow_skipped_files=true",
-            "--api_port=8091", "--automatic_restart=false", "--dev_appserver_log_level=info",
-            "--skip_sdk_update_check=true", "--default_gcs_bucket_name=buckets",
-            "--clear_datastore=true", "--datastore_path=" + fakeDatastorePath,
-            "--ARG1", "--ARG2");
+    List<String> expected =
+        ImmutableList.of(
+            "exploded-war",
+            "--host=host",
+            "--port=8090",
+            "--admin_host=adminHost",
+            "--admin_port=8000",
+            "--auth_domain=example.com",
+            "--storage_path=" + fakeStoragePath,
+            "--log_level=debug",
+            "--max_module_instances=3",
+            "--use_mtime_file_watcher=true",
+            "--threadsafe_override=default:False,backend:True",
+            "--python_startup_script=script.py",
+            "--python_startup_args=arguments",
+            "--jvm_flag=-Dflag1",
+            "--jvm_flag=-Dflag2",
+            "--custom_entrypoint=entrypoint",
+            "--runtime=java",
+            "--allow_skipped_files=true",
+            "--api_port=8091",
+            "--automatic_restart=false",
+            "--dev_appserver_log_level=info",
+            "--skip_sdk_update_check=true",
+            "--default_gcs_bucket_name=buckets",
+            "--clear_datastore=true",
+            "--datastore_path=" + fakeDatastorePath,
+            "--ARG1",
+            "--ARG2");
 
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
 
-    SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.of("getServices", 3));
-
+    SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(ImmutableMap.of("getServices", 3));
   }
 
   @Test
@@ -132,9 +145,13 @@ public class CloudSdkAppEngineDevServer2Test {
     configuration.setSkipSdkUpdateCheck(false);
     configuration.setClearDatastore(false);
 
-    List<String> expected = ImmutableList
-        .of("exploded-war", "--use_mtime_file_watcher=false", "--allow_skipped_files=false",
-            "--automatic_restart=false", "--skip_sdk_update_check=false",
+    List<String> expected =
+        ImmutableList.of(
+            "exploded-war",
+            "--use_mtime_file_watcher=false",
+            "--allow_skipped_files=false",
+            "--automatic_restart=false",
+            "--skip_sdk_update_check=false",
             "--clear_datastore=false");
 
     devServer.run(configuration);
@@ -162,12 +179,11 @@ public class CloudSdkAppEngineDevServer2Test {
     Map<String, String> clientEnvVars = ImmutableMap.of("key1", "val1", "key2", "val2");
     configuration.setEnvironment(clientEnvVars);
 
-    List<String> expectedArgs = ImmutableList
-        .of("exploded-war", "--env_var", "key1=val1", "--env_var", "key2=val2");
+    List<String> expectedArgs =
+        ImmutableList.of("exploded-war", "--env_var", "key1=val1", "--env_var", "key2=val2");
 
     devServer.run(configuration);
 
     verify(sdk, times(1)).runDevAppServerCommand(eq(expectedArgs));
   }
-
 }

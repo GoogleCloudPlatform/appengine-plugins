@@ -22,13 +22,10 @@ import com.google.cloud.tools.appengine.api.instances.InstancesSelectionConfigur
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Cloud SDK based implementation of {@link AppEngineInstances}.
- */
+/** Cloud SDK based implementation of {@link AppEngineInstances}. */
 public class CloudSdkAppEngineInstances implements AppEngineInstances {
 
   private CloudSdk sdk;
@@ -47,20 +44,18 @@ public class CloudSdkAppEngineInstances implements AppEngineInstances {
 
   /**
    * Enable debug on the instance.
-   * 
+   *
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
-  public void enableDebug(InstancesSelectionConfiguration configuration)
-      throws AppEngineException {
+  public void enableDebug(InstancesSelectionConfiguration configuration) throws AppEngineException {
     setDebug(configuration, true);
-
   }
 
   /**
    * Disable debug on the instance.
-   * 
+   *
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */

@@ -16,34 +16,27 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.google.cloud.tools.appengine.api.services.DefaultTrafficSplitConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineServices;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-/**
- * Unit tests for {@link CloudSdkAppEngineServices}
- */
+/** Unit tests for {@link com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineServices} */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineServicesTest {
 
-  @Mock
-  private CloudSdk sdk;
+  @Mock private CloudSdk sdk;
 
   @Test
   public void setTrafficTest() throws ProcessRunnerException {
@@ -61,8 +54,14 @@ public class CloudSdkAppEngineServicesTest {
     appEngineService.setTraffic(configuration);
 
     List<String> args =
-        Arrays.asList("services", "set-traffic", "myService", "--splits", "v1=0.3,v2=0.7",
-            "--project", "myProject");
+        Arrays.asList(
+            "services",
+            "set-traffic",
+            "myService",
+            "--splits",
+            "v1=0.3,v2=0.7",
+            "--project",
+            "myProject");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }

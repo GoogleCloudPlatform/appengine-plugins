@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.appengine.api.devserver;
 
-/**
- * Plain Java bean implementation of {@link StopConfiguration}.
- */
+/** Plain Java bean implementation of {@link StopConfiguration}. */
 public class DefaultStopConfiguration implements StopConfiguration {
 
   private String adminHost;

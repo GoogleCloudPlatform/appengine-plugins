@@ -16,20 +16,17 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Unit tests for {@link CloudSdkComponent}.
- */
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
+
+/** Unit tests for {@link CloudSdkComponent}. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkComponentTest {
 
@@ -64,13 +61,12 @@ public class CloudSdkComponentTest {
 
     // Since the ordering of fields in JSON objects is not guaranteed, we cannot compare the full
     // strings for equality. Instead, use regexes to validate that key/value pairs are present.
-    assertJsonKeyValueExists("current_version_string", cloudSdkComponent.getCurrentVersion(),
-        result);
+    assertJsonKeyValueExists(
+        "current_version_string", cloudSdkComponent.getCurrentVersion(), result);
     assertJsonKeyValueExists("id", cloudSdkComponent.getId(), result);
     assertJsonKeyValueExists("is_configuration", cloudSdkComponent.getIsConfiguration(), result);
     assertJsonKeyValueExists("is_hidden", cloudSdkComponent.getIsHidden(), result);
-    assertJsonKeyValueExists("latest_version_string", cloudSdkComponent.getLatestVersion(),
-        result);
+    assertJsonKeyValueExists("latest_version_string", cloudSdkComponent.getLatestVersion(), result);
     assertJsonKeyValueExists("name", cloudSdkComponent.getName(), result);
     assertJsonKeyValueExists("size", cloudSdkComponent.getSizeInBytes(), result);
   }
@@ -116,18 +112,18 @@ public class CloudSdkComponentTest {
   }
 
   private static String getCloudSdkComponentTestFixtureAsJson() {
-    return "{" +
-        "\"current_version_string\": \"1.9.43\"," +
-        "\"id\": \"app-engine-java\"," +
-        "\"is_configuration\": false," +
-        "\"is_hidden\": false," +
-        "\"latest_version_string\": \"1.9.44\"," +
-        "\"name\": \"gcloud app Java Extensions\"," +
-        "\"size\": 138442691," +
-        "\"state\": { " +
-        "  \"name\": \"Installed\" " +
-        "}" +
-      "}";
+    return "{"
+        + "\"current_version_string\": \"1.9.43\","
+        + "\"id\": \"app-engine-java\","
+        + "\"is_configuration\": false,"
+        + "\"is_hidden\": false,"
+        + "\"latest_version_string\": \"1.9.44\","
+        + "\"name\": \"gcloud app Java Extensions\","
+        + "\"size\": 138442691,"
+        + "\"state\": { "
+        + "  \"name\": \"Installed\" "
+        + "}"
+        + "}";
   }
 
   private static CloudSdkComponent getCloudSdkComponentTestFixture() {
@@ -137,7 +133,7 @@ public class CloudSdkComponentTest {
     CloudSdkComponent expected = new CloudSdkComponent();
     expected.setState(state);
     expected.setCurrentVersion("1.9.43");
-        expected.setId("app-engine-java");
+    expected.setId("app-engine-java");
     expected.setIsConfiguration(false);
     expected.setIsHidden(false);
     expected.setLatestVersionString("1.9.44");
@@ -157,5 +153,4 @@ public class CloudSdkComponentTest {
     assertEquals(expected.getSizeInBytes(), actual.getSizeInBytes());
     assertEquals(expected.getState().getName(), actual.getState().getName());
   }
-
 }

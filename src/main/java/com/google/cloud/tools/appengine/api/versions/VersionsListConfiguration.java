@@ -18,13 +18,10 @@ package com.google.cloud.tools.appengine.api.versions;
 
 import com.google.cloud.tools.appengine.api.Configuration;
 
-/**
- * Configuration for {@link AppEngineVersions#list(VersionsListConfiguration)}.
- */
+/** Configuration for {@link AppEngineVersions#list(VersionsListConfiguration)}. */
 public interface VersionsListConfiguration extends Configuration {
 
   String getService();
 
   Boolean getHideNoTraffic();
-
 }

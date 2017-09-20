@@ -21,5 +21,4 @@ public class CloudSdkVersionFileNotFoundException extends CloudSdkVersionFileExc
   public CloudSdkVersionFileNotFoundException(String message) {
     super(message);
   }
-
 }

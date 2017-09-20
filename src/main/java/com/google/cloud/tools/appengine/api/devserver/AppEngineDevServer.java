@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.api.devserver;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
-/**
- * Interface for running App Engine Local Development Server.
- */
+/** Interface for running App Engine Local Development Server. */
 public interface AppEngineDevServer {
 
   /**
@@ -38,5 +36,4 @@ public interface AppEngineDevServer {
    * @throws AppEngineException When the operation encounters an error.
    */
   void stop(StopConfiguration config) throws AppEngineException;
-
 }

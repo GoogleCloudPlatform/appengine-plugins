@@ -22,14 +22,12 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
 import com.google.common.base.Charsets;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 
 /**
  * Default process runner that allows synchronous or asynchronous execution. It also allows
@@ -50,14 +48,15 @@ public class DefaultProcessRunner implements ProcessRunner {
   /**
    * Base constructor.
    *
-   * @param async           whether to run commands asynchronously
-   * @param exitListeners   client consumers of process onExit event
-   * @param startListeners  client consumers of process onStart event
+   * @param async whether to run commands asynchronously
+   * @param exitListeners client consumers of process onExit event
+   * @param startListeners client consumers of process onStart event
    */
-  public DefaultProcessRunner(boolean async,
-                               List<ProcessExitListener> exitListeners,
-                               List<ProcessStartListener> startListeners,
-                               boolean inheritProcessOutput) {
+  public DefaultProcessRunner(
+      boolean async,
+      List<ProcessExitListener> exitListeners,
+      List<ProcessStartListener> startListeners,
+      boolean inheritProcessOutput) {
     this.async = async;
     this.exitListeners = exitListeners;
     this.startListeners = startListeners;
@@ -68,17 +67,18 @@ public class DefaultProcessRunner implements ProcessRunner {
    * Constructor that attaches output listeners to a process. It assumes the generated subprocess
    * does not inherit stdout/stderr.
    *
-   * @param async                whether to run commands asynchronously
-   * @param exitListeners        client consumers of process onExit event
-   * @param startListeners       client consumers of process onStart event
-   * @param stdOutLineListeners  client consumers of process standard output
-   * @param stdErrLineListeners  client consumers of process error output
+   * @param async whether to run commands asynchronously
+   * @param exitListeners client consumers of process onExit event
+   * @param startListeners client consumers of process onStart event
+   * @param stdOutLineListeners client consumers of process standard output
+   * @param stdErrLineListeners client consumers of process error output
    */
-  public DefaultProcessRunner(boolean async,
-                              List<ProcessExitListener> exitListeners,
-                              List<ProcessStartListener> startListeners,
-                              List<ProcessOutputLineListener> stdOutLineListeners,
-                              List<ProcessOutputLineListener> stdErrLineListeners) {
+  public DefaultProcessRunner(
+      boolean async,
+      List<ProcessExitListener> exitListeners,
+      List<ProcessStartListener> startListeners,
+      List<ProcessOutputLineListener> stdOutLineListeners,
+      List<ProcessOutputLineListener> stdErrLineListeners) {
     this(async, exitListeners, startListeners, false /* inheritProcessOutput */);
     this.stdOutLineListeners.addAll(stdOutLineListeners);
     this.stdErrLineListeners.addAll(stdErrLineListeners);
@@ -142,17 +142,13 @@ public class DefaultProcessRunner implements ProcessRunner {
     }
   }
 
-  /**
-   * Environment variables to append to the current system environment variables.
-   */
+  /** Environment variables to append to the current system environment variables. */
   @Override
   public void setEnvironment(Map<String, String> environment) {
     this.environment = environment;
   }
 
-  /**
-   * Sets the working directory of the process.
-   */
+  /** Sets the working directory of the process. */
   @Override
   public void setWorkingDirectory(File workingDirectory) {
     this.workingDirectory = workingDirectory;
@@ -160,18 +156,19 @@ public class DefaultProcessRunner implements ProcessRunner {
 
   private Thread handleStdOut(Process process) {
     final Scanner stdOut = new Scanner(process.getInputStream(), Charsets.UTF_8.name());
-    Thread stdOutThread = new Thread("standard-out") {
-      @Override
-      public void run() {
-        while (stdOut.hasNextLine() && !Thread.interrupted()) {
-          String line = stdOut.nextLine();
-          for (ProcessOutputLineListener stdOutLineListener : stdOutLineListeners) {
-            stdOutLineListener.onOutputLine(line);
+    Thread stdOutThread =
+        new Thread("standard-out") {
+          @Override
+          public void run() {
+            while (stdOut.hasNextLine() && !Thread.interrupted()) {
+              String line = stdOut.nextLine();
+              for (ProcessOutputLineListener stdOutLineListener : stdOutLineListeners) {
+                stdOutLineListener.onOutputLine(line);
+              }
+            }
+            stdOut.close();
           }
-        }
-        stdOut.close();
-      }
-    };
+        };
     stdOutThread.setDaemon(true);
     stdOutThread.start();
     return stdOutThread;
@@ -179,18 +176,19 @@ public class DefaultProcessRunner implements ProcessRunner {
 
   private Thread handleErrOut(Process process) {
     final Scanner stdErr = new Scanner(process.getErrorStream(), Charsets.UTF_8.name());
-    Thread stdErrThread = new Thread("standard-err") {
-      @Override
-      public void run() {
-        while (stdErr.hasNextLine() && !Thread.interrupted()) {
-          String line = stdErr.nextLine();
-          for (ProcessOutputLineListener stdErrLineListener : stdErrLineListeners) {
-            stdErrLineListener.onOutputLine(line);
+    Thread stdErrThread =
+        new Thread("standard-err") {
+          @Override
+          public void run() {
+            while (stdErr.hasNextLine() && !Thread.interrupted()) {
+              String line = stdErr.nextLine();
+              for (ProcessOutputLineListener stdErrLineListener : stdErrLineListeners) {
+                stdErrLineListener.onOutputLine(line);
+              }
+            }
+            stdErr.close();
           }
-        }
-        stdErr.close();
-      }
-    };
+        };
     stdErrThread.setDaemon(true);
     stdErrThread.start();
     return stdErrThread;
@@ -212,33 +210,37 @@ public class DefaultProcessRunner implements ProcessRunner {
     }
   }
 
-  private void asyncRun(final Process process,
-      final Thread stdOutHandler, final Thread stdErrHandler) {
+  private void asyncRun(
+      final Process process, final Thread stdOutHandler, final Thread stdErrHandler) {
     if (!exitListeners.isEmpty()
-        || !stdOutLineListeners.isEmpty() || !stdErrLineListeners.isEmpty()) {
-      Thread exitThread = new Thread("wait-for-process-exit-and-output-handlers") {
-        @Override
-        public void run() {
-          try {
-            syncRun(process, stdOutHandler, stdErrHandler);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        }
-      };
+        || !stdOutLineListeners.isEmpty()
+        || !stdErrLineListeners.isEmpty()) {
+      Thread exitThread =
+          new Thread("wait-for-process-exit-and-output-handlers") {
+            @Override
+            public void run() {
+              try {
+                syncRun(process, stdOutHandler, stdErrHandler);
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+            }
+          };
       exitThread.setDaemon(true);
       exitThread.start();
     }
   }
 
   private static void shutdownProcessHook(final Process process) {
-    Runtime.getRuntime().addShutdownHook(new Thread("destroy-process") {
-      @Override
-      public void run() {
-        if (process != null) {
-          process.destroy();
-        }
-      }
-    });
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread("destroy-process") {
+              @Override
+              public void run() {
+                if (process != null) {
+                  process.destroy();
+                }
+              }
+            });
   }
 }

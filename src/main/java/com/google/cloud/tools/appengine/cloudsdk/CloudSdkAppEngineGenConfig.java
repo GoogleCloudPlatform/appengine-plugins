@@ -22,13 +22,10 @@ import com.google.cloud.tools.appengine.api.genconfig.GenConfigUtility;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Cloud SDK based implementation of {@link GenConfigUtility}.
- */
+/** Cloud SDK based implementation of {@link GenConfigUtility}. */
 public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
 
   private CloudSdk sdk;
@@ -39,21 +36,21 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
 
   /**
    * Generates missing configuration files.
-   * 
+   *
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
   public void genConfig(GenConfigParams config) throws AppEngineException {
     Preconditions.checkNotNull(config);
 
     if (!config.getSourceDirectory().exists()) {
-      throw new AppEngineException("Source directory does not exist. Location: "
-          + config.getSourceDirectory().toPath());
+      throw new AppEngineException(
+          "Source directory does not exist. Location: " + config.getSourceDirectory().toPath());
     }
     if (!config.getSourceDirectory().isDirectory()) {
-      throw new AppEngineException("Source location is not a directory. Location: "
-          + config.getSourceDirectory().toPath());
+      throw new AppEngineException(
+          "Source location is not a directory. Location: " + config.getSourceDirectory().toPath());
     }
 
     List<String> arguments = new ArrayList<>();
@@ -72,6 +69,5 @@ public class CloudSdkAppEngineGenConfig implements GenConfigUtility {
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
-
   }
 }

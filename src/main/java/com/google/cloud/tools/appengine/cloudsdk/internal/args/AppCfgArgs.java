@@ -19,21 +19,15 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Command Line argument helper for AppCfg based commands.
- */
+/** Command Line argument helper for AppCfg based commands. */
 public class AppCfgArgs {
 
-  /**
-   * @return [--name=value] or [] if value=null.
-   */
+  /** Returns [--name=value] or [] if value=null. */
   public static List<String> get(String name, String value) {
     return Args.stringWithEq(name, value);
   }
 
-  /**
-   * @return [--name] if value=true, [] if value=false/null.
-   */
+  /** Returns [--name] if value=true, [] if value=false/null. */
   public static List<String> get(String name, Boolean value) {
     if (Boolean.TRUE.equals(value)) {
       return Collections.singletonList("--" + name);

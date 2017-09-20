@@ -16,16 +16,11 @@
 
 package com.google.cloud.tools.appengine.api.versions;
 
-
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
-
 import java.util.Collection;
 
-/**
- * Plain Java bean implementation of {@link VersionsSelectionConfiguration}.
- */
-public class DefaultVersionsSelectionConfiguration
-    extends DefaultConfiguration
+/** Plain Java bean implementation of {@link VersionsSelectionConfiguration}. */
+public class DefaultVersionsSelectionConfiguration extends DefaultConfiguration
     implements VersionsSelectionConfiguration {
 
   private Collection<String> versions;

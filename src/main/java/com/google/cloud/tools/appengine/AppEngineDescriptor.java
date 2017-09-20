@@ -18,7 +18,11 @@ package com.google.cloud.tools.appengine;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.common.collect.Maps;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -26,16 +30,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-/**
- * Utilities to obtain information from appengine-web.xml.
- */
+/** Utilities to obtain information from appengine-web.xml. */
 public class AppEngineDescriptor {
 
   private static final String APP_ENGINE_NAMESPACE = "http://appengine.google.com/ns/1.0";
@@ -65,31 +60,32 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * @return project ID from the &lt;application&gt; element of the appengine-web.xml or null
-   *         if it is missing
+   * Returns project ID from the &lt;application&gt; element of the appengine-web.xml or null if it
+   * is missing
    */
-  public String getProjectId()  {
+  public String getProjectId() {
     return getText(getNode(document, "appengine-web-app", "application"));
   }
 
   /**
-   * @return runtime from the &lt;runtime&gt; element of the appengine-web.xml or null
-   *         if it is missing
+   * Returns runtime from the &lt;runtime&gt; element of the appengine-web.xml or null if it is
+   * missing
    */
-  public String getRuntime()  {
+  public String getRuntime() {
     return getText(getNode(document, "appengine-web-app", "runtime"));
   }
+
   /**
-   * @return project version from the &lt;version&gt; element of the appengine-web.xml or
-   *         null if it is missing
+   * Returns project version from the &lt;version&gt; element of the appengine-web.xml or null if it
+   * is missing
    */
   public String getProjectVersion() {
     return getText(getNode(document, "appengine-web-app", "version"));
   }
 
   /**
-   * @return service ID from the &lt;service&gt; element of the appengine-web.xml, or
-   *         null if it is missing. Will also look at module ID.
+   * Returns service ID from the &lt;service&gt; element of the appengine-web.xml, or null if it is
+   * missing. Will also look at module ID.
    */
   public String getServiceId() {
     String serviceId = getText(getNode(document, "appengine-web-app", "service"));
@@ -99,9 +95,7 @@ public class AppEngineDescriptor {
     return getText(getNode(document, "appengine-web-app", "module"));
   }
 
-  /**
-   * @return true if the runtime read from appengine-web.xml is Java8
-   */
+  /** Returns true if the runtime read from appengine-web.xml is Java8 */
   public boolean isJava8() {
     String runtime = getRuntime();
     return "java8".equals(runtime) || "java8g".equals(runtime);
@@ -109,14 +103,14 @@ public class AppEngineDescriptor {
 
   /**
    * Given the following structure:
-   * <pre>
-   * {@code
+   *
+   * <pre>{@code
    * <env-variables>
    *   <env-var name="key" value="val" />
    * </env-variables>
-   * }
-   * </pre>
-   * This will construct a map of the form {[key, val], ...}
+   * }</pre>
+   *
+   * <p>This will construct a map of the form {[key, val], ...}.
    *
    * @return a map representing the environment variable settings in the appengine-web.xml
    */
@@ -130,21 +124,17 @@ public class AppEngineDescriptor {
       try {
         return node.getTextContent();
       } catch (DOMException ex) {
-        throw new AppEngineException("Failed to parse text content from node "
-            + node.getNodeName());
+        throw new AppEngineException(
+            "Failed to parse text content from node " + node.getNodeName());
       }
     }
 
     return null;
   }
 
-  /**
-   * Returns a map formed from the attributes of the nodes contained within the parent node.
-   */
-  private static Map<String, String> getAttributeMap(Node parent,
-                                                     String nodeName,
-                                                     String keyAttributeName,
-                                                     String valueAttributeName) {
+  /** Returns a map formed from the attributes of the nodes contained within the parent node. */
+  private static Map<String, String> getAttributeMap(
+      Node parent, String nodeName, String keyAttributeName, String valueAttributeName) {
     if (parent != null) {
       Map<String, String> nameValueAttributeMap = Maps.newHashMap();
 
@@ -161,8 +151,8 @@ public class AppEngineDescriptor {
               try {
                 nameValueAttributeMap.put(keyNode.getTextContent(), valueNode.getTextContent());
               } catch (DOMException ex) {
-                throw new AppEngineException("Failed to parse value from attribute node "
-                    + keyNode.getNodeName());
+                throw new AppEngineException(
+                    "Failed to parse value from attribute node " + keyNode.getNodeName());
               }
             }
           }
@@ -175,9 +165,7 @@ public class AppEngineDescriptor {
     return null;
   }
 
-  /**
-   * Returns the first node found matching the given name contained within the parent node.
-   */
+  /** Returns the first node found matching the given name contained within the parent node. */
   private static Node getNode(Document doc, String parentNodeName, String targetNodeName) {
     NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentNodeName);
     if (parentElements.getLength() > 0) {

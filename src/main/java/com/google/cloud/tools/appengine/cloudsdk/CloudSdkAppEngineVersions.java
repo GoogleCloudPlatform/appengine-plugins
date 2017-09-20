@@ -23,13 +23,10 @@ import com.google.cloud.tools.appengine.api.versions.VersionsSelectionConfigurat
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Cloud SDK based implementation of {@link AppEngineVersions}.
- */
+/** Cloud SDK based implementation of {@link AppEngineVersions}. */
 public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
   private final CloudSdk sdk;
@@ -48,7 +45,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
   /**
    * Starts serving a specific version or versions.
-   * 
+   *
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
@@ -69,7 +66,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
   /**
    * Stops serving a specific version or versions.
-   * 
+   *
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
@@ -90,7 +87,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
   /**
    * Deletes a specified version or versions.
-   * 
+   *
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */

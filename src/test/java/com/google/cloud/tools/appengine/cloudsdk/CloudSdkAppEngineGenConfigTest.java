@@ -16,15 +16,19 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.genconfig.DefaultGenConfigParams;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineGenConfig;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,25 +38,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-/**
- * Unit tests for {@link CloudSdkAppEngineGenConfig}.
- */
+/** Unit tests for {@link com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineGenConfig}. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineGenConfigTest {
 
-  @Mock
-  private CloudSdk sdk;
+  @Mock private CloudSdk sdk;
 
-  @Rule
-  public TemporaryFolder tmpDir = new TemporaryFolder();
+  @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
   private File source;
 
@@ -75,9 +67,15 @@ public class CloudSdkAppEngineGenConfigTest {
 
     SpyVerifier.newVerifier(params).verifyDeclaredSetters();
 
-    List<String> expected = ImmutableList
-        .of("gen-config", source.toString(), "--config", "app.yaml", "--custom",
-            "--runtime", "java");
+    List<String> expected =
+        ImmutableList.of(
+            "gen-config",
+            source.toString(),
+            "--config",
+            "app.yaml",
+            "--custom",
+            "--runtime",
+            "java");
 
     genConfig.genConfig(params);
 
@@ -93,8 +91,7 @@ public class CloudSdkAppEngineGenConfigTest {
     params.setSourceDirectory(source);
     params.setCustom(false);
 
-    List<String> expected = ImmutableList
-        .of("gen-config", source.toString(), "--no-custom");
+    List<String> expected = ImmutableList.of("gen-config", source.toString(), "--no-custom");
 
     genConfig.genConfig(params);
 
@@ -111,7 +108,5 @@ public class CloudSdkAppEngineGenConfigTest {
     genConfig.genConfig(params);
 
     verify(sdk, times(1)).runAppCommand(eq(expected));
-
   }
-
 }

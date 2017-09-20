@@ -18,11 +18,8 @@ package com.google.cloud.tools.appengine.api.versions;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 
-/**
- * Plain Java bean implementation of {@link VersionsListConfiguration}.
- */
-public class DefaultVersionsListConfiguration
-    extends DefaultConfiguration
+/** Plain Java bean implementation of {@link VersionsListConfiguration}. */
+public class DefaultVersionsListConfiguration extends DefaultConfiguration
     implements VersionsListConfiguration {
 
   private String service;

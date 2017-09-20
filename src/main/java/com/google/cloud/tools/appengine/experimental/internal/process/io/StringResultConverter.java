@@ -18,8 +18,8 @@ package com.google.cloud.tools.appengine.experimental.internal.process.io;
 
 /**
  * Convert a string result into structured data.
- * @param <T>
- *   The structured data type
+ *
+ * @param <T> The structured data type
  */
 public interface StringResultConverter<T> {
   T getResult(String result);

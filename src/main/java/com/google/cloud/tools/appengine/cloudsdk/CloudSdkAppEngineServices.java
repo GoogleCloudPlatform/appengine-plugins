@@ -22,13 +22,10 @@ import com.google.cloud.tools.appengine.api.services.TrafficSplitConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Cloud SDK based implementation of {@link AppEngineServices}.
- */
+/** Cloud SDK based implementation of {@link AppEngineServices}. */
 public class CloudSdkAppEngineServices implements AppEngineServices {
 
   private CloudSdk sdk;

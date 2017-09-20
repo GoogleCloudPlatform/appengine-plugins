@@ -21,5 +21,4 @@ public class CloudSdkVersionFileParseException extends CloudSdkVersionFileExcept
   public CloudSdkVersionFileParseException(String message, Throwable ex) {
     super(message, ex);
   }
-
 }

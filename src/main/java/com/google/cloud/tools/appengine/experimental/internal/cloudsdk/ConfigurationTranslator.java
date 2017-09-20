@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.experimental.internal.cloudsdk;
 
 import java.util.List;
 
-/**
- * Translate a configuration into a usable form.
- */
+/** Translate a configuration into a usable form. */
 public interface ConfigurationTranslator<T> {
   List<String> translate(T configuration);
 }
