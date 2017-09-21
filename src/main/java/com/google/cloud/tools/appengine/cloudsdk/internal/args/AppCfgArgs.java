@@ -22,12 +22,12 @@ import java.util.List;
 /** Command Line argument helper for AppCfg based commands. */
 public class AppCfgArgs {
 
-  /** Returns [--name=value] or [] if value=null. */
+  /** Returns {@code [--name=value]} or {@code []} if value=null. */
   public static List<String> get(String name, String value) {
     return Args.stringWithEq(name, value);
   }
 
-  /** Returns [--name] if value=true, [] if value=false/null. */
+  /** Returns {@code [--name]} if value=true, {@code []} if value=false/null. */
   public static List<String> get(String name, Boolean value) {
     if (Boolean.TRUE.equals(value)) {
       return Collections.singletonList("--" + name);

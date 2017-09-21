@@ -27,18 +27,18 @@ import java.util.Map;
 /** Command Line argument helper for gcloud based commands. */
 public class GcloudArgs {
 
-  /** Return {@code [--name, value]} or {@code []} if value is null. */
+  /** Returns {@code [--name, value]} or {@code []} if value is null. */
   public static List<String> get(String name, String value) {
     return Args.string(name, value);
   }
 
-  /** Return {@code [--name, value]} or {@code []} if value is null. */
+  /** Returns {@code [--name, value]} or {@code []} if value is null. */
   public static List<String> get(String name, Integer value) {
     return Args.integer(name, value);
   }
 
   /**
-   * Return {@code [--name]} if value is true, {@code [--no-name]} if value is false, {@code []} if
+   * Returns {@code [--name]} if value is true, {@code [--no-name]} if value is false, {@code []} if
    * value is null.
    */
   public static List<String> get(String name, Boolean value) {
@@ -51,25 +51,25 @@ public class GcloudArgs {
     return Collections.emptyList();
   }
 
-  /** Return {@code [--name, file.toPath().toString()]} or {@code []} if file is null. */
+  /** Returns {@code [--name, file.toPath().toString()]} or {@code []} if file is null. */
   public static List<String> get(String name, File file) {
     return Args.filePath(name, file);
   }
 
   /**
-   * Return {@code [--name, path.toString()]} or {@code []} if path is null, or its representation
+   * Returns {@code [--name, path.toString()]} or {@code []} if path is null, or its representation
    * is empty.
    */
   public static List<String> get(String name, Path path) {
     return Args.path(name, path);
   }
 
-  /** Return {@code [key1=value1,key2=value2,...]}, {@code []} if keyValueMapping=empty/null. */
+  /** Returns {@code [key1=value1,key2=value2,...]}, {@code []} if keyValueMapping=empty/null. */
   public static List<String> get(Map<?, ?> keyValueMapping) {
     return Args.keyValueString(keyValueMapping);
   }
 
-  /** Return list of args for the common arguments in {@link Configuration}. */
+  /** Returns a list of args for the common arguments in {@link Configuration}. */
   public static List<String> get(Configuration configuration) {
     List<String> result = Lists.newArrayList();
     result.addAll(get("project", configuration.getProject()));

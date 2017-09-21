@@ -105,19 +105,15 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
 
   /** Stops the local development server. */
   @Override
-  public void stop(StopConfiguration configuration) throws AppEngineException {
-    Preconditions.checkNotNull(configuration);
+  public void stop(StopConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
 
     try {
       URL adminServerUrl =
           new URL(
               "http",
-              configuration.getAdminHost() != null
-                  ? configuration.getAdminHost()
-                  : DEFAULT_ADMIN_HOST,
-              configuration.getAdminPort() != null
-                  ? configuration.getAdminPort()
-                  : DEFAULT_ADMIN_PORT,
+              config.getAdminHost() != null ? config.getAdminHost() : DEFAULT_ADMIN_HOST,
+              config.getAdminPort() != null ? config.getAdminPort() : DEFAULT_ADMIN_PORT,
               "/quit");
       HttpURLConnection connection = (HttpURLConnection) adminServerUrl.openConnection();
 

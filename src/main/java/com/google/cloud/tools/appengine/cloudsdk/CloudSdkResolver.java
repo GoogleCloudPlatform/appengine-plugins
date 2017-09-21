@@ -18,7 +18,7 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import java.nio.file.Path;
 
-/** Resolve paths find the CloudSdk. */
+/** Resolve paths to find the CloudSdk. */
 public interface CloudSdkResolver {
 
   /**

@@ -61,7 +61,7 @@ public class AppEngineDescriptor {
 
   /**
    * Returns project ID from the &lt;application&gt; element of the appengine-web.xml or null if it
-   * is missing
+   * is missing.
    */
   public String getProjectId() {
     return getText(getNode(document, "appengine-web-app", "application"));
@@ -69,7 +69,7 @@ public class AppEngineDescriptor {
 
   /**
    * Returns runtime from the &lt;runtime&gt; element of the appengine-web.xml or null if it is
-   * missing
+   * missing.
    */
   public String getRuntime() {
     return getText(getNode(document, "appengine-web-app", "runtime"));
@@ -77,7 +77,7 @@ public class AppEngineDescriptor {
 
   /**
    * Returns project version from the &lt;version&gt; element of the appengine-web.xml or null if it
-   * is missing
+   * is missing.
    */
   public String getProjectVersion() {
     return getText(getNode(document, "appengine-web-app", "version"));
@@ -95,7 +95,7 @@ public class AppEngineDescriptor {
     return getText(getNode(document, "appengine-web-app", "module"));
   }
 
-  /** Returns true if the runtime read from appengine-web.xml is Java8 */
+  /** Returns true if the runtime read from appengine-web.xml is Java8. */
   public boolean isJava8() {
     String runtime = getRuntime();
     return "java8".equals(runtime) || "java8g".equals(runtime);

@@ -18,7 +18,7 @@ package com.google.cloud.tools.appengine.api.instances;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
-/** This set of commands can be used to manage existing App Engine instance. */
+/** This set of commands can be used to manage existing App Engine instances. */
 public interface AppEngineInstances {
 
   /** Enables debug mode for an instance. */

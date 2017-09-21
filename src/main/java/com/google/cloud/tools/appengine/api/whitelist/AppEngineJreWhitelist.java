@@ -22,9 +22,10 @@ import java.util.Set;
 
 /**
  * Utility to check whether a given class is directly accessible in Java programs that run in the
- * App Engine Standard Environment. Note that just because a class is whitelisted does not mean that
- * all features and methods of the class are supported for an application running in the App Engine
- * sandbox environment.
+ * App Engine Standard Environment.
+ *
+ * <p>Note that just because a class is whitelisted does not mean that all features and methods of
+ * the class are supported for an application running in the App Engine sandbox environment.
  *
  * <p>All classes that are not bundled into the JDK are whitelisted.
  *

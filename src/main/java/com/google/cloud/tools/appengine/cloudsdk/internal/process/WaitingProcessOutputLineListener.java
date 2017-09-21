@@ -33,12 +33,12 @@ public class WaitingProcessOutputLineListener
   private volatile boolean exited;
 
   /**
-   * Create a listener that waits for a message for specified time.
+   * Creates a listener that waits for a message for a specified amount of time.
    *
-   * @param message The message to look for in the output of the process to consider it to be
+   * @param message the message to look for in the output of the process to consider it to be
    *     successfully started. If the message is not seen within the specified timeout, a {@link
    *     ProcessRunnerException} will be thrown. The message is assumed to be a regular expression.
-   * @param timeoutSeconds The maximum number of seconds to wait for the message to be seen until
+   * @param timeoutSeconds the maximum number of seconds to wait for the message to be seen until
    *     giving up. If set to 0, will skip waiting.
    */
   public WaitingProcessOutputLineListener(String message, int timeoutSeconds) {

@@ -18,7 +18,11 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
-/** User needs to run <samp>gcloud components install app-engine-java</samp>. */
+/**
+ * User needs to run:
+ *
+ * <pre>gcloud components install app-engine-java</pre>
+ */
 public class AppEngineJavaComponentsNotInstalledException extends AppEngineException {
 
   public AppEngineJavaComponentsNotInstalledException(String message) {
