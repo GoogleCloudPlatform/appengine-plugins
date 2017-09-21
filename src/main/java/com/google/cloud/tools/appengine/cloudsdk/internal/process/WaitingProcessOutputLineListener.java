@@ -33,7 +33,7 @@ public class WaitingProcessOutputLineListener
   private volatile boolean exited;
 
   /**
-   * Constructor.
+   * Create a listener that waits for a message for specified time.
    *
    * @param message The message to look for in the output of the process to consider it to be
    *     successfully started. If the message is not seen within the specified timeout, a {@link

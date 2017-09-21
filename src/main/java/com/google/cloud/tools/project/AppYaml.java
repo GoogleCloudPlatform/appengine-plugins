@@ -32,7 +32,7 @@ public class AppYaml {
   private static final String RUNTIME_KEY = "runtime";
 
   /**
-   * Constructor.
+   * Parse an app.yaml to AppYaml object.
    *
    * @param appYaml the app.yaml file
    * @throws IOException if reading app.yaml fails due to I/O errors
