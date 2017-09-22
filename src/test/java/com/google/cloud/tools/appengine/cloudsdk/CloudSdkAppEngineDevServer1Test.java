@@ -459,4 +459,33 @@ public class CloudSdkAppEngineDevServer1Test {
     verify(sdk).runDevAppServer1Command(any(List.class), any(List.class), any(Map.class),
         eq((File) null) /* workingDirectory */);
   }
+
+  @Test
+  public void testGetLocalAppEngineEnvironmentVariables_java7() {
+    Map<String, String> environment = CloudSdkAppEngineDevServer1.getLocalAppEngineEnvironmentVariables("java7");
+    Assert.assertEquals(expectedJava7Environment, environment);
+  }
+
+  @Test
+  public void testGetLocalAppEngineEnvironmentVariables_java8() {
+    Map<String, String> environment = CloudSdkAppEngineDevServer1.getLocalAppEngineEnvironmentVariables("java8");
+    Assert.assertEquals(expectedJava8Environment, environment);
+  }
+
+  @Test
+  public void testGetLocalAppEngineEnvironmentVariables_other() {
+    Map<String, String> environment = CloudSdkAppEngineDevServer1.getLocalAppEngineEnvironmentVariables("some_other_runtime");
+    Map<String, String> expectedEnvironment = ImmutableMap.of("GAE_ENV", "localdev", "GAE_RUNTIME", "some_other_runtime");
+    Assert.assertEquals(expectedEnvironment, environment);
+  }
+
+  @Test
+  public void testGetGaeRuntimeJava_isJava8() {
+    Assert.assertEquals("java8", CloudSdkAppEngineDevServer1.getGaeRuntimeJava(true));
+  }
+
+  @Test
+  public void testGetGaeRuntimeJava_isNotJava8() {
+    Assert.assertEquals("java7", CloudSdkAppEngineDevServer1.getGaeRuntimeJava(false));
+  }
 }

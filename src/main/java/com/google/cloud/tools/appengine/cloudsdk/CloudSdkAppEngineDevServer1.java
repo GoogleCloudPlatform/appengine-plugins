@@ -254,7 +254,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    * @param gaeRuntime the runtime ID to set the environment variable GAE_RUNTIME to
    * @return {@code Map<String, String>} that maps from the environment variable name to its value
    */
-  private static Map<String, String> getLocalAppEngineEnvironmentVariables(String gaeRuntime) {
+  @VisibleForTesting
+  static Map<String, String> getLocalAppEngineEnvironmentVariables(String gaeRuntime) {
     Map<String, String> environment = Maps.newHashMap();
 
     String gaeEnv = "localdev";
@@ -269,7 +270,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    * @param isJava8 if {@code true}, use Java 8; otherwise, use Java 7
    * @return "java8" if {@code isJava8} is true; otherwise, returns "java7"
    */
-  private static String getGaeRuntimeJava(boolean isJava8) {
+  @VisibleForTesting
+  static String getGaeRuntimeJava(boolean isJava8) {
     return isJava8 ? "java8" : "java7";
   }
 
