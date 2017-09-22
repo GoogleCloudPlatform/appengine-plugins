@@ -110,7 +110,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       arguments.addAll(additionalArguments);
     }
 
-    if (isJava8(config.getServices())) {
+    boolean isJava8 = isJava8(config.getServices());
+
+    if (isJava8) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
       jvmArguments.add("-D--enable_all_permissions=true");
       arguments.add("--no_java_agent");
@@ -131,7 +133,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
           + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
     }
 
-    String gaeRuntime = getGaeRuntimeJava(isJava8(config.getServices()));
+    String gaeRuntime = getGaeRuntimeJava(isJava8);
     appEngineEnvironment.putAll(getLocalAppEngineEnvironmentVariables(gaeRuntime));
 
     if (config.getEnvironment() != null) {

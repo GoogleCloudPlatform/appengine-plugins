@@ -171,7 +171,7 @@ public class CloudSdkAppEngineDevServer1Test {
         java8Service /* workingDirectory */);
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.of("getServices", 8, "getJavaHomeDir", 2, "getJvmFlags", 2));
+        ImmutableMap.of("getServices", 7, "getJavaHomeDir", 2, "getJvmFlags", 2));
 
     // verify we are checking and ignoring these parameters
     Map<String, Object> paramWarnings = new HashMap<>();
