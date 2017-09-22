@@ -71,6 +71,7 @@ public final class StandardDownloader implements Downloader {
       try (InputStream in = conn.getInputStream()) {
 
         long contentLength = conn.getContentLengthLong();
+        // Progress is updated every 1%
         long updateThreshold = contentLength / 100;
 
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -80,17 +81,21 @@ public final class StandardDownloader implements Downloader {
         int bytesRead;
         while ((bytesRead = in.read(buffer)) != -1) {
           if (Thread.currentThread().isInterrupted()) {
-            // throw exception here? todo?
             throw new InterruptedException("Downloader was interrupted.");
           }
           totalBytesRead += bytesRead;
           if (totalBytesRead - lastUpdated > updateThreshold) {
-            lastUpdated = totalBytesRead;
             if (downloadProgressListener != null) {
-              downloadProgressListener.updateProgress(bytesRead, totalBytesRead, contentLength);
+              downloadProgressListener.updateProgress(
+                  totalBytesRead - lastUpdated, totalBytesRead, contentLength);
             }
+            lastUpdated = totalBytesRead;
           }
           out.write(buffer, 0, bytesRead);
+        }
+        if (downloadProgressListener != null && (lastUpdated != totalBytesRead)) {
+          downloadProgressListener.updateProgress(
+              totalBytesRead - lastUpdated, totalBytesRead, contentLength);
         }
       }
     }

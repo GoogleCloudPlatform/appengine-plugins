@@ -95,7 +95,7 @@ public class StandardDownloaderTest {
   @Test
   public void testDownloadURL() throws IOException, InterruptedException {
     Path destination = tmp.getRoot().toPath().resolve("destination-file");
-    Path testSourceFile = createTestRemoteResource(StandardDownloader.BUFFER_SIZE * 10);
+    Path testSourceFile = createTestRemoteResource(StandardDownloader.BUFFER_SIZE * 10 + 1);
     URL fakeRemoteResource = testSourceFile.toUri().toURL();
     DownloadProgressListener mockListener = Mockito.mock(DownloadProgressListener.class);
 
