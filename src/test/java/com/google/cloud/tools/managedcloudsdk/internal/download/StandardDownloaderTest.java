@@ -75,7 +75,8 @@ public class StandardDownloaderTest {
     StandardDownloader downloader =
         new StandardDownloader(fakeRemoteResource, destination, null, null);
 
-    downloader.call();
+    Path downloaderDestination = downloader.call();
+    Assert.assertEquals(destination, downloaderDestination);
   }
 
   @Test
@@ -89,7 +90,8 @@ public class StandardDownloaderTest {
     StandardDownloader downloader =
         new StandardDownloader(fakeRemoteResource, destination, null, null);
 
-    downloader.call();
+    Path downloaderDestination = downloader.call();
+    Assert.assertEquals(destination, downloaderDestination);
   }
 
   @Test
@@ -101,7 +103,9 @@ public class StandardDownloaderTest {
 
     StandardDownloader downloader =
         new StandardDownloader(fakeRemoteResource, destination, null, mockListener);
-    downloader.call();
+
+    Path downloaderDestination = downloader.call();
+    Assert.assertEquals(destination, downloaderDestination);
 
     Assert.assertTrue(FileUtils.contentEquals(destination.toFile(), testSourceFile.toFile()));
 
