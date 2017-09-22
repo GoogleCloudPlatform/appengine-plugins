@@ -20,7 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ServiceNameValidatorTest {
-  
+
   @Test
   public void testDomain() {
     Assert.assertFalse(ServiceNameValidator.validate("google.com:mystore"));
@@ -40,15 +40,16 @@ public class ServiceNameValidatorTest {
   public void testUpperCase() {
     Assert.assertTrue(ServiceNameValidator.validate("WORD"));
   }
-  
+
   @Test
   public void testLongWord() {
-    boolean validate = ServiceNameValidator.validate(
-        "012345678901234567890123456789012345678901234567890123456789"
-        + "012345678901234567890123456789012345678901234567890");
+    boolean validate =
+        ServiceNameValidator.validate(
+            "012345678901234567890123456789012345678901234567890123456789"
+                + "012345678901234567890123456789012345678901234567890");
     Assert.assertFalse(validate);
   }
-  
+
   @Test
   public void testContainsSpace() {
     Assert.assertFalse(ServiceNameValidator.validate("com google eclipse"));
@@ -58,7 +59,7 @@ public class ServiceNameValidatorTest {
   public void testEmptyString() {
     Assert.assertFalse(ServiceNameValidator.validate(""));
   }
-  
+
   @Test
   public void testNull() {
     Assert.assertFalse(ServiceNameValidator.validate(null));
@@ -68,12 +69,12 @@ public class ServiceNameValidatorTest {
   public void testBeginsWithHyphen() {
     Assert.assertFalse(ServiceNameValidator.validate("-foo"));
   }
-  
+
   @Test
   public void testEndsWithHyphen() {
     Assert.assertFalse(ServiceNameValidator.validate("-bar"));
   }
-  
+
   @Test
   public void testContainsHyphen() {
     Assert.assertTrue(ServiceNameValidator.validate("foo-bar"));

@@ -23,7 +23,6 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.args.AppCfgArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,8 +39,7 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
 
   private CloudSdk cloudSdk;
 
-  public CloudSdkAppEngineStandardStaging(
-      CloudSdk cloudSdk) {
+  public CloudSdkAppEngineStandardStaging(CloudSdk cloudSdk) {
     this.cloudSdk = cloudSdk;
   }
 
@@ -76,23 +74,23 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
     try {
 
       if (dockerfile != null && dockerfile.toFile().exists()) {
-        Files.copy(dockerfile, config.getSourceDirectory().toPath()
-            .resolve(dockerfile.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(
+            dockerfile,
+            config.getSourceDirectory().toPath().resolve(dockerfile.getFileName()),
+            StandardCopyOption.REPLACE_EXISTING);
       }
 
       cloudSdk.runAppCfgCommand(arguments);
 
-      //TODO : Move this fix up the chain (appcfg)
+      // TODO : Move this fix up the chain (appcfg)
       if (config.getRuntime() != null && config.getRuntime().equals("java")) {
         File appYaml = new File(config.getStagingDirectory(), "app.yaml");
-        com.google.common.io.Files
-            .append("\nruntime_config:\n  jdk: openjdk8\n", appYaml, Charsets.UTF_8);
+        com.google.common.io.Files.append(
+            "\nruntime_config:\n  jdk: openjdk8\n", appYaml, Charsets.UTF_8);
       }
 
     } catch (IOException | ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
-
   }
-
 }

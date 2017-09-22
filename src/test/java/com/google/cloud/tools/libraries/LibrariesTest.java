@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
- package com.google.cloud.tools.libraries;
+
+package com.google.cloud.tools.libraries;
 
 import static org.hamcrest.collection.IsArrayContaining.hasItemInArray;
 
@@ -28,7 +28,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -37,7 +36,6 @@ import javax.json.JsonReaderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,12 +46,12 @@ public class LibrariesTest {
   private JsonObject[] apis;
 
   @Before
-  public void parseJson() throws FileNotFoundException {    
+  public void parseJson() throws FileNotFoundException {
     JsonReaderFactory factory = Json.createReaderFactory(null);
     InputStream in =
         new FileInputStream("src/main/java/com/google/cloud/tools/libraries/libraries.json");
-    JsonReader reader = factory.createReader(in); 
-    apis = reader.readArray().toArray(new JsonObject[0]); 
+    JsonReader reader = factory.createReader(in);
+    apis = reader.readArray().toArray(new JsonObject[0]);
   }
 
   @Test
@@ -64,11 +62,11 @@ public class LibrariesTest {
     File in = new File("src/main/java/com/google/cloud/tools/libraries/libraries.xml");
     parser.parse(in);
   }
-  
+
   @Test
   public void testJson() throws IOException {
     Assert.assertTrue(apis.length > 0);
-    for (int i = 0; i < apis.length; i++) { 
+    for (int i = 0; i < apis.length; i++) {
       assertApi(apis[i]);
     }
   }
@@ -79,11 +77,14 @@ public class LibrariesTest {
     Assert.assertFalse(api.getString("name").isEmpty());
     Assert.assertFalse(api.getString("description").isEmpty());
     String transports = api.getJsonArray("transports").getString(0);
-    Assert.assertTrue(transports + " is not a recognized transport",
+    Assert.assertTrue(
+        transports + " is not a recognized transport",
         "http".equals(transports) || "grpc".equals(transports));
     assertReachable(api.getString("documentation"));
-    if (api.getString("icon") != null) {
+    try {
       assertReachable(api.getString("icon"));
+    } catch (NullPointerException ex) {
+      // no icon element to test
     }
     JsonArray clients = api.getJsonArray("clients");
     Assert.assertFalse(clients.isEmpty());
@@ -91,8 +92,12 @@ public class LibrariesTest {
       JsonObject client = (JsonObject) clients.get(i);
       String launchStage = client.getString("launchStage");
       Assert.assertThat(statuses, hasItemInArray(launchStage));
+      try {
+        assertReachable(client.getString("site"));
+      } catch (NullPointerException ex) {
+        // no site element to test
+      }
       assertReachable(client.getString("apireference"));
-      assertReachable(client.getString("site"));
       Assert.assertTrue(client.getString("languageLevel").matches("1\\.\\d+\\.\\d+"));
       Assert.assertFalse(client.getString("name").isEmpty());
       Assert.assertNotNull(client.getJsonObject("mavenCoordinates"));
@@ -104,21 +109,20 @@ public class LibrariesTest {
 
   private static void assertReachable(String url) throws IOException {
     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-    Assert.assertEquals(200, connection.getResponseCode());
+    Assert.assertEquals("Could not reach " + url, 200, connection.getResponseCode());
   }
-  
+
   @Test
   public void testDuplicates() throws URISyntaxException {
     Map<String, String> apiCoordinates = new HashMap<>();
-    for (int i = 0; i < apis.length; i++) { 
-      JsonObject api = apis[i];
+    for (JsonObject api : apis) {
       String name = api.getString("name");
       if (apiCoordinates.containsKey(name)) {
         Assert.fail(name + " is defined twice");
       }
       JsonObject coordinates =
           ((JsonObject) api.getJsonArray("clients").get(0)).getJsonObject("mavenCoordinates");
-      String mavenCoordinates = 
+      String mavenCoordinates =
           coordinates.getString("groupId") + ":" + coordinates.getString("artifactId");
       if (apiCoordinates.containsValue(mavenCoordinates)) {
         Assert.fail(mavenCoordinates + " is defined twice");
@@ -126,5 +130,4 @@ public class LibrariesTest {
       apiCoordinates.put(name, mavenCoordinates);
     }
   }
-
 }

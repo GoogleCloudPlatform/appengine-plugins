@@ -21,13 +21,10 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.experimental.internal.cloudsdk.ConfigurationTranslator;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-
 import java.io.File;
 import java.util.List;
 
-/**
- * Translate {@link DeployConfiguration} into gcloud command line params.
- */
+/** Translate {@link DeployConfiguration} into gcloud command line params. */
 public class DeployTranslator implements ConfigurationTranslator<DeployConfiguration> {
 
   @Override

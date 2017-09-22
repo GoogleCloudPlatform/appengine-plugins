@@ -17,15 +17,11 @@
 package com.google.cloud.tools.appengine.api.services;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
-
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * Plain Java bean implementation of {@link TrafficSplitConfiguration}.
- */
-public class DefaultTrafficSplitConfiguration
-    extends DefaultConfiguration
+/** Plain Java bean implementation of {@link TrafficSplitConfiguration}. */
+public class DefaultTrafficSplitConfiguration extends DefaultConfiguration
     implements TrafficSplitConfiguration {
 
   private Collection<String> services;

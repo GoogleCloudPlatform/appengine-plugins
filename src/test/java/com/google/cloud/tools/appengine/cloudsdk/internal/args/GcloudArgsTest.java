@@ -16,24 +16,20 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-import static org.junit.Assert.assertEquals;
-
-/**
- * Unit tests for {@link GcloudArgs}
- */
+/** Unit tests for {@link GcloudArgs} */
 public class GcloudArgsTest {
 
   @Test
@@ -57,8 +53,7 @@ public class GcloudArgsTest {
     assertEquals(Arrays.asList("--name2", "2"), GcloudArgs.get("name2", 2));
   }
 
-  @Rule
-  public TemporaryFolder tmpDir = new TemporaryFolder();
+  @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
   @Test
   public void testGet_file() throws IOException {
@@ -76,7 +71,8 @@ public class GcloudArgsTest {
     versionToTrafficSplitMapping.put("v2", 0.3);
     versionToTrafficSplitMapping.put("v3", 0.5);
 
-    assertEquals(Collections.singletonList("v1=0.2,v2=0.3,v3=0.5"),
+    assertEquals(
+        Collections.singletonList("v1=0.2,v2=0.3,v3=0.5"),
         GcloudArgs.get(versionToTrafficSplitMapping));
 
     assertEquals(Collections.emptyList(), GcloudArgs.get(Collections.emptyMap()));
@@ -84,12 +80,13 @@ public class GcloudArgsTest {
 
   @Test
   public void testCommonConfig() {
-    DefaultConfiguration config = new DefaultConfiguration() {
-      @Override
-      public String getProject() {
-        return "myProject";
-      }
-    };
+    DefaultConfiguration config =
+        new DefaultConfiguration() {
+          @Override
+          public String getProject() {
+            return "myProject";
+          }
+        };
 
     assertEquals(Arrays.asList("--project", "myProject"), GcloudArgs.get(config));
   }

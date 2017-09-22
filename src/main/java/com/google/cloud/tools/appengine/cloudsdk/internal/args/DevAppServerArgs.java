@@ -23,35 +23,27 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Command Line argument helper for dev_appserver based command.
- */
+/** Command Line argument helper for dev_appserver based command. */
 public class DevAppServerArgs {
 
-  /**
-   * Returns {@code [--name=value]} or {@code []} if value=null.
-   */
+  /** Returns {@code [--name=value]} or {@code []} if value=null. */
   public static List<String> get(String name, String value) {
     return Args.stringWithEq(name, value);
   }
 
-  /**
-   * Returns {@code [--name=value1, --name=value2, ...]} or {@code []} if value=null.
-   */
+  /** Returns {@code [--name=value1, --name=value2, ...]} or {@code []} if value=null. */
   public static List<String> get(String name, List<String> values) {
     return Args.stringsWithEq(name, values);
   }
 
-  /**
-   * Returns {@code [--name=value]} or {@code []} if value=null.
-   */
+  /** Returns {@code [--name=value]} or {@code []} if value=null. */
   public static List<String> get(String name, Integer value) {
     return Args.integerWithEq(name, value);
   }
 
   /**
-   * Returns {@code [--name=true]} if value=true, {@code [--name=false]} if value=false,
-   *     {@code []} if value=null.
+   * Returns {@code [--name=true]} if value=true, {@code [--name=false]} if value=false, {@code []}
+   * if value=null.
    */
   public static List<String> get(String name, Boolean value) {
     if (value == null) {
@@ -60,9 +52,7 @@ public class DevAppServerArgs {
     return Arrays.asList("--" + name + "=" + value.toString());
   }
 
-  /**
-   * Returns {@code [--name=filePath]} or {@code []} if file=null.
-   */
+  /** Returns {@code [--name=filePath]} or {@code []} if file=null. */
   public static List<String> get(String name, File file) {
     if (file != null) {
       Path path = file.toPath();
@@ -75,7 +65,7 @@ public class DevAppServerArgs {
 
   /**
    * Returns {@code [--name, key1=val1, --name, key2=val2, ...]} or {@code []} if
-   *      keyValues=empty/null.
+   * keyValues=empty/null.
    */
   public static List<String> get(String name, Map<String, String> keyValues) {
     return Args.flaggedKeyValues(name, keyValues);

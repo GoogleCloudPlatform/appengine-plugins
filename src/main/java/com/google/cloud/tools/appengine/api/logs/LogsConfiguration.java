@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.api.logs;
 
 import com.google.cloud.tools.appengine.api.Configuration;
 
-/**
- * Identifies an application for use in {@link AppEngineLogs}.
- */
+/** Identifies an application for use in {@link AppEngineLogs}. */
 public interface LogsConfiguration extends Configuration {
 
   String getLevel();
@@ -30,5 +28,4 @@ public interface LogsConfiguration extends Configuration {
   String getService();
 
   Integer getLimit();
-
 }

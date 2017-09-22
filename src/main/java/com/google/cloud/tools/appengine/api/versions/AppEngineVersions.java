@@ -18,29 +18,18 @@ package com.google.cloud.tools.appengine.api.versions;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
-/**
- * This set of commands can be used to manage existing App Engine versions.
- */
+/** This set of commands can be used to manage existing App Engine versions. */
 public interface AppEngineVersions {
 
-  /**
-   * Start serving a specific version of an App Engine Application.
-   */
+  /** Start serving a specific version of an App Engine Application. */
   void start(VersionsSelectionConfiguration configuration) throws AppEngineException;
 
-  /**
-   * Stop serving a specific version of an App Engine application.
-   */
+  /** Stop serving a specific version of an App Engine application. */
   void stop(VersionsSelectionConfiguration configuration) throws AppEngineException;
 
-  /**
-   * Delete a specific version of an App Engine application.
-   */
+  /** Delete a specific version of an App Engine application. */
   void delete(VersionsSelectionConfiguration configuration) throws AppEngineException;
 
-  /**
-   * List your existing deployed versions.
-   */
+  /** List your existing deployed versions. */
   void list(VersionsListConfiguration configuration) throws AppEngineException;
-
 }

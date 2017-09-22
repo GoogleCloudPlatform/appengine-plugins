@@ -18,21 +18,18 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
-/**
- * The Cloud SDK could not be found in any of the expected locations.
- */
+/** The Cloud SDK could not be found in any of the expected locations. */
 public class CloudSdkNotFoundException extends AppEngineException {
 
   public CloudSdkNotFoundException(String message) {
     super(message);
   }
-  
+
   public CloudSdkNotFoundException(Throwable cause) {
     super(cause);
   }
-  
+
   public CloudSdkNotFoundException(String message, Throwable cause) {
     super(message, cause);
   }
-
 }

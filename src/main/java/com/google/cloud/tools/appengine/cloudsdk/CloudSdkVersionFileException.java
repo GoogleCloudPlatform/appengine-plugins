@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
-/**
- * The Cloud SDK's version file could not be read.
- */
+/** The Cloud SDK's version file could not be read. */
 public class CloudSdkVersionFileException extends AppEngineException {
 
   public CloudSdkVersionFileException(String message) {

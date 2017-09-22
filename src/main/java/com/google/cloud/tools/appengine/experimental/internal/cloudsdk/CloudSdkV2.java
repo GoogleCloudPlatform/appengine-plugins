@@ -18,16 +18,12 @@ package com.google.cloud.tools.appengine.experimental.internal.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.common.annotations.VisibleForTesting;
-
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Cloud SDK CLI wrapper.
- * TODO : Need to revisit usage of path resolver.
- */
+/** Cloud SDK CLI wrapper. TODO : Need to revisit usage of path resolver. */
 public class CloudSdkV2 {
   private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
   private static final String GCLOUD = "bin/gcloud";
@@ -46,9 +42,7 @@ public class CloudSdkV2 {
     return sdkPath;
   }
 
-  /**
-   * return gcloud path.
-   */
+  /** return gcloud path. */
   public Path getGCloudPath() {
     String gcloud = GCLOUD;
     if (IS_WINDOWS) {
@@ -83,7 +77,6 @@ public class CloudSdkV2 {
     } else {
       return Paths.get("python");
     }
-
   }
 
   /**
@@ -106,12 +99,14 @@ public class CloudSdkV2 {
     if (!Files.isRegularFile(getDevAppServerPath())) {
       throw new AppEngineException(
           "Validation Error: dev_appserver.py location '"
-              + getDevAppServerPath() + "' is not a file.");
+              + getDevAppServerPath()
+              + "' is not a file.");
     }
     if (!Files.isDirectory(getJavaAppEngineSdkPath())) {
       throw new AppEngineException(
           "Validation Error: Java App Engine SDK location '"
-              + getJavaAppEngineSdkPath() + "' is not a directory.");
+              + getJavaAppEngineSdkPath()
+              + "' is not a directory.");
     }
   }
 }

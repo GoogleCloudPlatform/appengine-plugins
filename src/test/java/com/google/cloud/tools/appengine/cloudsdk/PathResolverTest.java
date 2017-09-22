@@ -17,7 +17,13 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.test.utils.LogStoringHandler;
-
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.LogRecord;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
@@ -27,37 +33,27 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.LogRecord;
-
 public class PathResolverTest {
 
-  @ClassRule
-  public static TemporaryFolder symlinkTestArea = new TemporaryFolder();
+  @ClassRule public static TemporaryFolder symlinkTestArea = new TemporaryFolder();
   private static Exception symlinkException = null;
 
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   private PathResolver resolver = new PathResolver();
-
 
   @BeforeClass
   public static void generateSymlinkException() throws IOException {
     Path dest = symlinkTestArea.newFile().toPath();
-    Path link = symlinkTestArea.getRoot().toPath().resolve("test-link"+ System.currentTimeMillis());
+    Path link =
+        symlinkTestArea.getRoot().toPath().resolve("test-link" + System.currentTimeMillis());
     try {
       Files.createSymbolicLink(link, dest);
     } catch (Exception e) {
       symlinkException = e;
     }
   }
-  
+
   @Test
   public void testResolve() {
     Assert.assertNotNull("Could not locate Cloud SDK", resolver.getCloudSdkPath());
@@ -67,11 +63,12 @@ public class PathResolverTest {
   public void testGetRank() {
     Assert.assertTrue(resolver.getRank() > 10000);
   }
-  
+
   @Test
   public void testGetLocationsFromPath() {
-    List<String> paths = PathResolver.getLocationsFromPath(
-        "\\my music & videos" + "google-cloud-sdk" + File.separator + "bin");
+    List<String> paths =
+        PathResolver.getLocationsFromPath(
+            "\\my music & videos" + "google-cloud-sdk" + File.separator + "bin");
     Assert.assertEquals(1, paths.size());
     Assert.assertEquals("\\my music & videosgoogle-cloud-sdk", paths.get(0));
   }
@@ -81,13 +78,13 @@ public class PathResolverTest {
     String actual = PathResolver.unquote("\"only remove \"\" end quotes\"");
     Assert.assertEquals("only remove \"\" end quotes", actual);
   }
-  
+
   @Test
   public void testGetLocationFromLink_valid() throws IOException {
     Assume.assumeNoException(symlinkException);
     Path sdkHome = temporaryFolder.newFolder().toPath().toRealPath();
     Path bin = Files.createDirectory(sdkHome.resolve("bin"));
-    Path gcloud =  Files.createFile(bin.resolve("gcloud"));
+    Path gcloud = Files.createFile(bin.resolve("gcloud"));
     Files.createSymbolicLink(temporaryFolder.getRoot().toPath().resolve("gcloud"), gcloud);
 
     List<String> possiblePaths = new ArrayList<>();
@@ -125,8 +122,8 @@ public class PathResolverTest {
     Assert.assertEquals(1, testHandler.getLogs().size());
     LogRecord logRecord = testHandler.getLogs().get(0);
 
-    Assert.assertEquals("Non-critical exception when searching for cloud-sdk",
-        logRecord.getMessage());
+    Assert.assertEquals(
+        "Non-critical exception when searching for cloud-sdk", logRecord.getMessage());
     Assert.assertEquals(exception, logRecord.getThrown());
   }
 }

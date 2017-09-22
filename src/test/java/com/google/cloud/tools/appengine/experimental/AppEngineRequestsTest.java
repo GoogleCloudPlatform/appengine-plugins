@@ -16,26 +16,22 @@
 
 package com.google.cloud.tools.appengine.experimental;
 
-import com.google.cloud.tools.appengine.experimental.internal.cloudsdk.CloudSdkAppEngineRequestFactory;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertThat;
 
+import com.google.cloud.tools.appengine.experimental.internal.cloudsdk.CloudSdkAppEngineRequestFactory;
+import java.io.IOException;
+import java.nio.file.Path;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
-
 public class AppEngineRequestsTest {
 
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
-  @Rule
-  public TemporaryFolder testDirectory = new TemporaryFolder();
+  @Rule public ExpectedException exception = ExpectedException.none();
+  @Rule public TemporaryFolder testDirectory = new TemporaryFolder();
 
   private Path sdkHome;
 
@@ -54,8 +50,8 @@ public class AppEngineRequestsTest {
 
   @Test
   public void testNewRequestFactory_cloudSdk() {
-    AppEngineRequestFactory rf = AppEngineRequests.newRequestFactoryBuilder().cloudSdk(sdkHome).build();
+    AppEngineRequestFactory rf =
+        AppEngineRequests.newRequestFactoryBuilder().cloudSdk(sdkHome).build();
     assertThat(rf, instanceOf(CloudSdkAppEngineRequestFactory.class));
   }
-
 }

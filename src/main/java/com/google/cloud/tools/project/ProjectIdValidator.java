@@ -20,16 +20,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Check if a string is a legal <a href='https://support.google.com/cloud/answer/6158840?hl=en'>Google 
- * Cloud Platform Project ID</a>. Source: com.google.apphosting.base.AppId<p>
- * 
+ * Check if a string is a legal <a
+ * href='https://support.google.com/cloud/answer/6158840?hl=en'>Google Cloud Platform Project
+ * ID</a>. Source: com.google.apphosting.base.AppId
+ *
+ * <p>
+ *
  * <pre>
  * project-id ::= [(partition)~][(domain):](display-project-id)
  * partition ::= [a-z\d\-\.]{1,100}
  * domain ::= r'(?!-)[a-z\d\-\.]{1,100}'
  * display-project-id ::= r'(?!-)[a-z\d\-]{1,100}'
  * </pre>
- * 
+ *
  * Note that in some older documentation this is referred to as an "application ID."
  */
 public class ProjectIdValidator {
@@ -41,15 +44,21 @@ public class ProjectIdValidator {
       Pattern.compile("([a-z\\d\\-\\.]{1," + MAX_LENGTH + "})?\\:", Pattern.CASE_INSENSITIVE);
   private static final Pattern PARTITION_REGEX =
       Pattern.compile("([a-z\\d\\-]{1," + MAX_LENGTH + "})?\\~", Pattern.CASE_INSENSITIVE);
-  private static final Pattern PROJECT_ID_REGEX = Pattern.compile(
-      "(?:" + PARTITION_REGEX + ")?((?:" + DOMAIN_REGEX + ")?(" + DISPLAY_PROJECT_ID_REGEX + "))",
-      Pattern.CASE_INSENSITIVE);  
-  
+  private static final Pattern PROJECT_ID_REGEX =
+      Pattern.compile(
+          "(?:"
+              + PARTITION_REGEX
+              + ")?((?:"
+              + DOMAIN_REGEX
+              + ")?("
+              + DISPLAY_PROJECT_ID_REGEX
+              + "))",
+          Pattern.CASE_INSENSITIVE);
+
   /**
-   * Check whether a string is a syntactically correct project ID.
-   * This method only checks syntax. It does not check that the ID
-   * actually identifies a project in the Google Cloud Platform. 
-   * 
+   * Check whether a string is a syntactically correct project ID. This method only checks syntax.
+   * It does not check that the ID actually identifies a project in the Google Cloud Platform.
+   *
    * @param id the alleged project ID
    * @return true if it's correct, false otherwise
    */
@@ -60,5 +69,4 @@ public class ProjectIdValidator {
     Matcher matcher = PROJECT_ID_REGEX.matcher(id);
     return matcher.matches();
   }
-
 }

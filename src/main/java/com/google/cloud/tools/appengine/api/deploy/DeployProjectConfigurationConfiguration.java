@@ -17,12 +17,9 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import com.google.cloud.tools.appengine.api.Configuration;
-
 import java.io.File;
 
-/**
- * Configuration for {@link AppEngineDeployment} project-level yaml deployments.
- */
+/** Configuration for {@link AppEngineDeployment} project-level yaml deployments. */
 public interface DeployProjectConfigurationConfiguration extends Configuration {
   File getAppEngineDirectory();
 }

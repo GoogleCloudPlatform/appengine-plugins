@@ -16,17 +16,15 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-/**
- * Unit tests for {@link ExitCodeRecorderProcessExitListener}
- */
+/** Unit tests for {@link ExitCodeRecorderProcessExitListener} */
 @RunWith(MockitoJUnitRunner.class)
 public class ExitCodeRecorderProcessExitListenerTest {
 

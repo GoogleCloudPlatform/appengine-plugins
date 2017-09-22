@@ -17,12 +17,9 @@
 package com.google.cloud.tools.appengine.api.debug;
 
 import java.io.File;
-
 import javax.annotation.Nullable;
 
-/**
- * Plain Java bean implementation of {@link GenRepoInfoFileConfiguration}.
- */
+/** Plain Java bean implementation of {@link GenRepoInfoFileConfiguration}. */
 public class DefaultGenRepoInfoFileConfiguration implements GenRepoInfoFileConfiguration {
   private File outputDirectory;
   private File sourceDirectory;

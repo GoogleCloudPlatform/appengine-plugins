@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.appengine.api;
 
-/**
- * Base implementation for common configuration elements.
- */
+/** Base implementation for common configuration elements. */
 public abstract class DefaultConfiguration implements Configuration {
 
   private String project;

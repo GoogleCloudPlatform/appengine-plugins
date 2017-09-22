@@ -17,14 +17,10 @@
 package com.google.cloud.tools.appengine.experimental;
 
 import com.google.cloud.tools.appengine.experimental.internal.cloudsdk.CloudSdkAppEngineRequestFactory;
-
 import java.nio.file.Path;
-
 import javax.annotation.Nonnull;
 
-/**
- * Entry point to generate {@link AppEngineRequestFactory}.
- */
+/** Entry point to generate {@link AppEngineRequestFactory}. */
 public class AppEngineRequests {
   public static AppEngineRequestFactoryBuilder newRequestFactoryBuilder() {
     return new AppEngineRequestFactoryBuilder();
@@ -41,43 +37,34 @@ public class AppEngineRequests {
       CLOUD_SDK;
     }
 
-    private AppEngineRequestFactoryBuilder() {
-    }
+    private AppEngineRequestFactoryBuilder() {}
 
-    /**
-     * Configure the factory to use the Google Cloud SDK.
-     */
+    /** Configure the factory to use the Google Cloud SDK. */
     public AppEngineRequestFactoryBuilder cloudSdk(@Nonnull Path cloudSdkHome) {
       this.cloudSdkHome = cloudSdkHome;
       this.factory = Factory.CLOUD_SDK;
       return this;
     }
 
-    /**
-     * Configure a credential file override.
-     */
+    /** Configure a credential file override. */
     public AppEngineRequestFactoryBuilder credentialFile(Path credentialFile) {
       this.credentialFile = credentialFile;
       return this;
     }
 
-    /**
-     * Configure the metrics environment for user agent modification.
-     */
-    public AppEngineRequestFactoryBuilder metricsEnvironment(String metricsEnvironment,
-        String metricsEnvironmentVersion) {
+    /** Configure the metrics environment for user agent modification. */
+    public AppEngineRequestFactoryBuilder metricsEnvironment(
+        String metricsEnvironment, String metricsEnvironmentVersion) {
       this.metricsEnvironment = metricsEnvironment;
       this.metricsEnvironmentVersion = metricsEnvironmentVersion;
       return this;
     }
 
-    /**
-     * Build a new {@link AppEngineRequestFactory} based on the builder configuration.
-     */
+    /** Build a new {@link AppEngineRequestFactory} based on the builder configuration. */
     public AppEngineRequestFactory build() {
       if (factory == Factory.CLOUD_SDK) {
-        return new CloudSdkAppEngineRequestFactory(cloudSdkHome, credentialFile,
-            metricsEnvironment, metricsEnvironmentVersion);
+        return new CloudSdkAppEngineRequestFactory(
+            cloudSdkHome, credentialFile, metricsEnvironment, metricsEnvironmentVersion);
       }
 
       throw new IllegalStateException("No App Engine request factory implementation defined");

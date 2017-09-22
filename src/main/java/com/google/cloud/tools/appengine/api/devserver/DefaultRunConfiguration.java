@@ -22,9 +22,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Plain Java bean implementation of {@link RunConfiguration}.
- */
+/** Plain Java bean implementation of {@link RunConfiguration}. */
 public class DefaultRunConfiguration implements RunConfiguration {
 
   private List<File> services;

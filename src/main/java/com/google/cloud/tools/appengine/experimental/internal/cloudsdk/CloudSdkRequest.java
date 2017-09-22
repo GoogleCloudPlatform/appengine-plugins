@@ -21,12 +21,11 @@ import com.google.cloud.tools.appengine.experimental.AppEngineRequest;
 import com.google.cloud.tools.appengine.experimental.AppEngineRequestFuture;
 import com.google.cloud.tools.appengine.experimental.internal.process.CliProcessManagerProvider;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
-
 import java.io.IOException;
 
 /**
- * The CloudSdkRequest template, all requests will essentially be instances of this class
- * while providing all the parts to actually initiate a request.
+ * The CloudSdkRequest template, all requests will essentially be instances of this class while
+ * providing all the parts to actually initiate a request.
  *
  * @param <R> Request result type
  */
@@ -39,9 +38,10 @@ public final class CloudSdkRequest<R> implements AppEngineRequest<R> {
   /**
    * Create a new CloudSdkRequest, there are no subclasses, just configure the providers correctly.
    */
-  public CloudSdkRequest(CloudSdkProcessFactory processFactory,
-                         CliProcessManagerProvider<R> processManagerProvider,
-                         StringResultConverter<R> resultConverter) {
+  public CloudSdkRequest(
+      CloudSdkProcessFactory processFactory,
+      CliProcessManagerProvider<R> processManagerProvider,
+      StringResultConverter<R> resultConverter) {
     this.processFactory = processFactory;
     this.processManagerProvider = processManagerProvider;
     this.resultConverter = resultConverter;

@@ -22,13 +22,10 @@ import com.google.cloud.tools.appengine.api.logs.LogsConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Cloud SDK based implementation of {@link AppEngineLogs}.
- */
+/** Cloud SDK based implementation of {@link AppEngineLogs}. */
 public class CloudSdkAppEngineLogs implements AppEngineLogs {
 
   private CloudSdk sdk;
@@ -47,7 +44,7 @@ public class CloudSdkAppEngineLogs implements AppEngineLogs {
 
   /**
    * Read log entries.
-   * 
+   *
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */

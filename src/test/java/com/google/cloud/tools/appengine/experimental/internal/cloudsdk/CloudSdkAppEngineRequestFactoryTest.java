@@ -19,7 +19,11 @@ package com.google.cloud.tools.appengine.experimental.internal.cloudsdk;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Maps;
-
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,23 +33,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineRequestFactoryTest {
 
-  @Rule
-  public TemporaryFolder testFolder = new TemporaryFolder();
+  @Rule public TemporaryFolder testFolder = new TemporaryFolder();
 
   private Path fakeGcloud;
   private Path fakeCredentialFile;
 
-  @Mock
-  private CloudSdkV2 sdk;
+  @Mock private CloudSdkV2 sdk;
 
   @Before
   public void configureMocks() throws IOException {
@@ -56,8 +52,8 @@ public class CloudSdkAppEngineRequestFactoryTest {
 
   @Test
   public void testGetEnvironment_nothingSet() {
-    Map<String, String> env = new CloudSdkAppEngineRequestFactory(sdk, null, null, null)
-        .getEnvironment();
+    Map<String, String> env =
+        new CloudSdkAppEngineRequestFactory(sdk, null, null, null).getEnvironment();
 
     Map<String, String> expected = Maps.newHashMap();
 
@@ -66,8 +62,9 @@ public class CloudSdkAppEngineRequestFactoryTest {
 
   @Test
   public void testGetEnvironment_metricEnvironmentSet() {
-    Map<String, String> env = new CloudSdkAppEngineRequestFactory(sdk, null, "test-environment",
-        "test-version").getEnvironment();
+    Map<String, String> env =
+        new CloudSdkAppEngineRequestFactory(sdk, null, "test-environment", "test-version")
+            .getEnvironment();
 
     Map<String, String> expected = Maps.newHashMap();
     expected.put("CLOUDSDK_METRICS_ENVIRONMENT", "test-environment");
@@ -79,8 +76,8 @@ public class CloudSdkAppEngineRequestFactoryTest {
   @Test
   public void testGetEnvironment_credentialFile() {
 
-    Map<String, String> env = new CloudSdkAppEngineRequestFactory(sdk, fakeCredentialFile, null,
-        null).getEnvironment();
+    Map<String, String> env =
+        new CloudSdkAppEngineRequestFactory(sdk, fakeCredentialFile, null, null).getEnvironment();
 
     Map<String, String> expected = Maps.newHashMap();
     expected.put("CLOUDSDK_APP_USE_GSUTIL", "0");
@@ -91,8 +88,10 @@ public class CloudSdkAppEngineRequestFactoryTest {
   @Test
   public void testGetEnvironment_all() {
 
-    Map<String, String> env = new CloudSdkAppEngineRequestFactory(sdk, fakeCredentialFile,
-        "test-environment", "test-version").getEnvironment();
+    Map<String, String> env =
+        new CloudSdkAppEngineRequestFactory(
+                sdk, fakeCredentialFile, "test-environment", "test-version")
+            .getEnvironment();
 
     Map<String, String> expected = Maps.newHashMap();
     expected.put("CLOUDSDK_METRICS_ENVIRONMENT", "test-environment");
@@ -105,12 +104,13 @@ public class CloudSdkAppEngineRequestFactoryTest {
   @Test
   public void testGetAppCommand_defaults() {
 
-    List<String> command = new CloudSdkAppEngineRequestFactory(sdk, null, null, null)
-        .getAppCommand(Arrays.asList("command", "--param=value"));
+    List<String> command =
+        new CloudSdkAppEngineRequestFactory(sdk, null, null, null)
+            .getAppCommand(Arrays.asList("command", "--param=value"));
 
-    List<String> expected = Arrays
-        .asList(fakeGcloud.toString(), "app", "command", "--param=value", "--format=yaml",
-            "--quiet");
+    List<String> expected =
+        Arrays.asList(
+            fakeGcloud.toString(), "app", "command", "--param=value", "--format=yaml", "--quiet");
 
     Assert.assertEquals(expected, command);
   }
@@ -118,12 +118,20 @@ public class CloudSdkAppEngineRequestFactoryTest {
   @Test
   public void testGetAppCommand_credentialFile() {
 
-    List<String> command = new CloudSdkAppEngineRequestFactory(sdk, fakeCredentialFile, null, null)
-        .getAppCommand(Arrays.asList("command", "--param=value"));
+    List<String> command =
+        new CloudSdkAppEngineRequestFactory(sdk, fakeCredentialFile, null, null)
+            .getAppCommand(Arrays.asList("command", "--param=value"));
 
-    List<String> expected = Arrays
-        .asList(fakeGcloud.toString(), "app", "command", "--param=value", "--format=yaml",
-            "--quiet", "--credential-file-override", fakeCredentialFile.toString());
+    List<String> expected =
+        Arrays.asList(
+            fakeGcloud.toString(),
+            "app",
+            "command",
+            "--param=value",
+            "--format=yaml",
+            "--quiet",
+            "--credential-file-override",
+            fakeCredentialFile.toString());
 
     Assert.assertEquals(expected, command);
   }

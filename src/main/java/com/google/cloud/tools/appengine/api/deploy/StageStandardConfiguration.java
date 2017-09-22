@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.api.deploy;
 
 import java.io.File;
 
-/**
- * Configuration for {@link AppEngineStandardStaging#stageStandard(StageStandardConfiguration)}.
- */
+/** Configuration for {@link AppEngineStandardStaging#stageStandard(StageStandardConfiguration)}. */
 public interface StageStandardConfiguration {
 
   File getSourceDirectory();

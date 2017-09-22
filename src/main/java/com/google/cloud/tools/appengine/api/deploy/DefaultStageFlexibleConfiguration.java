@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.api.deploy;
 
 import java.io.File;
 
-/**
- * Plain Java bean implementation of {@link StageFlexibleConfiguration}.
- */
+/** Plain Java bean implementation of {@link StageFlexibleConfiguration}. */
 public class DefaultStageFlexibleConfiguration implements StageFlexibleConfiguration {
 
   private File appEngineDirectory;

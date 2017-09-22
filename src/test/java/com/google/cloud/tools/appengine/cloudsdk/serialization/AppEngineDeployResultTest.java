@@ -26,42 +26,42 @@ import org.junit.Test;
 public class AppEngineDeployResultTest {
 
   private static final String ONE_VERSION =
-      "{" +
-      "  'configs': []," +
-      "  'versions': [" +
-      "    {" +
-      "      'id': '20160429t112518'," +
-      "      'last_deployed_time': null," +
-      "      'project': 'bizarre-project'," +
-      "      'service': 'display-service'," +
-      "      'traffic_split': null," +
-      "      'version': null" +
-      "    }" +
-      "  ]" +
-      "}";
+      "{"
+          + "  'configs': [],"
+          + "  'versions': ["
+          + "    {"
+          + "      'id': '20160429t112518',"
+          + "      'last_deployed_time': null,"
+          + "      'project': 'bizarre-project',"
+          + "      'service': 'display-service',"
+          + "      'traffic_split': null,"
+          + "      'version': null"
+          + "    }"
+          + "  ]"
+          + "}";
 
   private static final String TWO_VERSIONS =
-      "{" +
-      "  'configs': []," +
-      "  'versions': [" +
-      "    {" +
-      "      'id': '20160429t112518'," +
-      "      'last_deployed_time': null," +
-      "      'project': 'bizarre-project'," +
-      "      'service': 'display-service'," +
-      "      'traffic_split': null," +
-      "      'version': null" +
-      "    }," +
-      "    {" +
-      "      'id': '20170805t091353'," +
-      "      'last_deployed_time': null," +
-      "      'project': 'another-project'," +
-      "      'service': 'awesome-service'," +
-      "      'traffic_split': null," +
-      "      'version': null" +
-      "    }" +
-      "  ]" +
-      "}";
+      "{"
+          + "  'configs': [],"
+          + "  'versions': ["
+          + "    {"
+          + "      'id': '20160429t112518',"
+          + "      'last_deployed_time': null,"
+          + "      'project': 'bizarre-project',"
+          + "      'service': 'display-service',"
+          + "      'traffic_split': null,"
+          + "      'version': null"
+          + "    },"
+          + "    {"
+          + "      'id': '20170805t091353',"
+          + "      'last_deployed_time': null,"
+          + "      'project': 'another-project',"
+          + "      'service': 'awesome-service',"
+          + "      'traffic_split': null,"
+          + "      'version': null"
+          + "    }"
+          + "  ]"
+          + "}";
 
   @Test
   public void testParse_oneVersion() throws JsonParseException {

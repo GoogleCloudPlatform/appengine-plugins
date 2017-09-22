@@ -16,16 +16,13 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
-/**
- * A ProcessOutputLineListener that uses a StringBuffer to store the contents of all lines.
- */
+/** A ProcessOutputLineListener that uses a StringBuffer to store the contents of all lines. */
 public class StringBuilderProcessOutputLineListener implements ProcessOutputLineListener {
 
   // This used to be a StringBuilder but that wasn't thread safe.
   private final StringBuffer buffer = new StringBuffer();
 
-  public StringBuilderProcessOutputLineListener() {
-  }
+  public StringBuilderProcessOutputLineListener() {}
 
   @Override
   public void onOutputLine(String line) {

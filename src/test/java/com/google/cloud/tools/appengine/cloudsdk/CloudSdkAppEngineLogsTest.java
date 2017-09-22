@@ -16,31 +16,24 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import com.google.cloud.tools.appengine.api.logs.DefaultLogsConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineLogs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
+import com.google.cloud.tools.appengine.api.logs.DefaultLogsConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-/**
- * Unit tests for {@link CloudSdkAppEngineLogs}
- */
+/** Unit tests for {@link com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineLogs} */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineLogsTest {
 
-  @Mock
-  private CloudSdk sdk;
+  @Mock private CloudSdk sdk;
 
   @Test
   public void readTest() throws ProcessRunnerException {
@@ -55,8 +48,19 @@ public class CloudSdkAppEngineLogsTest {
     appEngineLogs.read(configuration);
 
     List<String> args =
-        Arrays.asList("logs", "read", "--level", "warning", "--version", "v1", "--service",
-            "myService", "--limit", "10", "--project", "myProject");
+        Arrays.asList(
+            "logs",
+            "read",
+            "--level",
+            "warning",
+            "--version",
+            "v1",
+            "--service",
+            "myService",
+            "--limit",
+            "10",
+            "--project",
+            "myProject");
 
     verify(sdk, times(1)).runAppCommand(eq(args));
   }

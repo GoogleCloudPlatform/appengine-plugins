@@ -16,24 +16,24 @@
 
 package com.google.cloud.tools.io;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.Files;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.Files;
-import java.nio.file.NotDirectoryException;
 
 public class FilePermissionsTest {
 
   private Path parent;
-  
+
   @Before
   public void setUp() throws IOException {
-     parent = Files.createTempDirectory("foo");
+    parent = Files.createTempDirectory("foo");
   }
 
   @Test
@@ -45,9 +45,9 @@ public class FilePermissionsTest {
   public void testSubDirectoryCanBeCreated() throws IOException {
     FilePermissions.verifyDirectoryCreatable(Paths.get(parent.toString(), "bar", "baz"));
   }
-  
+
   @Test // Non-Windows only
-  public void testSubDirectoryCannotBeCreatedInDevNull()  {
+  public void testSubDirectoryCannotBeCreatedInDevNull() {
     Assume.assumeTrue(!System.getProperty("os.name").startsWith("Windows"));
     try {
       FilePermissions.verifyDirectoryCreatable(Paths.get("/dev/null/foo/bar"));
@@ -67,7 +67,7 @@ public class FilePermissionsTest {
       Assert.assertTrue(ex.getMessage().contains(file.getFileName().toString()));
     }
   }
-  
+
   @Test
   public void testSubDirectoryCannotBeCreatedDueToPreexistingFile() throws IOException {
     Path file = Files.createTempFile(parent, "prefix", "suffix");
@@ -78,11 +78,11 @@ public class FilePermissionsTest {
       Assert.assertTrue(ex.getMessage().contains(file.getFileName().toString()));
     }
   }
-  
+
   @Test
   public void testDirectoryCannotBeCreatedDueToUnwritableParent() throws IOException {
     Path dir = Files.createDirectory(Paths.get(parent.toString(), "child"));
-    Assume.assumeTrue(dir.toFile().setWritable(false)); //On windows this isn't true
+    Assume.assumeTrue(dir.toFile().setWritable(false)); // On windows this isn't true
     dir.toFile().setWritable(false);
     try {
       FilePermissions.verifyDirectoryCreatable(Paths.get(dir.toString(), "bar"));
@@ -91,7 +91,7 @@ public class FilePermissionsTest {
       Assert.assertTrue(ex.getMessage().contains(dir.getFileName().toString()));
     }
   }
-  
+
   @Test
   public void testRootNotWritable() throws IOException {
     Assume.assumeFalse(Files.isWritable(Paths.get("/")));
@@ -102,5 +102,4 @@ public class FilePermissionsTest {
       Assert.assertEquals("/ is not writable", ex.getMessage());
     }
   }
-
 }

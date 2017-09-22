@@ -23,7 +23,7 @@ import com.google.cloud.tools.appengine.experimental.AppEngineRequest;
 import com.google.cloud.tools.appengine.experimental.internal.process.CliProcessManager;
 import com.google.cloud.tools.appengine.experimental.internal.process.CliProcessManagerProvider;
 import com.google.cloud.tools.appengine.experimental.internal.process.io.StringResultConverter;
-
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,24 +32,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
-
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkRequestTest {
 
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
+  @Rule public ExpectedException exception = ExpectedException.none();
 
-  @Mock
-  private CloudSdkProcessFactory processFactory;
-  @Mock
-  private CliProcessManagerProvider<String> processManagerProvider;
-  @Mock
-  private StringResultConverter<String> resultConverter;
-  @Mock
-  private Process process;
-  @Mock
-  private CliProcessManager<String> manager;
+  @Mock private CloudSdkProcessFactory processFactory;
+  @Mock private CliProcessManagerProvider<String> processManagerProvider;
+  @Mock private StringResultConverter<String> resultConverter;
+  @Mock private Process process;
+  @Mock private CliProcessManager<String> manager;
 
   @Before
   public void configureMocks() throws IOException {
@@ -59,8 +51,8 @@ public class CloudSdkRequestTest {
 
   @Test
   public void testExecute_success() throws IOException {
-    AppEngineRequest<String> request = new CloudSdkRequest<String>(processFactory,
-        processManagerProvider, resultConverter);
+    AppEngineRequest<String> request =
+        new CloudSdkRequest<String>(processFactory, processManagerProvider, resultConverter);
     request.execute();
     verify(processFactory).newProcess();
     verify(processManagerProvider).manage(process, resultConverter);
@@ -68,8 +60,8 @@ public class CloudSdkRequestTest {
 
   @Test
   public void testExecute_executeAfterExecute() {
-    AppEngineRequest<String> request = new CloudSdkRequest<String>(processFactory,
-        processManagerProvider, resultConverter);
+    AppEngineRequest<String> request =
+        new CloudSdkRequest<String>(processFactory, processManagerProvider, resultConverter);
     request.execute();
 
     exception.expect(IllegalStateException.class);

@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.cloudsdk.process;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
-/**
- * Exit listener that throws a {@link AppEngineException} on a non-zero exit value.
- */
+/** Exit listener that throws a {@link AppEngineException} on a non-zero exit value. */
 // Used by Maven plugin
 public class NonZeroExceptionExitListener implements ProcessExitListener {
 
@@ -30,5 +28,4 @@ public class NonZeroExceptionExitListener implements ProcessExitListener {
       throw new AppEngineException("Non zero exit: " + exitCode);
     }
   }
-
 }

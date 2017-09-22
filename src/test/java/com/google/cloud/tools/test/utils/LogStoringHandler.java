@@ -27,46 +27,44 @@ import java.util.logging.Logger;
  * A simple log storing handler. Apply this to the logger you want to track - for example the logger
  * in some class ABC
  *
- * Logger log = Logger.getLogger(ABC.class.getName());
- * handler = new LogStoringHandler();
+ * <p>Logger log = Logger.getLogger(ABC.class.getName()); handler = new LogStoringHandler();
  * log.addHandler(handler);
  *
- * The handler now stores all logs created by that logger.
+ * <p>The handler now stores all logs created by that logger.
  */
 public class LogStoringHandler extends Handler {
 
-    private List<LogRecord> logs = new ArrayList<>();
+  private List<LogRecord> logs = new ArrayList<>();
 
-    /**
-     * Convenience method for test handler creation and registration. It will
-     * configure the logger and handler to Level.ALL to accept all logs.
-     */
-    public static LogStoringHandler getForLogger(String loggerName) {
-        LogStoringHandler handler = new LogStoringHandler();
-        Logger log = Logger.getLogger(loggerName);
-        log.addHandler(handler);
-        log.setLevel(Level.ALL);
-        handler.setLevel(Level.ALL);
-        return handler;
-    }
+  /**
+   * Convenience method for test handler creation and registration. It will configure the logger and
+   * handler to Level.ALL to accept all logs.
+   */
+  public static LogStoringHandler getForLogger(String loggerName) {
+    LogStoringHandler handler = new LogStoringHandler();
+    Logger log = Logger.getLogger(loggerName);
+    log.addHandler(handler);
+    log.setLevel(Level.ALL);
+    handler.setLevel(Level.ALL);
+    return handler;
+  }
 
-    @Override
-    public void publish(LogRecord record) {
-      logs.add(record);
-    }
+  @Override
+  public void publish(LogRecord record) {
+    logs.add(record);
+  }
 
-    @Override
-    public void flush() {
-      // purposely does nothing
-    }
+  @Override
+  public void flush() {
+    // purposely does nothing
+  }
 
-    @Override
-    public void close() throws SecurityException {
-      // purposely does nothing
-    }
+  @Override
+  public void close() throws SecurityException {
+    // purposely does nothing
+  }
 
-    public List<LogRecord> getLogs() {
-      return logs;
-    }
-
+  public List<LogRecord> getLogs() {
+    return logs;
+  }
 }

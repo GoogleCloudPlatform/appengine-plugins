@@ -1,25 +1,326 @@
 [
   {
-    "name": "Google BigQuery API",
-    "documentation": "https://cloud.google.com/bigquery/docs/reference/libraries",
-    "description":"Google's fully managed, petabyte scale, serverless data warehouse for analytics",
-    "transports": ["http"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/bigquery.svg",
+    "name": "Google Cloud Speech",
+    "documentation": "https://cloud.google.com/speech/docs/reference/libraries",
+    "description": "Google Cloud Speech API converts audio to text in over 100 languages.",
+    "transports": ["grpc"],
     "clients": [
       {
-      "name":"Google Cloud Java Client for BigQuery",
-      "language":"java",
-      "site":"https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-java",
-      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/bigquery/package-summary.html",
-      "infotip":"The com.google.cloud.bigquery packages",
-      "launchStage" : "beta",  
-      "packages" : ["com.google.cloud.bigquery"],
-      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
-      "languageLevel" : "1.7.0",
-      "mavenCoordinates" : {
-         "groupId" : "com.google.cloud",
-         "artifactId" : "google-cloud-bigquery",
-         "version" : "0.22.0-beta"
+      "name": "Java Client Libraries for the Google Cloud Speech API",
+      "language": "java",
+      "site": "https://cloud.google.com/speech/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/speech/v1beta1/package-summary.html",
+      "infotip": "The com.google.cloud.speech.v1 packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-speech",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-speech",
+         "version": "0.23.1-alpha"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Google Cloud Resource Manager",
+    "documentation": "https://cloud.google.com/resource-manager/docs/",
+    "description": "The Google Cloud Resource Manager service enables you to programmatically manage hierarchical resource containers such as organizations, folders, and projects.",
+    "transports": ["http"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Google Cloud Resource Manager API",
+      "language": "java",
+      "site": "https://cloud.google.com/speech/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/?com/google/cloud/resourcemanager/package-summary.html",
+      "infotip": "The com.google.cloud.speech.resourcemanager packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-resourcemanager",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-resourcemanager",
+         "version": "0.23.1-alpha"
+       }
+      }
+    ]
+  },  {
+    "name": "Data Loss Prevention",
+    "documentation": "https://cloud.google.com/dlp/docs/reference/libraries",
+    "description": "The DLP API enables clients to detect the presence of Personally Identifiable Information (PII) and other privacy-sensitive data in user-supplied, unstructured data streams such as text blocks and images.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/dlp.svg",
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Data Loss Prevention API",
+      "language": "java",
+      "site": "https://cloud.google.com/dlp/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/dlp/v2beta1/package-summary.html",
+      "infotip": "The com.google.cloud.dlp.v2beta1 packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-dlp",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-dlp",
+         "version": "0.23.1-alpha"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Video Intelligence",
+    "documentation": "https://cloud.google.com/video-intelligence/docs/",
+    "description": "The Google Cloud Video Intelligence API enables developers to annotate videos stored in Google Cloud Storage with video and frame-level (1 fps) contextual information. The API supports common video formats including .mov, .mp4, and .avi.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "A client to the Google Cloud Video Intelligence API.",
+      "language": "java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/videointelligence/v1beta1/package-summary.html",
+      "infotip": "The com.google.cloud.videointelligence.v1beta1 packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-video-intelligence",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-video-intelligence",
+         "version": "0.23.1-alpha"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Compute Engine",
+    "documentation": "https://cloud.google.com/compute/docs/apis",
+    "description": "Google Compute Engine lets you create and run virtual machines on Google infrastructure.",
+    "transports": ["http"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/compute-engine.svg",
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Google Compute Engine API",
+      "language": "java",
+      "site": "https://cloud.google.com/compute/docs/api/libraries#google_apis_java_client_library",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/compute/package-summary.html",
+      "infotip": "The com.google.cloud.compute packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-compute",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-compute",
+         "version": "0.23.1-alpha"
+       }
+      }
+    ]
+  },
+   {
+    "name": "Stackdriver Monitoring",
+    "documentation": "https://cloud.google.com/monitoring/docs/reference/libraries",
+    "description": "Stackdriver Monitoring provides visibility into the performance, uptime, and overall health of cloud-powered applications.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/stackdriver.svg",
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Stackdriver Monitoring API",
+      "language": "java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/monitoring/v3/package-summary.html",
+      "infotip": "The com.google.cloud.monitoring.v3 packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-monitoring",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-monitoring",
+         "version": "0.23.1-alpha"
+       }
+      }
+    ]
+  },
+ {
+    "name": "Stackdriver Error Reporting",
+    "documentation": "https://cloud.google.com/error-reporting/reference/",
+    "description": "Stackdriver Error Reporting counts, analyzes and aggregates the crashes in your running cloud services.",
+    "transports": ["http"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/stackdriver.svg",
+    "clients": [
+      {
+      "name": "Java Client Libraries for Stackdriver Error Reporting",
+      "language": "java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/errorreporting/v1beta1/package-summary.html",
+      "infotip": "The com.google.cloud.errorreporting.v1beta1 packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-errorreporting",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-errorreporting",
+         "version": "0.23.1-alpha"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Stackdriver Trace",
+    "documentation": "https://cloud.google.com/trace/docs/reference/",
+    "description": "A distributed tracing system that collects latency data from App Engine applications.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/trace.svg",
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Stackdriver Trace API",
+      "language": "java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/trace/v1/package-summary.html",
+      "infotip": "The com.google.cloud.trace.v1 packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-trace",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-trace",
+         "version": "0.23.1-alpha"
+       }
+      }
+    ]
+  },
+ {
+    "name": "Cloud DNS",
+    "documentation": "https://cloud.google.com/dns/docs/apis",
+    "description": "Google Cloud DNS is a managed authoritative Domain Name System (DNS) service running on Google infrastructure. Cloud DNS translates domain names such as www.google.com into IP addresses such as 74.125.29.101.",
+    "transports": ["http"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/dns.svg",
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Google dns Engine API",
+      "dns": "java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/dns/package-summary.html",
+      "infotip": "The com.google.cloud.dns packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-dns",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-dns",
+         "version": "0.23.1-alpha"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Google Cloud Vision",
+    "documentation": "https://cloud.google.com/vision/docs/reference/libraries",
+    "description": "The Google Cloud Vision API provides vision features including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Google Cloud Vision API",
+      "vision": "java",
+      "site": "https://cloud.google.com/vision/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/vision/v1/package-summary.html",
+      "infotip": "The com.google.cloud.vision.v1 packages",
+      "launchStage": "beta",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-vision",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-vision",
+         "version": "0.23.1-beta"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Google Cloud Natural Language",
+    "documentation": "https://cloud.google.com/natural-language/docs/reference/libraries",
+    "description": "The Google Cloud Natural Language API provides natural language understanding technologies including sentiment analysis, entity analysis, and syntax analysis.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/natural-language.svg",
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Google Cloud Natural Language API",
+      "language": "java",
+      "site": "https://cloud.google.com/natural-language/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/language/v1/package-summary.html",
+      "infotip": "The com.google.cloud.language.v1 packages",
+      "launchStage": "beta",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-language",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-language",
+         "version": "0.23.1-beta"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Google Cloud Spanner",
+    "documentation": "https://cloud.google.com/spanner/docs/reference/libraries",
+    "description": "Cloud Spanner is a fully managed, relational database service built for transactional consistency, high availability, and global scale.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/spanner.svg",
+    "clients": [
+      {
+      "name": "Google Java Client for Cloud Spanner",
+      "language": "java",
+      "site": "https://cloud.google.com/spanner/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/spanner/package-summary.html",
+      "infotip": "The com.google.cloud.spanner packages",
+      "launchStage": "beta",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-spanner",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-spanner",
+         "version": "0.23.1-beta"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Google Cloud Pub/Sub",
+    "documentation": "https://cloud.google.com/pubsub/docs/reference/libraries",
+    "description": "Google Cloud Pub/Sub provides reliable, many-to-many, asynchronous messaging between applications. Publisher applications can send messages to a topic and other applications can subscribe to that topic to receive the messages.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/pubsub.svg",
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Google Cloud Pub/Sub API",
+      "language": "java",
+      "site": "https://cloud.google.com/pubsub/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/pubsub/v1/package-summary.html",
+      "infotip": "The com.google.cloud.pubsub.v1 packages",
+      "launchStage": "beta",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-pubsub",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-pubsub",
+         "version": "0.23.1-beta"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Google BigQuery API",
+    "documentation": "https://cloud.google.com/bigquery/docs/reference/libraries",
+    "description": "Google's fully managed, petabyte scale, serverless data warehouse for analytics",
+    "transports": ["http"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/bigquery.svg",
+    "clients": [
+      {
+      "name": "Google Cloud Java Client for BigQuery",
+      "language": "java",
+      "site": "https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/bigquery/package-summary.html",
+      "infotip": "The com.google.cloud.bigquery packages",
+      "launchStage": "beta",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-bigquery",
+         "version": "0.23.1-beta"
        }
       }
     ]
@@ -27,24 +328,23 @@
   {
     "name": "Google Cloud Datastore",
     "documentation": "https://cloud.google.com/datastore/docs/reference/libraries",
-    "description":"Google Cloud Datastore is a NoSQL key-value database built for automatic scaling.",
+    "description": "Google Cloud Datastore is a NoSQL key-value database built for automatic scaling.",
     "transports": ["http"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/datastore.svg",
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/datastore.svg",
     "clients": [
       {
-      "name":"Cloud Datastore Client Library for Java",
-      "language":"java",
-      "site":"https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-java",
-      "apireference":"https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/datastore/package-summary.html",
-      "infotip":"The com.google.cloud.datastore packages",
-      "packages" : ["com.google.cloud.datastore"],
-      "launchStage" : "GA",  
-      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
-      "languageLevel" : "1.7.0",
-      "mavenCoordinates" : {
-         "groupId" : "com.google.cloud",
-         "artifactId" : "google-cloud-datastore",
-         "version" : "1.4.0"
+      "name": "Cloud Datastore Client Library for Java",
+      "language": "java",
+      "site": "https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/datastore/package-summary.html",
+      "infotip": "The com.google.cloud.datastore packages",
+      "launchStage": "GA",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-datastore",
+         "version": "1.5.1"
        }
       }
     ]
@@ -52,24 +352,70 @@
   {
     "name": "Google Cloud Storage",
     "documentation": "https://cloud.google.com/storage/docs/reference/libraries",
-    "description":"Unified BLOB storage for developers and enterprises, from live data serving to data analytics/ML to data archiving.",
+    "description": "Unified BLOB storage for developers and enterprises, from live data serving to data analytics/ML to data archiving.",
     "transports": ["http"],
-    "icon":"https://cloud.google.com/_static/images/cloud/products/logos/svg/storage.svg",
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/storage.svg",
     "clients": [
       {
-      "name":"Google Cloud Storage Client Library for Java",
-      "language":"java",
-      "site":"https://cloud.google.com/storage/docs/reference/libraries#client-libraries-install-java",
-      "apireference" : "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/storage/package-summary.html",
-      "packages" : ["com.google.cloud.storage"],
-      "infotip":"The com.google.cloud.storage packages for client side access to GCS",
-      "launchStage" : "GA",  
-      "source" : "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-storage",
-      "languageLevel" : "1.7.0",
-      "mavenCoordinates" : {
-         "groupId" : "com.google.cloud",
-         "artifactId" : "google-cloud-storage",
-         "version" : "1.4.0"
+      "name": "Google Cloud Storage Client Library for Java",
+      "language": "java",
+      "site": "https://cloud.google.com/storage/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/storage/package-summary.html",
+      "infotip": "The com.google.cloud.storage packages for client side access to GCS",
+      "launchStage": "GA",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-storage",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-storage",
+         "version": "1.5.1"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Google Cloud Translation",
+    "documentation": "https://cloud.google.com/translate/docs/reference/libraries",
+    "description": "A simple programmatic interface for detecting the language of arbitrary strings and translating them into dozens of languages using Neural Machine Translation.",
+    "transports": ["http"],
+    "clients": [
+      {
+      "name": "Google Cloud Translation Client Library for Java",
+      "language": "java",
+      "site": "https://cloud.google.com/translate/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/translate/package-summary.html",
+      "infotip": "The com.google.cloud.translate packages for client side access to GCS",
+      "launchStage": "GA",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-translate",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-translate",
+         "version": "1.5.1"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Stackdriver Logging",
+    "documentation": "https://cloud.google.com/logging/docs/reference/libraries",
+    "description": "Stackdriver Logging enables you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services in real-time.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/logging.svg",
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Stackdriver Logging API.",
+      "language": "java",
+      "site": "https://cloud.google.com/logging/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/logging/package-summary.html",
+      "infotip": "The com.google.cloud.logging packages for controlling Stackdriver logging",
+      "launchStage": "GA",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-translate",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-logging",
+         "version": "1.5.1"
        }
       }
     ]

@@ -21,9 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-/**
- * Factory for raw process creation.
- */
+/** Factory for raw process creation. */
 public class CloudSdkProcessFactory {
 
   private final List<String> command;
@@ -36,9 +34,7 @@ public class CloudSdkProcessFactory {
     this.environment = environment;
   }
 
-  /**
-   * Create a new raw process.
-   */
+  /** Create a new raw process. */
   public Process newProcess() throws IOException {
     logger.info(command.toString());
 

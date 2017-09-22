@@ -16,16 +16,14 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
-import com.google.common.collect.ImmutableList;
-
-import org.junit.Test;
-
-import java.util.List;
-
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+
+import com.google.common.collect.ImmutableList;
+import java.util.List;
+import org.junit.Test;
 
 public class CloudSdkVersionTest {
 
@@ -139,20 +137,19 @@ public class CloudSdkVersionTest {
 
   @Test
   public void testCompareTo_preReleaseNumeric() {
-    assertTrue(new CloudSdkVersion("1.0.0-1")
-        .compareTo(new CloudSdkVersion("1.0.0-2")) < 0);
+    assertTrue(new CloudSdkVersion("1.0.0-1").compareTo(new CloudSdkVersion("1.0.0-2")) < 0);
   }
 
   @Test
   public void testCompareTo_preReleaseAlphaNumeric() {
-    assertTrue(new CloudSdkVersion("1.0.0-a")
-        .compareTo(new CloudSdkVersion("1.0.0-b")) < 0);
+    assertTrue(new CloudSdkVersion("1.0.0-a").compareTo(new CloudSdkVersion("1.0.0-b")) < 0);
   }
 
   @Test
   public void testCompareTo_preReleaseNumericVsAlpha() {
-    assertTrue(new CloudSdkVersion("1.0.0-alpha.2")
-        .compareTo(new CloudSdkVersion("1.0.0-alpha.1-beta")) < 0);
+    assertTrue(
+        new CloudSdkVersion("1.0.0-alpha.2").compareTo(new CloudSdkVersion("1.0.0-alpha.1-beta"))
+            < 0);
   }
 
   @Test
@@ -165,9 +162,9 @@ public class CloudSdkVersionTest {
 
   @Test
   public void testCompareTo_preReleaseWithDifferentNumberOfFields() {
-    assertTrue(new CloudSdkVersion("0.1.0-alpha")
-        .compareTo(new CloudSdkVersion("0.1.0-alpha.0")) < 0);
-    assertTrue(new CloudSdkVersion("0.1.0-alpha.1.0.1")
-        .compareTo(new CloudSdkVersion("0.1.0-omega")) < 0);
+    assertTrue(
+        new CloudSdkVersion("0.1.0-alpha").compareTo(new CloudSdkVersion("0.1.0-alpha.0")) < 0);
+    assertTrue(
+        new CloudSdkVersion("0.1.0-alpha.1.0.1").compareTo(new CloudSdkVersion("0.1.0-omega")) < 0);
   }
 }

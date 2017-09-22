@@ -19,14 +19,12 @@ package com.google.cloud.tools.appengine.cloudsdk.process;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.DefaultProcessRunner;
 
 /**
- * Line output listener for {@link DefaultProcessRunner}.
- * Warning: all implementations must be thread safe. The process writes lines, 
- * and any consumers listen from the lines in a separate thread.
+ * Line output listener for {@link DefaultProcessRunner}. Warning: all implementations must be
+ * thread safe. The process writes lines, and any consumers listen from the lines in a separate
+ * thread.
  */
 public interface ProcessOutputLineListener {
 
-  /**
-   * Called once per output line.
-   */
+  /** Called once per output line. */
   void onOutputLine(String line);
 }

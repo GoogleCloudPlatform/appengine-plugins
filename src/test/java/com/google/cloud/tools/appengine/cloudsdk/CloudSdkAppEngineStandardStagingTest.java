@@ -16,13 +16,19 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultStageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,26 +38,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-
-/**
- * Unit tests for {@link CloudSdkAppEngineStandardStaging}.
- */
+/** Unit tests for {@link CloudSdkAppEngineStandardStaging}. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineStandardStagingTest {
 
-  @Rule
-  public TemporaryFolder tmpDir = new TemporaryFolder();
+  @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
-  @Mock
-  private CloudSdk sdk;
+  @Mock private CloudSdk sdk;
 
   private File source;
   private File destination;
@@ -71,7 +64,8 @@ public class CloudSdkAppEngineStandardStagingTest {
   @Test
   public void testCheckFlags_allFlags() throws Exception {
 
-    DefaultStageStandardConfiguration configuration = Mockito.spy(new DefaultStageStandardConfiguration());
+    DefaultStageStandardConfiguration configuration =
+        Mockito.spy(new DefaultStageStandardConfiguration());
     configuration.setSourceDirectory(source);
     configuration.setStagingDirectory(destination);
     configuration.setDockerfile(dockerfile);
@@ -87,10 +81,18 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
-    List<String> expected = ImmutableList
-        .of("--enable_quickstart", "--disable_update_check", "--enable_jar_splitting",
-            "--jar_splitting_excludes=suffix1,suffix2", "--compile_encoding=UTF8", "--delete_jsps",
-            "--enable_jar_classes", "--disable_jar_jsps", "--allow_any_runtime", "--runtime=java",
+    List<String> expected =
+        ImmutableList.of(
+            "--enable_quickstart",
+            "--disable_update_check",
+            "--enable_jar_splitting",
+            "--jar_splitting_excludes=suffix1,suffix2",
+            "--compile_encoding=UTF8",
+            "--delete_jsps",
+            "--enable_jar_classes",
+            "--disable_jar_jsps",
+            "--allow_any_runtime",
+            "--runtime=java",
             "stage",
             source.toPath().toString(),
             destination.toPath().toString());
@@ -98,12 +100,13 @@ public class CloudSdkAppEngineStandardStagingTest {
     staging.stageStandard(configuration);
 
     verify(sdk, times(1)).runAppCfgCommand(eq(expected));
-    SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(
-        ImmutableMap.<String, Integer>of(
-            "getRuntime", 4,
-            "getSourceDirectory", 3,
-            "getDockerfile", 2,
-            "getStagingDirectory", 3));
+    SpyVerifier.newVerifier(configuration)
+        .verifyDeclaredGetters(
+            ImmutableMap.<String, Integer>of(
+                "getRuntime", 4,
+                "getSourceDirectory", 3,
+                "getDockerfile", 2,
+                "getStagingDirectory", 3));
   }
 
   @Test
@@ -120,8 +123,8 @@ public class CloudSdkAppEngineStandardStagingTest {
     configuration.setEnableJarClasses(false);
     configuration.setDisableJarJsps(false);
 
-    List<String> expected = ImmutableList
-        .of("stage", source.toPath().toString(), destination.toPath().toString());
+    List<String> expected =
+        ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
 
     staging.stageStandard(configuration);
 
@@ -135,12 +138,11 @@ public class CloudSdkAppEngineStandardStagingTest {
     configuration.setSourceDirectory(source);
     configuration.setStagingDirectory(destination);
 
-    List<String> expected = ImmutableList
-        .of("stage", source.toPath().toString(), destination.toPath().toString());
+    List<String> expected =
+        ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
 
     staging.stageStandard(configuration);
 
     verify(sdk, times(1)).runAppCfgCommand(eq(expected));
   }
-
 }

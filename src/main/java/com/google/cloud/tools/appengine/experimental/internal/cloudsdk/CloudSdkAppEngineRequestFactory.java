@@ -26,14 +26,11 @@ import com.google.cloud.tools.appengine.experimental.internal.process.CliProcess
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Cloud Sdk implementation of the {@link AppEngineRequestFactory}.
- */
+/** Cloud Sdk implementation of the {@link AppEngineRequestFactory}. */
 public class CloudSdkAppEngineRequestFactory implements AppEngineRequestFactory {
   private final CloudSdkV2 sdk;
   private final String metricsEnvironment;
@@ -42,19 +39,29 @@ public class CloudSdkAppEngineRequestFactory implements AppEngineRequestFactory 
 
   /**
    * Configure a new Cloud Sdk based request factory.
+   *
    * @param cloudSdkHome Path to the Google Cloud Sdk
    * @param credentialFile Path to a credential override file
    * @param metricsEnvironment The tool using this library to call gcloud
    * @param metricsEnvironmentVersion The tool version
    */
-  public CloudSdkAppEngineRequestFactory(Path cloudSdkHome, Path credentialFile,
-      String metricsEnvironment, String metricsEnvironmentVersion) {
-    this(new CloudSdkV2(cloudSdkHome), credentialFile, metricsEnvironment,
+  public CloudSdkAppEngineRequestFactory(
+      Path cloudSdkHome,
+      Path credentialFile,
+      String metricsEnvironment,
+      String metricsEnvironmentVersion) {
+    this(
+        new CloudSdkV2(cloudSdkHome),
+        credentialFile,
+        metricsEnvironment,
         metricsEnvironmentVersion);
   }
 
-  CloudSdkAppEngineRequestFactory(CloudSdkV2 sdk, Path credentialFile,
-      String metricsEnvironment, String metricsEnvironmentVersion) {
+  CloudSdkAppEngineRequestFactory(
+      CloudSdkV2 sdk,
+      Path credentialFile,
+      String metricsEnvironment,
+      String metricsEnvironmentVersion) {
     this.sdk = sdk;
     this.metricsEnvironment = metricsEnvironment;
     this.metricsEnvironmentVersion = metricsEnvironmentVersion;

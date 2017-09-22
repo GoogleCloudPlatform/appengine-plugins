@@ -27,12 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.annotation.Nullable;
 
-/**
- * Resolve paths with Google Cloud SDK and Python defaults.
- */
+/** Resolve paths with Google Cloud SDK and Python defaults. */
 public class PathResolver implements CloudSdkResolver {
 
   private static final Logger logger = Logger.getLogger(PathResolver.class.getName());
@@ -72,9 +69,7 @@ public class PathResolver implements CloudSdkResolver {
     return finalPath;
   }
 
-  /** 
-   * The default location for a single-user install of Cloud SDK on Windows.
-   */
+  /** The default location for a single-user install of Cloud SDK on Windows. */
   @Nullable
   private static String getLocalAppDataLocation() {
     String localAppData = System.getenv("LOCALAPPDATA");
@@ -91,7 +86,7 @@ public class PathResolver implements CloudSdkResolver {
 
     if (pathEnv != null) {
       for (String path : pathEnv.split(File.pathSeparator)) {
-        // Windows sometimes quotes paths so we need to strip these. 
+        // Windows sometimes quotes paths so we need to strip these.
         // However quotes are legal in Unix paths.
         if (IS_WINDOWS) {
           path = unquote(path);
@@ -145,7 +140,6 @@ public class PathResolver implements CloudSdkResolver {
       // intentionally ignore exception
       logger.log(Level.FINE, "Non-critical exception when searching for cloud-sdk", ioe);
     }
-
   }
 
   @Nullable

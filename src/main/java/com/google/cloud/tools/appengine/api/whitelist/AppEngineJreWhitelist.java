@@ -21,15 +21,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Utility to check whether a given class is directly accessible in Java programs that run
- * in the App Engine Standard Environment. Note that just because a class is whitelisted  
- * does not mean that all features and methods of the class are supported for an 
- * application running in the App Engine sandbox environment.
- * <p/>
- * All classes that are not bundled into the JDK are whitelisted. 
- * 
- * @see <a href="https://cloud.google.com/appengine/docs/java/jrewhitelist">The 
- *     JRE Class Whitelist</a>
+ * Utility to check whether a given class is directly accessible in Java programs that run in the
+ * App Engine Standard Environment.
+ *
+ * <p>Note that just because a class is whitelisted does not mean that all features and methods of
+ * the class are supported for an application running in the App Engine sandbox environment.
+ *
+ * <p>All classes that are not bundled into the JDK are whitelisted.
+ *
+ * @see <a href="https://cloud.google.com/appengine/docs/java/jrewhitelist">The JRE Class
+ *     Whitelist</a>
  */
 public class AppEngineJreWhitelist {
 
@@ -292,7 +293,7 @@ public class AppEngineJreWhitelist {
               "java.lang.Readable",
               "java.lang.ReflectiveOperationException",
               "java.lang.Runnable",
-              "java.lang.Runtime", 
+              "java.lang.Runtime",
               "java.lang.RuntimeException",
               "java.lang.RuntimePermission",
               "java.lang.SecurityException",
@@ -530,8 +531,8 @@ public class AppEngineJreWhitelist {
               "java.security.ProtectionDomain",
               "java.security.Provider",
               "java.security.Provider$Service",
-              "java.security.SecureClassLoader", 
-              "java.security.SecureRandom", 
+              "java.security.SecureClassLoader",
+              "java.security.SecureRandom",
               "java.security.SecureRandomSpi",
               "java.security.Security",
               "java.security.SecurityPermission",
@@ -1489,7 +1490,6 @@ public class AppEngineJreWhitelist {
               "javax.xml.ws.spi.WebServiceFeatureAnnotation",
               "javax.xml.ws.wsaddressing.W3CEndpointReference",
               "javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder",
-
               "javax.xml.bind.Binder",
               "javax.xml.bind.DataBindingException",
               "javax.xml.bind.DatatypeConverter",
@@ -1933,40 +1933,39 @@ public class AppEngineJreWhitelist {
               "javax.naming.directory.Attribute",
               "javax.naming.directory.Attributes",
               "javax.naming.ldap.LdapName",
-              "javax.naming.ldap.Rdn"
-              ));
+              "javax.naming.ldap.Rdn"));
 
   /**
    * Determine whether class is allowed in App Engine Standard.
-   * 
+   *
    * @param className fully package qualified class name
    * @return true if this class is allowed in Java 7 on App Engine Standard, false otherwise
    */
   public static boolean contains(String className) {
-    if (className.startsWith("javax.") ) {
+    if (className.startsWith("javax.")) {
       return !isBundledInJre(className) || WHITELIST.contains(className);
-    } else if (className.startsWith("java.") 
-        || className.startsWith("sun.util.") 
-        || className.startsWith("org.xml.sax.") 
-        || className.startsWith("org.w3c.dom.") 
-        || className.startsWith("org.omg.") 
-        || className.startsWith("org.ietf.jgss.") 
-        // com.sun and com.oracle packages are tricky. Some are in the JRE. Some aren't. 
-        || className.startsWith("com.sun.jmx.") 
-        || className.startsWith("com.sun.jndi.") 
-        || className.startsWith("com.sun.media.") 
-        || className.startsWith("com.sun.management.") 
-        || className.startsWith("com.sun.beans.") 
-        || className.startsWith("com.sun.corba.") 
-        || className.startsWith("com.sun.awt.") 
-        || className.startsWith("com.sun.swing.") 
-        || className.startsWith("com.sun.rmi.") 
-        || className.startsWith("com.sun.xml.") 
-        || className.startsWith("com.sun.java.") 
-        || className.startsWith("com.sun.org.") 
-        || className.startsWith("com.sun.rowset.") 
-        || className.startsWith("com.oracle.net.") 
-        || className.startsWith("com.oracle.nio.") 
+    } else if (className.startsWith("java.")
+        || className.startsWith("sun.util.")
+        || className.startsWith("org.xml.sax.")
+        || className.startsWith("org.w3c.dom.")
+        || className.startsWith("org.omg.")
+        || className.startsWith("org.ietf.jgss.")
+        // com.sun and com.oracle packages are tricky. Some are in the JRE. Some aren't.
+        || className.startsWith("com.sun.jmx.")
+        || className.startsWith("com.sun.jndi.")
+        || className.startsWith("com.sun.media.")
+        || className.startsWith("com.sun.management.")
+        || className.startsWith("com.sun.beans.")
+        || className.startsWith("com.sun.corba.")
+        || className.startsWith("com.sun.awt.")
+        || className.startsWith("com.sun.swing.")
+        || className.startsWith("com.sun.rmi.")
+        || className.startsWith("com.sun.xml.")
+        || className.startsWith("com.sun.java.")
+        || className.startsWith("com.sun.org.")
+        || className.startsWith("com.sun.rowset.")
+        || className.startsWith("com.oracle.net.")
+        || className.startsWith("com.oracle.nio.")
         || className.startsWith("com.oracle.util.")) {
       return WHITELIST.contains(className);
     } else { // not a JRE class
@@ -1974,7 +1973,7 @@ public class AppEngineJreWhitelist {
     }
   }
 
-  // javax packages are tricky. Some are in the JRE. Some aren't. 
+  // javax packages are tricky. Some are in the JRE. Some aren't.
   private static boolean isBundledInJre(String className) {
     if (className.startsWith("javax.accessibility.")
         || className.startsWith("javax.activation.")
@@ -2001,5 +2000,4 @@ public class AppEngineJreWhitelist {
     }
     return false;
   }
-  
 }

@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.api.logs;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 
-/**
- * Plain Java bean implementation of {@link LogsConfiguration}.
- */
+/** Plain Java bean implementation of {@link LogsConfiguration}. */
 public class DefaultLogsConfiguration extends DefaultConfiguration implements LogsConfiguration {
 
   private String level;

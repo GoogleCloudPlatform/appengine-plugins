@@ -16,20 +16,18 @@
 
 package com.google.cloud.tools.appengine;
 
-import com.google.common.collect.ImmutableMap;
-
-import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import com.google.common.collect.ImmutableMap;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 public class AppEngineDescriptorTest {
 
@@ -54,7 +52,7 @@ public class AppEngineDescriptorTest {
   private static final String RUNTIME = "<runtime>" + RUNTIME_ID + "</runtime>";
   private static final String ENVIRONMENT =
       "<env-variables><env-var name='keya' value='vala' /><env-var name='key2' value='val2' /><env-var name='keyc' value='valc' /></env-variables>";
-  
+
   private static final String XML_WITHOUT_PROJECT_ID = ROOT_START_TAG + ROOT_END_TAG;
   private static final String XML_WITHOUT_VERSION = ROOT_START_TAG + PROJECT_ID + ROOT_END_TAG;
   private static final String XML_WITH_VERSION_AND_PROJECT_ID =
@@ -104,7 +102,7 @@ public class AppEngineDescriptorTest {
     assertEquals(TEST_ID, descriptor.getProjectId());
     assertEquals(TEST_VERSION, descriptor.getProjectVersion());
   }
-  
+
   @Test
   public void testParse_xmlWithInvalidNamespace() throws IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITH_VERSION_AND_PROJECT_ID_WRONG_NS);
@@ -145,8 +143,10 @@ public class AppEngineDescriptorTest {
   @Test
   public void testUnknownRuntime() throws IOException, SAXException {
     AppEngineDescriptor descriptor =
-        parse("<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
-            + "<runtime>java9</runtime>" + "</appengine-web-app>");
+        parse(
+            "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
+                + "<runtime>java9</runtime>"
+                + "</appengine-web-app>");
 
     assertEquals("java9", descriptor.getRuntime());
     assertFalse(descriptor.isJava8());
@@ -155,48 +155,51 @@ public class AppEngineDescriptorTest {
   @Test
   public void testJava81() throws IOException, SAXException {
     AppEngineDescriptor descriptor =
-        parse("<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
-            + "<runtime>java8h</runtime>" + "</appengine-web-app>");
+        parse(
+            "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
+                + "<runtime>java8h</runtime>"
+                + "</appengine-web-app>");
 
     assertEquals("java8h", descriptor.getRuntime());
     assertFalse(descriptor.isJava8());
   }
-  
+
   @Test
   public void testInternalRuntime() throws IOException, SAXException {
     AppEngineDescriptor descriptor =
-        parse("<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
-            + "<runtime>java8g</runtime>" + "</appengine-web-app>");
+        parse(
+            "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
+                + "<runtime>java8g</runtime>"
+                + "</appengine-web-app>");
 
     assertEquals("java8g", descriptor.getRuntime());
     assertTrue(descriptor.isJava8());
   }
 
-
   @Test
   public void testJava6Runtime() throws IOException, SAXException {
     AppEngineDescriptor descriptor =
-        parse("<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
-            + "<runtime>java</runtime>" + "</appengine-web-app>");
+        parse(
+            "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
+                + "<runtime>java</runtime>"
+                + "</appengine-web-app>");
 
     assertEquals("java", descriptor.getRuntime());
     assertFalse(descriptor.isJava8());
   }
 
-  
   @Test
   public void testParseAttributeMapValues() throws IOException, SAXException {
     Map<String, String> environment =
         parse(ROOT_START_TAG + ENVIRONMENT + ROOT_END_TAG).getEnvironment();
-    Map<String, String> expectedEnvironment = ImmutableMap.of(
-        "keya", "vala", "key2", "val2", "keyc", "valc");
+    Map<String, String> expectedEnvironment =
+        ImmutableMap.of("keya", "vala", "key2", "val2", "keyc", "valc");
 
     assertEquals(expectedEnvironment, environment);
   }
 
   private static AppEngineDescriptor parse(String xmlString) throws IOException, SAXException {
-    return AppEngineDescriptor
-        .parse(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
+    return AppEngineDescriptor.parse(
+        new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
   }
-
 }
