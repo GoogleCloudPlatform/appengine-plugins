@@ -39,34 +39,13 @@ public class StandardDownloaderTest {
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
   @Test
-  public void testValidateAndCreateFiles_pass() throws IOException {
-    Path destination = tmp.getRoot().toPath().resolve("destinationFile");
-
-    StandardDownloader downloader = new StandardDownloader(null, destination, null, null);
-
-    downloader.createDestinationDirectory();
-    // pass
-  }
-
-  @Test
-  public void testValidateAndCreateFiles_createDestinationAndPass() throws IOException {
-    Path destinationDir = tmp.getRoot().toPath().resolve("destinationDir");
-    Path destination = destinationDir.resolve("destinationFile");
-
-    StandardDownloader downloader = new StandardDownloader(null, destination, null, null);
-
-    Assert.assertFalse(Files.exists(destinationDir));
-    downloader.createDestinationDirectory();
-    Assert.assertTrue(Files.exists(destinationDir));
-  }
-
-  @Test
-  public void testValidateAndCreateFiles_targetDirectoryIsFile() throws IOException {
+  public void testValidateAndCreateFiles_targetDirectoryIsFile()
+      throws IOException, InterruptedException {
     Path fileWithBadParent = tmp.newFile().toPath().resolve("xyz");
 
     StandardDownloader downloader = new StandardDownloader(null, fileWithBadParent, null, null);
     try {
-      downloader.createDestinationDirectory();
+      downloader.call();
       Assert.fail("NotDirectoryException expected but not thrown");
     } catch (NotDirectoryException nde) {
       // pass
@@ -74,12 +53,13 @@ public class StandardDownloaderTest {
   }
 
   @Test
-  public void testValidateAndCreateFiles_fileAlreadyExists() throws IOException {
+  public void testValidateAndCreateFiles_fileAlreadyExists()
+      throws IOException, InterruptedException {
     Path fileThatExists = tmp.newFile().toPath();
 
     StandardDownloader downloader = new StandardDownloader(null, fileThatExists, null, null);
     try {
-      downloader.createDestinationDirectory();
+      downloader.call();
       Assert.fail("FileAlreadyExists expected but not thrown");
     } catch (FileAlreadyExistsException faee) {
       // pass
@@ -87,29 +67,41 @@ public class StandardDownloaderTest {
   }
 
   @Test
-  public void testDownloadURL_worksWithNullProgressListener()
-      throws IOException, InterruptedException {
-
-    Path destination = tmp.getRoot().toPath().resolve("destinationFile");
+  public void testDownloadURL_createsNewDirectory() throws IOException, InterruptedException {
+    Path destination = tmp.getRoot().toPath().resolve("dir-to-create").resolve("destination-file");
     Path testSourceFile = createTestRemoteResource(1);
     URL fakeRemoteResource = testSourceFile.toUri().toURL();
 
     StandardDownloader downloader =
         new StandardDownloader(fakeRemoteResource, destination, null, null);
 
-    downloader.downloadUrl();
+    downloader.call();
+  }
+
+  @Test
+  public void testDownloadURL_worksWithNullProgressListener()
+      throws IOException, InterruptedException {
+
+    Path destination = tmp.getRoot().toPath().resolve("destination-file");
+    Path testSourceFile = createTestRemoteResource(1);
+    URL fakeRemoteResource = testSourceFile.toUri().toURL();
+
+    StandardDownloader downloader =
+        new StandardDownloader(fakeRemoteResource, destination, null, null);
+
+    downloader.call();
   }
 
   @Test
   public void testDownloadURL() throws IOException, InterruptedException {
-    Path destination = tmp.getRoot().toPath().resolve("destinationFile");
+    Path destination = tmp.getRoot().toPath().resolve("destination-file");
     Path testSourceFile = createTestRemoteResource(StandardDownloader.BUFFER_SIZE * 10);
     URL fakeRemoteResource = testSourceFile.toUri().toURL();
     DownloadProgressListener mockListener = Mockito.mock(DownloadProgressListener.class);
 
     StandardDownloader downloader =
         new StandardDownloader(fakeRemoteResource, destination, null, mockListener);
-    downloader.downloadUrl();
+    downloader.call();
 
     Assert.assertTrue(FileUtils.contentEquals(destination.toFile(), testSourceFile.toFile()));
 
@@ -155,6 +147,8 @@ public class StandardDownloaderTest {
 
   @Test
   public void testDownloadURL_userAgentSet() throws IOException, InterruptedException {
+    Path destination = tmp.getRoot().toPath().resolve("destination-file");
+
     final URLConnection mockConnection = Mockito.mock(URLConnection.class);
     URLStreamHandler testHandler =
         new URLStreamHandler() {
@@ -166,10 +160,11 @@ public class StandardDownloaderTest {
 
     // create a URL with a custom streamHandler so we can get our mock connection
     URL testURL = new URL("", "", 80, "", testHandler);
-    StandardDownloader downloader = new StandardDownloader(testURL, null, "test-user-agent", null);
+    StandardDownloader downloader =
+        new StandardDownloader(testURL, destination, "test-user-agent", null);
 
     try {
-      downloader.downloadUrl();
+      downloader.call();
     } catch (Exception e) {
       // ignore, we're only looking for user agent being set
     }

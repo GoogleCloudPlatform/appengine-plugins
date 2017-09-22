@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.internal.download;
 
-import com.google.common.annotations.VisibleForTesting;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +27,7 @@ import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 
 /** Standard implementation of {@link Downloader}. */
-public class StandardDownloader implements Downloader {
+public final class StandardDownloader implements Downloader {
 
   static final int BUFFER_SIZE = 10 * 1024;
   private final URL address;
@@ -50,13 +49,6 @@ public class StandardDownloader implements Downloader {
 
   @Override
   public Path call() throws IOException, InterruptedException {
-
-    createDestinationDirectory();
-    return downloadUrl();
-  }
-
-  @VisibleForTesting
-  void createDestinationDirectory() throws IOException {
     Path destinationDir = destinationFile.getParent();
     if (Files.exists(destinationDir) && !Files.isDirectory(destinationDir)) {
       throw new NotDirectoryException(
@@ -69,10 +61,7 @@ public class StandardDownloader implements Downloader {
     if (!Files.exists(destinationDir)) {
       Files.createDirectories(destinationDir);
     }
-  }
 
-  @VisibleForTesting
-  Path downloadUrl() throws IOException, InterruptedException {
     URLConnection conn;
     conn = address.openConnection();
     conn.setRequestProperty("User-Agent", userAgentString);

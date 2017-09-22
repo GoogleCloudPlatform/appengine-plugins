@@ -22,9 +22,9 @@ public interface DownloadProgressListener {
   /**
    * Use this method to display progress, {@code percent downloaded = current * 100 / total}.
    *
-   * @param lastChunk bytes read since last update.
-   * @param completed bytes downloaded so far.
-   * @param total file size in bytes.
+   * @param lastChunk bytes read since last update
+   * @param completed bytes downloaded so far
+   * @param total file size in bytes
    */
   void updateProgress(long lastChunk, long completed, long total);
 }

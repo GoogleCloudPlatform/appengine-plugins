@@ -20,21 +20,27 @@ import java.net.URL;
 import java.nio.file.Path;
 
 /** Downloader factory. */
-public class DownloaderFactory {
+public final class DownloaderFactory {
 
   private final String userAgentString;
 
+  /**
+   * Creates a new factory.
+   *
+   * @param userAgentString for server side tracking of clients downloading the sdk. For example,
+   *     "Cloud Tools for Eclipse" or "com.google.cloud.tools.appengine-maven-plguin".
+   */
   public DownloaderFactory(String userAgentString) {
     this.userAgentString = userAgentString;
   }
 
   /**
-   * Get a new {@link Downloader} implementation.
+   * Returns a new {@link Downloader} implementation.
    *
-   * @param source URL of file to download (remote).
-   * @param destination Path on local file system to save the file.
-   * @param downloadProgressListener Optional progress listener.
-   * @return location of downloaded file.
+   * @param source URL of file to download (remote)
+   * @param destination Path on local file system to save the file
+   * @param downloadProgressListener Optional progress listener
+   * @return a {@link Downloader} instance.
    */
   public Downloader newDownloader(
       URL source, Path destination, DownloadProgressListener downloadProgressListener) {
