@@ -29,7 +29,7 @@ import java.nio.file.Path;
 /** Standard implementation of {@link Downloader}. */
 public final class StandardDownloader implements Downloader {
 
-  static final int BUFFER_SIZE = 10 * 1024;
+  static final int BUFFER_SIZE = 8 * 1024;
   private final URL address;
   private final Path destinationFile;
   private final String userAgentString;
@@ -84,18 +84,15 @@ public final class StandardDownloader implements Downloader {
             throw new InterruptedException("Downloader was interrupted.");
           }
           totalBytesRead += bytesRead;
-          if (totalBytesRead - lastUpdated > updateThreshold) {
+          long bytesSinceLastUpdate = totalBytesRead - lastUpdated;
+          if (totalBytesRead == contentLength || bytesSinceLastUpdate > updateThreshold) {
             if (downloadProgressListener != null) {
               downloadProgressListener.updateProgress(
-                  totalBytesRead - lastUpdated, totalBytesRead, contentLength);
+                  bytesSinceLastUpdate, totalBytesRead, contentLength);
             }
             lastUpdated = totalBytesRead;
           }
           out.write(buffer, 0, bytesRead);
-        }
-        if (downloadProgressListener != null && (lastUpdated != totalBytesRead)) {
-          downloadProgressListener.updateProgress(
-              totalBytesRead - lastUpdated, totalBytesRead, contentLength);
         }
       }
     }
