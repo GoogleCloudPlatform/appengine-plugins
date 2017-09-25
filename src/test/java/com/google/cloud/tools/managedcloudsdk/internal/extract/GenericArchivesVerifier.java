@@ -64,7 +64,7 @@ public class GenericArchivesVerifier {
     assert MockUtil.isMock(listener);
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-    Mockito.verify(listener, Mockito.times(4)).message(messageCaptor.capture());
+    Mockito.verify(listener, Mockito.times(3)).message(messageCaptor.capture());
 
     Assert.assertThat(
         messageCaptor.getAllValues(),

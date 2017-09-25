@@ -19,14 +19,17 @@ package com.google.cloud.tools.managedcloudsdk.internal.extract;
 import java.io.IOException;
 import java.nio.file.Path;
 
-/** Provide a archive extractor implementation */
+/** Provide a archive extractor implementation. */
 public interface ExtractorProvider {
 
   /**
+   * Extracts a single file archive into target destination folder.
+   *
    * @param archive The archive to extract
    * @param destination The destination folder for extracted files
    * @param extractorMessageListener An listener for extraction messages
-   * @throws IOException
+   * @throws IOException if extractor fails
    */
-  void extract(Path archive, Path destination, ExtractorMessageListener extractorMessageListener) throws IOException;
+  void extract(Path archive, Path destination, ExtractorMessageListener extractorMessageListener)
+      throws IOException;
 }

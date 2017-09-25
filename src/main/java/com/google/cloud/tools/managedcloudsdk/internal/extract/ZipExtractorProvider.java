@@ -34,7 +34,9 @@ public final class ZipExtractorProvider implements ExtractorProvider {
   ZipExtractorProvider() {}
 
   @Override
-  public void extract(Path archive, Path destination, ExtractorMessageListener extractorMessageListener) throws IOException {
+  public void extract(
+      Path archive, Path destination, ExtractorMessageListener extractorMessageListener)
+      throws IOException {
     try (ZipArchiveInputStream in = new ZipArchiveInputStream(Files.newInputStream(archive))) {
       ZipArchiveEntry entry;
       while ((entry = in.getNextZipEntry()) != null) {
@@ -53,6 +55,5 @@ public final class ZipExtractorProvider implements ExtractorProvider {
         }
       }
     }
-
   }
 }

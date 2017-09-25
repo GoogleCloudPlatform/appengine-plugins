@@ -22,9 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/**
- * {@link Extractor} implementation with configurable {@link ExtractorProvider} implementation.
- */
+/** {@link Extractor} implementation with configurable {@link ExtractorProvider} implementation. */
 public final class ConfigurableExtractor<T extends ExtractorProvider> implements Extractor {
   private final Path archive;
   private final Path destination;
@@ -32,7 +30,8 @@ public final class ConfigurableExtractor<T extends ExtractorProvider> implements
   private final ExtractorMessageListener listener;
 
   /** Use {@link ExtractorFactory} to instantiate. */
-  ConfigurableExtractor(Path archive, Path destination, T extractorProvider, ExtractorMessageListener listener) {
+  ConfigurableExtractor(
+      Path archive, Path destination, T extractorProvider, ExtractorMessageListener listener) {
     this.archive = archive;
     this.destination = destination;
     this.extractorProvider = extractorProvider;
@@ -50,7 +49,8 @@ public final class ConfigurableExtractor<T extends ExtractorProvider> implements
     // this is convention
     Path cloudSdkHome = destination.resolve("google-cloud-sdk");
     if (!Files.isDirectory(cloudSdkHome)) {
-      throw new FileNotFoundException("After extraction, Cloud SDK home not found at " + cloudSdkHome);
+      throw new FileNotFoundException(
+          "After extraction, Cloud SDK home not found at " + cloudSdkHome);
     }
     return cloudSdkHome;
   }

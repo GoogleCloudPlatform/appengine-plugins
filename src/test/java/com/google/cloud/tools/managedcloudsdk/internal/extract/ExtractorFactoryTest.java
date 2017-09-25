@@ -32,7 +32,9 @@ public class ExtractorFactoryTest {
     Path archive = tmp.newFile("test-zip.zip").toPath();
     Extractor testExtractor = new ExtractorFactory().newExtractor(archive, null, null);
     Assert.assertTrue(testExtractor instanceof ConfigurableExtractor);
-    Assert.assertTrue(((ConfigurableExtractor)testExtractor).getExtractorProvider() instanceof ZipExtractorProvider);
+    Assert.assertTrue(
+        ((ConfigurableExtractor) testExtractor).getExtractorProvider()
+            instanceof ZipExtractorProvider);
   }
 
   @Test
@@ -40,7 +42,9 @@ public class ExtractorFactoryTest {
     Path archive = tmp.newFile("test-tar-gz.tar.gz").toPath();
     Extractor testExtractor = new ExtractorFactory().newExtractor(archive, null, null);
     Assert.assertTrue(testExtractor instanceof ConfigurableExtractor);
-    Assert.assertTrue(((ConfigurableExtractor)testExtractor).getExtractorProvider() instanceof TarGzExtractorProvider);
+    Assert.assertTrue(
+        ((ConfigurableExtractor) testExtractor).getExtractorProvider()
+            instanceof TarGzExtractorProvider);
   }
 
   @Test

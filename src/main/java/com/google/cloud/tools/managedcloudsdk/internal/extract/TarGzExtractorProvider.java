@@ -25,8 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFileAttributeView;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
@@ -38,7 +36,9 @@ public final class TarGzExtractorProvider implements ExtractorProvider {
   TarGzExtractorProvider() {}
 
   @Override
-  public void extract(Path archive, Path destination, ExtractorMessageListener extractorMessageListener) throws IOException {
+  public void extract(
+      Path archive, Path destination, ExtractorMessageListener extractorMessageListener)
+      throws IOException {
 
     GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(Files.newInputStream(archive));
     try (TarArchiveInputStream in = new TarArchiveInputStream(gzipIn)) {
@@ -67,5 +67,4 @@ public final class TarGzExtractorProvider implements ExtractorProvider {
       }
     }
   }
-
 }

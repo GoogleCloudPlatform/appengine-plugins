@@ -29,8 +29,7 @@ import org.mockito.stubbing.Answer;
 
 public class ConfigurableExtractorTest {
 
-  @Rule
-  public TemporaryFolder tmp = new TemporaryFolder();
+  @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
   @Test
   public void testCall_success() throws Exception {
@@ -41,20 +40,26 @@ public class ConfigurableExtractorTest {
     ExtractorProvider mockProvider = Mockito.mock(ExtractorProvider.class);
     ExtractorMessageListener mockListener = Mockito.mock(ExtractorMessageListener.class);
 
-    Mockito.doAnswer(new Answer<Void>() {
-      @Override
-      public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-        // pretend to extract by creating the expected final directory (for success!)
-        Files.createDirectory(expectedCloudSdkHome);
-        return null;
-      }
-    }).when(mockProvider).extract(extractionSource, extractionDestination, mockListener);
+    Mockito.doAnswer(
+            new Answer<Void>() {
+              @Override
+              public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
+                // pretend to extract by creating the expected final directory (for success!)
+                Files.createDirectory(expectedCloudSdkHome);
+                return null;
+              }
+            })
+        .when(mockProvider)
+        .extract(extractionSource, extractionDestination, mockListener);
 
-    Extractor extractor = new ConfigurableExtractor<>(extractionSource, extractionDestination, mockProvider, mockListener);
+    Extractor extractor =
+        new ConfigurableExtractor<>(
+            extractionSource, extractionDestination, mockProvider, mockListener);
     Path cloudSdkHomeUnderTest = extractor.call();
 
     Assert.assertEquals(expectedCloudSdkHome, cloudSdkHomeUnderTest);
-    Mockito.verify(mockListener, Mockito.times(1)).message("Extracting archive: " + extractionSource.toString());
+    Mockito.verify(mockListener, Mockito.times(1))
+        .message("Extracting archive: " + extractionSource.toString());
   }
 
   @Test
@@ -63,12 +68,16 @@ public class ConfigurableExtractorTest {
     Path extractionDestination = tmp.getRoot().toPath();
     Path extractionSource = tmp.newFile("fake.archive").toPath();
 
-    Extractor extractor = new ConfigurableExtractor<>(extractionSource, extractionDestination, mockProvider, null);
+    Extractor extractor =
+        new ConfigurableExtractor<>(extractionSource, extractionDestination, mockProvider, null);
     try {
       Path cloudSdkHome = extractor.call();
       Assert.fail("FileNotFoundException expected but not thrown");
     } catch (FileNotFoundException ex) {
-      Assert.assertEquals("After extraction, Cloud SDK home not found at " + tmp.getRoot().toPath().resolve("google-cloud-sdk"), ex.getMessage());
+      Assert.assertEquals(
+          "After extraction, Cloud SDK home not found at "
+              + tmp.getRoot().toPath().resolve("google-cloud-sdk"),
+          ex.getMessage());
     }
   }
 }
