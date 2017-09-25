@@ -106,7 +106,7 @@ public class StandardDownloaderTest {
     Path downloaderDestination = downloader.call();
     Assert.assertEquals(destination, downloaderDestination);
 
-    Assert.assertEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
+    Assert.assertArrayEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
 
     ArgumentCaptor<Long> lastChunkCaptor = ArgumentCaptor.forClass(Long.class);
     ArgumentCaptor<Long> completedCaptor = ArgumentCaptor.forClass(Long.class);
