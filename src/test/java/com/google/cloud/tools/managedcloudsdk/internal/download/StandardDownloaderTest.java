@@ -26,7 +26,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
-import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -107,7 +106,7 @@ public class StandardDownloaderTest {
     Path downloaderDestination = downloader.call();
     Assert.assertEquals(destination, downloaderDestination);
 
-    Assert.assertTrue(FileUtils.contentEquals(destination.toFile(), testSourceFile.toFile()));
+    Assert.assertEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
 
     ArgumentCaptor<Long> lastChunkCaptor = ArgumentCaptor.forClass(Long.class);
     ArgumentCaptor<Long> completedCaptor = ArgumentCaptor.forClass(Long.class);

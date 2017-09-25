@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 /**
- * Downloader for downloading a single Cloud SDK archive, it is a callable we use in chained
+ * Downloader for downloading a single Cloud SDK archive. It is a callable we use in chained
  * asynchronous calls.
  */
 public interface Downloader extends Callable<Path> {

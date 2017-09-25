@@ -62,15 +62,15 @@ public final class StandardDownloader implements Downloader {
       Files.createDirectories(destinationDir);
     }
 
-    URLConnection conn;
-    conn = address.openConnection();
-    conn.setRequestProperty("User-Agent", userAgentString);
+    URLConnection connection;
+    connection = address.openConnection();
+    connection.setRequestProperty("User-Agent", userAgentString);
 
     try (BufferedOutputStream out =
         new BufferedOutputStream(Files.newOutputStream(destinationFile))) {
-      try (InputStream in = conn.getInputStream()) {
+      try (InputStream in = connection.getInputStream()) {
 
-        long contentLength = conn.getContentLengthLong();
+        long contentLength = connection.getContentLengthLong();
         // Progress is updated every 1%
         long updateThreshold = contentLength / 100;
 
