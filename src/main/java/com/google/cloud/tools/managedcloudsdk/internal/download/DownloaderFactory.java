@@ -40,7 +40,7 @@ public final class DownloaderFactory {
    * @param source URL of file to download (remote)
    * @param destination Path on local file system to save the file
    * @param downloadProgressListener Optional progress listener
-   * @return a {@link Downloader} instance.
+   * @return a {@link Downloader} instance
    */
   public Downloader newDownloader(
       URL source, Path destination, DownloadProgressListener downloadProgressListener) {

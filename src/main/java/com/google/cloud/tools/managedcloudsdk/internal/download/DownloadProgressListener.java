@@ -20,7 +20,7 @@ package com.google.cloud.tools.managedcloudsdk.internal.download;
 public interface DownloadProgressListener {
 
   /**
-   * Use this method to display progress, {@code percent downloaded = current * 100 / total}.
+   * Use this method to display progress: {@code percent downloaded = current * 100 / total}.
    *
    * @param lastChunk bytes read since last update
    * @param completed bytes downloaded so far

@@ -48,6 +48,9 @@ public class StandardDownloaderTest {
       Assert.fail("NotDirectoryException expected but not thrown");
     } catch (NotDirectoryException nde) {
       // pass
+      Assert.assertEquals(
+          "Cannot download to " + fileWithBadParent.getParent() + " because it is not a directory",
+          nde.getMessage());
     }
   }
 
@@ -62,6 +65,8 @@ public class StandardDownloaderTest {
       Assert.fail("FileAlreadyExists expected but not thrown");
     } catch (FileAlreadyExistsException faee) {
       // pass
+      Assert.assertEquals(
+          "Cannot write to " + fileThatExists + " because it already exists", faee.getMessage());
     }
   }
 
@@ -168,7 +173,7 @@ public class StandardDownloaderTest {
 
     try {
       downloader.call();
-    } catch (Exception e) {
+    } catch (Exception ex) {
       // ignore, we're only looking for user agent being set
     }
     Mockito.verify(mockConnection, Mockito.times(1))

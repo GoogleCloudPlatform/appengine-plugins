@@ -62,8 +62,7 @@ public final class StandardDownloader implements Downloader {
       Files.createDirectories(destinationDir);
     }
 
-    URLConnection connection;
-    connection = address.openConnection();
+    URLConnection connection = address.openConnection();
     connection.setRequestProperty("User-Agent", userAgentString);
 
     try (BufferedOutputStream out =
