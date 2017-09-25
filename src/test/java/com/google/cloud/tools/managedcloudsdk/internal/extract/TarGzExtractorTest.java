@@ -19,6 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.internal.extract;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,8 +43,11 @@ public class TarGzExtractorTest {
     ex.call();
 
     GenericArchivesVerifier.assertArchiveExtraction(extractionRoot);
-    GenericArchivesVerifier.assertFilePermissions(extractionRoot);
     GenericArchivesVerifier.assertListenerReceivedExtractionMessages(
         listener, tmp.getRoot().toPath(), testArchive);
+    // only check file permissions on non-windows
+    if (!System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows")) {
+      GenericArchivesVerifier.assertFilePermissions(extractionRoot);
+    }
   }
 }
