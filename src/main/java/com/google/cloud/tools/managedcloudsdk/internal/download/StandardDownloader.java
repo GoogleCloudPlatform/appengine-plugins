@@ -70,28 +70,31 @@ public final class StandardDownloader implements Downloader {
       try (InputStream in = connection.getInputStream()) {
 
         long contentLength = connection.getContentLengthLong();
+
+        int bytesRead;
+        byte[] buffer = new byte[BUFFER_SIZE];
+
         // Progress is updated every 1%
         long updateThreshold = contentLength / 100;
-
-        byte[] buffer = new byte[BUFFER_SIZE];
         long lastUpdated = 0;
         long totalBytesRead = 0;
 
-        int bytesRead;
         while ((bytesRead = in.read(buffer)) != -1) {
           if (Thread.currentThread().isInterrupted()) {
             throw new InterruptedException("Downloader was interrupted.");
           }
-          totalBytesRead += bytesRead;
-          long bytesSinceLastUpdate = totalBytesRead - lastUpdated;
-          if (totalBytesRead == contentLength || bytesSinceLastUpdate > updateThreshold) {
-            if (downloadProgressListener != null) {
+          out.write(buffer, 0, bytesRead);
+
+          // update progress
+          if (downloadProgressListener != null) {
+            totalBytesRead += bytesRead;
+            long bytesSinceLastUpdate = totalBytesRead - lastUpdated;
+            if (totalBytesRead == contentLength || bytesSinceLastUpdate > updateThreshold) {
               downloadProgressListener.updateProgress(
                   bytesSinceLastUpdate, totalBytesRead, contentLength);
             }
             lastUpdated = totalBytesRead;
           }
-          out.write(buffer, 0, bytesRead);
         }
       }
     }
