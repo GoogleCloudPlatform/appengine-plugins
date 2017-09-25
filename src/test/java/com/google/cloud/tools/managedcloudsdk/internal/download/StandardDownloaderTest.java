@@ -167,9 +167,9 @@ public class StandardDownloaderTest {
         };
 
     // create a URL with a custom streamHandler so we can get our mock connection
-    URL testURL = new URL("", "", 80, "", testHandler);
+    URL testUrl = new URL("", "", 80, "", testHandler);
     StandardDownloader downloader =
-        new StandardDownloader(testURL, destination, "test-user-agent", null);
+        new StandardDownloader(testUrl, destination, "test-user-agent", null);
 
     try {
       downloader.call();
