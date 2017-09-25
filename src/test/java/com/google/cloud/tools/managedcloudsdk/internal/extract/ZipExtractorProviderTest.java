@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
-public class ZipExtractorTest {
+public class ZipExtractorProviderTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -37,9 +37,9 @@ public class ZipExtractorTest {
     Assert.assertTrue(Files.exists(testArchive));
     ExtractorMessageListener listener = Mockito.mock(ExtractorMessageListener.class);
 
-    Extractor ex = new ZipExtractor(testArchive, extractionRoot, listener);
+    ZipExtractorProvider zipExtractorProvider = new ZipExtractorProvider();
 
-    ex.call();
+    zipExtractorProvider.extract(testArchive, extractionRoot, listener);
 
     GenericArchivesVerifier.assertArchiveExtraction(extractionRoot);
     GenericArchivesVerifier.assertListenerReceivedExtractionMessages(

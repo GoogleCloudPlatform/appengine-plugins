@@ -69,7 +69,6 @@ public class GenericArchivesVerifier {
     Assert.assertThat(
         messageCaptor.getAllValues(),
         Matchers.containsInAnyOrder(
-            "Extracting archive: " + archive.toString(),
             testDir.resolve("dir").toString(),
             testDir.resolve("dir").resolve("file2.txt").toString(),
             testDir.resolve("file1.txt").toString()));

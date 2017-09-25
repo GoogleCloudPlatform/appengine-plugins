@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.internal.extract;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,38 +25,28 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFileAttributeView;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
-/**
- * Extractor for *.tar.gz google cloud sdk archives.
- *
- * <p>NOTE: this does not handle links or symlinks or any other kind of special types in the tar. It
- * will only create files and directories.
- */
-public class TarGzExtractor implements Extractor {
+/** {@link ExtractorProvider} implementation for *.tar.gz files. */
+public final class TarGzExtractorProvider implements ExtractorProvider {
 
-  private final Path archive;
-  private final Path destination;
-  private final ExtractorMessageListener listener;
-
-  TarGzExtractor(Path archive, Path destination, ExtractorMessageListener listener) {
-    this.archive = archive;
-    this.destination = destination;
-    this.listener = listener;
-  }
+  /** Only instantiated in {@link ExtractorFactory}. */
+  @VisibleForTesting
+  TarGzExtractorProvider() {}
 
   @Override
-  public Path call() throws IOException {
-    listener.message("Extracting archive: " + archive.toString());
+  public void extract(Path archive, Path destination, ExtractorMessageListener extractorMessageListener) throws IOException {
 
     GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(Files.newInputStream(archive));
     try (TarArchiveInputStream in = new TarArchiveInputStream(gzipIn)) {
       TarArchiveEntry entry;
       while ((entry = in.getNextTarEntry()) != null) {
         final Path entryPath = destination.resolve(entry.getName());
-        if (listener != null) {
-          listener.message(entryPath.toString());
+        if (extractorMessageListener != null) {
+          extractorMessageListener.message(entryPath.toString());
         }
         if (entry.isDirectory()) {
           if (!Files.exists(entryPath)) {
@@ -75,8 +66,6 @@ public class TarGzExtractor implements Extractor {
         }
       }
     }
-
-    // this is convention
-    return destination.resolve("google-cloud-sdk");
   }
+
 }

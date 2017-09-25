@@ -29,7 +29,7 @@ public class ExtractorFactory {
    * @param archive The archive to extract
    * @param destination The destination folder for extracted files
    * @param extractorMessageListener An listener for extraction messages
-   * @return {@link TarGzExtractor} for ".tar.gz", {@link ZipExtractor} for ".zip"
+   * @return {@link ConfigurableExtractor<TarGzExtractorProvider>} for ".tar.gz", {@link ConfigurableExtractor<ZipExtractorProvider>} for ".zip"
    * @throws UnknownArchiveTypeException if not ".tar.gz" or ".zip"
    */
   public Extractor newExtractor(
@@ -37,10 +37,10 @@ public class ExtractorFactory {
       throws UnknownArchiveTypeException {
 
     if (archive.toString().endsWith(".tar.gz")) {
-      return new TarGzExtractor(archive, destination, extractorMessageListener);
+      return new ConfigurableExtractor<>(archive, destination, new TarGzExtractorProvider(), extractorMessageListener);
 
     } else if (archive.toString().endsWith(".zip")) {
-      return new ZipExtractor(archive, destination, extractorMessageListener);
+      return new ConfigurableExtractor<>(archive, destination, new ZipExtractorProvider(), extractorMessageListener);
 
     } else {
       throw new UnknownArchiveTypeException(archive);

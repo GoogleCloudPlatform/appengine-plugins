@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
-public class TarGzExtractorTest {
+public class TarGzExtractorProviderTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -38,9 +38,9 @@ public class TarGzExtractorTest {
     Assert.assertTrue(Files.exists(testArchive));
     ExtractorMessageListener listener = Mockito.mock(ExtractorMessageListener.class);
 
-    Extractor ex = new TarGzExtractor(testArchive, extractionRoot, listener);
+    ExtractorProvider tarGzExtractorProvider = new TarGzExtractorProvider();
 
-    ex.call();
+    tarGzExtractorProvider.extract(testArchive, extractionRoot, listener);
 
     GenericArchivesVerifier.assertArchiveExtraction(extractionRoot);
     GenericArchivesVerifier.assertListenerReceivedExtractionMessages(

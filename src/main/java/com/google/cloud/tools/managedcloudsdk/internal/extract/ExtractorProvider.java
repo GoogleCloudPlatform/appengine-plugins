@@ -16,18 +16,17 @@
 
 package com.google.cloud.tools.managedcloudsdk.internal.extract;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
-/** Exception class for archives we do not handle. */
-public class UnknownArchiveTypeException extends Exception {
-  private final Path archive;
+/** Provide a archive extractor implementation */
+public interface ExtractorProvider {
 
-  public UnknownArchiveTypeException(Path archive) {
-    super("Unknown archive: " + archive.toString());
-    this.archive = archive;
-  }
-
-  public Path getArchive() {
-    return archive;
-  }
+  /**
+   * @param archive The archive to extract
+   * @param destination The destination folder for extracted files
+   * @param extractorMessageListener An listener for extraction messages
+   * @throws IOException
+   */
+  void extract(Path archive, Path destination, ExtractorMessageListener extractorMessageListener) throws IOException;
 }
