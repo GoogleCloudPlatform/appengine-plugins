@@ -19,14 +19,22 @@ package com.google.cloud.tools.managedcloudsdk.internal.extract;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.util.Enumeration;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.IOUtils;
 
-/** {@link ExtractorProvider} implementation for *.zip files. */
+/**
+ * {@link ExtractorProvider} implementation for *.zip files.
+ *
+ * <p>NOTE: this does not handle links or symlinks or any other kind of special types in the tar. It
+ * will only create files and directories.
+ */
 public final class ZipExtractorProvider implements ExtractorProvider {
 
   /** Only instantiated in {@link ExtractorFactory}. */
@@ -37,20 +45,35 @@ public final class ZipExtractorProvider implements ExtractorProvider {
   public void extract(
       Path archive, Path destination, ExtractorMessageListener extractorMessageListener)
       throws IOException {
-    try (ZipArchiveInputStream in = new ZipArchiveInputStream(Files.newInputStream(archive))) {
-      ZipArchiveEntry entry;
-      while ((entry = in.getNextZipEntry()) != null) {
-        final Path entryPath = destination.resolve(entry.getName());
+
+    // Use ZipFile instead of ZipArchiveInputStream so that we can obtain file permissions
+    // on unix-like systems via getUnixMode(). ZipArchiveInputStream doesn't have access to
+    // all the zip file data and will return "0" for any call to getUnixMode().
+    try (ZipFile zipFile = new ZipFile(archive.toFile())) {
+      Enumeration<ZipArchiveEntry> zipEntries = zipFile.getEntries();
+      while (zipEntries.hasMoreElements()) {
+        ZipArchiveEntry entry = zipEntries.nextElement();
+        final Path entryTarget = destination.resolve(entry.getName());
+
         if (extractorMessageListener != null) {
-          extractorMessageListener.message(entryPath.toString());
+          extractorMessageListener.message(entryTarget.toString());
         }
+
         if (entry.isDirectory()) {
-          if (!Files.exists(entryPath)) {
-            Files.createDirectories(entryPath);
+          if (!Files.exists(entryTarget)) {
+            Files.createDirectories(entryTarget);
           }
         } else {
-          try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(entryPath))) {
-            IOUtils.copy(in, out);
+          try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(entryTarget))) {
+            try (InputStream in = zipFile.getInputStream(entry)) {
+              IOUtils.copy(in, out);
+              PosixFileAttributeView attributeView =
+                  Files.getFileAttributeView(entryTarget, PosixFileAttributeView.class);
+              if (attributeView != null) {
+                attributeView.setPermissions(
+                    PosixUtil.getPosixFilePermissions(entry.getUnixMode()));
+              }
+            }
           }
         }
       }

@@ -61,7 +61,9 @@ public class GenericArchivesVerifier {
 
   public static void assertListenerReceivedExtractionMessages(
       ExtractorMessageListener listener, Path testDir, Path archive) {
-    assert MockUtil.isMock(listener);
+    if (!MockUtil.isMock(listener)) {
+      throw new IllegalArgumentException("Listener must be a mock.");
+    }
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     Mockito.verify(listener, Mockito.times(3)).message(messageCaptor.capture());

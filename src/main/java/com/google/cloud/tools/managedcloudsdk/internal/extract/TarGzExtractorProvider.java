@@ -28,7 +28,12 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
-/** {@link ExtractorProvider} implementation for *.tar.gz files. */
+/**
+ * {@link ExtractorProvider} implementation for *.tar.gz files.
+ *
+ * <p>NOTE: this does not handle links or symlinks or any other kind of special types in the tar. It
+ * will only create files and directories.
+ */
 public final class TarGzExtractorProvider implements ExtractorProvider {
 
   /** Only instantiated in {@link ExtractorFactory}. */
@@ -44,19 +49,19 @@ public final class TarGzExtractorProvider implements ExtractorProvider {
     try (TarArchiveInputStream in = new TarArchiveInputStream(gzipIn)) {
       TarArchiveEntry entry;
       while ((entry = in.getNextTarEntry()) != null) {
-        final Path entryPath = destination.resolve(entry.getName());
+        final Path entryTarget = destination.resolve(entry.getName());
         if (extractorMessageListener != null) {
-          extractorMessageListener.message(entryPath.toString());
+          extractorMessageListener.message(entryTarget.toString());
         }
         if (entry.isDirectory()) {
-          if (!Files.exists(entryPath)) {
-            Files.createDirectories(entryPath);
+          if (!Files.exists(entryTarget)) {
+            Files.createDirectories(entryTarget);
           }
         } else if (entry.isFile()) {
-          try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(entryPath))) {
+          try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(entryTarget))) {
             IOUtils.copy(in, out);
             PosixFileAttributeView attributeView =
-                Files.getFileAttributeView(entryPath, PosixFileAttributeView.class);
+                Files.getFileAttributeView(entryTarget, PosixFileAttributeView.class);
             if (attributeView != null) {
               attributeView.setPermissions(PosixUtil.getPosixFilePermissions(entry.getMode()));
             }
