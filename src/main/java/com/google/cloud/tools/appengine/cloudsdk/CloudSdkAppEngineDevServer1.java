@@ -107,7 +107,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       arguments.addAll(additionalArguments);
     }
 
-    if (isJava8(config.getServices())) {
+    boolean isJava8 = isJava8(config.getServices());
+
+    if (isJava8) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
       jvmArguments.add("-D--enable_all_permissions=true");
       arguments.add("--no_java_agent");
@@ -131,6 +133,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
           "Setting appengine-web.xml configured environment variables: "
               + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
     }
+
+    String gaeRuntime = getGaeRuntimeJava(isJava8);
+    appEngineEnvironment.putAll(getLocalAppEngineEnvironmentVariables(gaeRuntime));
 
     if (config.getEnvironment() != null) {
       appEngineEnvironment.putAll(config.getEnvironment());
@@ -241,6 +246,35 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       }
     }
     return allAppEngineEnvironment;
+  }
+
+  /**
+   * Gets a {@code Map<String, String>} of the environment variables for running the {@link
+   * AppEngineDevServer}.
+   *
+   * @param gaeRuntime the runtime ID to set the environment variable GAE_RUNTIME to
+   * @return {@code Map<String, String>} that maps from the environment variable name to its value
+   */
+  @VisibleForTesting
+  static Map<String, String> getLocalAppEngineEnvironmentVariables(String gaeRuntime) {
+    Map<String, String> environment = Maps.newHashMap();
+
+    String gaeEnv = "localdev";
+    environment.put("GAE_ENV", gaeEnv);
+    environment.put("GAE_RUNTIME", gaeRuntime);
+
+    return environment;
+  }
+
+  /**
+   * Gets the App Engine runtime ID for Java runtimes.
+   *
+   * @param isJava8 if {@code true}, use Java 8; otherwise, use Java 7
+   * @return "java8" if {@code isJava8} is true; otherwise, returns "java7"
+   */
+  @VisibleForTesting
+  static String getGaeRuntimeJava(boolean isJava8) {
+    return isJava8 ? "java8" : "java7";
   }
 
   private static void checkAndWarnDuplicateEnvironmentVariables(
