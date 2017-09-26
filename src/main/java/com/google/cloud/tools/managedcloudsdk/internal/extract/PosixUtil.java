@@ -21,7 +21,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /** Utilities for files on Posix based systems. */
-class PosixUtil {
+final class PosixUtil {
 
   /** Convert integer mode to {@link PosixFilePermission} object. */
   static Set<PosixFilePermission> getPosixFilePermissions(int mode) {

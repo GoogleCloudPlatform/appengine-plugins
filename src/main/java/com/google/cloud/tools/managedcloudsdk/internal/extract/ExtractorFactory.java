@@ -19,7 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.internal.extract;
 import java.nio.file.Path;
 
 /** {@link Extractor} Factory. */
-public class ExtractorFactory {
+public final class ExtractorFactory {
 
   /**
    * Creates a new extractor based on filetype. Filetype determination is based on the filename
