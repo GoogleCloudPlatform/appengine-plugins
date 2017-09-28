@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.internal.extract;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.io.ByteStreams;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +38,6 @@ import org.apache.commons.compress.utils.IOUtils;
 public final class TarGzExtractorProvider implements ExtractorProvider {
 
   /** Only instantiated in {@link ExtractorFactory}. */
-  @VisibleForTesting
   TarGzExtractorProvider() {}
 
   @Override

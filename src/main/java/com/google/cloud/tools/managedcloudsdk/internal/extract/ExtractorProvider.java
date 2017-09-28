@@ -25,9 +25,9 @@ public interface ExtractorProvider {
   /**
    * Extracts a single file archive into target destination folder.
    *
-   * @param archive The archive to extract
-   * @param destination The destination folder for extracted files
-   * @param extractorMessageListener An listener for extraction messages
+   * @param archive the archive to extract
+   * @param destination the destination folder for extracted files
+   * @param extractorMessageListener an listener for extraction messages
    * @throws IOException if extractor fails
    */
   void extract(Path archive, Path destination, ExtractorMessageListener extractorMessageListener)

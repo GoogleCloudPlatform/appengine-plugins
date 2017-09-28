@@ -17,18 +17,19 @@
 package com.google.cloud.tools.managedcloudsdk.internal.extract;
 
 import java.nio.file.Path;
+import java.util.Locale;
 
 /** {@link Extractor} Factory. */
 public final class ExtractorFactory {
 
   /**
    * Creates a new extractor based on filetype. Filetype determination is based on the filename
-   * string, this method makes no attempt to validate the actual file contents to verify they are
-   * indeed of the type defined by the file extension.
+   * string, this method makes no attempt to validate the file contents to verify they are the type
+   * defined by the file extension.
    *
-   * @param archive The archive to extract
-   * @param destination The destination folder for extracted files
-   * @param extractorMessageListener An listener for extraction messages
+   * @param archive the archive to extract
+   * @param destination the destination folder for extracted files
+   * @param extractorMessageListener a listener for extraction messages
    * @return {@link ConfigurableExtractor} with {@link TarGzExtractorProvider} for ".tar.gz", {@link
    *     ZipExtractorProvider} for ".zip"
    * @throws UnknownArchiveTypeException if not ".tar.gz" or ".zip"
@@ -37,11 +38,11 @@ public final class ExtractorFactory {
       Path archive, Path destination, ExtractorMessageListener extractorMessageListener)
       throws UnknownArchiveTypeException {
 
-    if (archive.toString().endsWith(".tar.gz")) {
+    if (archive.toString().toLowerCase().endsWith(".tar.gz")) {
       return new ConfigurableExtractor<>(
           archive, destination, new TarGzExtractorProvider(), extractorMessageListener);
 
-    } else if (archive.toString().endsWith(".zip")) {
+    } else if (archive.toString().toLowerCase().endsWith(".zip")) {
       return new ConfigurableExtractor<>(
           archive, destination, new ZipExtractorProvider(), extractorMessageListener);
 
