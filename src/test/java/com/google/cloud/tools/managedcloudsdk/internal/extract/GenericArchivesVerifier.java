@@ -19,6 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.internal.extract;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import org.hamcrest.Matchers;
@@ -30,18 +31,20 @@ import org.mockito.internal.util.MockUtil;
 /** Helper for archives in src/test/resources/genericArchives */
 public class GenericArchivesVerifier {
 
-  public static void assertArchiveExtraction(Path root) {
-    Path file1 = root.resolve("file1.txt");
-    Path dir = root.resolve("dir");
-    Path file2 = dir.resolve("file2.txt");
+  private static final Path ROOT = Paths.get("root");
+  private static final Path FILE_1 = ROOT.resolve("file1.txt");
+  private static final Path SUB = ROOT.resolve("sub");
+  private static final Path FILE_2 = SUB.resolve("file2.txt");
 
-    Assert.assertTrue(Files.isRegularFile(file1));
-    Assert.assertTrue(Files.isDirectory(dir));
-    Assert.assertTrue(Files.isRegularFile(file2));
+  public static void assertArchiveExtraction(Path testRoot) {
+    Assert.assertTrue(Files.isDirectory(testRoot.resolve(ROOT)));
+    Assert.assertTrue(Files.isRegularFile(testRoot.resolve(FILE_1)));
+    Assert.assertTrue(Files.isDirectory(testRoot.resolve(SUB)));
+    Assert.assertTrue(Files.isRegularFile(testRoot.resolve(FILE_2)));
   }
 
-  public static void assertFilePermissions(Path root) throws IOException {
-    Path file1 = root.resolve("file1.txt"); // mode = 640
+  public static void assertFilePermissions(Path testRoot) throws IOException {
+    Path file1 = testRoot.resolve(FILE_1); // mode 664
     PosixFileAttributeView allAttributesFile1 =
         Files.getFileAttributeView(file1, PosixFileAttributeView.class);
     Assert.assertThat(
@@ -51,7 +54,7 @@ public class GenericArchivesVerifier {
             PosixFilePermission.OWNER_WRITE,
             PosixFilePermission.GROUP_READ));
 
-    Path file2 = root.resolve("dir").resolve("file2.txt"); // mode = 777
+    Path file2 = testRoot.resolve(FILE_2); // mode 777
     PosixFileAttributeView allAttributesFile2 =
         Files.getFileAttributeView(file2, PosixFileAttributeView.class);
     Assert.assertThat(
@@ -60,19 +63,17 @@ public class GenericArchivesVerifier {
   }
 
   public static void assertListenerReceivedExtractionMessages(
-      ExtractorMessageListener listener, Path testDir, Path archive) {
+      ExtractorMessageListener listener, Path testRoot) {
     if (!MockUtil.isMock(listener)) {
       throw new IllegalArgumentException("Listener must be a mock.");
     }
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-    Mockito.verify(listener, Mockito.times(3)).message(messageCaptor.capture());
 
-    Assert.assertThat(
-        messageCaptor.getAllValues(),
-        Matchers.containsInAnyOrder(
-            testDir.resolve("dir").toString(),
-            testDir.resolve("dir").resolve("file2.txt").toString(),
-            testDir.resolve("file1.txt").toString()));
+    // tars allow for duplicate entries
+    Mockito.verify(listener, Mockito.atLeastOnce()).message(testRoot.resolve(ROOT).toString());
+    Mockito.verify(listener, Mockito.atLeastOnce()).message(testRoot.resolve(FILE_1).toString());
+    Mockito.verify(listener, Mockito.atLeastOnce()).message(testRoot.resolve(SUB).toString());
+    Mockito.verify(listener, Mockito.atLeastOnce()).message(testRoot.resolve(FILE_2).toString());
   }
 }

@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.internal.extract;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.io.ByteStreams;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -58,6 +56,9 @@ public final class TarGzExtractorProvider implements ExtractorProvider {
             Files.createDirectories(entryTarget);
           }
         } else if (entry.isFile()) {
+          if (!Files.exists(entryTarget.getParent())) {
+            Files.createDirectories(entryTarget.getParent());
+          }
           try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(entryTarget))) {
             IOUtils.copy(in, out);
             PosixFileAttributeView attributeView =
@@ -68,6 +69,9 @@ public final class TarGzExtractorProvider implements ExtractorProvider {
           }
         } else {
           // we don't know what kind of entry this is (we only process directories and files).
+          if (extractorMessageListener != null) {
+            extractorMessageListener.message("Skipping entry (unknown type): " + entry.getName());
+          }
         }
       }
     }

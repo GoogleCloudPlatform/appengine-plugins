@@ -64,6 +64,9 @@ public final class ZipExtractorProvider implements ExtractorProvider {
             Files.createDirectories(entryTarget);
           }
         } else {
+          if (!Files.exists(entryTarget.getParent())) {
+            Files.createDirectories(entryTarget.getParent());
+          }
           try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(entryTarget))) {
             try (InputStream in = zipFile.getInputStream(entry)) {
               IOUtils.copy(in, out);

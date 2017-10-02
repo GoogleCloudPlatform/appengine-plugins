@@ -44,7 +44,7 @@ public class ZipExtractorProviderTest {
 
     GenericArchivesVerifier.assertArchiveExtraction(extractionRoot);
     GenericArchivesVerifier.assertListenerReceivedExtractionMessages(
-        listener, tmp.getRoot().toPath(), testArchive);
+        listener, tmp.getRoot().toPath());
 
     // only check file permissions on non-windows
     if (!System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows")) {

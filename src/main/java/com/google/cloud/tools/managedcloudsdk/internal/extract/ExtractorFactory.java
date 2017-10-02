@@ -17,7 +17,6 @@
 package com.google.cloud.tools.managedcloudsdk.internal.extract;
 
 import java.nio.file.Path;
-import java.util.Locale;
 
 /** {@link Extractor} Factory. */
 public final class ExtractorFactory {
