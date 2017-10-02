@@ -22,7 +22,7 @@ import java.util.List;
 /** {@link InstallScriptProvider} for windows. */
 public final class WindowsInstallScriptProvider implements InstallScriptProvider {
 
-  /** Instantiated by {@link InstallerFactory} */
+  /** Instantiated by {@link InstallerFactory}. */
   WindowsInstallScriptProvider() {}
 
   @Override

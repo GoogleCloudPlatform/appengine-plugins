@@ -16,8 +16,8 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
-public class UnsupportedOSException extends Exception {
-  public UnsupportedOSException(String message) {
+public class UnsupportedOsException extends Exception {
+  public UnsupportedOsException(String message) {
     super(message);
   }
 }

@@ -37,7 +37,7 @@ public final class LatestInstaller<T extends InstallScriptProvider> implements I
   private final InstallProcessStreamHandler installInstallProcessStreamHandler;
   private final ProcessBuilderFactory processBuilderFactory;
 
-  /** Instantiated by {@link InstallerFactory} */
+  /** Instantiated by {@link InstallerFactory}. */
   LatestInstaller(
       Path installedSdkRoot,
       InstallScriptProvider installScriptProvider,
@@ -54,25 +54,19 @@ public final class LatestInstaller<T extends InstallScriptProvider> implements I
   @Override
   public Path call() throws IOException, ExecutionException {
 
-    ProcessBuilder pb = processBuilderFactory.newProcessBuilder();
-
     List<String> command = new ArrayList<>(installScriptProvider.getScriptCommandLine());
-
     // now configure parameters (not OS specific)
     command.add("--path-update=false"); // don't update user's path
     command.add("--command-completion=false"); // don't add command completion
     command.add("--quiet"); // don't accept user input during install
     command.add("--usage-reporting=" + usageReporting); // usageReportingPassthrough
 
-    // set the command
+    ProcessBuilder pb = processBuilderFactory.newProcessBuilder();
     pb.command(command);
-    // set working directory
     pb.directory(installedSdkRoot.toFile());
-    // if no stream handlers defined, just send the output somewhere
     if (installInstallProcessStreamHandler == null) {
       pb.inheritIO();
     }
-
     Process installProcess = pb.start();
 
     if (installInstallProcessStreamHandler != null) {

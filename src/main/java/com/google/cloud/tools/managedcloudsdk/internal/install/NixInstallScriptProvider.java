@@ -22,8 +22,8 @@ import java.util.List;
 /** {@link InstallScriptProvider} for mac and linux. */
 public final class NixInstallScriptProvider implements InstallScriptProvider {
 
-  /** Instantiated by {@link InstallerFactory} */
-  NixInstallScriptProvider() {};
+  /** Instantiated by {@link InstallerFactory}. */
+  NixInstallScriptProvider() {}
 
   @Override
   public List<String> getScriptCommandLine() {

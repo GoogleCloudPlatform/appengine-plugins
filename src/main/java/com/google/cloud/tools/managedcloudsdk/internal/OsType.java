@@ -16,16 +16,22 @@
 
 package com.google.cloud.tools.managedcloudsdk.internal;
 
-import com.google.cloud.tools.managedcloudsdk.UnsupportedOSException;
+import com.google.cloud.tools.managedcloudsdk.UnsupportedOsException;
 import java.util.Locale;
 
-/** Created by appu on 8/30/17. */
+/** Helper Enum for Operating System detection. */
 public enum OsType {
   MAC,
   WINDOWS,
   LINUX;
 
-  public static OsType getSystemOS() throws UnsupportedOSException {
+  /**
+   * Detects and returns the operating system.
+   *
+   * @return an {@link OsType} representation of the detected OS
+   * @throws UnsupportedOsException if not Windows, Linux or MacOs
+   */
+  public static OsType getSystemOs() throws UnsupportedOsException {
     String osName = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
     if (osName.contains("windows")) {
       return OsType.WINDOWS;
@@ -39,6 +45,6 @@ public enum OsType {
       return OsType.MAC;
     }
 
-    throw new UnsupportedOSException("Unknown OS : " + osName);
+    throw new UnsupportedOsException("Unknown OS : " + osName);
   }
 }

@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.internal.install;
 
-/** Simple class to abstract out the ProcessBuilder */
+/** Simple class to abstract out the ProcessBuilder. */
 final class ProcessBuilderFactory {
 
   ProcessBuilder newProcessBuilder() {

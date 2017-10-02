@@ -70,8 +70,8 @@ public final class InstallerFactory {
       case MAC:
       case LINUX:
         return new NixInstallScriptProvider();
+      default:
+        throw new IllegalStateException("Unexpected OSType: " + os.name());
     }
-
-    throw new IllegalStateException("Programmer Error");
   }
 }

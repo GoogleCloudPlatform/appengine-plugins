@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
+/** Defines the version of a Cloud SDK. */
 public final class Version {
   public static Version LATEST = new Version();
 
@@ -25,12 +26,13 @@ public final class Version {
     version = "LATEST";
   }
 
+  /** Build a new version from a string representation, use {@link Version#LATEST} for latest. */
   public Version(String version) throws BadCloudSdkVersionException {
-    if (version.matches("^\\d+\\.\\d+\\.\\d+$")) {
-      this.version = version;
-    } else
+    if (!version.matches("^\\d+\\.\\d+\\.\\d+$")) {
       throw new BadCloudSdkVersionException(
           "Version must match [number].[number].[number] for example 100.0.0");
+    }
+    this.version = version;
   }
 
   public String getVersion() {

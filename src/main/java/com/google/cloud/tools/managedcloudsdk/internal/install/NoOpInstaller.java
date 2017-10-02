@@ -23,7 +23,7 @@ public class NoOpInstaller implements Installer {
 
   private final Path installedSdkRoot;
 
-  /** Instantiated by {@link InstallerFactory} */
+  /** Instantiated by {@link InstallerFactory}. */
   NoOpInstaller(Path installedSdkRoot) {
     this.installedSdkRoot = installedSdkRoot;
   }

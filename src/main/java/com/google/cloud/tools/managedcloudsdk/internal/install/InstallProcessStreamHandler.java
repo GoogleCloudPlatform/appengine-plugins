@@ -18,7 +18,7 @@ package com.google.cloud.tools.managedcloudsdk.internal.install;
 
 import java.io.InputStream;
 
-/** Listener on {@link Installer} tasks */
+/** Listener on {@link Installer} tasks. */
 public interface InstallProcessStreamHandler {
 
   /**
