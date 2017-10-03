@@ -42,8 +42,7 @@ public class LibrariesTest {
   @Before
   public void parseJson() throws FileNotFoundException {
     JsonReaderFactory factory = Json.createReaderFactory(null);
-    InputStream in =
-        new FileInputStream("src/main/java/com/google/cloud/tools/libraries/libraries.json");
+    InputStream in = new FileInputStream("src/main/resources/libraries.json");
     JsonReader reader = factory.createReader(in);
     apis = reader.readArray().toArray(new JsonObject[0]);
   }
