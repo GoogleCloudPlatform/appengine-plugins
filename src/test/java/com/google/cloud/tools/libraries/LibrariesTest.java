@@ -18,8 +18,6 @@ package com.google.cloud.tools.libraries;
 
 import static org.hamcrest.collection.IsArrayContaining.hasItemInArray;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -40,9 +38,9 @@ public class LibrariesTest {
   private JsonObject[] apis;
 
   @Before
-  public void parseJson() throws FileNotFoundException {
+  public void parseJson() {
     JsonReaderFactory factory = Json.createReaderFactory(null);
-    InputStream in = new FileInputStream("src/main/resources/libraries.json");
+    InputStream in = LibrariesTest.class.getClassLoader().getResourceAsStream("libraries.json");
     JsonReader reader = factory.createReader(in);
     apis = reader.readArray().toArray(new JsonObject[0]);
   }
