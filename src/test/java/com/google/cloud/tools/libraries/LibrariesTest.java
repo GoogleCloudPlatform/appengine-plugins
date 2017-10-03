@@ -29,6 +29,8 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonReaderFactory;
+import javax.json.JsonString;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,7 +84,9 @@ public class LibrariesTest {
       assertReachable(client.getString("apireference"));
       Assert.assertTrue(client.getString("languageLevel").matches("1\\.\\d+\\.\\d+"));
       Assert.assertFalse(client.getString("name").isEmpty());
-      Assert.assertEquals("java", client.getString("language"));
+      JsonString language = client.getJsonString("language");
+      Assert.assertNotNull("Missing language in " + client.getString("name"), language);
+      Assert.assertEquals("java", language.getString());
       Assert.assertNotNull(client.getJsonObject("mavenCoordinates"));
       if (client.getString("source") != null) {
         assertReachable(client.getString("source"));
