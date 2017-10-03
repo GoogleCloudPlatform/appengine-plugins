@@ -82,6 +82,7 @@ public class LibrariesTest {
       assertReachable(client.getString("apireference"));
       Assert.assertTrue(client.getString("languageLevel").matches("1\\.\\d+\\.\\d+"));
       Assert.assertFalse(client.getString("name").isEmpty());
+      Assert.assertEquals("java", client.getString("language"));
       Assert.assertNotNull(client.getJsonObject("mavenCoordinates"));
       if (client.getString("source") != null) {
         assertReachable(client.getString("source"));

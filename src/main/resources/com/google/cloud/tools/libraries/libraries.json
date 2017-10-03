@@ -192,7 +192,7 @@
     "clients": [
       {
       "name": "Java Client Libraries for the Google dns Engine API",
-      "dns": "java",
+      "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/dns/package-summary.html",
       "infotip": "The com.google.cloud.dns packages",
       "launchStage": "alpha",  
