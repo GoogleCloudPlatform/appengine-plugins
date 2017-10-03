@@ -40,7 +40,7 @@ public class LibrariesTest {
   @Before
   public void parseJson() {
     JsonReaderFactory factory = Json.createReaderFactory(null);
-    InputStream in = LibrariesTest.class.getClassLoader().getResourceAsStream("libraries.json");
+    InputStream in = LibrariesTest.class.getResourceAsStream("libraries.json");
     JsonReader reader = factory.createReader(in);
     apis = reader.readArray().toArray(new JsonObject[0]);
   }
