@@ -189,7 +189,8 @@
       <plugin>
         <groupId>com.coveo</groupId>
         <artifactId>fmt-maven-plugin</artifactId>
-        <version>1.8.0</version>
+        <version>2.0.0</version>
+        <!-- use fmt:format to auto format -->
         <dependencies>
           <dependency>
             <groupId>com.google.googlejavaformat</groupId>
@@ -197,6 +198,9 @@
             <version>1.4</version>
           </dependency>
         </dependencies>
+        <configuration>
+          <displayFiles>true</displayFiles>
+        </configuration>
         <executions>
           <execution>
             <id>default-cli</id>
