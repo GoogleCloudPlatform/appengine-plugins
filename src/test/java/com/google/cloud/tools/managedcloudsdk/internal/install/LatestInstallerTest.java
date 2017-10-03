@@ -44,7 +44,7 @@ public class LatestInstallerTest {
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
   @Before
-  public void setup() throws IOException {
+  public void initializeAndConfigureMocks() throws IOException {
     MockitoAnnotations.initMocks(this);
 
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine())
@@ -67,15 +67,30 @@ public class LatestInstallerTest {
             mockProcessBuilderFactory);
     Path returnedSdkRoot = installer.call();
 
-    Mockito.verify(mockProcessBuilder, Mockito.times(1)).command(getExpectedCommand(false));
-    Mockito.verify(mockProcessBuilder, Mockito.times(1)).directory(tmp.getRoot());
-    Mockito.verify(mockProcessBuilder, Mockito.times(1)).inheritIO();
-    Mockito.verify(mockProcessBuilder, Mockito.times(1)).start();
-    Mockito.verifyNoMoreInteractions(mockProcessBuilder);
+    Mockito.verify(mockProcessBuilder).command(getExpectedCommand(false));
+    Mockito.verify(mockProcessBuilder).directory(tmp.getRoot());
+    Mockito.verify(mockProcessBuilder).inheritIO();
+    Mockito.verify(mockProcessBuilder).start();
+    Mockito.verify(mockProcess).waitFor();
+    Mockito.verify(mockProcess).exitValue();
 
-    Mockito.verify(mockProcess, Mockito.times(1)).waitFor();
+    Mockito.verifyNoMoreInteractions(mockProcess, mockProcessBuilder);
 
     Assert.assertEquals(tmp.getRoot().toPath(), returnedSdkRoot);
+  }
+
+  @Test
+  public void testCall_withUsageReporting() throws Exception {
+    Installer installer =
+        new LatestInstaller<>(
+            tmp.getRoot().toPath(),
+            mockInstallScriptProvider,
+            true,
+            null,
+            mockProcessBuilderFactory);
+    installer.call();
+
+    Mockito.verify(mockProcessBuilder).command(getExpectedCommand(true));
   }
 
   @Test
@@ -90,8 +105,8 @@ public class LatestInstallerTest {
             mockProcessBuilderFactory);
     installer.call();
 
-    Mockito.verify(mockProcessBuilder, Mockito.times(0)).inheritIO();
-    Mockito.verify(mockHandler, Mockito.times(1)).handleStreams(mockInputStream, mockInputStream);
+    Mockito.verify(mockProcessBuilder, Mockito.never()).inheritIO();
+    Mockito.verify(mockHandler).handleStreams(mockInputStream, mockInputStream);
   }
 
   @Test
@@ -111,7 +126,7 @@ public class LatestInstallerTest {
     } catch (ExecutionException ex) {
       Assert.assertEquals("Process cancelled", ex.getMessage());
     }
-    Mockito.verify(mockProcess, Mockito.times(1)).destroy();
+    Mockito.verify(mockProcess).destroy();
   }
 
   @Test

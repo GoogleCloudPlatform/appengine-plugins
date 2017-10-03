@@ -45,19 +45,19 @@ public final class InstallerFactory {
    * Returns a new {@link Installer} instance.
    *
    * @param installedSdkRoot path to the Cloud SDK directory
-   * @param installInstallProcessStreamHandler listener on installer script output
+   * @param installProcessStreamHandler listener on installer script output
    * @return a {@link LatestInstaller} instance if factory configured with 'LATEST' version or
    *     {@link NoOpInstaller} if factory is configured with a fixed version.
    */
   public Installer newInstaller(
-      Path installedSdkRoot, InstallProcessStreamHandler installInstallProcessStreamHandler) {
+      Path installedSdkRoot, InstallProcessStreamHandler installProcessStreamHandler) {
 
     if (version.equals(Version.LATEST)) {
       return new LatestInstaller(
           installedSdkRoot,
           getInstallScriptProvider(),
           usageReporting,
-          installInstallProcessStreamHandler,
+          installProcessStreamHandler,
           new ProcessBuilderFactory());
     }
     return new NoOpInstaller(installedSdkRoot);

@@ -51,7 +51,7 @@ public class InstallerFactoryTest {
   public Class<? extends InstallScriptProvider> expectedInstallScriptProviderClass;
 
   @Test
-  public void testNewInstaller_LastestVersion() {
+  public void testNewInstaller_latestVersion() {
     Installer installer = new InstallerFactory(Version.LATEST, OS, false).newInstaller(null, null);
     Assert.assertEquals(LatestInstaller.class, installer.getClass());
     Assert.assertEquals(
@@ -60,7 +60,7 @@ public class InstallerFactoryTest {
   }
 
   @Test
-  public void testNewInstaller_FixedVersion() throws BadCloudSdkVersionException {
+  public void testNewInstaller_fixedVersion() throws BadCloudSdkVersionException {
     Installer installer =
         new InstallerFactory(new Version("1.0.0"), OS, false).newInstaller(null, null);
     Assert.assertEquals(NoOpInstaller.class, installer.getClass());

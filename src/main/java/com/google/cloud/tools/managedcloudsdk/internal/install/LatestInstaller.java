@@ -34,7 +34,7 @@ public final class LatestInstaller<T extends InstallScriptProvider> implements I
   private final Path installedSdkRoot;
   private final InstallScriptProvider installScriptProvider;
   private final boolean usageReporting;
-  private final InstallProcessStreamHandler installInstallProcessStreamHandler;
+  private final InstallProcessStreamHandler installProcessStreamHandler;
   private final ProcessBuilderFactory processBuilderFactory;
 
   /** Instantiated by {@link InstallerFactory}. */
@@ -42,12 +42,12 @@ public final class LatestInstaller<T extends InstallScriptProvider> implements I
       Path installedSdkRoot,
       InstallScriptProvider installScriptProvider,
       boolean usageReporting,
-      InstallProcessStreamHandler installInstallProcessStreamHandler,
+      InstallProcessStreamHandler installProcessStreamHandler,
       ProcessBuilderFactory processBuilderFactory) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;
     this.usageReporting = usageReporting;
-    this.installInstallProcessStreamHandler = installInstallProcessStreamHandler;
+    this.installProcessStreamHandler = installProcessStreamHandler;
     this.processBuilderFactory = processBuilderFactory;
   }
 
@@ -64,13 +64,13 @@ public final class LatestInstaller<T extends InstallScriptProvider> implements I
     ProcessBuilder pb = processBuilderFactory.newProcessBuilder();
     pb.command(command);
     pb.directory(installedSdkRoot.toFile());
-    if (installInstallProcessStreamHandler == null) {
+    if (installProcessStreamHandler == null) {
       pb.inheritIO();
     }
     Process installProcess = pb.start();
 
-    if (installInstallProcessStreamHandler != null) {
-      installInstallProcessStreamHandler.handleStreams(
+    if (installProcessStreamHandler != null) {
+      installProcessStreamHandler.handleStreams(
           installProcess.getInputStream(), installProcess.getErrorStream());
     }
 
