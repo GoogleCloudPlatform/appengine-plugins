@@ -16,19 +16,15 @@
 
 package com.google.cloud.tools.managedcloudsdk.internal.install;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import org.junit.Assert;
+import org.junit.Test;
 
-/** {@link InstallScriptProvider} for mac and linux. */
-public final class NixInstallScriptProvider implements InstallScriptProvider {
-
-  /** Instantiated by {@link InstallerFactory}. */
-  NixInstallScriptProvider() {}
-
-  @Override
-  public List<String> getScriptCommandLine() {
-    List<String> script = new ArrayList<>(1);
-    script.add("./install.sh");
-    return script;
+/** Tests for {@link UnixInstallScriptProvider} */
+public class UnixInstallScriptProviderTest {
+  @Test
+  public void testGetScriptCommandLine() {
+    Assert.assertEquals(
+        Arrays.asList("./install.sh"), new UnixInstallScriptProvider().getScriptCommandLine());
   }
 }

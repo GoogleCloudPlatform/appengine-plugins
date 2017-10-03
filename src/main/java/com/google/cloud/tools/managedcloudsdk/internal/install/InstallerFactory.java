@@ -30,9 +30,9 @@ public final class InstallerFactory {
   /**
    * Creates a new factory.
    *
-   * @param version Version of the Cloud SDK
-   * @param os The operating system of the computer this script is running on
-   * @param usageReporting Enable or disable client side usage reporting {@code true} is enabled,
+   * @param version version of the Cloud SDK
+   * @param os the operating system of the computer this script is running on
+   * @param usageReporting enable or disable client side usage reporting {@code true} is enabled,
    *     {@code false} is disabled
    */
   public InstallerFactory(Version version, OsType os, boolean usageReporting) {
@@ -44,8 +44,8 @@ public final class InstallerFactory {
   /**
    * Returns a new {@link Installer} instance.
    *
-   * @param installedSdkRoot Path to the Cloud SDK directory
-   * @param installInstallProcessStreamHandler Listener on installer script output
+   * @param installedSdkRoot path to the Cloud SDK directory
+   * @param installInstallProcessStreamHandler listener on installer script output
    * @return a {@link LatestInstaller} instance if factory configured with 'LATEST' version or
    *     {@link NoOpInstaller} if factory is configured with a fixed version.
    */
@@ -69,7 +69,7 @@ public final class InstallerFactory {
         return new WindowsInstallScriptProvider();
       case MAC:
       case LINUX:
-        return new NixInstallScriptProvider();
+        return new UnixInstallScriptProvider();
       default:
         throw new IllegalStateException("Unexpected OSType: " + os.name());
     }

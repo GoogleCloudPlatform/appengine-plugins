@@ -38,8 +38,8 @@ public class InstallerFactoryTest {
   public static Collection<Object[]> data() {
     return Arrays.asList(
         new Object[][] {
-          {OsType.LINUX, NixInstallScriptProvider.class},
-          {OsType.MAC, NixInstallScriptProvider.class},
+          {OsType.LINUX, UnixInstallScriptProvider.class},
+          {OsType.MAC, UnixInstallScriptProvider.class},
           {OsType.WINDOWS, WindowsInstallScriptProvider.class}
         });
   }

@@ -24,8 +24,8 @@ public interface InstallProcessStreamHandler {
   /**
    * Use this method to display output from the install process.
    *
-   * @param stdOut Install process standard output stream
-   * @param stdErr Install process standard error stream
+   * @param stdOut install process standard output stream
+   * @param stdErr install process standard error stream
    */
   void handleStreams(InputStream stdOut, InputStream stdErr);
 }

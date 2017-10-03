@@ -26,8 +26,8 @@ import java.util.concurrent.ExecutionException;
 /**
  * Implementation of {@link Installer} for 'LATEST' version cloud SDK.
  *
- * <p>The archive downloaded provides an install scrip that we run that downloads OS and
- * architecture specific components.
+ * <p>The archive downloaded provides an install scrip that downloads OS and architecture specific
+ * components.
  */
 public final class LatestInstaller<T extends InstallScriptProvider> implements Installer {
 
