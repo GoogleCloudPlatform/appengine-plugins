@@ -30,7 +30,6 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonReaderFactory;
 import javax.json.JsonString;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,6 +57,8 @@ public class LibrariesTest {
   private static final String[] statuses = {"early access", "alpha", "beta", "GA", "deprecated"};
 
   private static void assertApi(JsonObject api) throws IOException {
+    String id = api.getString("id");
+    Assert.assertTrue(id.matches("[a-z]+"));
     Assert.assertFalse(api.getString("name").isEmpty());
     Assert.assertFalse(api.getString("description").isEmpty());
     String transports = api.getJsonArray("transports").getString(0);
