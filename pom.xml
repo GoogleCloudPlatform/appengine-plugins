@@ -332,12 +332,6 @@
       </plugins>
     </pluginManagement>
 
-    <resources>
-      <resource>
-        <directory>src/main/java/com/google/cloud/tools/libraries</directory>
-      </resource>
-    </resources>
-
   </build>
 
   <profiles>
