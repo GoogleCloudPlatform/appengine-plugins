@@ -18,8 +18,6 @@ package com.google.cloud.tools.libraries;
 
 import static org.hamcrest.collection.IsArrayContaining.hasItemInArray;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -31,6 +29,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonReaderFactory;
+import javax.json.JsonString;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,10 +39,9 @@ public class LibrariesTest {
   private JsonObject[] apis;
 
   @Before
-  public void parseJson() throws FileNotFoundException {
+  public void parseJson() {
     JsonReaderFactory factory = Json.createReaderFactory(null);
-    InputStream in =
-        new FileInputStream("src/main/java/com/google/cloud/tools/libraries/libraries.json");
+    InputStream in = LibrariesTest.class.getResourceAsStream("libraries.json");
     JsonReader reader = factory.createReader(in);
     apis = reader.readArray().toArray(new JsonObject[0]);
   }
@@ -59,6 +57,8 @@ public class LibrariesTest {
   private static final String[] statuses = {"early access", "alpha", "beta", "GA", "deprecated"};
 
   private static void assertApi(JsonObject api) throws IOException {
+    String id = api.getString("id");
+    Assert.assertTrue(id.matches("[a-z]+"));
     Assert.assertFalse(api.getString("name").isEmpty());
     Assert.assertFalse(api.getString("description").isEmpty());
     String transports = api.getJsonArray("transports").getString(0);
@@ -85,6 +85,9 @@ public class LibrariesTest {
       assertReachable(client.getString("apireference"));
       Assert.assertTrue(client.getString("languageLevel").matches("1\\.\\d+\\.\\d+"));
       Assert.assertFalse(client.getString("name").isEmpty());
+      JsonString language = client.getJsonString("language");
+      Assert.assertNotNull("Missing language in " + client.getString("name"), language);
+      Assert.assertEquals("java", language.getString());
       Assert.assertNotNull(client.getJsonObject("mavenCoordinates"));
       if (client.getString("source") != null) {
         assertReachable(client.getString("source"));
