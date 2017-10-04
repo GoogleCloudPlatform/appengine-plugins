@@ -40,13 +40,11 @@ public final class ExtractorFactory {
     if (archive.toString().toLowerCase().endsWith(".tar.gz")) {
       return new ConfigurableExtractor<>(
           archive, destination, new TarGzExtractorProvider(), extractorMessageListener);
-
-    } else if (archive.toString().toLowerCase().endsWith(".zip")) {
+    }
+    if (archive.toString().toLowerCase().endsWith(".zip")) {
       return new ConfigurableExtractor<>(
           archive, destination, new ZipExtractorProvider(), extractorMessageListener);
-
-    } else {
-      throw new UnknownArchiveTypeException(archive);
     }
+    throw new UnknownArchiveTypeException(archive);
   }
 }
