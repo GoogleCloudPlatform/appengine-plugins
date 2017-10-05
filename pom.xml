@@ -147,8 +147,8 @@
           <forceJavacCompilerUse>true</forceJavacCompilerUse>
           <!-- maven-compiler-plugin defaults to targeting Java 5, but our javac
           only supports >=6 -->
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
         <dependencies>
           <dependency>
