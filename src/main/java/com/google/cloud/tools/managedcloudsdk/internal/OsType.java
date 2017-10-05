@@ -32,7 +32,12 @@ public enum OsType {
    * @throws UnsupportedOsException if not Windows, Linux or MacOs
    */
   public static OsType getSystemOs() throws UnsupportedOsException {
-    String osName = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+    String osName = System.getProperty("os.name");
+    return getSystemOs(osName);
+  }
+
+  static OsType getSystemOs(String rawOsName) throws UnsupportedOsException {
+    String osName = rawOsName.toLowerCase(Locale.ENGLISH);
     if (osName.contains("windows")) {
       return OsType.WINDOWS;
     }
@@ -45,6 +50,6 @@ public enum OsType {
       return OsType.MAC;
     }
 
-    throw new UnsupportedOsException("Unknown OS : " + osName);
+    throw new UnsupportedOsException("Unknown OS: " + rawOsName);
   }
 }

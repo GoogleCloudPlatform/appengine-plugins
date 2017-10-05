@@ -18,7 +18,7 @@ package com.google.cloud.tools.managedcloudsdk;
 
 /** Defines the version of a Cloud SDK. */
 public final class Version {
-  public static Version LATEST = new Version();
+  public static final Version LATEST = new Version();
 
   private String version;
 
