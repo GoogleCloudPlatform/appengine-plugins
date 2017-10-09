@@ -7,7 +7,7 @@
 
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-plugins-core</artifactId>
-  <version>0.3.8-SNAPSHOT</version>
+  <version>0.3.9-SNAPSHOT</version>
 
   <name>App Engine Plugins Core Library</name>
   <description>
@@ -103,6 +103,12 @@
       <artifactId>javax.json</artifactId>
       <version>1.0.4</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+      <version>1.14</version>
+    </dependency>
+
     <!-- test dependencies -->
     <dependency>
       <groupId>junit</groupId>
