@@ -83,7 +83,7 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/videointelligence/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.videointelligence.v1beta1 packages",
-      "launchStage": "alpha",  
+      "launchStage": "beta",  
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-video-intelligence",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
