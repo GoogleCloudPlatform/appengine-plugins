@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.libraries.json;
 
-import com.google.gson.Gson;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -31,7 +30,7 @@ public final class CloudLibrary {
   private List<String> transports;
   private List<CloudLibraryClient> clients;
 
-  /** Use {@link #parse(String)} instead. */
+  /** Prevents instantiation. */
   private CloudLibrary() {}
 
   /** Returns the name of this library. */
