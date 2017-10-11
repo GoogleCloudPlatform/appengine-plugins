@@ -34,14 +34,6 @@ public final class CloudLibrary {
   /** Use {@link #parse(String)} instead. */
   private CloudLibrary() {}
 
-  /**
-   * Parses the given JSON representation of a {@link CloudLibrary} and returns a new instance
-   * deserialized from the given JSON.
-   */
-  public static CloudLibrary parse(String json) {
-    return new Gson().fromJson(json, CloudLibrary.class);
-  }
-
   /** Returns the name of this library. */
   @Nullable
   public String getName() {

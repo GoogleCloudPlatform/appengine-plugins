@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.Iterables;
+import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.junit.Test;
 
@@ -47,7 +48,7 @@ public final class CloudLibraryTest {
 
   @Test
   public void parse_withFullyPopulatedJson_returnsPopulatedObject() {
-    CloudLibrary library = CloudLibrary.parse(createFullyPopulatedJson());
+    CloudLibrary library = parse(createFullyPopulatedJson());
     CloudLibraryClient client = Iterables.getOnlyElement(library.getClients());
     CloudLibraryClientMavenCoordinates mavenCoordinates = client.getMavenCoordinates();
 
@@ -75,7 +76,7 @@ public final class CloudLibraryTest {
   @Test
   public void parse_withMissingFields_returnsObjectWithNulls() {
     String json = String.format("{name:%s}", wrap(NAME));
-    CloudLibrary library = CloudLibrary.parse(json);
+    CloudLibrary library = parse(json);
     assertEquals(NAME, library.getName());
     assertNull(library.getId());
 
@@ -89,7 +90,7 @@ public final class CloudLibraryTest {
     String transport1 = "transport1";
     String transport2 = "transport2";
     String json = String.format("{transports:[%s, %s]}", transport1, transport2);
-    CloudLibrary library = CloudLibrary.parse(json);
+    CloudLibrary library = parse(json);
 
     assertEquals(transport1, library.getTransports().get(0));
     assertEquals(transport2, library.getTransports().get(1));
@@ -102,7 +103,7 @@ public final class CloudLibraryTest {
     String client1Json = String.format("{name:%s}", client1);
     String client2Json = String.format("{name:%s}", client2);
     String json = String.format("{clients:[%s, %s]}", client1Json, client2Json);
-    CloudLibrary library = CloudLibrary.parse(json);
+    CloudLibrary library = parse(json);
 
     assertEquals(client1, library.getClients().get(0).getName());
     assertEquals(client2, library.getClients().get(1).getName());
@@ -111,17 +112,25 @@ public final class CloudLibraryTest {
   @Test
   public void parse_withEmptyJson_doesNotThrowException() {
     // The test will fail if this throws an exception.
-    CloudLibrary.parse("");
+    parse("");
   }
 
   @Test
   public void parse_withMalformedJson_throwsException() {
     try {
-      CloudLibrary.parse("this is invalid json");
+      parse("this is invalid json");
       fail("Expected JsonSyntaxException to be thrown.");
     } catch (JsonSyntaxException e) {
       // The existence of the exception is enough.
     }
+  }
+
+  /**
+   * Parses the given JSON representation of a {@link CloudLibrary} and returns a new instance
+   * deserialized from the given JSON.
+   */
+  private static CloudLibrary parse(String json) {
+    return new Gson().fromJson(json, CloudLibrary.class);
   }
 
   /**
