@@ -125,6 +125,16 @@ public final class CloudLibraryTest {
     }
   }
 
+  @Test
+  public void parse_withMismatchingTypes_throwsException() {
+    try {
+      parse("{clients:123}");
+      fail("Expected JsonSyntaxException to be thrown.");
+    } catch (JsonSyntaxException e) {
+      // The existence of the exception is enough.
+    }
+  }
+
   /**
    * Parses the given JSON representation of a {@link CloudLibrary} and returns a new instance
    * deserialized from the given JSON.
