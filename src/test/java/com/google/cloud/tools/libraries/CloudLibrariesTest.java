@@ -32,12 +32,12 @@ public final class CloudLibrariesTest {
   }
 
   @Test
-  public void getLibraries_withMissingFile_throwsException() {
+  public void getLibraries_withMissingFile_throwsException() throws IOException {
     CloudLibraries cloudLibraries = new CloudLibraries("does-not.exist");
     try {
       cloudLibraries.getLibraries();
-      fail("Expected IOException to be thrown.");
-    } catch (IOException e) {
+      fail("Expected AssertionError to be thrown.");
+    } catch (AssertionError e) {
       assertEquals("Resource not found: does-not.exist", e.getMessage());
     }
   }

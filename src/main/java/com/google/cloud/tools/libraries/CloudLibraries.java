@@ -53,7 +53,7 @@ public final class CloudLibraries {
   List<CloudLibrary> getLibraries() throws IOException {
     try (InputStream inputStream = CloudLibraries.class.getResourceAsStream(librariesJsonPath)) {
       if (inputStream == null) {
-        throw new IOException("Resource not found: " + librariesJsonPath);
+        throw new AssertionError("Resource not found: " + librariesJsonPath);
       }
 
       InputStreamReader reader = new InputStreamReader(inputStream);
