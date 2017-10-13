@@ -8,8 +8,22 @@ Die() {
 	exit 1
 }
 
+DieUsage() {
+    Die "Usage: ./release <release version> <next version>"
+}
+
+# Usage: CheckVersion <version>
+CheckVersion() {
+    [[ $1 =~ ^\d+\.\d+\.\d+$ ]] || Die "Version not in ###.###.### format."
+}
+
+[ $# -ne 2 ] ||DieUsage
+
 VERSION=$1
 NEXT_VERSION=$2
+
+CheckVersion ${VERSION}
+CheckVersion ${NEXT_VERSION}
 
 echo '===== RELEASE SETUP SCRIPT ====='
 
@@ -32,7 +46,10 @@ git tag v${VERSION}
 NEXT_SNAPSHOT=${NEXT_VERSION}-SNAPSHOT
 mvn versions:set versions:commit -DnewVersion=${NEXT_SNAPSHOT}
 
-# Pushs the release branch to Github.
+# Commits this next snapshot version.
+git commit -am "${NEXT_SNAPSHOT}"
+
+# Pushes the release branch to Github.
 git push --tags --set-upstream ${VERSION} origin/${VERSION}
 
 # File a PR on Github for the new branch. Have someone LGTM it, which gives you permission to continue.
