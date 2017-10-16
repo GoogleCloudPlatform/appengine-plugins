@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.process;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,27 +50,27 @@ public class CommandExecutor {
     return this;
   }
 
-  // @VisibleForTesting
+  @VisibleForTesting
   static class ProcessBuilderFactory {
     ProcessBuilder createProcessBuilder() {
       return new ProcessBuilder();
     }
   }
 
-  // @VisibleForTesting
+  @VisibleForTesting
   CommandExecutor setProcessBuilderFactory(ProcessBuilderFactory processBuilderFactory) {
     this.processBuilderFactory = processBuilderFactory;
     return this;
   }
 
-  // @VisibleForTesting
+  @VisibleForTesting
   static class ExecutorServiceFactory {
     ExecutorService createExecutorService() {
       return Executors.newSingleThreadExecutor();
     }
   }
 
-  // @VisibleForTesting
+  @VisibleForTesting
   CommandExecutor setExecutorServiceFactory(ExecutorServiceFactory executorServiceFactory) {
     this.executorServiceFactory = executorServiceFactory;
     return this;
