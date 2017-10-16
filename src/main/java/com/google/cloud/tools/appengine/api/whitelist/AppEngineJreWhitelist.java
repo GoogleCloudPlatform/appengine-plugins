@@ -1879,7 +1879,7 @@ public class AppEngineJreWhitelist {
               "com.sun.org.apache.xalan.internal.xsltc.dom.CurrentNodeListFilter",
               "com.sun.org.apache.xalan.internal.xsltc.dom.DOMAdapter",
               "com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet",
-              "com.sun.org.apache.xalan.internal.xsltc.runtime.MessageHandler",
+              "com.sun.org.apache.xalan.internal.xsltc.runtime.MessageListener",
               "com.sun.org.apache.xml.internal.dtm.DTMAxisIterator",
               "com.sun.org.apache.xalan.internal.xsltc.dom.StepIterator",
               "com.sun.org.apache.xml.internal.dtm.ref.DTMAxisIteratorBase",
