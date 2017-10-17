@@ -20,7 +20,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-/** Tests for {@link com.google.cloud.tools.managedcloudsdk.install.WindowsInstallScriptProvider} */
+/** Tests for {@link WindowsInstallScriptProvider} */
 public class WindowsInstallScriptProviderTest {
 
   @Test

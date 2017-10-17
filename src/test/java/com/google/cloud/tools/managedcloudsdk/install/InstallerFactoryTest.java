@@ -51,9 +51,7 @@ public class InstallerFactoryTest {
   @Test
   public void testNewInstaller_latestVersion() {
     Installer installer = new InstallerFactory(os, false).newInstaller(null, null);
-    Assert.assertEquals(Installer.class, installer.getClass());
     Assert.assertEquals(
-        expectedInstallScriptProviderClass,
-        ((Installer) installer).getInstallScriptProvider().getClass());
+        expectedInstallScriptProviderClass, installer.getInstallScriptProvider().getClass());
   }
 }

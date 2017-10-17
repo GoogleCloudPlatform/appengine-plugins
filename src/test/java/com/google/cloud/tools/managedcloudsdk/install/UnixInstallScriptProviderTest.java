@@ -20,7 +20,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-/** Tests for {@link com.google.cloud.tools.managedcloudsdk.install.UnixInstallScriptProvider} */
+/** Tests for {@link UnixInstallScriptProvider} */
 public class UnixInstallScriptProviderTest {
   @Test
   public void testGetScriptCommandLine() {

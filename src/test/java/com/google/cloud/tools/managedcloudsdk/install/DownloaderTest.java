@@ -143,7 +143,6 @@ public class DownloaderTest {
     } catch (Exception ex) {
       // ignore, we're only looking for user agent being set
     }
-    Mockito.verify(mockConnection, Mockito.times(1))
-        .setRequestProperty("User-Agent", "test-user-agent");
+    Mockito.verify(mockConnection).setRequestProperty("User-Agent", "test-user-agent");
   }
 }

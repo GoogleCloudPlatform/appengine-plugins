@@ -66,8 +66,7 @@ public class ExtractorTest {
     Path cloudSdkHomeUnderTest = extractor.call();
 
     Assert.assertEquals(expectedCloudSdkHome, cloudSdkHomeUnderTest);
-    Mockito.verify(mockMessageListener, Mockito.times(1))
-        .message("Extracting archive: " + extractionSource.toString());
+    Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource);
   }
 
   @Test

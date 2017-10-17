@@ -45,7 +45,7 @@ final class Extractor<T extends ExtractorProvider> implements Callable<Path> {
   /** Extract and return a {@link Path} to the Cloud SDK home directory. */
   @Override
   public Path call() throws IOException {
-    messageListener.message("Extracting archive: " + archive.toString());
+    messageListener.message("Extracting archive: " + archive);
 
     extractorProvider.extract(archive, destination, messageListener);
 
