@@ -62,7 +62,7 @@ final class Downloader implements Callable<Path> {
         new BufferedOutputStream(
             Files.newOutputStream(destinationFile, StandardOpenOption.CREATE_NEW))) {
       try (InputStream in = connection.getInputStream()) {
-        messageListener.message("Downloading " + address.toString());
+        messageListener.message("Downloading " + address);
 
         long contentLength = connection.getContentLengthLong();
 

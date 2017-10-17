@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.process;
 
-import static org.mockito.Mockito.*;
-
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.common.base.Joiner;
 import java.io.ByteArrayInputStream;
@@ -54,12 +52,12 @@ public class CommandExecutorTest {
   public void setup() throws IOException, InterruptedException {
     MockitoAnnotations.initMocks(this);
 
-    when(processBuilderFactoryMock.createProcessBuilder()).thenReturn(processBuilderMock);
-    when(processBuilderMock.start()).thenReturn(processMock);
-    when(processMock.waitFor()).thenReturn(0);
-    when(processMock.getInputStream())
+    Mockito.when(processBuilderFactoryMock.createProcessBuilder()).thenReturn(processBuilderMock);
+    Mockito.when(processBuilderMock.start()).thenReturn(processMock);
+    Mockito.when(processMock.waitFor()).thenReturn(0);
+    Mockito.when(processMock.getInputStream())
         .thenReturn(new ByteArrayInputStream(Joiner.on("\n").join(output).getBytes()));
-    loggerInOrder = inOrder(messageListener);
+    loggerInOrder = Mockito.inOrder(messageListener);
   }
 
   @Test
@@ -72,7 +70,7 @@ public class CommandExecutorTest {
     environmentInput.put("ENV1", "val1");
     environmentInput.put("ENV2", "val2");
     Map<String, String> processEnvironment = new HashMap<>();
-    when(processBuilderMock.environment()).thenReturn(processEnvironment);
+    Mockito.when(processBuilderMock.environment()).thenReturn(processEnvironment);
 
     setProcessMockOutput(expectedOutput);
 
@@ -84,7 +82,7 @@ public class CommandExecutorTest {
             .run(command);
 
     verifyProcessBuilding(command);
-    verify(processBuilderMock).environment();
+    Mockito.verify(processBuilderMock).environment();
     Assert.assertEquals(environmentInput, processEnvironment);
     Assert.assertEquals(expectedOutput, output);
 
@@ -99,8 +97,8 @@ public class CommandExecutorTest {
     List<String> command = Arrays.asList("someCommand", "someOption");
 
     InputStream processOutput = Mockito.mock(InputStream.class);
-    when(processOutput.read()).thenThrow(IOException.class);
-    when(processMock.getInputStream()).thenReturn(processOutput);
+    Mockito.when(processOutput.read()).thenThrow(IOException.class);
+    Mockito.when(processMock.getInputStream()).thenReturn(processOutput);
 
     new CommandExecutor()
         .setMessageListener(messageListener)
@@ -118,7 +116,7 @@ public class CommandExecutorTest {
     List<String> expectedOutput = Arrays.asList("some output line 1", "some output line 2");
 
     setProcessMockOutput(expectedOutput);
-    when(processMock.waitFor()).thenReturn(123);
+    Mockito.when(processMock.waitFor()).thenReturn(123);
 
     int exitCode =
         new CommandExecutor()
@@ -136,10 +134,12 @@ public class CommandExecutorTest {
 
     // Mocks the ExecutorService to be interrupted when awaiting termination.
     CommandExecutor.ExecutorServiceFactory executorServiceFactoryMock =
-        mock(CommandExecutor.ExecutorServiceFactory.class);
-    ExecutorService executorServiceMock = mock(ExecutorService.class);
-    when(executorServiceFactoryMock.createExecutorService()).thenReturn(executorServiceMock);
-    when(executorServiceMock.awaitTermination(CommandExecutor.TIMEOUT_SECONDS, TimeUnit.SECONDS))
+        Mockito.mock(CommandExecutor.ExecutorServiceFactory.class);
+    ExecutorService executorServiceMock = Mockito.mock(ExecutorService.class);
+    Mockito.when(executorServiceFactoryMock.createExecutorService())
+        .thenReturn(executorServiceMock);
+    Mockito.when(
+            executorServiceMock.awaitTermination(CommandExecutor.TIMEOUT_SECONDS, TimeUnit.SECONDS))
         .thenThrow(new InterruptedException());
 
     new CommandExecutor()
@@ -159,7 +159,7 @@ public class CommandExecutorTest {
     List<String> command = Arrays.asList("someCommand", "someOption");
 
     // force an interruption to simulate a cancel.
-    when(processMock.waitFor()).thenThrow(InterruptedException.class);
+    Mockito.when(processMock.waitFor()).thenThrow(InterruptedException.class);
 
     try {
       new CommandExecutor()
@@ -171,19 +171,19 @@ public class CommandExecutorTest {
       Assert.assertEquals("Process cancelled.", ex.getMessage());
     }
 
-    verify(processMock).destroy();
+    Mockito.verify(processMock).destroy();
     loggerInOrder.verify(messageListener).message("Running command : someCommand someOption");
   }
 
   private void setProcessMockOutput(List<String> expectedOutput) {
-    when(processMock.getInputStream())
+    Mockito.when(processMock.getInputStream())
         .thenReturn(new ByteArrayInputStream(Joiner.on("\n").join(expectedOutput).getBytes()));
   }
 
   private void verifyProcessBuilding(List<String> command) throws IOException {
-    verify(processBuilderMock).command(command);
-    verify(processBuilderMock).redirectErrorStream(true);
-    verify(processBuilderMock).start();
-    verify(processMock).getInputStream();
+    Mockito.verify(processBuilderMock).command(command);
+    Mockito.verify(processBuilderMock).redirectErrorStream(true);
+    Mockito.verify(processBuilderMock).start();
+    Mockito.verify(processMock).getInputStream();
   }
 }
