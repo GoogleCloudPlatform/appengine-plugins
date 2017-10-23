@@ -1,5 +1,5 @@
 #!/bin/bash -
-# Usage: ./release <release version> <next version>
+# Usage: ./prepare_release.sh <release version>
 
 set -e
 
@@ -9,7 +9,7 @@ Die() {
 }
 
 DieUsage() {
-    Die "Usage: ./release <release version> <next version>"
+    Die "Usage: ./prepare_release.sh <release version>"
 }
 
 # Usage: CheckVersion <version>
@@ -17,10 +17,18 @@ CheckVersion() {
     [[ $1 =~ ^\d+\.\d+\.\d+$ ]] || Die "Version not in ###.###.### format."
 }
 
-[ $# -ne 2 ] ||DieUsage
+# Usage: IncrementVersion <version>
+IncrementVersion() {
+    local version=$1
+    local minorVersion=$(echo $version | sed 's/[0-9][0-9]*\.[0-9][0-9]*\.\([0-9][0-9]\)*/\1/')
+    local nextMinorVersion=$((minorVersion+1))
+    echo $version | sed "s/\([0-9][0-9]*\.[0-9][0-9]*\)\.[0-9][0-9]*/\1.$nextMinorVersion/"
+}
+
+[ $# -ne 2 ] || DieUsage
 
 VERSION=$1
-NEXT_VERSION=$2
+NEXT_VERSION=$(IncrementVersion $VERSION)
 
 CheckVersion ${VERSION}
 CheckVersion ${NEXT_VERSION}
