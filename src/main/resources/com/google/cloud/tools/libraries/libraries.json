@@ -2,6 +2,7 @@
   {
     "name": "Google Cloud Speech",
     "id": "googlecloudspeech",
+    "serviceName": "speech.googleapis.com",
     "documentation": "https://cloud.google.com/speech/docs/reference/libraries",
     "description": "Google Cloud Speech API converts audio to text in over 100 languages.",
     "transports": ["grpc"],
@@ -26,6 +27,7 @@
   {
     "name": "Google Cloud Resource Manager",
     "id": "googlecloudresourcemanager",
+    "serviceName": "cloudresourcemanager.googleapis.com",
     "documentation": "https://cloud.google.com/resource-manager/docs/",
     "description": "The Google Cloud Resource Manager service enables you to programmatically manage hierarchical resource containers such as organizations, folders, and projects.",
     "transports": ["http"],
@@ -49,6 +51,7 @@
   },  {
     "name": "Data Loss Prevention",
     "id": "datalossprevention",
+    "serviceName": "dlp.googleapis.com",
     "documentation": "https://cloud.google.com/dlp/docs/reference/libraries",
     "description": "The DLP API enables clients to detect the presence of Personally Identifiable Information (PII) and other privacy-sensitive data in user-supplied, unstructured data streams such as text blocks and images.",
     "transports": ["grpc"],
@@ -74,6 +77,7 @@
   {
     "name": "Video Intelligence",
     "id": "videointelligence",
+    "serviceName": "videointelligence.googleapis.com",
     "documentation": "https://cloud.google.com/video-intelligence/docs/",
     "description": "The Google Cloud Video Intelligence API enables developers to annotate videos stored in Google Cloud Storage with video and frame-level (1 fps) contextual information. The API supports common video formats including .mov, .mp4, and .avi.",
     "transports": ["grpc"],
@@ -97,6 +101,7 @@
   {
     "name": "Compute Engine",
     "id": "computeengine",
+    "serviceName": "compute.googleapis.com",
     "documentation": "https://cloud.google.com/compute/docs/apis",
     "description": "Google Compute Engine lets you create and run virtual machines on Google infrastructure.",
     "transports": ["http"],
@@ -122,6 +127,7 @@
    {
     "name": "Stackdriver Monitoring",
     "id": "stackdrivermonitoring",
+    "serviceName": "monitoring.googleapis.com",
     "documentation": "https://cloud.google.com/monitoring/docs/reference/libraries",
     "description": "Stackdriver Monitoring provides visibility into the performance, uptime, and overall health of cloud-powered applications.",
     "transports": ["grpc"],
@@ -145,7 +151,8 @@
   },
  {
     "name": "Stackdriver Error Reporting",
-     "id": "stackdrivererrorreporting",
+    "id": "stackdrivererrorreporting",
+    "serviceName": "clouderrorreporting.googleapis.com",
     "documentation": "https://cloud.google.com/error-reporting/reference/",
     "description": "Stackdriver Error Reporting counts, analyzes and aggregates the crashes in your running cloud services.",
     "transports": ["http"],
@@ -170,6 +177,7 @@
   {
     "name": "Stackdriver Trace",
     "id": "stackdrivertrace",
+    "serviceName": "cloudtrace.googleapis.com",
     "documentation": "https://cloud.google.com/trace/docs/reference/",
     "description": "A distributed tracing system that collects latency data from App Engine applications.",
     "transports": ["grpc"],
@@ -194,6 +202,7 @@
  {
     "name": "Cloud DNS",
     "id": "clouddns",
+    "serviceName": "dns.googleapis.com",
     "documentation": "https://cloud.google.com/dns/docs/apis",
     "description": "Google Cloud DNS is a managed authoritative Domain Name System (DNS) service running on Google infrastructure. Cloud DNS translates domain names such as www.google.com into IP addresses such as 74.125.29.101.",
     "transports": ["http"],
@@ -218,6 +227,7 @@
   {
     "name": "Google Cloud Vision",
     "id": "googlecloudvision",
+    "serviceName": "vision.googleapis.com",
     "documentation": "https://cloud.google.com/vision/docs/reference/libraries",
     "description": "The Google Cloud Vision API provides vision features including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content.",
     "transports": ["grpc"],
@@ -242,6 +252,7 @@
   {
     "name": "Google Cloud Natural Language",
     "id": "googlecloudnaturallanguage",
+    "serviceName": "language.googleapis.com",
     "documentation": "https://cloud.google.com/natural-language/docs/reference/libraries",
     "description": "The Google Cloud Natural Language API provides natural language understanding technologies including sentiment analysis, entity analysis, and syntax analysis.",
     "transports": ["grpc"],
@@ -267,6 +278,7 @@
   {
     "name": "Google Cloud Spanner",
     "id": "googlecloudspanner",
+    "serviceName": "spanner.googleapis.com",
     "documentation": "https://cloud.google.com/spanner/docs/reference/libraries",
     "description": "Cloud Spanner is a fully managed, relational database service built for transactional consistency, high availability, and global scale.",
     "transports": ["grpc"],
@@ -292,6 +304,7 @@
   {
     "name": "Google Cloud Pub/Sub",
     "id": "googlecloudpubsub",
+    "serviceName": "pubsub.googleapis.com",
     "documentation": "https://cloud.google.com/pubsub/docs/reference/libraries",
     "description": "Google Cloud Pub/Sub provides reliable, many-to-many, asynchronous messaging between applications. Publisher applications can send messages to a topic and other applications can subscribe to that topic to receive the messages.",
     "transports": ["grpc"],
@@ -317,6 +330,7 @@
   {
     "name": "Google BigQuery API",
     "id": "googlebiqqueryapi",
+    "serviceName": "bigquery-json.googleapis.com",
     "documentation": "https://cloud.google.com/bigquery/docs/reference/libraries",
     "description": "Google's fully managed, petabyte scale, serverless data warehouse for analytics",
     "transports": ["http"],
@@ -342,6 +356,7 @@
   {
     "name": "Google Cloud Datastore",
     "id": "clouddatastore",
+    "serviceName": "datastore.googleapis.com",
     "documentation": "https://cloud.google.com/datastore/docs/reference/libraries",
     "description": "Google Cloud Datastore is a NoSQL key-value database built for automatic scaling.",
     "transports": ["http"],
@@ -367,6 +382,7 @@
   {
     "name": "Google Cloud Storage",
     "id": "googlecloudstorage",
+    "serviceName": "storage-component.googleapis.com",
     "documentation": "https://cloud.google.com/storage/docs/reference/libraries",
     "description": "Unified BLOB storage for developers and enterprises, from live data serving to data analytics/ML to data archiving.",
     "transports": ["http"],
@@ -392,6 +408,7 @@
   {
     "name": "Google Cloud Translation",
     "id": "cloudtranslation",
+    "serviceName": "translate.googleapis.com",
     "documentation": "https://cloud.google.com/translate/docs/reference/libraries",
     "description": "A simple programmatic interface for detecting the language of arbitrary strings and translating them into dozens of languages using Neural Machine Translation.",
     "transports": ["http"],
@@ -416,6 +433,7 @@
   {
     "name": "Stackdriver Logging",
     "id": "stackdriverlogging",
+    "serviceName": "logging.googleapis.com",
     "documentation": "https://cloud.google.com/logging/docs/reference/libraries",
     "description": "Stackdriver Logging enables you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services in real-time.",
     "transports": ["grpc"],
