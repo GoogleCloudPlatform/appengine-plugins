@@ -17,7 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.Assert;
@@ -43,17 +43,16 @@ public class ExtractorTest {
   }
 
   @Test
-  public void testCall_success() throws Exception {
-    Path extractionDestination = tmp.getRoot().toPath();
+  public void testExtract_success() throws Exception {
+    final Path extractionDestination = tmp.newFolder("target").toPath();
     Path extractionSource = tmp.newFile("fake.archive").toPath();
-    final Path expectedCloudSdkHome = tmp.getRoot().toPath().resolve("google-cloud-sdk");
 
     Mockito.doAnswer(
             new Answer<Void>() {
               @Override
               public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-                // pretend to extract by creating the expected final directory (for success!)
-                Files.createDirectory(expectedCloudSdkHome);
+                Files.createDirectory(extractionDestination.resolve("some-dir"));
+                Files.createFile(extractionDestination.resolve("some-file"));
                 return null;
               }
             })
@@ -63,28 +62,52 @@ public class ExtractorTest {
     Extractor extractor =
         new Extractor<>(
             extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
-    Path cloudSdkHomeUnderTest = extractor.call();
+    Path expectedExtractionRoot = extractor.extract();
 
-    Assert.assertEquals(expectedCloudSdkHome, cloudSdkHomeUnderTest);
+    Assert.assertEquals(extractionDestination, expectedExtractionRoot);
+    Assert.assertTrue(Files.exists(extractionDestination));
     Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource);
+    Mockito.verify(mockExtractorProvider)
+        .extract(extractionSource, extractionDestination, mockMessageListener);
+    Mockito.verifyNoMoreInteractions(mockMessageListener);
   }
 
   @Test
-  public void testCall_archiveStructureFailure() throws Exception {
-    ExtractorProvider mockProvider = Mockito.mock(ExtractorProvider.class);
-    Path extractionDestination = tmp.getRoot().toPath();
+  public void testExtract_cleanupAfterException() throws Exception {
+    final Path extractionDestination = tmp.newFolder("target").toPath();
     Path extractionSource = tmp.newFile("fake.archive").toPath();
 
+    Mockito.doAnswer(
+            new Answer<Void>() {
+              @Override
+              public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
+                // pretend to extract by creating the expected final directory (for success!)
+                Files.createDirectory(extractionDestination.resolve("some-dir"));
+                Files.createFile(extractionDestination.resolve("some-file"));
+                throw new IOException("Failed during extraction");
+              }
+            })
+        .when(mockExtractorProvider)
+        .extract(extractionSource, extractionDestination, mockMessageListener);
+
     Extractor extractor =
-        new Extractor<>(extractionSource, extractionDestination, mockProvider, mockMessageListener);
+        new Extractor<>(
+            extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
+
     try {
-      Path cloudSdkHome = extractor.call();
-      Assert.fail("FileNotFoundException expected but not thrown");
-    } catch (FileNotFoundException ex) {
-      Assert.assertEquals(
-          "After extraction, Cloud SDK home not found at "
-              + tmp.getRoot().toPath().resolve("google-cloud-sdk"),
-          ex.getMessage());
+      extractor.extract();
+      Assert.fail("IOException expected but thrown - test infrastructure failure");
+    } catch (IOException ex) {
+      // ensure we are rethrowing after cleanup
+      Assert.assertEquals("Failed during extraction", ex.getMessage());
     }
+
+    Assert.assertFalse(Files.exists(extractionDestination));
+    Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource);
+    Mockito.verify(mockMessageListener)
+        .message("Extraction failed, cleaning up " + extractionDestination);
+    Mockito.verify(mockExtractorProvider)
+        .extract(extractionSource, extractionDestination, mockMessageListener);
+    Mockito.verifyNoMoreInteractions(mockMessageListener);
   }
 }

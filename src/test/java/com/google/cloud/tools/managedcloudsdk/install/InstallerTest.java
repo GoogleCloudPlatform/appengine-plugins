@@ -65,7 +65,7 @@ public class InstallerTest {
             false,
             mockMessageListener,
             mockCommandExecutorFactory);
-    Path returnedSdkRoot = installer.call();
+    Path returnedSdkRoot = installer.install();
 
     Mockito.verify(mockCommandExecutor).run(getExpectedCommand(false));
     Assert.assertEquals(tmp.getRoot().toPath(), returnedSdkRoot);
@@ -80,7 +80,7 @@ public class InstallerTest {
             true,
             mockMessageListener,
             mockCommandExecutorFactory);
-    Path returnedSdkRoot = installer.call();
+    Path returnedSdkRoot = installer.install();
 
     Mockito.verify(mockCommandExecutor).run(getExpectedCommand(true));
     Assert.assertEquals(tmp.getRoot().toPath(), returnedSdkRoot);
@@ -98,7 +98,7 @@ public class InstallerTest {
             mockMessageListener,
             mockCommandExecutorFactory);
     try {
-      installer.call();
+      installer.install();
       Assert.fail("ExecutionException expected but not found.");
     } catch (ExecutionException ex) {
       Assert.assertEquals("Installer exited with non-zero exit code: 10", ex.getMessage());

@@ -34,7 +34,8 @@ final class ExtractorFactory {
    *     ZipExtractorProvider} for ".zip"
    * @throws UnknownArchiveTypeException if not ".tar.gz" or ".zip"
    */
-  public Extractor newExtractor(Path archive, Path destination, MessageListener messageListener)
+  public Extractor<? extends ExtractorProvider> newExtractor(
+      Path archive, Path destination, MessageListener messageListener)
       throws UnknownArchiveTypeException {
 
     if (archive.toString().toLowerCase().endsWith(".tar.gz")) {

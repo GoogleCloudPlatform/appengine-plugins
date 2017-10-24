@@ -23,6 +23,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -46,20 +47,31 @@ public class DownloaderTest {
     MockitoAnnotations.initMocks(this);
   }
 
+  private Path createTestRemoteResource(long sizeInBytes) throws IOException {
+
+    Path testFile = tmp.newFile().toPath();
+    try (BufferedWriter writer = Files.newBufferedWriter(testFile, Charset.defaultCharset())) {
+      for (long i = 0; i < sizeInBytes; i++) {
+        writer.write('a');
+      }
+    }
+    return testFile;
+  }
+
   @Test
-  public void testDownloadURL_createsNewDirectory() throws IOException, InterruptedException {
+  public void testDownload_createsNewDirectory() throws IOException, InterruptedException {
     Path destination = tmp.getRoot().toPath().resolve("dir-to-create").resolve("destination-file");
     Path testSourceFile = createTestRemoteResource(1);
     URL fakeRemoteResource = testSourceFile.toUri().toURL();
 
     Downloader downloader = new Downloader(fakeRemoteResource, destination, null, messageListener);
 
-    Path downloaderDestination = downloader.call();
+    Path downloaderDestination = downloader.download();
     Assert.assertEquals(destination, downloaderDestination);
   }
 
   @Test
-  public void testDownloadURL_worksWithNullProgressListener()
+  public void testDownload_worksWithNullProgressListener()
       throws IOException, InterruptedException {
 
     Path destination = tmp.getRoot().toPath().resolve("destination-file");
@@ -68,12 +80,12 @@ public class DownloaderTest {
 
     Downloader downloader = new Downloader(fakeRemoteResource, destination, null, messageListener);
 
-    Path downloaderDestination = downloader.call();
+    Path downloaderDestination = downloader.download();
     Assert.assertEquals(destination, downloaderDestination);
   }
 
   @Test
-  public void testDownloadURL() throws IOException, InterruptedException {
+  public void testDownload() throws IOException, InterruptedException {
     Path destination = tmp.getRoot().toPath().resolve("destination-file");
     long testFileSize = Downloader.BUFFER_SIZE * 10 + 1;
     Path testSourceFile = createTestRemoteResource(testFileSize);
@@ -81,7 +93,7 @@ public class DownloaderTest {
 
     Downloader downloader = new Downloader(fakeRemoteResource, destination, null, messageListener);
 
-    Path downloaderDestination = downloader.call();
+    Path downloaderDestination = downloader.download();
     Assert.assertEquals(destination, downloaderDestination);
 
     Assert.assertArrayEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
@@ -109,19 +121,8 @@ public class DownloaderTest {
     Assert.assertEquals(testFileSize, lastRead);
   }
 
-  private Path createTestRemoteResource(long sizeInBytes) throws IOException {
-
-    Path testFile = tmp.newFile().toPath();
-    try (BufferedWriter writer = Files.newBufferedWriter(testFile, Charset.defaultCharset())) {
-      for (long i = 0; i < sizeInBytes; i++) {
-        writer.write('a');
-      }
-    }
-    return testFile;
-  }
-
   @Test
-  public void testDownloadURL_userAgentSet() throws IOException, InterruptedException {
+  public void testDownload_userAgentSet() throws IOException, InterruptedException {
     Path destination = tmp.getRoot().toPath().resolve("destination-file");
 
     final URLConnection mockConnection = Mockito.mock(URLConnection.class);
@@ -139,10 +140,25 @@ public class DownloaderTest {
         new Downloader(testUrl, destination, "test-user-agent", messageListener);
 
     try {
-      downloader.call();
+      downloader.download();
     } catch (Exception ex) {
       // ignore, we're only looking for user agent being set
     }
     Mockito.verify(mockConnection).setRequestProperty("User-Agent", "test-user-agent");
+  }
+
+  @Test
+  public void testDownload_failIfExists() throws IOException, InterruptedException {
+    Path destination = tmp.getRoot().toPath().resolve("destination-file");
+    Files.createFile(destination);
+
+    Downloader downloader = new Downloader(null, destination, null, messageListener);
+
+    try {
+      downloader.download();
+      Assert.fail("FileAlreadyExistsException expected but not thrown.");
+    } catch (FileAlreadyExistsException ex) {
+      Assert.assertEquals(ex.getMessage(), destination.toString());
+    }
   }
 }

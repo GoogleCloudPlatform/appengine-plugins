@@ -22,16 +22,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.concurrent.Callable;
 
-/**
- * Downloader for downloading a single Cloud SDK archive. It is a callable we use in chained
- * asynchronous calls.
- */
-final class Downloader implements Callable<Path> {
+/** Downloader for downloading a single Cloud SDK archive. */
+final class Downloader {
 
   static final int BUFFER_SIZE = 8 * 1024;
   private final URL address;
@@ -48,24 +45,30 @@ final class Downloader implements Callable<Path> {
     this.messageListener = messageListener;
   }
 
-  /** Download and return a {@link Path} to downloaded archive. */
-  @Override
-  public Path call() throws IOException, InterruptedException {
+  /**
+   * Download and return a {@link Path} to downloaded archive, this will overwrite a previously
+   * existing file.
+   */
+  public Path download() throws IOException, InterruptedException {
     if (!Files.exists(destinationFile.getParent())) {
       Files.createDirectories(destinationFile.getParent());
+    }
+
+    if (Files.exists(destinationFile)) {
+      throw new FileAlreadyExistsException(destinationFile.toString());
     }
 
     URLConnection connection = address.openConnection();
     connection.setRequestProperty("User-Agent", userAgentString);
 
-    try (BufferedOutputStream out =
-        new BufferedOutputStream(
-            Files.newOutputStream(destinationFile, StandardOpenOption.CREATE_NEW))) {
-      try (InputStream in = connection.getInputStream()) {
-        messageListener.message("Downloading " + address);
+    try (InputStream in = connection.getInputStream()) {
+      long contentLength = connection.getContentLengthLong();
 
-        long contentLength = connection.getContentLengthLong();
+      messageListener.message("Downloading " + address);
 
+      try (BufferedOutputStream out =
+          new BufferedOutputStream(
+              Files.newOutputStream(destinationFile, StandardOpenOption.CREATE_NEW))) {
         int bytesRead;
         byte[] buffer = new byte[BUFFER_SIZE];
 
@@ -77,8 +80,9 @@ final class Downloader implements Callable<Path> {
         messageListener.message("0/" + String.valueOf(contentLength));
         while ((bytesRead = in.read(buffer)) != -1) {
           if (Thread.currentThread().isInterrupted()) {
-            messageListener.message("Downloader was interrupted");
-            throw new InterruptedException("Downloader was interrupted");
+            messageListener.message("Process was interrupted");
+            cleanUp();
+            throw new InterruptedException("Process was interrupted");
           }
           out.write(buffer, 0, bytesRead);
 
@@ -88,12 +92,17 @@ final class Downloader implements Callable<Path> {
           if (totalBytesRead == contentLength || bytesSinceLastUpdate > updateThreshold) {
             messageListener.message(
                 String.valueOf(totalBytesRead) + "/" + String.valueOf(contentLength));
+            lastUpdated = totalBytesRead;
           }
-          lastUpdated = totalBytesRead;
         }
       }
     }
     messageListener.message("Download complete");
     return destinationFile;
+  }
+
+  private void cleanUp() throws IOException {
+    messageListener.message("Cleaning up...");
+    Files.deleteIfExists(destinationFile);
   }
 }

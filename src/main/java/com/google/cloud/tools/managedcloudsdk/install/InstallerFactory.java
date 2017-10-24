@@ -46,9 +46,10 @@ final class InstallerFactory {
    * @param messageListener listener on installer script output
    * @return a {@link Installer} instance.
    */
-  public Installer newInstaller(Path installedSdkRoot, MessageListener messageListener) {
+  public Installer<? extends InstallScriptProvider> newInstaller(
+      Path installedSdkRoot, MessageListener messageListener) {
 
-    return new Installer(
+    return new Installer<>(
         installedSdkRoot,
         getInstallScriptProvider(),
         usageReporting,
