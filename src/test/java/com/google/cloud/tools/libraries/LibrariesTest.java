@@ -18,12 +18,14 @@ package com.google.cloud.tools.libraries;
 
 import static org.hamcrest.collection.IsArrayContaining.hasItemInArray;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -59,6 +61,7 @@ public class LibrariesTest {
   private static void assertApi(JsonObject api) throws IOException {
     String id = api.getString("id");
     Assert.assertTrue(id.matches("[a-z]+"));
+    Assert.assertFalse(api.getString("serviceName").isEmpty());
     Assert.assertFalse(api.getString("name").isEmpty());
     Assert.assertFalse(api.getString("description").isEmpty());
     String transports = api.getJsonArray("transports").getString(0);
@@ -102,11 +105,16 @@ public class LibrariesTest {
 
   @Test
   public void testDuplicates() {
-    Map<String, String> apiCoordinates = new HashMap<>();
+    Map<String, String> apiCoordinates = Maps.newHashMap();
+    Set<String> serviceNames = Sets.newHashSet();
     for (JsonObject api : apis) {
       String name = api.getString("name");
+      String serviceName = api.getString("serviceName");
       if (apiCoordinates.containsKey(name)) {
-        Assert.fail(name + " is defined twice");
+        Assert.fail("name: " + name + " is defined twice");
+      }
+      if (serviceNames.contains(serviceName)) {
+        Assert.fail("service name: " + serviceName + " is defined twice");
       }
       JsonObject coordinates =
           ((JsonObject) api.getJsonArray("clients").get(0)).getJsonObject("mavenCoordinates");
@@ -116,6 +124,7 @@ public class LibrariesTest {
         Assert.fail(mavenCoordinates + " is defined twice");
       }
       apiCoordinates.put(name, mavenCoordinates);
+      serviceNames.add(serviceName);
     }
   }
 
