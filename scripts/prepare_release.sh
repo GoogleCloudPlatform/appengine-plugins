@@ -2,7 +2,6 @@
 # Usage: ./prepare_release.sh <release version>
 
 set -e
-set -x
 
 Die() {
 	echo $1
@@ -59,7 +58,7 @@ mvn versions:set versions:commit -DnewVersion=${NEXT_SNAPSHOT}
 git commit -am "${NEXT_SNAPSHOT}"
 
 # Pushes the release branch to Github.
-# git push --tags --set-upstream ${VERSION} origin/${VERSION}
+git push --tags --set-upstream origin ${VERSION}
 
 # File a PR on Github for the new branch. Have someone LGTM it, which gives you permission to continue.
 echo 'File a PR for the new release branch:'
