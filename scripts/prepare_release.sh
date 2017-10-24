@@ -38,13 +38,13 @@ IncrementVersion() {
 
 [ $# -ne 2 ] || DieUsage
 
+EchoGreen '===== RELEASE SETUP SCRIPT ====='
+
 VERSION=$1
 CheckVersion ${VERSION}
 
 NEXT_VERSION=$(IncrementVersion $VERSION)
 CheckVersion ${NEXT_VERSION}
-
-echo '===== RELEASE SETUP SCRIPT ====='
 
 if [[ $(git status -uno --porcelain) ]]; then
     Die 'There are uncommitted changes.'
