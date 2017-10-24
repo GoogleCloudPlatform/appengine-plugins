@@ -14,7 +14,7 @@ DieUsage() {
 
 # Usage: CheckVersion <version>
 CheckVersion() {
-    [[ $1 =~ ^\d+\.\d+\.\d+$ ]] || Die "Version not in ###.###.### format."
+    [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || Die "Version not in ###.###.### format."
 }
 
 # Usage: IncrementVersion <version>
@@ -28,9 +28,9 @@ IncrementVersion() {
 [ $# -ne 2 ] || DieUsage
 
 VERSION=$1
-NEXT_VERSION=$(IncrementVersion $VERSION)
-
 CheckVersion ${VERSION}
+
+NEXT_VERSION=$(IncrementVersion $VERSION)
 CheckVersion ${NEXT_VERSION}
 
 echo '===== RELEASE SETUP SCRIPT ====='
