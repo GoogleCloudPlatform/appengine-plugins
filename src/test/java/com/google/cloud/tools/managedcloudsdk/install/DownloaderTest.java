@@ -161,4 +161,42 @@ public class DownloaderTest {
       Assert.assertEquals(ex.getMessage(), destination.toString());
     }
   }
+
+  @Test
+  public void testDownload_interruptTriggersCleanup() throws IOException, InterruptedException {
+    final Path destination = tmp.getRoot().toPath().resolve("destination-file");
+    long testFileSize = Downloader.BUFFER_SIZE * 10 + 1;
+    Path testSourceFile = createTestRemoteResource(testFileSize);
+    final URL fakeRemoteResource = testSourceFile.toUri().toURL();
+
+    // Start a new thread for this test to avoid mucking with Thread state when
+    // junit reuses threads.
+    Thread testThreadToInterrupt =
+        new Thread(
+            new Runnable() {
+              @Override
+              public void run() {
+                Downloader downloader =
+                    new Downloader(fakeRemoteResource, destination, null, messageListener);
+                Thread.currentThread().interrupt();
+                try {
+                  downloader.download();
+                  Assert.fail("InterruptedException expected but not thrown.");
+                } catch (InterruptedException ex) {
+                  Assert.assertEquals("Download was interrupted", ex.getMessage());
+                } catch (IOException e) {
+                  Assert.fail("Test failed due to IOException");
+                }
+              }
+            });
+    testThreadToInterrupt.start();
+    testThreadToInterrupt.join();
+
+    Assert.assertFalse(Files.exists(destination));
+    Mockito.verify(messageListener).message("Downloading " + fakeRemoteResource);
+    Mockito.verify(messageListener).message("0/" + String.valueOf(testFileSize));
+    Mockito.verify(messageListener).message("Download was interrupted");
+    Mockito.verify(messageListener).message("Cleaning up...");
+    Mockito.verifyNoMoreInteractions(messageListener);
+  }
 }

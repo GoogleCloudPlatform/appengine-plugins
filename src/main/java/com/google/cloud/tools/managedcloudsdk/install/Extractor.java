@@ -54,7 +54,7 @@ final class Extractor<T extends ExtractorProvider> {
       try {
         messageListener.message("Extraction failed, cleaning up " + destination);
         cleanUp(destination);
-      } catch (Exception exx) {
+      } catch (IOException exx) {
         messageListener.message("Failed to cleanup directory");
       }
       // intentional rethrow after cleanup

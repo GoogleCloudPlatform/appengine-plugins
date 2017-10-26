@@ -80,9 +80,10 @@ final class Downloader {
         messageListener.message("0/" + String.valueOf(contentLength));
         while ((bytesRead = in.read(buffer)) != -1) {
           if (Thread.currentThread().isInterrupted()) {
-            messageListener.message("Process was interrupted");
+            messageListener.message("Download was interrupted");
+            messageListener.message("Cleaning up...");
             cleanUp();
-            throw new InterruptedException("Process was interrupted");
+            throw new InterruptedException("Download was interrupted");
           }
           out.write(buffer, 0, bytesRead);
 
@@ -102,7 +103,6 @@ final class Downloader {
   }
 
   private void cleanUp() throws IOException {
-    messageListener.message("Cleaning up...");
     Files.deleteIfExists(destinationFile);
   }
 }
