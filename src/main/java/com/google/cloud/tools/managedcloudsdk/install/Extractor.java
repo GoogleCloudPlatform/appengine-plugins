@@ -76,6 +76,7 @@ final class Extractor<T extends ExtractorProvider> {
     return extractorProvider;
   }
 
+  // TODO: After move to Java8, use guava 21.0 recursive delete.
   private void cleanUp(final Path target) throws IOException {
     Preconditions.checkArgument(Files.isDirectory(target));
     Files.walkFileTree(
