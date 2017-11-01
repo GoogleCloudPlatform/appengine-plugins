@@ -28,7 +28,7 @@ interface ExtractorProvider {
    *
    * @param archive the archive to extract
    * @param destination the destination folder for extracted files
-   * @param messageListener an listener for extraction messages
+   * @param messageListener a listener for extraction messages
    * @throws IOException if extractor fails
    */
   void extract(Path archive, Path destination, MessageListener messageListener) throws IOException;

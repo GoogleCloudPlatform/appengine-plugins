@@ -22,6 +22,7 @@ import com.google.common.base.Joiner;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -38,6 +39,7 @@ public class CommandExecutor {
   private ExecutorServiceFactory executorServiceFactory = new ExecutorServiceFactory();
   private MessageListener messageListener;
   private Map<String, String> environment;
+  private Path workingDirectory;
 
   public CommandExecutor setMessageListener(MessageListener messageListener) {
     this.messageListener = messageListener;
@@ -47,6 +49,11 @@ public class CommandExecutor {
   /** Sets the environment variables to run the command with. */
   public CommandExecutor setEnvironment(Map<String, String> environmentMap) {
     this.environment = environmentMap;
+    return this;
+  }
+
+  public CommandExecutor setWorkingDirectory(Path workingDirectory) {
+    this.workingDirectory = workingDirectory;
     return this;
   }
 
@@ -89,6 +96,9 @@ public class CommandExecutor {
     ProcessBuilder processBuilder = processBuilderFactory.createProcessBuilder();
     processBuilder.command(command);
     processBuilder.redirectErrorStream(true);
+    if (workingDirectory != null) {
+      processBuilder.directory(workingDirectory.toFile());
+    }
     if (environment != null) {
       processBuilder.environment().putAll(environment);
     }

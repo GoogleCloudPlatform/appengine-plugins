@@ -20,7 +20,6 @@ import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,10 +64,9 @@ public class InstallerTest {
             false,
             mockMessageListener,
             mockCommandExecutorFactory);
-    Path returnedSdkRoot = installer.install();
+    installer.install();
 
     Mockito.verify(mockCommandExecutor).run(getExpectedCommand(false));
-    Assert.assertEquals(tmp.getRoot().toPath(), returnedSdkRoot);
   }
 
   @Test
@@ -80,10 +78,9 @@ public class InstallerTest {
             true,
             mockMessageListener,
             mockCommandExecutorFactory);
-    Path returnedSdkRoot = installer.install();
+    installer.install();
 
     Mockito.verify(mockCommandExecutor).run(getExpectedCommand(true));
-    Assert.assertEquals(tmp.getRoot().toPath(), returnedSdkRoot);
   }
 
   @Test

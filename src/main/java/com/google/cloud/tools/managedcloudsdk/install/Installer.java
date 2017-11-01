@@ -49,8 +49,8 @@ final class Installer<T extends InstallScriptProvider> {
     this.commandExecutorFactory = commandExecutorFactory;
   }
 
-  /** Install and return a {@link Path} to the Cloud SDK home directory. */
-  public Path install() throws IOException, ExecutionException {
+  /** Install a cloud sdk (only run this on LATEST). */
+  public void install() throws IOException, ExecutionException {
 
     List<String> command = new ArrayList<>(installScriptProvider.getScriptCommandLine());
     // now configure parameters (not OS specific)
@@ -60,14 +60,13 @@ final class Installer<T extends InstallScriptProvider> {
     command.add("--usage-reporting=" + usageReporting); // usageReportingPassthrough
 
     CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor(messageListener);
+    commandExecutor.setWorkingDirectory(installedSdkRoot);
 
     int exitcode = commandExecutor.run(command);
     if (exitcode != 0) {
       throw new ExecutionException(
           "Installer exited with non-zero exit code: " + exitcode, new Throwable());
     }
-
-    return installedSdkRoot;
   }
 
   @VisibleForTesting

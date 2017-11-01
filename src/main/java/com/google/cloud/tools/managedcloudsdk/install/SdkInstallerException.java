@@ -16,18 +16,8 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import java.nio.file.Path;
-
-/** Exception class for archives we do not handle. */
-public class UnknownArchiveTypeException extends Exception {
-  private final Path archive;
-
-  public UnknownArchiveTypeException(Path archive) {
-    super("Unknown archive: " + archive.toString());
-    this.archive = archive;
-  }
-
-  public Path getArchive() {
-    return archive;
+public class SdkInstallerException extends Exception {
+  public SdkInstallerException(String message) {
+    super(message);
   }
 }

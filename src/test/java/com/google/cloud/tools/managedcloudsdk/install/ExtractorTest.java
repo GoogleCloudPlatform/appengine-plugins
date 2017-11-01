@@ -62,9 +62,8 @@ public class ExtractorTest {
     Extractor extractor =
         new Extractor<>(
             extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
-    Path expectedExtractionRoot = extractor.extract();
+    extractor.extract();
 
-    Assert.assertEquals(extractionDestination, expectedExtractionRoot);
     Assert.assertTrue(Files.exists(extractionDestination));
     Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource);
     Mockito.verify(mockExtractorProvider)

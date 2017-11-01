@@ -18,13 +18,9 @@ package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Extractor for extracting files from a single archive. Use {@link ExtractorProvider} to provide
@@ -44,8 +40,8 @@ final class Extractor<T extends ExtractorProvider> {
     this.messageListener = messageListener;
   }
 
-  /** Extract and return a {@link Path} to the extraction root. */
-  public Path extract() throws IOException, InterruptedException {
+  /** Extract an archive. */
+  public void extract() throws IOException, InterruptedException {
     messageListener.message("Extracting archive: " + archive);
 
     try {
@@ -67,8 +63,6 @@ final class Extractor<T extends ExtractorProvider> {
       messageListener.message("Process was interrupted");
       throw new InterruptedException("Process was interrupted");
     }
-
-    return destination;
   }
 
   @VisibleForTesting
@@ -78,27 +72,6 @@ final class Extractor<T extends ExtractorProvider> {
 
   // TODO: After move to Java8, use guava 21.0 recursive delete.
   private void cleanUp(final Path target) throws IOException {
-    Preconditions.checkArgument(Files.isDirectory(target));
-    Files.walkFileTree(
-        target,
-        new SimpleFileVisitor<Path>() {
-          @Override
-          public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-              throws IOException {
-            Files.delete(file);
-            return FileVisitResult.CONTINUE;
-          }
-
-          @Override
-          public FileVisitResult postVisitDirectory(Path dir, IOException ex) throws IOException {
-            if (ex == null) {
-              Files.delete(dir);
-              return FileVisitResult.CONTINUE;
-            } else {
-              // directory iteration failed
-              throw ex;
-            }
-          }
-        });
+    Files.walkFileTree(target, new FileDeleteVisitor());
   }
 }

@@ -16,18 +16,28 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
-/** Exception class for archives we do not handle. */
-public class UnknownArchiveTypeException extends Exception {
-  private final Path archive;
-
-  public UnknownArchiveTypeException(Path archive) {
-    super("Unknown archive: " + archive.toString());
-    this.archive = archive;
+class FileDeleteVisitor extends SimpleFileVisitor<Path> {
+  @Override
+  public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+    Files.delete(file);
+    return FileVisitResult.CONTINUE;
   }
 
-  public Path getArchive() {
-    return archive;
+  @Override
+  public FileVisitResult postVisitDirectory(Path dir, IOException ex) throws IOException {
+    if (ex == null) {
+      Files.delete(dir);
+      return FileVisitResult.CONTINUE;
+    } else {
+      // directory iteration failed
+      throw ex;
+    }
   }
 }

@@ -17,25 +17,25 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.OsType;
+import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
 import java.nio.file.Path;
 
 /** {@link Installer} Factory. */
 final class InstallerFactory {
 
-  private final OsType os;
+  private final OsInfo osInfo;
   private final boolean usageReporting;
 
   /**
    * Creates a new factory.
    *
-   * @param os the operating system of the computer this script is running on
+   * @param osInfo the operating system of the computer this script is running on
    * @param usageReporting enable or disable client side usage reporting {@code true} is enabled,
    *     {@code false} is disabled
    */
-  public InstallerFactory(OsType os, boolean usageReporting) {
-    this.os = os;
+  public InstallerFactory(OsInfo osInfo, boolean usageReporting) {
+    this.osInfo = osInfo;
     this.usageReporting = usageReporting;
   }
 
@@ -58,14 +58,13 @@ final class InstallerFactory {
   }
 
   private InstallScriptProvider getInstallScriptProvider() {
-    switch (os) {
+    switch (osInfo.name()) {
       case WINDOWS:
         return new WindowsInstallScriptProvider();
       case MAC:
       case LINUX:
-        return new UnixInstallScriptProvider();
       default:
-        throw new IllegalStateException("Unexpected OSType: " + os.name());
+        return new UnixInstallScriptProvider();
     }
   }
 }

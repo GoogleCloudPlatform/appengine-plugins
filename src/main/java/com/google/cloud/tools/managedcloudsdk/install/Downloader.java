@@ -45,11 +45,8 @@ final class Downloader {
     this.messageListener = messageListener;
   }
 
-  /**
-   * Download and return a {@link Path} to downloaded archive, this will overwrite a previously
-   * existing file.
-   */
-  public Path download() throws IOException, InterruptedException {
+  /** Download an archive, this will NOT overwrite a previously existing file. */
+  public void download() throws IOException, InterruptedException {
     if (!Files.exists(destinationFile.getParent())) {
       Files.createDirectories(destinationFile.getParent());
     }
@@ -99,7 +96,6 @@ final class Downloader {
       }
     }
     messageListener.message("Download complete");
-    return destinationFile;
   }
 
   private void cleanUp() throws IOException {

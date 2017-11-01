@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.OsType;
+import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Assert;
@@ -36,14 +36,14 @@ public class InstallerFactoryTest {
   public static Collection<Object[]> data() {
     return Arrays.asList(
         new Object[][] {
-          {OsType.LINUX, UnixInstallScriptProvider.class},
-          {OsType.MAC, UnixInstallScriptProvider.class},
-          {OsType.WINDOWS, WindowsInstallScriptProvider.class}
+          {new OsInfo(OsInfo.Name.LINUX, null), UnixInstallScriptProvider.class},
+          {new OsInfo(OsInfo.Name.MAC, null), UnixInstallScriptProvider.class},
+          {new OsInfo(OsInfo.Name.WINDOWS, null), WindowsInstallScriptProvider.class}
         });
   }
 
   @Parameterized.Parameter(0)
-  public OsType os;
+  public OsInfo os;
 
   @Parameterized.Parameter(1)
   public Class<? extends InstallScriptProvider> expectedInstallScriptProviderClass;
