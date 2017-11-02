@@ -44,12 +44,28 @@ public class FileResourceProviderFactoryTest {
   public static Collection<Object[]> data() {
     return Arrays.asList(
         new Object[][] {
-          {new OsInfo(OsInfo.Name.WINDOWS, OsInfo.Arch.X86), "windows-x86.zip", "gcloud.cmd"},
-          {new OsInfo(OsInfo.Name.WINDOWS, OsInfo.Arch.X86_64), "windows-x86_64.zip", "gcloud.cmd"},
-          {new OsInfo(OsInfo.Name.MAC, OsInfo.Arch.X86), "darwin-x86.tar.gz", "gcloud"},
-          {new OsInfo(OsInfo.Name.MAC, OsInfo.Arch.X86_64), "darwin-x86_64.tar.gz", "gcloud"},
-          {new OsInfo(OsInfo.Name.LINUX, OsInfo.Arch.X86), "linux-x86.tar.gz", "gcloud"},
-          {new OsInfo(OsInfo.Name.LINUX, OsInfo.Arch.X86_64), "linux-x86_64.tar.gz", "gcloud"},
+          {
+            new OsInfo(OsInfo.Name.WINDOWS, OsInfo.Architecture.X86),
+            "windows-x86.zip",
+            "gcloud.cmd"
+          },
+          {
+            new OsInfo(OsInfo.Name.WINDOWS, OsInfo.Architecture.X86_64),
+            "windows-x86_64.zip",
+            "gcloud.cmd"
+          },
+          {new OsInfo(OsInfo.Name.MAC, OsInfo.Architecture.X86), "darwin-x86.tar.gz", "gcloud"},
+          {
+            new OsInfo(OsInfo.Name.MAC, OsInfo.Architecture.X86_64),
+            "darwin-x86_64.tar.gz",
+            "gcloud"
+          },
+          {new OsInfo(OsInfo.Name.LINUX, OsInfo.Architecture.X86), "linux-x86.tar.gz", "gcloud"},
+          {
+            new OsInfo(OsInfo.Name.LINUX, OsInfo.Architecture.X86_64),
+            "linux-x86_64.tar.gz",
+            "gcloud"
+          },
         });
   }
 

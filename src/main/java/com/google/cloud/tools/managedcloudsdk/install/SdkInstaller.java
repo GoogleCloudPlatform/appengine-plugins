@@ -59,6 +59,9 @@ public class SdkInstaller {
    * @return a path to the Cloud SDK home directory (wrapped in a listenable future)
    */
   public ListenableFuture<Path> downloadSdk(final MessageListener messageListener) {
+    if (executorService.isShutdown()) {
+      throw new IllegalStateException("downloadSdk has already run");
+    }
     ListenableFuture<Path> resultFuture =
         executorService.submit(
             new Callable<Path>() {

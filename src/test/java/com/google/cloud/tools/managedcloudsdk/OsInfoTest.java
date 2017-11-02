@@ -61,16 +61,17 @@ public class OsInfoTest {
 
   @Test
   public void testGetSystemArchitecture_is64() throws UnsupportedOsException {
-    Assert.assertEquals(OsInfo.Arch.X86_64, OsInfo.getSystemArchitecture("64"));
-    Assert.assertEquals(OsInfo.Arch.X86_64, OsInfo.getSystemArchitecture("universal"));
-    Assert.assertEquals(OsInfo.Arch.X86_64, OsInfo.getSystemArchitecture("junk64Junk"));
-    Assert.assertEquals(OsInfo.Arch.X86_64, OsInfo.getSystemArchitecture("junkUniversaljunk"));
+    Assert.assertEquals(OsInfo.Architecture.X86_64, OsInfo.getSystemArchitecture("64"));
+    Assert.assertEquals(OsInfo.Architecture.X86_64, OsInfo.getSystemArchitecture("universal"));
+    Assert.assertEquals(OsInfo.Architecture.X86_64, OsInfo.getSystemArchitecture("junk64Junk"));
+    Assert.assertEquals(
+        OsInfo.Architecture.X86_64, OsInfo.getSystemArchitecture("junkUniversaljunk"));
   }
 
   @Test
   public void testGetSystemArchitecture_defaultIs32() throws UnsupportedOsException {
-    Assert.assertEquals(OsInfo.Arch.X86, OsInfo.getSystemArchitecture("32"));
-    Assert.assertEquals(OsInfo.Arch.X86, OsInfo.getSystemArchitecture("junk32junk"));
-    Assert.assertEquals(OsInfo.Arch.X86, OsInfo.getSystemArchitecture("junk"));
+    Assert.assertEquals(OsInfo.Architecture.X86, OsInfo.getSystemArchitecture("32"));
+    Assert.assertEquals(OsInfo.Architecture.X86, OsInfo.getSystemArchitecture("junk32junk"));
+    Assert.assertEquals(OsInfo.Architecture.X86, OsInfo.getSystemArchitecture("junk"));
   }
 }

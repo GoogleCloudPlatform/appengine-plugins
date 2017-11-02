@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import static com.google.cloud.tools.managedcloudsdk.OsInfo.Arch.X86_64;
+import static com.google.cloud.tools.managedcloudsdk.OsInfo.Architecture.X86_64;
 
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.Version;
@@ -79,7 +79,7 @@ class FileResourceProviderFactory {
         return "linux-" + getArchitectureString() + ".tar.gz";
       default:
         // we can't actually get here
-        throw new RuntimeException(new Throwable());
+        throw new RuntimeException();
     }
   }
 

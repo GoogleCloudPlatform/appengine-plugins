@@ -27,15 +27,15 @@ public class OsInfo {
     LINUX;
   }
 
-  public enum Arch {
+  public enum Architecture {
     X86,
     X86_64
   }
 
   private final Name name;
-  private final Arch arch;
+  private final Architecture arch;
 
-  public OsInfo(Name name, Arch arch) {
+  public OsInfo(Name name, Architecture arch) {
     this.name = name;
     this.arch = arch;
   }
@@ -44,7 +44,7 @@ public class OsInfo {
     return name;
   }
 
-  public Arch arch() {
+  public Architecture arch() {
     return arch;
   }
 
@@ -80,16 +80,16 @@ public class OsInfo {
     throw new UnsupportedOsException("Unknown OS: " + rawOsName);
   }
 
-  public static Arch getSystemArchitecture() {
+  public static Architecture getSystemArchitecture() {
     String arch = System.getProperty("os.arch");
     return getSystemArchitecture(arch);
   }
 
-  static Arch getSystemArchitecture(String rawArch) {
+  static Architecture getSystemArchitecture(String rawArch) {
     String arch = rawArch.toLowerCase(Locale.ENGLISH);
     if (arch.contains("64") || arch.contains("universal")) {
-      return Arch.X86_64;
+      return Architecture.X86_64;
     }
-    return Arch.X86;
+    return Architecture.X86;
   }
 }
