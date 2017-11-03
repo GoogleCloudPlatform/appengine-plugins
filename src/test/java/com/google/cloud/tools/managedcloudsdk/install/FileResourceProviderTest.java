@@ -26,7 +26,7 @@ import org.junit.Test;
 public class FileResourceProviderTest {
 
   @Test
-  public void smokeTest() throws MalformedURLException {
+  public void testFileResourceProvider_smokeTest() throws MalformedURLException {
     URL testSrc = new URL("https://www.example.com");
     Path testDest = Paths.get("/tmp/file.archive");
     Path testExtractionDest = Paths.get("/tmp/extract");
