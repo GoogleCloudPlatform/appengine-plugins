@@ -62,10 +62,10 @@ final class Installer<T extends InstallScriptProvider> {
     CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor(messageListener);
     commandExecutor.setWorkingDirectory(installedSdkRoot);
 
-    int exitcode = commandExecutor.run(command);
-    if (exitcode != 0) {
+    CommandExecutor.Result result = commandExecutor.run(command);
+    if (result.getExitCode() != 0) {
       throw new ExecutionException(
-          "Installer exited with non-zero exit code: " + exitcode, new Throwable());
+          "Installer exited with non-zero exit code: " + result.getExitCode(), new Throwable());
     }
   }
 

@@ -19,6 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
+import com.google.cloud.tools.managedcloudsdk.process.FakeResults;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +53,7 @@ public class InstallerTest {
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
     Mockito.when(mockCommandExecutorFactory.newCommandExecutor(mockMessageListener))
         .thenReturn(mockCommandExecutor);
-    Mockito.when(mockCommandExecutor.run(Mockito.<String>anyList())).thenReturn(0);
+    Mockito.when(mockCommandExecutor.run(Mockito.<String>anyList())).thenReturn(FakeResults.EXIT_0);
   }
 
   @Test
@@ -85,7 +86,7 @@ public class InstallerTest {
 
   @Test
   public void testCall_nonZeroExit() throws Exception {
-    Mockito.when(mockCommandExecutor.run(Mockito.<String>anyList())).thenReturn(10);
+    Mockito.when(mockCommandExecutor.run(Mockito.<String>anyList())).thenReturn(FakeResults.EXIT_10);
 
     Installer installer =
         new Installer<>(
