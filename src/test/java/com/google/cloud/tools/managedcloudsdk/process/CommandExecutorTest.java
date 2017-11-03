@@ -21,6 +21,8 @@ import com.google.common.base.Joiner;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -72,17 +74,21 @@ public class CommandExecutorTest {
     Map<String, String> processEnvironment = new HashMap<>();
     Mockito.when(processBuilderMock.environment()).thenReturn(processEnvironment);
 
+    Path fakeWorkingDirectory = Paths.get("/tmp/fake/working/dir");
+
     setProcessMockOutput(expectedOutput);
 
     int exitCode =
         new CommandExecutor()
             .setMessageListener(messageListener)
+            .setWorkingDirectory(fakeWorkingDirectory)
             .setEnvironment(environmentInput)
             .setProcessBuilderFactory(processBuilderFactoryMock)
             .run(command);
 
     verifyProcessBuilding(command);
     Mockito.verify(processBuilderMock).environment();
+    Mockito.verify(processBuilderMock).directory(fakeWorkingDirectory.toFile());
     Assert.assertEquals(environmentInput, processEnvironment);
     Assert.assertEquals(expectedOutput, output);
 

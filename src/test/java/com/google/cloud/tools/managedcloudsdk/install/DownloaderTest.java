@@ -66,8 +66,8 @@ public class DownloaderTest {
 
     Downloader downloader = new Downloader(fakeRemoteResource, destination, null, messageListener);
 
-    Path downloaderDestination = downloader.download();
-    Assert.assertEquals(destination, downloaderDestination);
+    downloader.download();
+    Assert.assertTrue(Files.exists(destination));
   }
 
   @Test
@@ -80,8 +80,8 @@ public class DownloaderTest {
 
     Downloader downloader = new Downloader(fakeRemoteResource, destination, null, messageListener);
 
-    Path downloaderDestination = downloader.download();
-    Assert.assertEquals(destination, downloaderDestination);
+    downloader.download();
+    Assert.assertTrue(Files.exists(destination));
   }
 
   @Test
@@ -93,8 +93,8 @@ public class DownloaderTest {
 
     Downloader downloader = new Downloader(fakeRemoteResource, destination, null, messageListener);
 
-    Path downloaderDestination = downloader.download();
-    Assert.assertEquals(destination, downloaderDestination);
+    downloader.download();
+    Assert.assertTrue(Files.exists(destination));
 
     Assert.assertArrayEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
 
