@@ -24,6 +24,7 @@ public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfi
     implements DeployProjectConfigurationConfiguration {
 
   private File appEngineDirectory;
+  private String server;
 
   @Override
   public File getAppEngineDirectory() {
@@ -32,5 +33,14 @@ public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfi
 
   public void setAppEngineDirectory(File appEngineDirectory) {
     this.appEngineDirectory = appEngineDirectory;
+  }
+
+  @Override
+  public String getServer() {
+    return server;
+  }
+
+  public void setServer(String server) {
+    this.server = server;
   }
 }
