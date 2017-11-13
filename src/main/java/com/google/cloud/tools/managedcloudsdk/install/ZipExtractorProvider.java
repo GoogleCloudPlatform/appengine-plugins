@@ -56,7 +56,7 @@ final class ZipExtractorProvider implements ExtractorProvider {
         final Path entryTarget = destination.resolve(entry.getName());
 
         if (messageListener != null) {
-          messageListener.messageLn(entryTarget.toString());
+          messageListener.message(entryTarget.toString() + "\n");
         }
 
         if (entry.isDirectory()) {

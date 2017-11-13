@@ -65,7 +65,7 @@ public class ExtractorTest {
     extractor.extract();
 
     Assert.assertTrue(Files.exists(extractionDestination));
-    Mockito.verify(mockMessageListener).messageLn("Extracting archive: " + extractionSource);
+    Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource + "\n");
     Mockito.verify(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
     Mockito.verifyNoMoreInteractions(mockMessageListener);
@@ -102,9 +102,9 @@ public class ExtractorTest {
     }
 
     Assert.assertFalse(Files.exists(extractionDestination));
-    Mockito.verify(mockMessageListener).messageLn("Extracting archive: " + extractionSource);
+    Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource + "\n");
     Mockito.verify(mockMessageListener)
-        .messageLn("Extraction failed, cleaning up " + extractionDestination);
+        .message("Extraction failed, cleaning up " + extractionDestination + "\n");
     Mockito.verify(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
     Mockito.verifyNoMoreInteractions(mockMessageListener);

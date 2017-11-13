@@ -72,7 +72,7 @@ public class CommandExecutor {
    */
   public int run(List<String> command, AsyncStreamConsumer stdout, AsyncStreamConsumer stderr)
       throws IOException, ExecutionException {
-    messageListener.messageLn("Running command : " + Joiner.on(" ").join(command));
+    messageListener.message("Running command : " + Joiner.on(" ").join(command) + "\n");
 
     // Builds the command to execute.
     ProcessBuilder processBuilder = processBuilderFactory.createProcessBuilder();

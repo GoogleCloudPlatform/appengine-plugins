@@ -84,30 +84,12 @@ public class CommandExecutorTest {
     Mockito.verify(processBuilderMock).directory(fakeWorkingDirectory.toFile());
     Assert.assertEquals(environmentInput, processEnvironment);
 
-    Mockito.verify(messageListener).messageLn("Running command : someCommand someOption");
+    Mockito.verify(messageListener).message("Running command : someCommand someOption\n");
     Mockito.verify(mockStreamHandler).handleStream(mockStdOut);
     Mockito.verify(mockStreamHandler).handleStream(mockStdErr);
     Mockito.verifyNoMoreInteractions(messageListener);
     Mockito.verifyNoMoreInteractions(mockStreamHandler);
   }
-
-  //  @Test
-  //  public void testRun_badProcessOutput()
-  //      throws IOException, InterruptedException, ExecutionException {
-  //
-  //    InputStream processOutput = Mockito.mock(InputStream.class);
-  //    Mockito.when(processOutput.read()).thenThrow(IOException.class);
-  //    Mockito.when(processMock.getInputStream()).thenReturn(processOutput);
-  //
-  //    new CommandExecutor()
-  //        .setMessageListener(messageListener)
-  //        .setProcessBuilderFactory(processBuilderFactoryMock)
-  //        .run(command, new MessageListenerForwardingAsyncStreamHandler(messageListener),
-  // mockStreamHandler);
-  //
-  //    loggerInOrder.verify(messageListener).message("Running command : someCommand someOption");
-  //    loggerInOrder.verify(messageListener).message("IO Exception reading process output");
-  //  }
 
   @Test
   public void testRun_nonZeroExitCodePassthrough()
@@ -141,7 +123,7 @@ public class CommandExecutorTest {
     }
 
     Mockito.verify(processMock).destroy();
-    loggerInOrder.verify(messageListener).messageLn("Running command : someCommand someOption");
+    loggerInOrder.verify(messageListener).message("Running command : someCommand someOption\n");
   }
 
   private void verifyProcessBuilding(List<String> command) throws IOException {

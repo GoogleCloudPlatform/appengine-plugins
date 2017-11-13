@@ -26,7 +26,7 @@ public class CollectingLineHandler implements LineHandler<String> {
     if (line == null) {
       return;
     }
-    result.append(line).append(System.lineSeparator());
+    result.append(line).append("\n");
   }
 
   @Override

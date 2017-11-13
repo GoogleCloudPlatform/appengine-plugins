@@ -78,7 +78,7 @@ final class Installer<T extends InstallScriptProvider> {
       stdErrListener.getResult().get();
       stdOutListener.getResult().get();
     } catch (InterruptedException e) {
-      messageListener.messageLn("Output interrupted...");
+      messageListener.message("Output interrupted...\n");
     }
   }
 

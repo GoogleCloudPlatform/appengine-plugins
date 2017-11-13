@@ -33,7 +33,7 @@ public class MessageListenerForwardingHandler implements ByteHandler<Void>, Line
 
   @Override
   public void line(String line) {
-    messageListener.messageLn(line);
+    messageListener.message(line);
   }
 
   @Override

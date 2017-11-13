@@ -18,17 +18,10 @@ package com.google.cloud.tools.managedcloudsdk;
 
 public interface MessageListener {
   /**
-   * Process a full line. Implementers should add a newline to the end.
-   *
-   * @param line a full line (does not include newline character)
-   */
-  void messageLn(String line);
-
-  /**
    * Process a raw message. Implementers should not add a newline to the end, it may contain newline
    * characters of its own.
    *
-   * @param message a partial or full messages with all necessary newlines
+   * @param rawString a partial or full messages with all necessary newlines
    */
-  void message(String message);
+  void message(String rawString);
 }

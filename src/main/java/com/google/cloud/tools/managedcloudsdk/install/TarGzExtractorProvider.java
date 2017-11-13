@@ -49,7 +49,7 @@ final class TarGzExtractorProvider implements ExtractorProvider {
       while ((entry = in.getNextTarEntry()) != null) {
         final Path entryTarget = destination.resolve(entry.getName());
         if (messageListener != null) {
-          messageListener.messageLn(entryTarget.toString());
+          messageListener.message(entryTarget.toString() + "\n");
         }
         if (entry.isDirectory()) {
           if (!Files.exists(entryTarget)) {
@@ -70,7 +70,7 @@ final class TarGzExtractorProvider implements ExtractorProvider {
         } else {
           // we don't know what kind of entry this is (we only process directories and files).
           if (messageListener != null) {
-            messageListener.messageLn("Skipping entry (unknown type): " + entry.getName());
+            messageListener.message("Skipping entry (unknown type): " + entry.getName() + "\n");
           }
         }
       }

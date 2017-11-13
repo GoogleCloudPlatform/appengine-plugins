@@ -100,12 +100,12 @@ public class DownloaderTest {
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
 
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).messageLn(messageCaptor.capture());
+    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(messageCaptor.capture());
 
     List<String> values = messageCaptor.getAllValues();
-    Assert.assertEquals("Downloading " + fakeRemoteResource.toString(), values.get(0));
-    Assert.assertEquals("Downloading " + String.valueOf(testFileSize) + " bytes", values.get(1));
-    Assert.assertEquals("done.", values.get(values.size() - 1));
+    Assert.assertEquals("Downloading " + fakeRemoteResource.toString() + "\n", values.get(0));
+    Assert.assertEquals("Downloading " + String.valueOf(testFileSize) + " bytes\n", values.get(1));
+    Assert.assertEquals("done.\n", values.get(values.size() - 1));
 
     List<String> dots = values.subList(2, values.size() - 1);
 
@@ -186,11 +186,11 @@ public class DownloaderTest {
     testThreadToInterrupt.join();
 
     Assert.assertFalse(Files.exists(destination));
-    Mockito.verify(messageListener).messageLn("Downloading " + fakeRemoteResource);
+    Mockito.verify(messageListener).message("Downloading " + fakeRemoteResource + "\n");
     Mockito.verify(messageListener)
-        .messageLn("Downloading " + String.valueOf(testFileSize) + " bytes");
-    Mockito.verify(messageListener).messageLn("Download was interrupted");
-    Mockito.verify(messageListener).messageLn("Cleaning up...");
+        .message("Downloading " + String.valueOf(testFileSize) + " bytes\n");
+    Mockito.verify(messageListener).message("Download was interrupted\n");
+    Mockito.verify(messageListener).message("Cleaning up...\n");
     Mockito.verifyNoMoreInteractions(messageListener);
   }
 }
