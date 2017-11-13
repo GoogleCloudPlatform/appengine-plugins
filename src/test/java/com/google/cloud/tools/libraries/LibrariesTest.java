@@ -137,7 +137,7 @@ public class LibrariesTest {
         for (int i = 0; i < serviceRoles.size(); i++) {
           String role = serviceRoles.getString(i);
           if (roles.contains(role)) {
-            Assert.fail("Role: " + role + " is defined twice");
+            Assert.fail("Role: " + role + " is defined multiple times");
           }
           roles.add(role);
         }
