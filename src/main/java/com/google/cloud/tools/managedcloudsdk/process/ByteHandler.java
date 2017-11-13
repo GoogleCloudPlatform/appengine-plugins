@@ -17,9 +17,12 @@
 package com.google.cloud.tools.managedcloudsdk.process;
 
 /**
- * Generate fakes from package private constructor of {@link CommandExecutor.Result}.
+ * Handle bytes from a stream consumer.
+ *
+ * @param <T> use {@code Void} if you don't want to store the result
  */
-public class FakeResults {
-  public static final CommandExecutor.Result EXIT_0 = new CommandExecutor.Result("", "", 0);
-  public static final CommandExecutor.Result EXIT_10 = new CommandExecutor.Result("", "", 10);
+public interface ByteHandler<T> {
+  void bytes(byte[] bytes, int length);
+
+  T getResult();
 }

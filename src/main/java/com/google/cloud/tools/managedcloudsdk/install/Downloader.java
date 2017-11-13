@@ -61,7 +61,7 @@ final class Downloader {
     try (InputStream in = connection.getInputStream()) {
       long contentLength = connection.getContentLengthLong();
 
-      messageListener.message("Downloading " + address);
+      messageListener.messageLn("Downloading " + address);
 
       try (BufferedOutputStream out =
           new BufferedOutputStream(
@@ -69,16 +69,16 @@ final class Downloader {
         int bytesRead;
         byte[] buffer = new byte[BUFFER_SIZE];
 
-        // Progress is updated every 1%
-        long updateThreshold = contentLength / 100;
+        // Progress is updated every Megabyte
+        long updateThreshold = 1024;
         long lastUpdated = 0;
         long totalBytesRead = 0;
 
-        messageListener.message("0/" + String.valueOf(contentLength));
+        messageListener.messageLn("Downloading " + String.valueOf(contentLength) + " bytes");
         while ((bytesRead = in.read(buffer)) != -1) {
           if (Thread.currentThread().isInterrupted()) {
-            messageListener.message("Download was interrupted");
-            messageListener.message("Cleaning up...");
+            messageListener.messageLn("Download was interrupted");
+            messageListener.messageLn("Cleaning up...");
             cleanUp();
             throw new InterruptedException("Download was interrupted");
           }
@@ -88,14 +88,13 @@ final class Downloader {
           totalBytesRead += bytesRead;
           long bytesSinceLastUpdate = totalBytesRead - lastUpdated;
           if (totalBytesRead == contentLength || bytesSinceLastUpdate > updateThreshold) {
-            messageListener.message(
-                String.valueOf(totalBytesRead) + "/" + String.valueOf(contentLength));
+            messageListener.message(".");
             lastUpdated = totalBytesRead;
           }
         }
       }
     }
-    messageListener.message("Download complete");
+    messageListener.messageLn("done.");
   }
 
   private void cleanUp() throws IOException {

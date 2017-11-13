@@ -17,9 +17,10 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamConsumer;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
-import com.google.cloud.tools.managedcloudsdk.process.FakeResults;
+import com.google.common.util.concurrent.ListenableFuture;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,19 +42,29 @@ public class InstallerTest {
   @Mock private CommandExecutorFactory mockCommandExecutorFactory;
   @Mock private CommandExecutor mockCommandExecutor;
   @Mock private MessageListener mockMessageListener;
+  @Mock private AsyncStreamConsumer<Void> mockStreamHandler;
+  @Mock private ListenableFuture<Void> mockResult;
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
   private List<String> fakeCommand = Arrays.asList("scriptexec", "test-install.script");
 
   @Before
-  public void initializeAndConfigureMocks() throws IOException, ExecutionException {
+  public void initializeAndConfigureMocks()
+      throws IOException, ExecutionException, InterruptedException {
     MockitoAnnotations.initMocks(this);
 
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
     Mockito.when(mockCommandExecutorFactory.newCommandExecutor(mockMessageListener))
         .thenReturn(mockCommandExecutor);
-    Mockito.when(mockCommandExecutor.run(Mockito.<String>anyList())).thenReturn(FakeResults.EXIT_0);
+    Mockito.when(
+            mockCommandExecutor.run(
+                Mockito.<String>anyList(),
+                Mockito.any(AsyncStreamConsumer.class),
+                Mockito.any(AsyncStreamConsumer.class)))
+        .thenReturn(0);
+    Mockito.when(mockStreamHandler.getResult()).thenReturn(mockResult);
+    Mockito.when(mockResult.get()).thenReturn(null);
   }
 
   @Test
@@ -64,10 +75,15 @@ public class InstallerTest {
             mockInstallScriptProvider,
             false,
             mockMessageListener,
-            mockCommandExecutorFactory);
+            mockCommandExecutorFactory,
+            mockStreamHandler,
+            mockStreamHandler);
     installer.install();
 
-    Mockito.verify(mockCommandExecutor).run(getExpectedCommand(false));
+    Mockito.verify(mockCommandExecutor).setWorkingDirectory(tmp.getRoot().toPath());
+    Mockito.verify(mockCommandExecutor)
+        .run(getExpectedCommand(false), mockStreamHandler, mockStreamHandler);
+    Mockito.verifyNoMoreInteractions(mockCommandExecutor);
   }
 
   @Test
@@ -78,15 +94,25 @@ public class InstallerTest {
             mockInstallScriptProvider,
             true,
             mockMessageListener,
-            mockCommandExecutorFactory);
+            mockCommandExecutorFactory,
+            mockStreamHandler,
+            mockStreamHandler);
     installer.install();
 
-    Mockito.verify(mockCommandExecutor).run(getExpectedCommand(true));
+    Mockito.verify(mockCommandExecutor).setWorkingDirectory(tmp.getRoot().toPath());
+    Mockito.verify(mockCommandExecutor)
+        .run(getExpectedCommand(true), mockStreamHandler, mockStreamHandler);
+    Mockito.verifyNoMoreInteractions(mockCommandExecutor);
   }
 
   @Test
   public void testCall_nonZeroExit() throws Exception {
-    Mockito.when(mockCommandExecutor.run(Mockito.<String>anyList())).thenReturn(FakeResults.EXIT_10);
+    Mockito.when(
+            mockCommandExecutor.run(
+                Mockito.<String>anyList(),
+                Mockito.eq(mockStreamHandler),
+                Mockito.eq(mockStreamHandler)))
+        .thenReturn(10);
 
     Installer installer =
         new Installer<>(
@@ -94,13 +120,19 @@ public class InstallerTest {
             mockInstallScriptProvider,
             false,
             mockMessageListener,
-            mockCommandExecutorFactory);
+            mockCommandExecutorFactory,
+            mockStreamHandler,
+            mockStreamHandler);
     try {
       installer.install();
       Assert.fail("ExecutionException expected but not found.");
     } catch (ExecutionException ex) {
       Assert.assertEquals("Installer exited with non-zero exit code: 10", ex.getMessage());
     }
+    Mockito.verify(mockCommandExecutor).setWorkingDirectory(tmp.getRoot().toPath());
+    Mockito.verify(mockCommandExecutor)
+        .run(getExpectedCommand(false), mockStreamHandler, mockStreamHandler);
+    Mockito.verifyNoMoreInteractions(mockCommandExecutor);
   }
 
   private List<String> getExpectedCommand(boolean usageReporting) {

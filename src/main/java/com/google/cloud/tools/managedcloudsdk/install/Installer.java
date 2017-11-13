@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamConsumer;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
 import com.google.common.annotations.VisibleForTesting;
@@ -34,6 +35,8 @@ final class Installer<T extends InstallScriptProvider> {
   private final boolean usageReporting;
   private final MessageListener messageListener;
   private final CommandExecutorFactory commandExecutorFactory;
+  private final AsyncStreamConsumer<Void> stdOutListener;
+  private final AsyncStreamConsumer<Void> stdErrListener;
 
   /** Instantiated by {@link InstallerFactory}. */
   Installer(
@@ -41,12 +44,16 @@ final class Installer<T extends InstallScriptProvider> {
       InstallScriptProvider installScriptProvider,
       boolean usageReporting,
       MessageListener messageListener,
-      CommandExecutorFactory commandExecutorFactory) {
+      CommandExecutorFactory commandExecutorFactory,
+      AsyncStreamConsumer<Void> stdOutListener,
+      AsyncStreamConsumer<Void> stdErrListener) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;
     this.usageReporting = usageReporting;
     this.messageListener = messageListener;
     this.commandExecutorFactory = commandExecutorFactory;
+    this.stdOutListener = stdOutListener;
+    this.stdErrListener = stdErrListener;
   }
 
   /** Install a cloud sdk (only run this on LATEST). */
@@ -62,10 +69,16 @@ final class Installer<T extends InstallScriptProvider> {
     CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor(messageListener);
     commandExecutor.setWorkingDirectory(installedSdkRoot);
 
-    CommandExecutor.Result result = commandExecutor.run(command);
-    if (result.getExitCode() != 0) {
+    int exitCode = commandExecutor.run(command, stdOutListener, stdErrListener);
+    if (exitCode != 0) {
       throw new ExecutionException(
-          "Installer exited with non-zero exit code: " + result.getExitCode(), new Throwable());
+          "Installer exited with non-zero exit code: " + exitCode, new Throwable());
+    }
+    try {
+      stdErrListener.getResult().get();
+      stdOutListener.getResult().get();
+    } catch (InterruptedException e) {
+      messageListener.messageLn("Output interrupted...");
     }
   }
 

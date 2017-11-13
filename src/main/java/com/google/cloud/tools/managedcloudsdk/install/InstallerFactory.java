@@ -17,8 +17,12 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.MessageListenerForwardingHandler;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamConsumer;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
+import com.google.cloud.tools.managedcloudsdk.process.StreamByteConsumerFactory;
+import com.google.cloud.tools.managedcloudsdk.process.StreamLineConsumerFactory;
 import java.nio.file.Path;
 
 /** {@link Installer} Factory. */
@@ -54,7 +58,12 @@ final class InstallerFactory {
         getInstallScriptProvider(),
         usageReporting,
         messageListener,
-        new CommandExecutorFactory());
+        new CommandExecutorFactory(),
+        new AsyncStreamConsumer<>(
+            new StreamLineConsumerFactory<>(new MessageListenerForwardingHandler(messageListener))),
+        new AsyncStreamConsumer<>(
+            new StreamByteConsumerFactory<>(
+                new MessageListenerForwardingHandler(messageListener))));
   }
 
   private InstallScriptProvider getInstallScriptProvider() {

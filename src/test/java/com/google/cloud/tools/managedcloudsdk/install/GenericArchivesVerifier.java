@@ -73,12 +73,12 @@ public class GenericArchivesVerifier {
 
     // tars allow for duplicate entries
     Mockito.verify(messageListener, Mockito.atLeastOnce())
-        .message(testRoot.resolve(ROOT).toString());
+        .messageLn(testRoot.resolve(ROOT).toString());
     Mockito.verify(messageListener, Mockito.atLeastOnce())
-        .message(testRoot.resolve(FILE_1).toString());
+        .messageLn(testRoot.resolve(FILE_1).toString());
     Mockito.verify(messageListener, Mockito.atLeastOnce())
-        .message(testRoot.resolve(SUB).toString());
+        .messageLn(testRoot.resolve(SUB).toString());
     Mockito.verify(messageListener, Mockito.atLeastOnce())
-        .message(testRoot.resolve(FILE_2).toString());
+        .messageLn(testRoot.resolve(FILE_2).toString());
   }
 }

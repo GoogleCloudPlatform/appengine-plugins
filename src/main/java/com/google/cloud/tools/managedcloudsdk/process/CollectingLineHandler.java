@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk;
+package com.google.cloud.tools.managedcloudsdk.process;
 
-public interface MessageListener {
-  /**
-   * Process a full line. Implementers should add a newline to the end.
-   *
-   * @param line a full line (does not include newline character)
-   */
-  void messageLn(String line);
+/** A line handler that collects lines and returns a single result string. */
+public class CollectingLineHandler implements LineHandler<String> {
 
-  /**
-   * Process a raw message. Implementers should not add a newline to the end, it may contain newline
-   * characters of its own.
-   *
-   * @param message a partial or full messages with all necessary newlines
-   */
-  void message(String message);
+  private final StringBuilder result = new StringBuilder("");
+
+  @Override
+  public void line(String line) {
+    if (line == null) {
+      return;
+    }
+    result.append(line).append(System.lineSeparator());
+  }
+
+  @Override
+  public String getResult() {
+    return result.toString();
+  }
 }
