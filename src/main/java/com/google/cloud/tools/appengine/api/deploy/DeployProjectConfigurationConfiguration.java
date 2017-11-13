@@ -21,5 +21,8 @@ import java.io.File;
 
 /** Configuration for {@link AppEngineDeployment} project-level yaml deployments. */
 public interface DeployProjectConfigurationConfiguration extends Configuration {
+
   File getAppEngineDirectory();
+
+  String getServer();
 }

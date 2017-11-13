@@ -232,12 +232,19 @@ public class CloudSdkAppEngineDeploymentTest {
         new DefaultDeployProjectConfigurationConfiguration();
     File testConfigYaml = tmpDir.newFile("testconfig.yaml");
     configuration.setAppEngineDirectory(tmpDir.getRoot());
+    configuration.setServer("appengine.google.com");
     configuration.setProject("project");
 
     deployment.deployConfig("testconfig.yaml", configuration);
 
     List<String> expectedCommand =
-        ImmutableList.of("deploy", testConfigYaml.toString(), "--project", "project");
+        ImmutableList.of(
+            "deploy",
+            testConfigYaml.toString(),
+            "--server",
+            "appengine.google.com",
+            "--project",
+            "project");
 
     verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
   }
