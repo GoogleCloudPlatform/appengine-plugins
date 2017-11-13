@@ -29,16 +29,7 @@
     "id": "googlecloudresourcemanager",
     "serviceName": "cloudresourcemanager.googleapis.com",
     "serviceRoles": [
-      "roles/resourcemanager.folderAdmin",
-      "roles/resourcemanager.folderCreator",
-      "roles/resourcemanager.folderEditor",
-      "roles/resourcemanager.folderIamAdmin",
-      "roles/resourcemanager.folderMover",
-      "roles/resourcemanager.folderViewer",
       "roles/resourcemanager.organizationAdmin",
-      "roles/resourcemanager.organizationCreator",
-      "roles/resourcemanager.organizationViewer",
-      "roles/resourcemanager.projectCreator",
       "roles/resourcemanager.projectDeleter",
       "roles/resourcemanager.projectIamAdmin",
       "roles/resourcemanager.lienModifier"
