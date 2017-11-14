@@ -26,8 +26,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-/** Tests for {@link StreamByteConsumer}. */
-public class StreamByteConsumerTest {
+/** Tests for {@link StreamConsumer}. */
+public class StreamConsumerTest {
 
   private static final String TEST_STRING = "test line1\ntest line2\n";
 
@@ -41,7 +41,7 @@ public class StreamByteConsumerTest {
 
   @Test
   public void testCall_smokeTest() throws Exception {
-    StreamByteConsumer<Void> testConsumer = new StreamByteConsumer<>(inputStream, byteHandler);
+    StreamConsumer<Void> testConsumer = new StreamConsumer<>(inputStream, byteHandler);
     testConsumer.call();
     ArgumentCaptor<byte[]> bytes = ArgumentCaptor.forClass(byte[].class);
     ArgumentCaptor<Integer> nBytes = ArgumentCaptor.forClass(Integer.class);

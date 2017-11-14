@@ -17,16 +17,13 @@
 package com.google.cloud.tools.managedcloudsdk.process;
 
 /** A line handler that collects lines and returns a single result string. */
-public class CollectingLineHandler implements LineHandler<String> {
+public class CollectingByteHandler implements ByteHandler<String> {
 
   private final StringBuilder result = new StringBuilder("");
 
   @Override
-  public void line(String line) {
-    if (line == null) {
-      return;
-    }
-    result.append(line).append("\n");
+  public void bytes(byte[] bytes, int length) {
+    result.append(new String(bytes, 0, length));
   }
 
   @Override

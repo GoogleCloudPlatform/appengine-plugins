@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
  * AsyncWrapper to handle stream consumption on a separate thread. Do not re-use this on streams -
  * it can only handle one stream per instance.
  *
- * @param <T> the type of the returned Future, use {@code Void} if you're not returning anything
+ * @param <T> the type of the returned Future
  */
 public class AsyncStreamHandler<T> {
 
@@ -52,7 +52,7 @@ public class AsyncStreamHandler<T> {
     this.result = result;
   }
 
-  void handleStream(final InputStream inputStream) {
+  public void handleStream(final InputStream inputStream) {
     if (executorService.isShutdown()) {
       throw new IllegalStateException("Cannot re-use " + this.getClass().getName());
     }

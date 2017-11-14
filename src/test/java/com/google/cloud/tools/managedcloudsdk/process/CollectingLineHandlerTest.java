@@ -19,23 +19,22 @@ package com.google.cloud.tools.managedcloudsdk.process;
 import org.junit.Assert;
 import org.junit.Test;
 
-/** Tests for {@link CollectingLineHandler}. */
+/** Tests for {@link CollectingByteHandler}. */
 public class CollectingLineHandlerTest {
 
   @Test
   public void testLineHandler_smokeTest() {
-    CollectingLineHandler testHandler = new CollectingLineHandler();
-    testHandler.line("line1");
-    testHandler.line("line2");
+    CollectingByteHandler testHandler = new CollectingByteHandler();
+    testHandler.bytes("line1\n".getBytes(), 6);
+    testHandler.bytes("line2\n".getBytes(), 6);
     Assert.assertEquals("line1\nline2\n", testHandler.getResult());
   }
 
   @Test
-  public void testLineHandler_nullIgnored() {
-    CollectingLineHandler testHandler = new CollectingLineHandler();
-    testHandler.line("line1");
-    testHandler.line(null);
-    testHandler.line("line2");
+  public void testLineHandler_junkIgnored() {
+    CollectingByteHandler testHandler = new CollectingByteHandler();
+    testHandler.bytes("line1\n123".getBytes(), 6);
+    testHandler.bytes("line2\n456".getBytes(), 6);
     Assert.assertEquals("line1\nline2\n", testHandler.getResult());
   }
 }

@@ -20,11 +20,19 @@ import java.io.InputStream;
 import java.util.concurrent.Callable;
 
 /**
- * Factory for creating InputStream consumers.
+ * {@link StreamConsumer} factory.
  *
- * @param <T> the stored result type
+ * @param <T> use {@code Void} if you do not want to store the result
  */
-public interface StreamConsumerFactory<T> {
+public class StreamConsumerFactory<T> {
 
-  Callable<T> newConsumer(InputStream inputStream);
+  private final ByteHandler<T> byteHandler;
+
+  public StreamConsumerFactory(ByteHandler<T> byteHandler) {
+    this.byteHandler = byteHandler;
+  }
+
+  public Callable<T> newConsumer(InputStream inputStream) {
+    return new StreamConsumer<>(inputStream, byteHandler);
+  }
 }

@@ -17,23 +17,17 @@
 package com.google.cloud.tools.managedcloudsdk;
 
 import com.google.cloud.tools.managedcloudsdk.process.ByteHandler;
-import com.google.cloud.tools.managedcloudsdk.process.LineHandler;
 import com.google.common.base.Charsets;
 
 /**
- * {@link LineHandler}+{@link ByteHandler} combo handler that redirects to {@link MessageListener}.
+ * {@link ByteHandler} that redirects to {@link MessageListener}.
  */
-public class MessageListenerForwardingHandler implements ByteHandler<Void>, LineHandler<Void> {
+public class MessageListenerForwardingHandler implements ByteHandler<Void> {
 
   private final MessageListener messageListener;
 
   public MessageListenerForwardingHandler(MessageListener messageListener) {
     this.messageListener = messageListener;
-  }
-
-  @Override
-  public void line(String line) {
-    messageListener.message(line);
   }
 
   @Override

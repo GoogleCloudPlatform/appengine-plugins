@@ -36,8 +36,8 @@ final class Installer<T extends InstallScriptProvider> {
   private final boolean usageReporting;
   private final MessageListener messageListener;
   private final CommandExecutorFactory commandExecutorFactory;
-  private final AsyncStreamHandler<Void> stdOutListener;
-  private final AsyncStreamHandler<Void> stdErrListener;
+  private final AsyncStreamHandler<Void> stdOutConsumer;
+  private final AsyncStreamHandler<Void> stdErrConsumer;
 
   /** Instantiated by {@link InstallerFactory}. */
   Installer(
@@ -46,15 +46,15 @@ final class Installer<T extends InstallScriptProvider> {
       boolean usageReporting,
       MessageListener messageListener,
       CommandExecutorFactory commandExecutorFactory,
-      AsyncStreamHandler<Void> stdOutListener,
-      AsyncStreamHandler<Void> stdErrListener) {
+      AsyncStreamHandler<Void> stdOutConsumer,
+      AsyncStreamHandler<Void> stdErrConsumer) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;
     this.usageReporting = usageReporting;
     this.messageListener = messageListener;
     this.commandExecutorFactory = commandExecutorFactory;
-    this.stdOutListener = stdOutListener;
-    this.stdErrListener = stdErrListener;
+    this.stdOutConsumer = stdOutConsumer;
+    this.stdErrConsumer = stdErrConsumer;
   }
 
   /** Install a cloud sdk (only run this on LATEST). */
@@ -71,16 +71,10 @@ final class Installer<T extends InstallScriptProvider> {
     commandExecutor.setWorkingDirectory(installedSdkRoot);
 
     messageListener.message("Running command : " + Joiner.on(" ").join(command) + "\n");
-    int exitCode = commandExecutor.run(command, stdOutListener, stdErrListener);
+    int exitCode = commandExecutor.run(command, stdOutConsumer, stdErrConsumer);
     if (exitCode != 0) {
       throw new ExecutionException(
           "Installer exited with non-zero exit code: " + exitCode, new Throwable());
-    }
-    try {
-      stdErrListener.getResult().get();
-      stdOutListener.getResult().get();
-    } catch (InterruptedException e) {
-      messageListener.message("Output interrupted...\n");
     }
   }
 

@@ -21,8 +21,7 @@ import com.google.cloud.tools.managedcloudsdk.MessageListenerForwardingHandler;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
-import com.google.cloud.tools.managedcloudsdk.process.StreamByteConsumerFactory;
-import com.google.cloud.tools.managedcloudsdk.process.StreamLineConsumerFactory;
+import com.google.cloud.tools.managedcloudsdk.process.StreamConsumerFactory;
 import java.nio.file.Path;
 
 /** {@link Installer} Factory. */
@@ -60,9 +59,9 @@ final class InstallerFactory {
         messageListener,
         new CommandExecutorFactory(),
         new AsyncStreamHandler<>(
-            new StreamLineConsumerFactory<>(new MessageListenerForwardingHandler(messageListener))),
+            new StreamConsumerFactory<>(new MessageListenerForwardingHandler(messageListener))),
         new AsyncStreamHandler<>(
-            new StreamByteConsumerFactory<>(
+            new StreamConsumerFactory<>(
                 new MessageListenerForwardingHandler(messageListener))));
   }
 

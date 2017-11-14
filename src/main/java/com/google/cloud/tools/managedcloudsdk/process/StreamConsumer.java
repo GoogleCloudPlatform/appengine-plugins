@@ -16,34 +16,34 @@
 
 package com.google.cloud.tools.managedcloudsdk.process;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.concurrent.Callable;
 
 /**
- * Stream consumer that reads lines as they come in.
+ * Stream consumer that reads bytes as they come in.
  *
  * @param <T> use {@code Void} if you don't want to store the result
  */
-public class StreamLineConsumer<T> implements Callable<T> {
+public class StreamConsumer<T> implements Callable<T> {
+  private static final int BUFFER_SIZE = 1024;
   private final InputStream inputStream;
-  private final LineHandler<T> lineHandler;
+  private final ByteHandler<T> byteHandler;
 
-  public StreamLineConsumer(InputStream inputStream, LineHandler<T> lineHandler) {
+  /** Instantiated by {@link StreamConsumerFactory}. */
+  StreamConsumer(InputStream inputStream, ByteHandler<T> byteHandler) {
     this.inputStream = inputStream;
-    this.lineHandler = lineHandler;
+    this.byteHandler = byteHandler;
   }
 
   @Override
   public T call() throws Exception {
-    try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-      String line = br.readLine();
-      while (line != null) {
-        lineHandler.line(line);
-        line = br.readLine();
+    byte[] byteBuffer = new byte[BUFFER_SIZE];
+    int bytesRead;
+    try (InputStream in = inputStream) {
+      while ((bytesRead = in.read(byteBuffer)) != -1) {
+        byteHandler.bytes(byteBuffer, bytesRead);
       }
     }
-    return lineHandler.getResult();
+    return byteHandler.getResult();
   }
 }
