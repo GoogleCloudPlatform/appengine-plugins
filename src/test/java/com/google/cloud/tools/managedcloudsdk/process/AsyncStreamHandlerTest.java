@@ -27,7 +27,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class AsyncStreamConsumerTest {
+public class AsyncStreamHandlerTest {
 
   @Mock private ListeningExecutorService mockExecutorService;
   @Mock private StreamConsumerFactory<String> mockStreamConsumerFactory;
@@ -45,7 +45,7 @@ public class AsyncStreamConsumerTest {
     Mockito.when(mockExecutorService.isShutdown()).thenReturn(false);
     Mockito.when(mockStreamConsumerFactory.newConsumer(mockInputStream)).thenReturn(mockCallable);
 
-    new AsyncStreamConsumer<>(mockStreamConsumerFactory, mockExecutorService, mockFuture)
+    new AsyncStreamHandler<>(mockStreamConsumerFactory, mockExecutorService, mockFuture)
         .handleStream(mockInputStream);
 
     Mockito.verify(mockExecutorService).isShutdown();
@@ -59,12 +59,12 @@ public class AsyncStreamConsumerTest {
     Mockito.when(mockExecutorService.isShutdown()).thenReturn(true);
 
     try {
-      new AsyncStreamConsumer<>(mockStreamConsumerFactory, mockExecutorService, mockFuture)
+      new AsyncStreamHandler<>(mockStreamConsumerFactory, mockExecutorService, mockFuture)
           .handleStream(mockInputStream);
       Assert.fail("IllegalStateException expected but not thrown");
     } catch (IllegalStateException ex) {
       // pass
-      Assert.assertEquals("Cannot re-use " + AsyncStreamConsumer.class.getName(), ex.getMessage());
+      Assert.assertEquals("Cannot re-use " + AsyncStreamHandler.class.getName(), ex.getMessage());
     }
   }
 }

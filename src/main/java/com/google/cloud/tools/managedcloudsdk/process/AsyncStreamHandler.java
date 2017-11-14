@@ -29,21 +29,21 @@ import java.util.concurrent.Executors;
  *
  * @param <T> the type of the returned Future, use {@code Void} if you're not returning anything
  */
-public class AsyncStreamConsumer<T> {
+public class AsyncStreamHandler<T> {
 
   private final ListeningExecutorService executorService;
   private final StreamConsumerFactory<T> streamConsumerFactory;
   private final SettableFuture<T> result;
 
   /** Create a new instance. */
-  public AsyncStreamConsumer(StreamConsumerFactory<T> streamConsumerFactory) {
+  public AsyncStreamHandler(StreamConsumerFactory<T> streamConsumerFactory) {
     this(
         streamConsumerFactory,
         MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()),
         SettableFuture.<T>create());
   }
 
-  AsyncStreamConsumer(
+  AsyncStreamHandler(
       StreamConsumerFactory<T> streamConsumerFactory,
       ListeningExecutorService executorService,
       SettableFuture<T> result) {

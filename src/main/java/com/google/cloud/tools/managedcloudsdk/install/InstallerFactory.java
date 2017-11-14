@@ -19,7 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.MessageListenerForwardingHandler;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
-import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamConsumer;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
 import com.google.cloud.tools.managedcloudsdk.process.StreamByteConsumerFactory;
 import com.google.cloud.tools.managedcloudsdk.process.StreamLineConsumerFactory;
@@ -38,7 +38,7 @@ final class InstallerFactory {
    * @param usageReporting enable or disable client side usage reporting {@code true} is enabled,
    *     {@code false} is disabled
    */
-  public InstallerFactory(OsInfo osInfo, boolean usageReporting) {
+  InstallerFactory(OsInfo osInfo, boolean usageReporting) {
     this.osInfo = osInfo;
     this.usageReporting = usageReporting;
   }
@@ -50,7 +50,7 @@ final class InstallerFactory {
    * @param messageListener listener on installer script output
    * @return a {@link Installer} instance.
    */
-  public Installer<? extends InstallScriptProvider> newInstaller(
+  Installer<? extends InstallScriptProvider> newInstaller(
       Path installedSdkRoot, MessageListener messageListener) {
 
     return new Installer<>(
@@ -59,9 +59,9 @@ final class InstallerFactory {
         usageReporting,
         messageListener,
         new CommandExecutorFactory(),
-        new AsyncStreamConsumer<>(
+        new AsyncStreamHandler<>(
             new StreamLineConsumerFactory<>(new MessageListenerForwardingHandler(messageListener))),
-        new AsyncStreamConsumer<>(
+        new AsyncStreamHandler<>(
             new StreamByteConsumerFactory<>(
                 new MessageListenerForwardingHandler(messageListener))));
   }

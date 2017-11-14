@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.process;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -42,7 +41,7 @@ public class CommandExecutorTest {
   @Mock private Process processMock;
   @Mock private InputStream mockStdOut;
   @Mock private InputStream mockStdErr;
-  @Mock private AsyncStreamConsumer mockStreamHandler;
+  @Mock private AsyncStreamHandler mockStreamHandler;
   private final List<String> command = Arrays.asList("someCommand", "someOption");
 
   private InOrder loggerInOrder;

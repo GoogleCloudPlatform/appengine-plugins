@@ -17,7 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamConsumer;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -42,7 +42,7 @@ public class InstallerTest {
   @Mock private CommandExecutorFactory mockCommandExecutorFactory;
   @Mock private CommandExecutor mockCommandExecutor;
   @Mock private MessageListener mockMessageListener;
-  @Mock private AsyncStreamConsumer<Void> mockStreamHandler;
+  @Mock private AsyncStreamHandler<Void> mockStreamHandler;
   @Mock private ListenableFuture<Void> mockResult;
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
@@ -59,8 +59,8 @@ public class InstallerTest {
     Mockito.when(
             mockCommandExecutor.run(
                 Mockito.<String>anyList(),
-                Mockito.any(AsyncStreamConsumer.class),
-                Mockito.any(AsyncStreamConsumer.class)))
+                Mockito.any(AsyncStreamHandler.class),
+                Mockito.any(AsyncStreamHandler.class)))
         .thenReturn(0);
     Mockito.when(mockStreamHandler.getResult()).thenReturn(mockResult);
     Mockito.when(mockResult.get()).thenReturn(null);

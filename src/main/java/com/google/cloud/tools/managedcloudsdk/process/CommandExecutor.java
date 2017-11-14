@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.process;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -62,7 +60,7 @@ public class CommandExecutor {
    * @param command the list of command line tokens
    * @return exitcode from the process
    */
-  public int run(List<String> command, AsyncStreamConsumer stdout, AsyncStreamConsumer stderr)
+  public int run(List<String> command, AsyncStreamHandler stdout, AsyncStreamHandler stderr)
       throws IOException, ExecutionException {
 
     // Builds the command to execute.

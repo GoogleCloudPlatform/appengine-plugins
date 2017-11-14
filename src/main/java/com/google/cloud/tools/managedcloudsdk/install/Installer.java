@@ -17,7 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamConsumer;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
 import com.google.common.annotations.VisibleForTesting;
@@ -36,8 +36,8 @@ final class Installer<T extends InstallScriptProvider> {
   private final boolean usageReporting;
   private final MessageListener messageListener;
   private final CommandExecutorFactory commandExecutorFactory;
-  private final AsyncStreamConsumer<Void> stdOutListener;
-  private final AsyncStreamConsumer<Void> stdErrListener;
+  private final AsyncStreamHandler<Void> stdOutListener;
+  private final AsyncStreamHandler<Void> stdErrListener;
 
   /** Instantiated by {@link InstallerFactory}. */
   Installer(
@@ -46,8 +46,8 @@ final class Installer<T extends InstallScriptProvider> {
       boolean usageReporting,
       MessageListener messageListener,
       CommandExecutorFactory commandExecutorFactory,
-      AsyncStreamConsumer<Void> stdOutListener,
-      AsyncStreamConsumer<Void> stdErrListener) {
+      AsyncStreamHandler<Void> stdOutListener,
+      AsyncStreamHandler<Void> stdErrListener) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;
     this.usageReporting = usageReporting;
