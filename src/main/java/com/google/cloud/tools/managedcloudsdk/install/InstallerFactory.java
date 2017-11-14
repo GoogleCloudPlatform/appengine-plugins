@@ -61,8 +61,7 @@ final class InstallerFactory {
         new AsyncStreamHandler<>(
             new StreamConsumerFactory<>(new MessageListenerForwardingHandler(messageListener))),
         new AsyncStreamHandler<>(
-            new StreamConsumerFactory<>(
-                new MessageListenerForwardingHandler(messageListener))));
+            new StreamConsumerFactory<>(new MessageListenerForwardingHandler(messageListener))));
   }
 
   private InstallScriptProvider getInstallScriptProvider() {

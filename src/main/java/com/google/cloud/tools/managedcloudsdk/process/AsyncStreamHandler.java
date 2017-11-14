@@ -52,6 +52,7 @@ public class AsyncStreamHandler<T> {
     this.result = result;
   }
 
+  /** Handle an input stream on a separate thread. */
   public void handleStream(final InputStream inputStream) {
     if (executorService.isShutdown()) {
       throw new IllegalStateException("Cannot re-use " + this.getClass().getName());
