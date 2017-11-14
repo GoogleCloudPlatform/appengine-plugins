@@ -30,7 +30,7 @@ public class MessageListenerForwardingHandler implements ByteHandler<Void> {
 
   @Override
   public void bytes(byte[] bytes, int length) {
-    messageListener.message(new String(bytes, 0, length, Charsets.UTF_8));
+    messageListener.message(new String(bytes, 0, length));
   }
 
   @Override
