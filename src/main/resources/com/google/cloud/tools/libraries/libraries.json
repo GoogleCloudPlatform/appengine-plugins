@@ -369,7 +369,7 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/datastore/package-summary.html",
       "infotip": "The com.google.cloud.datastore packages",
       "launchStage": "GA",  
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-datastore",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
@@ -446,7 +446,7 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/logging/package-summary.html",
       "infotip": "The com.google.cloud.logging packages for controlling Stackdriver logging",
       "launchStage": "GA",  
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-translate",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-logging",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
