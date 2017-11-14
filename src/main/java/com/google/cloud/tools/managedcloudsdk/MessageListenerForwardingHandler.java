@@ -17,7 +17,6 @@
 package com.google.cloud.tools.managedcloudsdk;
 
 import com.google.cloud.tools.managedcloudsdk.process.ByteHandler;
-import com.google.common.base.Charsets;
 
 /** {@link ByteHandler} that redirects to {@link MessageListener}. */
 public class MessageListenerForwardingHandler implements ByteHandler<Void> {
