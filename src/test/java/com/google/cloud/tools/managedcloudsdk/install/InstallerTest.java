@@ -55,8 +55,7 @@ public class InstallerTest {
     MockitoAnnotations.initMocks(this);
 
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
-    Mockito.when(mockCommandExecutorFactory.newCommandExecutor(mockMessageListener))
-        .thenReturn(mockCommandExecutor);
+    Mockito.when(mockCommandExecutorFactory.newCommandExecutor()).thenReturn(mockCommandExecutor);
     Mockito.when(
             mockCommandExecutor.run(
                 Mockito.<String>anyList(),

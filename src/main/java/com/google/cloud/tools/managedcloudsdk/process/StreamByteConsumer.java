@@ -25,6 +25,7 @@ import java.util.concurrent.Callable;
  * @param <T> use {@code Void} if you don't want to store the result
  */
 public class StreamByteConsumer<T> implements Callable<T> {
+  private static final int BUFFER_SIZE = 1024;
   private final InputStream inputStream;
   private final ByteHandler<T> byteHandler;
 
@@ -36,7 +37,7 @@ public class StreamByteConsumer<T> implements Callable<T> {
 
   @Override
   public T call() throws Exception {
-    byte[] byteBuffer = new byte[1024];
+    byte[] byteBuffer = new byte[BUFFER_SIZE];
     int bytesRead;
     try (InputStream in = inputStream) {
       while ((bytesRead = in.read(byteBuffer)) != -1) {

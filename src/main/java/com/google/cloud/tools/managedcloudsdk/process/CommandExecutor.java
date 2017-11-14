@@ -28,17 +28,9 @@ import java.util.concurrent.ExecutionException;
 /** Executes a shell command. */
 public class CommandExecutor {
 
-  static final int TIMEOUT_SECONDS = 5;
-
   private ProcessBuilderFactory processBuilderFactory = new ProcessBuilderFactory();
-  private MessageListener messageListener;
   private Map<String, String> environment;
   private Path workingDirectory;
-
-  public CommandExecutor setMessageListener(MessageListener messageListener) {
-    this.messageListener = messageListener;
-    return this;
-  }
 
   /** Sets the environment variables to run the command with. */
   public CommandExecutor setEnvironment(Map<String, String> environmentMap) {
@@ -72,7 +64,6 @@ public class CommandExecutor {
    */
   public int run(List<String> command, AsyncStreamConsumer stdout, AsyncStreamConsumer stderr)
       throws IOException, ExecutionException {
-    messageListener.message("Running command : " + Joiner.on(" ").join(command) + "\n");
 
     // Builds the command to execute.
     ProcessBuilder processBuilder = processBuilderFactory.createProcessBuilder();

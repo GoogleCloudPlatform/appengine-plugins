@@ -21,6 +21,7 @@ import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamConsumer;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -66,9 +67,10 @@ final class Installer<T extends InstallScriptProvider> {
     command.add("--quiet"); // don't accept user input during install
     command.add("--usage-reporting=" + usageReporting); // usageReportingPassthrough
 
-    CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor(messageListener);
+    CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor();
     commandExecutor.setWorkingDirectory(installedSdkRoot);
 
+    messageListener.message("Running command : " + Joiner.on(" ").join(command) + "\n");
     int exitCode = commandExecutor.run(command, stdOutListener, stdErrListener);
     if (exitCode != 0) {
       throw new ExecutionException(

@@ -42,7 +42,6 @@ public class CommandExecutorTest {
   @Mock private Process processMock;
   @Mock private InputStream mockStdOut;
   @Mock private InputStream mockStdErr;
-  @Mock private MessageListener messageListener;
   @Mock private AsyncStreamConsumer mockStreamHandler;
   private final List<String> command = Arrays.asList("someCommand", "someOption");
 
@@ -57,7 +56,6 @@ public class CommandExecutorTest {
     Mockito.when(processMock.waitFor()).thenReturn(0);
     Mockito.when(processMock.getInputStream()).thenReturn(mockStdOut);
     Mockito.when(processMock.getErrorStream()).thenReturn(mockStdErr);
-    loggerInOrder = Mockito.inOrder(messageListener);
   }
 
   @Test
@@ -73,7 +71,6 @@ public class CommandExecutorTest {
 
     int result =
         new CommandExecutor()
-            .setMessageListener(messageListener)
             .setWorkingDirectory(fakeWorkingDirectory)
             .setEnvironment(environmentInput)
             .setProcessBuilderFactory(processBuilderFactoryMock)
@@ -84,10 +81,8 @@ public class CommandExecutorTest {
     Mockito.verify(processBuilderMock).directory(fakeWorkingDirectory.toFile());
     Assert.assertEquals(environmentInput, processEnvironment);
 
-    Mockito.verify(messageListener).message("Running command : someCommand someOption\n");
     Mockito.verify(mockStreamHandler).handleStream(mockStdOut);
     Mockito.verify(mockStreamHandler).handleStream(mockStdErr);
-    Mockito.verifyNoMoreInteractions(messageListener);
     Mockito.verifyNoMoreInteractions(mockStreamHandler);
   }
 
@@ -99,7 +94,6 @@ public class CommandExecutorTest {
 
     int exitCode =
         new CommandExecutor()
-            .setMessageListener(messageListener)
             .setProcessBuilderFactory(processBuilderFactoryMock)
             .run(command, mockStreamHandler, mockStreamHandler);
 
@@ -114,7 +108,6 @@ public class CommandExecutorTest {
 
     try {
       new CommandExecutor()
-          .setMessageListener(messageListener)
           .setProcessBuilderFactory(processBuilderFactoryMock)
           .run(command, mockStreamHandler, mockStreamHandler);
       Assert.fail("Execution exception expected but not thrown.");
@@ -123,7 +116,6 @@ public class CommandExecutorTest {
     }
 
     Mockito.verify(processMock).destroy();
-    loggerInOrder.verify(messageListener).message("Running command : someCommand someOption\n");
   }
 
   private void verifyProcessBuilding(List<String> command) throws IOException {

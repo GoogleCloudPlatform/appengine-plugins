@@ -16,13 +16,11 @@
 
 package com.google.cloud.tools.managedcloudsdk.process;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
-
 /** {@link CommandExecutor} Factory. */
 public class CommandExecutorFactory {
 
-  /** Return a default command executor with a message listener set. */
-  public CommandExecutor newCommandExecutor(MessageListener messageListener) {
-    return new CommandExecutor().setMessageListener(messageListener);
+  /** Return a command executor */
+  public CommandExecutor newCommandExecutor() {
+    return new CommandExecutor();
   }
 }
