@@ -20,10 +20,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /** Tests for {@link CollectingByteHandler}. */
-public class CollectingLineHandlerTest {
+public class CollectingByteHandlerTest {
 
   @Test
-  public void testLineHandler_smokeTest() {
+  public void testByteHandler_smokeTest() {
     CollectingByteHandler testHandler = new CollectingByteHandler();
     testHandler.bytes("line1\n".getBytes(), 6);
     testHandler.bytes("line2\n".getBytes(), 6);
@@ -31,7 +31,7 @@ public class CollectingLineHandlerTest {
   }
 
   @Test
-  public void testLineHandler_junkIgnored() {
+  public void testByteHandler_junkIgnored() {
     CollectingByteHandler testHandler = new CollectingByteHandler();
     testHandler.bytes("line1\n123".getBytes(), 6);
     testHandler.bytes("line2\n456".getBytes(), 6);
