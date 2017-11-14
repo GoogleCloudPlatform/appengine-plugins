@@ -19,7 +19,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-speech",
-         "version": "0.26.0-alpha"
+         "version": "0.28.0-alpha"
        }
       }
     ]
@@ -44,7 +44,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-resourcemanager",
-         "version": "0.26.0-alpha"
+         "version": "0.28.0-alpha"
        }
       }
     ]
@@ -63,13 +63,13 @@
       "site": "https://cloud.google.com/dlp/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/dlp/v2beta1/package-summary.html",
       "infotip": "The com.google.cloud.dlp.v2beta1 packages",
-      "launchStage": "alpha",  
+      "launchStage": "beta",  
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-dlp",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dlp",
-         "version": "0.26.0-alpha"
+         "version": "0.28.0-beta"
        }
       }
     ]
@@ -93,7 +93,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-video-intelligence",
-         "version": "0.26.0-beta"
+         "version": "0.28.0-beta"
        }
       }
     ]
@@ -119,7 +119,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-compute",
-         "version": "0.26.0-alpha"
+         "version": "0.28.0-alpha"
        }
       }
     ]
@@ -138,13 +138,13 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/monitoring/v3/package-summary.html",
       "infotip": "The com.google.cloud.monitoring.v3 packages",
-      "launchStage": "alpha",  
+      "launchStage": "beta",  
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-monitoring",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-monitoring",
-         "version": "0.26.0-alpha"
+         "version": "0.28.0-beta"
        }
       }
     ]
@@ -163,13 +163,13 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/errorreporting/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.errorreporting.v1beta1 packages",
-      "launchStage": "alpha",  
+      "launchStage": "beta",  
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-errorreporting",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-errorreporting",
-         "version": "0.26.0-alpha"
+         "version": "0.28.0-beta"
        }
       }
     ]
@@ -188,13 +188,13 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/trace/v1/package-summary.html",
       "infotip": "The com.google.cloud.trace.v1 packages",
-      "launchStage": "alpha",  
+      "launchStage": "beta",  
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-trace",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-trace",
-         "version": "0.26.0-alpha"
+         "version": "0.28.0-beta"
        }
       }
     ]
@@ -209,7 +209,7 @@
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/dns.svg",
     "clients": [
       {
-      "name": "Java Client Libraries for the Google dns Engine API",
+      "name": "Java Client Libraries for the Google DNS Engine API",
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/dns/package-summary.html",
       "infotip": "The com.google.cloud.dns packages",
@@ -219,7 +219,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dns",
-         "version": "0.26.0-alpha"
+         "version": "0.28.0-alpha"
        }
       }
     ]
@@ -244,7 +244,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-vision",
-         "version": "0.26.0-beta"
+         "version": "0.28.0-beta"
        }
       }
     ]
@@ -264,13 +264,13 @@
       "site": "https://cloud.google.com/natural-language/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/language/v1/package-summary.html",
       "infotip": "The com.google.cloud.language.v1 packages",
-      "launchStage": "beta",  
+      "launchStage": "GA",  
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-language",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-language",
-         "version": "0.26.0-beta"
+         "version": "1.10.0"
        }
       }
     ]
@@ -296,7 +296,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-spanner",
-         "version": "0.26.0-beta"
+         "version": "0.28.0-beta"
        }
       }
     ]
@@ -322,7 +322,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-pubsub",
-         "version": "0.26.0-beta"
+         "version": "0.28.0-beta"
        }
       }
     ]
@@ -348,7 +348,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-bigquery",
-         "version": "0.26.0-beta"
+         "version": "0.28.0-beta"
        }
       }
     ]
@@ -374,7 +374,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-datastore",
-         "version": "1.8.0"
+         "version": "1.10.0"
        }
       }
     ]
@@ -400,7 +400,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-storage",
-         "version": "1.8.0"
+         "version": "1.10.0"
        }
       }
     ]
@@ -425,7 +425,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-translate",
-         "version": "1.8.0"
+         "version": "1.10.0"
        }
       }
     ]
@@ -451,7 +451,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-logging",
-         "version": "1.8.0"
+         "version": "1.10.0"
        }
       }
     ]
