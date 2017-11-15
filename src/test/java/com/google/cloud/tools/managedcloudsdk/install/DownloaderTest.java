@@ -95,11 +95,9 @@ public class DownloaderTest {
 
     downloader.download();
     Assert.assertTrue(Files.exists(destination));
-
     Assert.assertArrayEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-
     Mockito.verify(messageListener, Mockito.atLeastOnce()).message(messageCaptor.capture());
 
     List<String> values = messageCaptor.getAllValues();
@@ -109,6 +107,7 @@ public class DownloaderTest {
 
     List<String> dots = values.subList(2, values.size() - 1);
 
+    Assert.assertTrue(dots.size() > 0);
     for (String dot : dots) {
       Assert.assertEquals(".", dot);
     }

@@ -72,13 +72,9 @@ public class GenericArchivesVerifier {
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
 
     // tars allow for duplicate entries
-    Mockito.verify(messageListener, Mockito.atLeastOnce())
-        .message(testRoot.resolve(ROOT).toString() + "\n");
-    Mockito.verify(messageListener, Mockito.atLeastOnce())
-        .message(testRoot.resolve(FILE_1).toString() + "\n");
-    Mockito.verify(messageListener, Mockito.atLeastOnce())
-        .message(testRoot.resolve(SUB).toString() + "\n");
-    Mockito.verify(messageListener, Mockito.atLeastOnce())
-        .message(testRoot.resolve(FILE_2).toString() + "\n");
+    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(ROOT) + "\n");
+    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(FILE_1) + "\n");
+    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(SUB) + "\n");
+    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(FILE_2) + "\n");
   }
 }
