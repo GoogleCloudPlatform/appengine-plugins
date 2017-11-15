@@ -28,6 +28,12 @@
     "name": "Google Cloud Resource Manager",
     "id": "googlecloudresourcemanager",
     "serviceName": "cloudresourcemanager.googleapis.com",
+    "serviceRoles": [
+      "roles/resourcemanager.organizationAdmin",
+      "roles/resourcemanager.projectDeleter",
+      "roles/resourcemanager.projectIamAdmin",
+      "roles/resourcemanager.lienModifier"
+    ],
     "documentation": "https://cloud.google.com/resource-manager/docs/",
     "description": "The Google Cloud Resource Manager service enables you to programmatically manage hierarchical resource containers such as organizations, folders, and projects.",
     "transports": ["http"],
@@ -102,6 +108,17 @@
     "name": "Compute Engine",
     "id": "computeengine",
     "serviceName": "compute.googleapis.com",
+    "serviceRoles": [
+      "roles/compute.admin",
+      "roles/compute.imageUser",
+      "roles/compute.instanceAdmin",
+      "roles/compute.instanceAdmin.v1",
+      "roles/compute.loadBalancerAdmin",
+      "roles/compute.networkAdmin",
+      "roles/compute.networkUser",
+      "roles/compute.networkViewer",
+      "roles/compute.securityAdmin"
+    ],
     "documentation": "https://cloud.google.com/compute/docs/apis",
     "description": "Google Compute Engine lets you create and run virtual machines on Google infrastructure.",
     "transports": ["http"],
@@ -124,13 +141,21 @@
       }
     ]
   },
-   {
+  {
     "name": "Stackdriver Monitoring",
     "id": "stackdrivermonitoring",
     "serviceName": "monitoring.googleapis.com",
+    "serviceRoles": [
+      "roles/monitoring.admin",
+      "roles/monitoring.editor",
+      "roles/monitoring.metricWriter",
+      "roles/monitoring.viewer"
+    ],
     "documentation": "https://cloud.google.com/monitoring/docs/reference/libraries",
     "description": "Stackdriver Monitoring provides visibility into the performance, uptime, and overall health of cloud-powered applications.",
-    "transports": ["grpc"],
+    "transports": [
+      "grpc"
+    ],
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/stackdriver.svg",
     "clients": [
       {
@@ -149,10 +174,16 @@
       }
     ]
   },
- {
+  {
     "name": "Stackdriver Error Reporting",
     "id": "stackdrivererrorreporting",
     "serviceName": "clouderrorreporting.googleapis.com",
+    "serviceRoles": [
+      "roles/errorreporting.admin",
+      "roles/errorreporting.user",
+      "roles/errorreporting.viewer",
+      "roles/errorreporting.writer"
+    ],
     "documentation": "https://cloud.google.com/error-reporting/reference/",
     "description": "Stackdriver Error Reporting counts, analyzes and aggregates the crashes in your running cloud services.",
     "transports": ["http"],
@@ -178,6 +209,11 @@
     "name": "Stackdriver Trace",
     "id": "stackdrivertrace",
     "serviceName": "cloudtrace.googleapis.com",
+    "serviceRoles": [
+      "roles/cloudtrace.admin",
+      "roles/cloudtrace.agent",
+      "roles/cloudtrace.user"
+    ],
     "documentation": "https://cloud.google.com/trace/docs/reference/",
     "description": "A distributed tracing system that collects latency data from App Engine applications.",
     "transports": ["grpc"],
@@ -199,13 +235,19 @@
       }
     ]
   },
- {
+  {
     "name": "Cloud DNS",
     "id": "clouddns",
     "serviceName": "dns.googleapis.com",
+    "serviceRoles": [
+      "roles/dns.admin",
+      "roles/dns.reader"
+    ],
     "documentation": "https://cloud.google.com/dns/docs/apis",
     "description": "Google Cloud DNS is a managed authoritative Domain Name System (DNS) service running on Google infrastructure. Cloud DNS translates domain names such as www.google.com into IP addresses such as 74.125.29.101.",
-    "transports": ["http"],
+    "transports": [
+      "http"
+    ],
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/dns.svg",
     "clients": [
       {
@@ -220,7 +262,7 @@
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dns",
          "version": "0.29.0-alpha"
-       }
+        }
       }
     ]
   },
@@ -279,6 +321,13 @@
     "name": "Google Cloud Spanner",
     "id": "googlecloudspanner",
     "serviceName": "spanner.googleapis.com",
+    "serviceRoles": [
+      "roles/spanner.admin",
+      "roles/spanner.databaseAdmin",
+      "roles/spanner.databaseReader",
+      "roles/spanner.databaseUser",
+      "roles/spanner.viewer"
+    ],
     "documentation": "https://cloud.google.com/spanner/docs/reference/libraries",
     "description": "Cloud Spanner is a fully managed, relational database service built for transactional consistency, high availability, and global scale.",
     "transports": ["grpc"],
@@ -305,6 +354,13 @@
     "name": "Google Cloud Pub/Sub",
     "id": "googlecloudpubsub",
     "serviceName": "pubsub.googleapis.com",
+    "serviceRoles": [
+      "roles/pubsub.admin",
+      "roles/pubsub.editor",
+      "roles/pubsub.publisher",
+      "roles/pubsub.subscriber",
+      "roles/pubsub.viewer"
+    ],
     "documentation": "https://cloud.google.com/pubsub/docs/reference/libraries",
     "description": "Google Cloud Pub/Sub provides reliable, many-to-many, asynchronous messaging between applications. Publisher applications can send messages to a topic and other applications can subscribe to that topic to receive the messages.",
     "transports": ["grpc"],
@@ -331,6 +387,14 @@
     "name": "Google BigQuery API",
     "id": "googlebiqqueryapi",
     "serviceName": "bigquery-json.googleapis.com",
+    "serviceRoles": [
+      "roles/bigquery.admin",
+      "roles/bigquery.dataEditor",
+      "roles/bigquery.dataOwner",
+      "roles/bigquery.dataViewer",
+      "roles/bigquery.jobUser",
+      "roles/bigquery.user"
+    ],
     "documentation": "https://cloud.google.com/bigquery/docs/reference/libraries",
     "description": "Google's fully managed, petabyte scale, serverless data warehouse for analytics",
     "transports": ["http"],
@@ -357,6 +421,13 @@
     "name": "Google Cloud Datastore",
     "id": "clouddatastore",
     "serviceName": "datastore.googleapis.com",
+    "serviceRoles": [
+      "roles/datastore.importExportAdmin",
+      "roles/datastore.indexAdmin",
+      "roles/datastore.owner",
+      "roles/datastore.user",
+      "roles/datastore.viewer"
+    ],
     "documentation": "https://cloud.google.com/datastore/docs/reference/libraries",
     "description": "Google Cloud Datastore is a NoSQL key-value database built for automatic scaling.",
     "transports": ["http"],
@@ -383,6 +454,12 @@
     "name": "Google Cloud Storage",
     "id": "googlecloudstorage",
     "serviceName": "storage-component.googleapis.com",
+    "serviceRoles": [
+      "roles/storage.admin",
+      "roles/storage.objectAdmin",
+      "roles/storage.objectCreator",
+      "roles/storage.objectViewer"
+    ],
     "documentation": "https://cloud.google.com/storage/docs/reference/libraries",
     "description": "Unified BLOB storage for developers and enterprises, from live data serving to data analytics/ML to data archiving.",
     "transports": ["http"],
@@ -434,6 +511,13 @@
     "name": "Stackdriver Logging",
     "id": "stackdriverlogging",
     "serviceName": "logging.googleapis.com",
+    "serviceRoles": [
+      "roles/logging.admin",
+      "roles/logging.configWriter",
+      "roles/logging.logWriter",
+      "roles/logging.privateLogViewer",
+      "roles/logging.viewer"
+    ],
     "documentation": "https://cloud.google.com/logging/docs/reference/libraries",
     "description": "Stackdriver Logging enables you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services in real-time.",
     "transports": ["grpc"],

@@ -129,6 +129,23 @@ public class LibrariesTest {
   }
 
   @Test
+  public void testServiceRoleMapping_hasNoDuplicateRoles() {
+    for (JsonObject api : apis) {
+      JsonArray serviceRoles = api.getJsonArray("serviceRoles");
+      if (serviceRoles != null) {
+        Set<String> roles = Sets.newHashSet();
+        for (int i = 0; i < serviceRoles.size(); i++) {
+          String role = serviceRoles.getString(i);
+          if (roles.contains(role)) {
+            Assert.fail("Role: " + role + " is defined multiple times");
+          }
+          roles.add(role);
+        }
+      }
+    }
+  }
+
+  @Test
   public void testVersionExists() throws IOException {
     for (JsonObject api : apis) {
       JsonObject coordinates =
