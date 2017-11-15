@@ -28,7 +28,7 @@ import org.junit.runners.Parameterized;
 
 /** Tests for {@link InstallerFactory}. * */
 @RunWith(Parameterized.class)
-public class ComponentInstallerFactoryTest {
+public class InstallerFactoryTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
