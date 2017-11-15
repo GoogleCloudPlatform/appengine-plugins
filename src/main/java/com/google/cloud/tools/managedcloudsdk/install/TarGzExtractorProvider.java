@@ -49,7 +49,7 @@ final class TarGzExtractorProvider implements ExtractorProvider {
       while ((entry = in.getNextTarEntry()) != null) {
         final Path entryTarget = destination.resolve(entry.getName());
         if (messageListener != null) {
-          messageListener.message(entryTarget.toString() + "\n");
+          messageListener.message(entryTarget + "\n");
         }
         if (entry.isDirectory()) {
           if (!Files.exists(entryTarget)) {
