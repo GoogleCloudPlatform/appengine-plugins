@@ -17,9 +17,11 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ final class Installer<T extends InstallScriptProvider> {
   private final boolean usageReporting;
   private final MessageListener messageListener;
   private final CommandExecutorFactory commandExecutorFactory;
+  private final AsyncStreamHandler<Void> stdOutConsumer;
+  private final AsyncStreamHandler<Void> stdErrConsumer;
 
   /** Instantiated by {@link InstallerFactory}. */
   Installer(
@@ -41,12 +45,16 @@ final class Installer<T extends InstallScriptProvider> {
       InstallScriptProvider installScriptProvider,
       boolean usageReporting,
       MessageListener messageListener,
-      CommandExecutorFactory commandExecutorFactory) {
+      CommandExecutorFactory commandExecutorFactory,
+      AsyncStreamHandler<Void> stdOutConsumer,
+      AsyncStreamHandler<Void> stdErrConsumer) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;
     this.usageReporting = usageReporting;
     this.messageListener = messageListener;
     this.commandExecutorFactory = commandExecutorFactory;
+    this.stdOutConsumer = stdOutConsumer;
+    this.stdErrConsumer = stdErrConsumer;
   }
 
   /** Install a cloud sdk (only run this on LATEST). */
@@ -59,13 +67,14 @@ final class Installer<T extends InstallScriptProvider> {
     command.add("--quiet"); // don't accept user input during install
     command.add("--usage-reporting=" + usageReporting); // usageReportingPassthrough
 
-    CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor(messageListener);
+    CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor();
     commandExecutor.setWorkingDirectory(installedSdkRoot);
 
-    int exitcode = commandExecutor.run(command);
-    if (exitcode != 0) {
+    messageListener.message("Running command : " + Joiner.on(" ").join(command) + "\n");
+    int exitCode = commandExecutor.run(command, stdOutConsumer, stdErrConsumer);
+    if (exitCode != 0) {
       throw new ExecutionException(
-          "Installer exited with non-zero exit code: " + exitcode, new Throwable());
+          "Installer exited with non-zero exit code: " + exitCode, new Throwable());
     }
   }
 

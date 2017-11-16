@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk;
+package com.google.cloud.tools.managedcloudsdk.process;
 
-public interface MessageListener {
-  /**
-   * Process a raw message. Implementers should not add a newline to the end, it may contain newline
-   * characters of its own.
-   *
-   * @param rawString a partial or full messages with all necessary newlines
-   */
-  void message(String rawString);
+import java.io.InputStream;
+import java.util.concurrent.Callable;
+
+/**
+ * {@link StreamConsumer} factory.
+ *
+ * @param <T> use {@code Void} if you do not want to store the result
+ */
+public class StreamConsumerFactory<T> {
+
+  private final ByteHandler<T> byteHandler;
+
+  public StreamConsumerFactory(ByteHandler<T> byteHandler) {
+    this.byteHandler = byteHandler;
+  }
+
+  public Callable<T> newConsumer(InputStream inputStream) {
+    return new StreamConsumer<>(inputStream, byteHandler);
+  }
 }

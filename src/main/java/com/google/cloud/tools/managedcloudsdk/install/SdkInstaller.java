@@ -84,14 +84,16 @@ public class SdkInstaller {
     // CLEANUP: remove old downloaded archive if exists
     if (Files.isRegularFile(fileResourceProvider.getArchiveDestination())) {
       messageListener.message(
-          "Removing stale archive: " + fileResourceProvider.getArchiveDestination());
+          "Removing stale archive: " + fileResourceProvider.getArchiveDestination() + "\n");
       Files.delete(fileResourceProvider.getArchiveDestination());
     }
 
     // CLEANUP: Remove old SDK directory if exists
     if (Files.exists(fileResourceProvider.getArchiveExtractionDestination())) {
       messageListener.message(
-          "Removing stale install: " + fileResourceProvider.getArchiveExtractionDestination());
+          "Removing stale install: "
+              + fileResourceProvider.getArchiveExtractionDestination()
+              + "\n");
       Files.walkFileTree(
           fileResourceProvider.getArchiveExtractionDestination(), new FileDeleteVisitor());
     }

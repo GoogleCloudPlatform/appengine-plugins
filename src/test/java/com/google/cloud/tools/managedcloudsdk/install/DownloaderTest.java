@@ -95,30 +95,22 @@ public class DownloaderTest {
 
     downloader.download();
     Assert.assertTrue(Files.exists(destination));
-
     Assert.assertArrayEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-
     Mockito.verify(messageListener, Mockito.atLeastOnce()).message(messageCaptor.capture());
 
     List<String> values = messageCaptor.getAllValues();
-    Assert.assertEquals("Downloading " + fakeRemoteResource.toString(), values.get(0));
-    Assert.assertEquals("Download complete", values.get(values.size() - 1));
+    Assert.assertEquals("Downloading " + fakeRemoteResource.toString() + "\n", values.get(0));
+    Assert.assertEquals("Downloading " + String.valueOf(testFileSize) + " bytes\n", values.get(1));
+    Assert.assertEquals("done.\n", values.get(values.size() - 1));
 
-    List<String> numericalOutput = values.subList(1, values.size() - 1);
+    List<String> dots = values.subList(2, values.size() - 1);
 
-    long lastRead = -1;
-    for (String progress : numericalOutput) {
-      String[] progressValues = progress.split("/");
-      Assert.assertEquals(2, progressValues.length);
-      long read = Long.valueOf(progressValues[0]);
-      long total = Long.valueOf(progressValues[1]);
-      Assert.assertTrue(read - lastRead > 0);
-      lastRead = read;
-      Assert.assertEquals(testFileSize, total);
+    Assert.assertTrue(dots.size() > 0);
+    for (String dot : dots) {
+      Assert.assertEquals(".", dot);
     }
-    Assert.assertEquals(testFileSize, lastRead);
   }
 
   @Test
@@ -193,10 +185,11 @@ public class DownloaderTest {
     testThreadToInterrupt.join();
 
     Assert.assertFalse(Files.exists(destination));
-    Mockito.verify(messageListener).message("Downloading " + fakeRemoteResource);
-    Mockito.verify(messageListener).message("0/" + String.valueOf(testFileSize));
-    Mockito.verify(messageListener).message("Download was interrupted");
-    Mockito.verify(messageListener).message("Cleaning up...");
+    Mockito.verify(messageListener).message("Downloading " + fakeRemoteResource + "\n");
+    Mockito.verify(messageListener)
+        .message("Downloading " + String.valueOf(testFileSize) + " bytes\n");
+    Mockito.verify(messageListener).message("Download was interrupted\n");
+    Mockito.verify(messageListener).message("Cleaning up...\n");
     Mockito.verifyNoMoreInteractions(messageListener);
   }
 }

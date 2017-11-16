@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk;
+package com.google.cloud.tools.managedcloudsdk.process;
 
-public interface MessageListener {
-  /**
-   * Process a raw message. Implementers should not add a newline to the end, it may contain newline
-   * characters of its own.
-   *
-   * @param rawString a partial or full messages with all necessary newlines
-   */
-  void message(String rawString);
+/** A line handler that collects lines and returns a single result string. */
+public class CollectingByteHandler implements ByteHandler<String> {
+
+  private final StringBuilder result = new StringBuilder("");
+
+  @Override
+  public void bytes(byte[] bytes, int length) {
+    result.append(new String(bytes, 0, length));
+  }
+
+  @Override
+  public String getResult() {
+    return result.toString();
+  }
 }

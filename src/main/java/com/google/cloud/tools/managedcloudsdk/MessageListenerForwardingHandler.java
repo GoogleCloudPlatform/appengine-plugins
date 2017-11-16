@@ -16,12 +16,24 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
-public interface MessageListener {
-  /**
-   * Process a raw message. Implementers should not add a newline to the end, it may contain newline
-   * characters of its own.
-   *
-   * @param rawString a partial or full messages with all necessary newlines
-   */
-  void message(String rawString);
+import com.google.cloud.tools.managedcloudsdk.process.ByteHandler;
+
+/** {@link ByteHandler} that redirects to {@link MessageListener}. */
+public class MessageListenerForwardingHandler implements ByteHandler<Void> {
+
+  private final MessageListener messageListener;
+
+  public MessageListenerForwardingHandler(MessageListener messageListener) {
+    this.messageListener = messageListener;
+  }
+
+  @Override
+  public void bytes(byte[] bytes, int length) {
+    messageListener.message(new String(bytes, 0, length));
+  }
+
+  @Override
+  public Void getResult() {
+    return null;
+  }
 }

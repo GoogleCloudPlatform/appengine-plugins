@@ -42,16 +42,16 @@ final class Extractor<T extends ExtractorProvider> {
 
   /** Extract an archive. */
   public void extract() throws IOException, InterruptedException {
-    messageListener.message("Extracting archive: " + archive);
+    messageListener.message("Extracting archive: " + archive + "\n");
 
     try {
       extractorProvider.extract(archive, destination, messageListener);
     } catch (IOException ex) {
       try {
-        messageListener.message("Extraction failed, cleaning up " + destination);
+        messageListener.message("Extraction failed, cleaning up " + destination + "\n");
         cleanUp(destination);
       } catch (IOException exx) {
-        messageListener.message("Failed to cleanup directory");
+        messageListener.message("Failed to cleanup directory\n");
       }
       // intentional rethrow after cleanup
       throw ex;
@@ -60,7 +60,7 @@ final class Extractor<T extends ExtractorProvider> {
     // we do not allow interrupt mid extraction, so catch it here, we still end up
     // with a valid directory though, so don't clean it up.
     if (Thread.currentThread().isInterrupted()) {
-      messageListener.message("Process was interrupted");
+      messageListener.message("Process was interrupted\n");
       throw new InterruptedException("Process was interrupted");
     }
   }

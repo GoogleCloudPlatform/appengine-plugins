@@ -31,6 +31,7 @@ import java.nio.file.StandardOpenOption;
 final class Downloader {
 
   static final int BUFFER_SIZE = 8 * 1024;
+  static final int UPDATE_THRESHOLD = 1024 * 1024; // update every megabyte
   private final URL address;
   private final Path destinationFile;
   private final String userAgentString;
@@ -61,7 +62,7 @@ final class Downloader {
     try (InputStream in = connection.getInputStream()) {
       long contentLength = connection.getContentLengthLong();
 
-      messageListener.message("Downloading " + address);
+      messageListener.message("Downloading " + address + "\n");
 
       try (BufferedOutputStream out =
           new BufferedOutputStream(
@@ -69,16 +70,14 @@ final class Downloader {
         int bytesRead;
         byte[] buffer = new byte[BUFFER_SIZE];
 
-        // Progress is updated every 1%
-        long updateThreshold = contentLength / 100;
         long lastUpdated = 0;
         long totalBytesRead = 0;
 
-        messageListener.message("0/" + String.valueOf(contentLength));
+        messageListener.message("Downloading " + String.valueOf(contentLength) + " bytes\n");
         while ((bytesRead = in.read(buffer)) != -1) {
           if (Thread.currentThread().isInterrupted()) {
-            messageListener.message("Download was interrupted");
-            messageListener.message("Cleaning up...");
+            messageListener.message("Download was interrupted\n");
+            messageListener.message("Cleaning up...\n");
             cleanUp();
             throw new InterruptedException("Download was interrupted");
           }
@@ -87,15 +86,14 @@ final class Downloader {
           // update progress
           totalBytesRead += bytesRead;
           long bytesSinceLastUpdate = totalBytesRead - lastUpdated;
-          if (totalBytesRead == contentLength || bytesSinceLastUpdate > updateThreshold) {
-            messageListener.message(
-                String.valueOf(totalBytesRead) + "/" + String.valueOf(contentLength));
+          if (totalBytesRead == contentLength || bytesSinceLastUpdate > UPDATE_THRESHOLD) {
+            messageListener.message(".");
             lastUpdated = totalBytesRead;
           }
         }
       }
     }
-    messageListener.message("Download complete");
+    messageListener.message("done.\n");
   }
 
   private void cleanUp() throws IOException {
