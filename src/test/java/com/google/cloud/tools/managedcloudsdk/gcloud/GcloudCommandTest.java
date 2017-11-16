@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.components;
+package com.google.cloud.tools.managedcloudsdk.gcloud;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
@@ -24,6 +24,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import org.junit.Assert;
@@ -35,8 +36,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-/** Tests for {@link ComponentInstaller} */
-public class ComponentInstallerTest {
+/** Tests for {@link GcloudCommand} */
+public class GcloudCommandTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -47,7 +48,7 @@ public class ComponentInstallerTest {
   @Mock private ListenableFuture<Void> mockResult;
 
   private Path fakeGcloud;
-  private SdkComponent testComponent = SdkComponent.APP_ENGINE_JAVA;
+  private List<String> fakeParameters;
 
   @Before
   public void setUpFakesAndMocks() throws IOException, ExecutionException, InterruptedException {
@@ -64,22 +65,23 @@ public class ComponentInstallerTest {
     Mockito.when(mockResult.get()).thenReturn(null);
 
     fakeGcloud = tmp.newFile("gcloud").toPath();
+    fakeParameters = Arrays.asList("test", "--option");
   }
 
   @Test
   public void testCall() throws Exception {
-    ComponentInstaller installer =
-        new ComponentInstaller(
+    GcloudCommand testCommand =
+        new GcloudCommand(
             fakeGcloud,
-            testComponent,
+            fakeParameters,
             mockMessageListener,
             mockCommandExecutorFactory,
             mockStreamHandler,
             mockStreamHandler);
-    installer.install();
+    testCommand.run();
 
     Mockito.verify(mockCommandExecutor)
-        .run(getExpectedCommand(fakeGcloud, testComponent), mockStreamHandler, mockStreamHandler);
+        .run(getExpectedCommand(), mockStreamHandler, mockStreamHandler);
     Mockito.verifyNoMoreInteractions(mockCommandExecutor);
   }
 
@@ -92,33 +94,30 @@ public class ComponentInstallerTest {
                 Mockito.eq(mockStreamHandler)))
         .thenReturn(10);
 
-    ComponentInstaller installer =
-        new ComponentInstaller(
+    GcloudCommand testCommand =
+        new GcloudCommand(
             fakeGcloud,
-            testComponent,
+            fakeParameters,
             mockMessageListener,
             mockCommandExecutorFactory,
             mockStreamHandler,
             mockStreamHandler);
     try {
-      installer.install();
-      Assert.fail("ExecutionException expected but not found.");
-    } catch (ExecutionException ex) {
-      Assert.assertEquals(
-          "Component Installer exited with non-zero exit code: 10", ex.getMessage());
+      testCommand.run();
+      Assert.fail("GcloudCommandExitException expected but not found.");
+    } catch (GcloudCommandExitException ex) {
+      Assert.assertEquals("gcloud exited with non-zero exit code: 10", ex.getMessage());
     }
     Mockito.verify(mockCommandExecutor)
-        .run(getExpectedCommand(fakeGcloud, testComponent), mockStreamHandler, mockStreamHandler);
+        .run(getExpectedCommand(), mockStreamHandler, mockStreamHandler);
     Mockito.verifyNoMoreInteractions(mockCommandExecutor);
   }
 
-  private List<String> getExpectedCommand(Path sdkHome, SdkComponent component) {
-    List<String> command = new ArrayList<>(6);
+  private List<String> getExpectedCommand() {
+    List<String> command = new ArrayList<>(3);
     command.add(fakeGcloud.toString());
-    command.add("components");
-    command.add("install");
-    command.add(component.toString());
-    command.add("--quiet");
+    command.add("test");
+    command.add("--option");
     return command;
   }
 }

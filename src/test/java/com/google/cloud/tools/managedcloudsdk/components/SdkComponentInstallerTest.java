@@ -18,10 +18,10 @@ package com.google.cloud.tools.managedcloudsdk.components;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.executors.SdkExecutorServiceFactory;
+import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandFactory;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.concurrent.Callable;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,32 +36,30 @@ public class SdkComponentInstallerTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private ComponentInstallerFactory componentInstallerFactory;
-  @Mock private MessageListener messageListener;
-  @Mock private SdkExecutorServiceFactory executorServiceFactory;
+  @Mock private GcloudCommandFactory mockGcloudCommandFactory;
+  @Mock private MessageListener mockMessageListener;
+  @Mock private SdkExecutorServiceFactory mockExecutorServiceFactory;
 
   private ListeningExecutorService testExecutorService;
-  private Path fakeGcloud;
   private SdkComponent testComponent = SdkComponent.APP_ENGINE_JAVA;
 
   @Before
   public void setUpFakesAndMocks() throws IOException {
     MockitoAnnotations.initMocks(this);
 
-    fakeGcloud = testDir.newFolder("gcloud").toPath();
     testExecutorService = Mockito.spy(MoreExecutors.newDirectExecutorService());
-    Mockito.when(executorServiceFactory.newExecutorService()).thenReturn(testExecutorService);
+    Mockito.when(mockExecutorServiceFactory.newExecutorService()).thenReturn(testExecutorService);
   }
 
   @Test
   public void testInstallComponent_successRun() {
     SdkComponentInstaller testInstaller =
-        new SdkComponentInstaller(fakeGcloud, componentInstallerFactory, executorServiceFactory);
-    testInstaller.installComponent(testComponent, messageListener);
+        new SdkComponentInstaller(mockGcloudCommandFactory, mockExecutorServiceFactory);
+    testInstaller.installComponent(testComponent, mockMessageListener);
 
-    Mockito.verify(executorServiceFactory).newExecutorService();
+    Mockito.verify(mockExecutorServiceFactory).newExecutorService();
     Mockito.verify(testExecutorService).submit(Mockito.any(Callable.class));
-    Mockito.verify(componentInstallerFactory)
-        .newInstaller(fakeGcloud, testComponent, messageListener);
+    Mockito.verify(mockGcloudCommandFactory)
+        .newCommand(testInstaller.getParameters(testComponent), mockMessageListener);
   }
 }

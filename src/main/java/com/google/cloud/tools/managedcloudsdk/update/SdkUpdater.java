@@ -19,25 +19,24 @@ package com.google.cloud.tools.managedcloudsdk.update;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.executors.SdkExecutorServiceFactory;
 import com.google.cloud.tools.managedcloudsdk.executors.SingleThreadExecutorServiceFactory;
+import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandFactory;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /** Update an SDK. */
 public class SdkUpdater {
 
-  private final Path gcloud;
-  private final UpdaterFactory updaterFactory;
+  private final GcloudCommandFactory commandFactory;
   private final SdkExecutorServiceFactory executorServiceFactory;
 
   /** Use {@link #newUpdater} to instantiate. */
   SdkUpdater(
-      Path gcloud,
-      UpdaterFactory updaterFactory,
-      SdkExecutorServiceFactory executorServiceFactory) {
-    this.gcloud = gcloud;
-    this.updaterFactory = updaterFactory;
+      GcloudCommandFactory commandFactory, SdkExecutorServiceFactory executorServiceFactory) {
+    this.commandFactory = commandFactory;
     this.executorServiceFactory = executorServiceFactory;
   }
 
@@ -54,12 +53,22 @@ public class SdkUpdater {
             new Callable<Void>() {
               @Override
               public Void call() throws Exception {
-                updaterFactory.newUpdater(gcloud, messageListener).update();
+                commandFactory.newCommand(getParameters(), messageListener).run();
                 return null;
               }
             });
     executorService.shutdown(); // shutdown executor after install
     return resultFuture;
+  }
+
+  List<String> getParameters() {
+    List<String> command = new ArrayList<>();
+    // now configure parameters (not OS specific)
+    command.add("components");
+    command.add("update");
+    command.add("--quiet");
+
+    return command;
   }
 
   /**
@@ -69,10 +78,9 @@ public class SdkUpdater {
    * @return a new configured Cloud Sdk updater
    */
   public static SdkUpdater newUpdater(Path gcloud) {
-
-    UpdaterFactory updaterFactory = new UpdaterFactory();
+    GcloudCommandFactory gcloudCommandFactory = new GcloudCommandFactory(gcloud);
     SdkExecutorServiceFactory executorServiceFactory = new SingleThreadExecutorServiceFactory();
 
-    return new SdkUpdater(gcloud, updaterFactory, executorServiceFactory);
+    return new SdkUpdater(gcloudCommandFactory, executorServiceFactory);
   }
 }

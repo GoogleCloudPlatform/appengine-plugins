@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.components;
+package com.google.cloud.tools.managedcloudsdk.gcloud;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
@@ -27,56 +27,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-/** Gcloud wrapper for installing components. */
-final class ComponentInstaller {
-
+public class GcloudCommand {
   private final Path gcloud;
-  private final SdkComponent component;
+  private final List<String> parameters;
   private final MessageListener messageListener;
   private final CommandExecutorFactory commandExecutorFactory;
   private final AsyncStreamHandler<Void> stdOutListener;
   private final AsyncStreamHandler<Void> stdErrListener;
 
-  /** Instantiated by {@link ComponentInstallerFactory}. */
-  ComponentInstaller(
+  GcloudCommand(
       Path gcloud,
-      SdkComponent component,
+      List<String> parameters,
       MessageListener messageListener,
       CommandExecutorFactory commandExecutorFactory,
       AsyncStreamHandler<Void> stdOutListener,
       AsyncStreamHandler<Void> stdErrListener) {
     this.gcloud = gcloud;
-    this.component = component;
+    this.parameters = parameters;
     this.messageListener = messageListener;
     this.commandExecutorFactory = commandExecutorFactory;
     this.stdOutListener = stdOutListener;
     this.stdErrListener = stdErrListener;
   }
 
-  /** Install a cloud sdk (only run this on LATEST). */
-  public void install() throws IOException, ExecutionException {
+  /** Run the command. */
+  public void run() throws IOException, ExecutionException, GcloudCommandExitException {
 
     List<String> command = new ArrayList<>();
-    // now configure parameters (not OS specific)
-    command.add(gcloud.toString()); // use full path
-    command.add("components");
-    command.add("install");
-    command.add(component.toString());
-    command.add("--quiet");
+    command.add(gcloud.toString());
+    command.addAll(parameters);
 
     CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor();
 
     messageListener.message("Running command : " + Joiner.on(" ").join(command) + "\n");
     int exitCode = commandExecutor.run(command, stdOutListener, stdErrListener);
     if (exitCode != 0) {
-      throw new ExecutionException(
-          "Component Installer exited with non-zero exit code: " + exitCode, new Throwable());
+      throw new GcloudCommandExitException("gcloud exited with non-zero exit code: " + exitCode);
     }
     try {
       stdErrListener.getResult().get();
       stdOutListener.getResult().get();
     } catch (InterruptedException e) {
-      messageListener.message("Output interrupted...\n");
+      messageListener.message("Output collection interrupted...\n");
     }
   }
 }

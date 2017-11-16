@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandExitException;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
@@ -58,7 +59,7 @@ final class Installer<T extends InstallScriptProvider> {
   }
 
   /** Install a cloud sdk (only run this on LATEST). */
-  public void install() throws IOException, ExecutionException {
+  public void install() throws IOException, ExecutionException, GcloudCommandExitException {
 
     List<String> command = new ArrayList<>(installScriptProvider.getScriptCommandLine());
     // now configure parameters (not OS specific)
@@ -73,8 +74,7 @@ final class Installer<T extends InstallScriptProvider> {
     messageListener.message("Running command : " + Joiner.on(" ").join(command) + "\n");
     int exitCode = commandExecutor.run(command, stdOutConsumer, stdErrConsumer);
     if (exitCode != 0) {
-      throw new ExecutionException(
-          "Installer exited with non-zero exit code: " + exitCode, new Throwable());
+      throw new GcloudCommandExitException("Installer exited with non-zero exit code: " + exitCode);
     }
   }
 

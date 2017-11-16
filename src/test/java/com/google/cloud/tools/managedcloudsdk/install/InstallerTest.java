@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandExitException;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
@@ -124,8 +125,8 @@ public class InstallerTest {
             mockStreamHandler);
     try {
       installer.install();
-      Assert.fail("ExecutionException expected but not found.");
-    } catch (ExecutionException ex) {
+      Assert.fail("GcloudCommandExitException expected but not found.");
+    } catch (GcloudCommandExitException ex) {
       Assert.assertEquals("Installer exited with non-zero exit code: 10", ex.getMessage());
     }
     Mockito.verify(mockCommandExecutor).setWorkingDirectory(tmp.getRoot().toPath());

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.update;
+package com.google.cloud.tools.managedcloudsdk.gcloud;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.MessageListenerForwardingHandler;
@@ -22,21 +22,34 @@ import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
 import com.google.cloud.tools.managedcloudsdk.process.StreamConsumerFactory;
 import java.nio.file.Path;
+import java.util.List;
 
-/** {@link Updater} Factory. */
-public final class UpdaterFactory {
+/** {@link GcloudCommand} factory for running gcloud commands. */
+public class GcloudCommandFactory {
+
+  private final Path gcloud;
 
   /**
-   * Returns a new {@link Updater} instance.
+   * Configure a new CommandFactory.
    *
-   * @param gcloud path to the Cloud SDK directory
-   * @param messageListener listener on installer script output
-   * @return a {@link Updater} instance.
+   * @param gcloud full path to gcloud
    */
-  Updater newUpdater(Path gcloud, MessageListener messageListener) {
+  public GcloudCommandFactory(Path gcloud) {
+    this.gcloud = gcloud;
+  }
 
-    return new Updater(
+  /**
+   * Returns a new {@link GcloudCommand} instance.
+   *
+   * @param parameters parameters to configure a single gcloud execution
+   * @param messageListener listener on installer script output
+   * @return a {@link GcloudCommand} configured to install the component
+   */
+  public GcloudCommand newCommand(List<String> parameters, MessageListener messageListener) {
+
+    return new GcloudCommand(
         gcloud,
+        parameters,
         messageListener,
         new CommandExecutorFactory(),
         new AsyncStreamHandler<>(

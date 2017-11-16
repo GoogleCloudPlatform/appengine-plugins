@@ -19,6 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.Version;
+import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandExitException;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -76,7 +77,7 @@ public class SdkInstaller {
 
   Path downloadSdkSync(final MessageListener messageListener)
       throws IOException, InterruptedException, SdkInstallerException, UnknownArchiveTypeException,
-          ExecutionException {
+          ExecutionException, GcloudCommandExitException {
 
     FileResourceProvider fileResourceProvider =
         fileResourceProviderFactory.newFileResourceProvider();

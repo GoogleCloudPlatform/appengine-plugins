@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandExitException;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import java.io.IOException;
 import java.net.URL;
@@ -69,7 +70,8 @@ public class SdkInstallerTest {
 
   @Before
   public void setUpMocksAndFakes()
-      throws IOException, InterruptedException, UnknownArchiveTypeException, ExecutionException {
+      throws IOException, InterruptedException, UnknownArchiveTypeException, ExecutionException,
+          GcloudCommandExitException {
     MockitoAnnotations.initMocks(this);
 
     Path managedSdkRoot = testDir.newFolder("managed-sdk-test-home").toPath();
@@ -164,7 +166,7 @@ public class SdkInstallerTest {
   @Test
   public void testDownloadSdk_successRun()
       throws InterruptedException, ExecutionException, SdkInstallerException,
-          UnknownArchiveTypeException, IOException {
+          UnknownArchiveTypeException, IOException, GcloudCommandExitException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
@@ -181,7 +183,7 @@ public class SdkInstallerTest {
   @Test
   public void testDownloadSdk_successRunWithoutExplicitInstall()
       throws InterruptedException, ExecutionException, SdkInstallerException,
-          UnknownArchiveTypeException, IOException {
+          UnknownArchiveTypeException, IOException, GcloudCommandExitException {
     SdkInstaller testInstaller =
         new SdkInstaller(
             fileResourceProviderFactory,
@@ -196,7 +198,8 @@ public class SdkInstallerTest {
 
   @Test
   public void testDownloadSdk_failedDownload()
-      throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException {
+      throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException,
+          GcloudCommandExitException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
@@ -217,7 +220,8 @@ public class SdkInstallerTest {
 
   @Test
   public void testDownloadSdk_failedExtraction()
-      throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException {
+      throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException,
+          GcloudCommandExitException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
@@ -238,7 +242,8 @@ public class SdkInstallerTest {
 
   @Test
   public void testDownloadSdk_failedInstallation()
-      throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException {
+      throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException,
+          GcloudCommandExitException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
