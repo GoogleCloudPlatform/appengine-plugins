@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.gcloud;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
@@ -43,8 +42,8 @@ public class GcloudCommandTest {
 
   @Mock private CommandExecutorFactory mockCommandExecutorFactory;
   @Mock private CommandExecutor mockCommandExecutor;
-  @Mock private MessageListener mockMessageListener;
   @Mock private AsyncStreamHandler<Void> mockStreamHandler;
+  @Mock private ListenableFuture<Void> mockStreamResult;
   @Mock private ListenableFuture<Void> mockResult;
 
   private Path fakeGcloud;
@@ -74,7 +73,6 @@ public class GcloudCommandTest {
         new GcloudCommand(
             fakeGcloud,
             fakeParameters,
-            mockMessageListener,
             mockCommandExecutorFactory,
             mockStreamHandler,
             mockStreamHandler);
@@ -98,7 +96,6 @@ public class GcloudCommandTest {
         new GcloudCommand(
             fakeGcloud,
             fakeParameters,
-            mockMessageListener,
             mockCommandExecutorFactory,
             mockStreamHandler,
             mockStreamHandler);
@@ -111,6 +108,27 @@ public class GcloudCommandTest {
     Mockito.verify(mockCommandExecutor)
         .run(getExpectedCommand(), mockStreamHandler, mockStreamHandler);
     Mockito.verifyNoMoreInteractions(mockCommandExecutor);
+  }
+
+  @Test
+  public void testCall_outputConsumptionInterrupted() throws Exception {
+    Mockito.when(mockStreamHandler.getResult()).thenReturn(mockStreamResult);
+    Mockito.when(mockStreamResult.get()).thenThrow(InterruptedException.class);
+
+    GcloudCommand testCommand =
+        new GcloudCommand(
+            fakeGcloud,
+            fakeParameters,
+            mockCommandExecutorFactory,
+            mockStreamHandler,
+            mockStreamHandler);
+
+    try {
+      testCommand.run();
+      Assert.fail("ExecutionException expected but not found.");
+    } catch (ExecutionException ex) {
+      Assert.assertEquals("Output consumers interrupted.", ex.getMessage());
+    }
   }
 
   private List<String> getExpectedCommand() {

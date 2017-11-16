@@ -50,7 +50,6 @@ public class GcloudCommandFactory {
     return new GcloudCommand(
         gcloud,
         parameters,
-        messageListener,
         new CommandExecutorFactory(),
         new AsyncStreamHandler<>(
             new StreamConsumerFactory<>(new MessageListenerForwardingHandler(messageListener))),

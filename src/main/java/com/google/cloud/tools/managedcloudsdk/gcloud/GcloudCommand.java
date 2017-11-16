@@ -16,11 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.gcloud;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
-import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import java.util.concurrent.ExecutionException;
 public class GcloudCommand {
   private final Path gcloud;
   private final List<String> parameters;
-  private final MessageListener messageListener;
   private final CommandExecutorFactory commandExecutorFactory;
   private final AsyncStreamHandler<Void> stdOutListener;
   private final AsyncStreamHandler<Void> stdErrListener;
@@ -38,13 +35,11 @@ public class GcloudCommand {
   GcloudCommand(
       Path gcloud,
       List<String> parameters,
-      MessageListener messageListener,
       CommandExecutorFactory commandExecutorFactory,
       AsyncStreamHandler<Void> stdOutListener,
       AsyncStreamHandler<Void> stdErrListener) {
     this.gcloud = gcloud;
     this.parameters = parameters;
-    this.messageListener = messageListener;
     this.commandExecutorFactory = commandExecutorFactory;
     this.stdOutListener = stdOutListener;
     this.stdErrListener = stdErrListener;
@@ -59,7 +54,6 @@ public class GcloudCommand {
 
     CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor();
 
-    messageListener.message("Running command : " + Joiner.on(" ").join(command) + "\n");
     int exitCode = commandExecutor.run(command, stdOutListener, stdErrListener);
     if (exitCode != 0) {
       throw new GcloudCommandExitException("gcloud exited with non-zero exit code: " + exitCode);
@@ -68,7 +62,7 @@ public class GcloudCommand {
       stdErrListener.getResult().get();
       stdOutListener.getResult().get();
     } catch (InterruptedException e) {
-      messageListener.message("Output collection interrupted...\n");
+      throw new ExecutionException("Output consumers interrupted.", e);
     }
   }
 }
