@@ -18,13 +18,18 @@ package com.google.cloud.tools.managedcloudsdk.gcloud;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.MessageListenerForwardingHandler;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncByteConsumer;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamSaver;
+import com.google.cloud.tools.managedcloudsdk.process.CollectingByteHandler;
+import com.google.cloud.tools.managedcloudsdk.process.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
-import com.google.cloud.tools.managedcloudsdk.process.StreamConsumerFactory;
+import com.google.cloud.tools.managedcloudsdk.process.CommandRunner;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
-/** {@link GcloudCommand} factory for running gcloud commands. */
+/** {@link CommandRunner} factory for running gcloud commands. */
 public class GcloudCommandFactory {
 
   private final Path gcloud;
@@ -39,21 +44,35 @@ public class GcloudCommandFactory {
   }
 
   /**
-   * Returns a new {@link GcloudCommand} instance.
+   * Returns a new {@link CommandRunner} instance.
    *
    * @param parameters parameters to configure a single gcloud execution
    * @param messageListener listener on installer script output
-   * @return a {@link GcloudCommand} configured to install the component
+   * @return a {@link CommandRunner} configured to run the command
    */
-  public GcloudCommand newCommand(List<String> parameters, MessageListener messageListener) {
+  public CommandRunner newRunner(List<String> parameters, MessageListener messageListener) {
+    AsyncStreamHandler stdOut =
+        new AsyncByteConsumer(new MessageListenerForwardingHandler(messageListener));
+    AsyncStreamHandler stdErr =
+        new AsyncByteConsumer(new MessageListenerForwardingHandler(messageListener));
 
-    return new GcloudCommand(
-        gcloud,
-        parameters,
-        new CommandExecutorFactory(),
-        new AsyncStreamHandler<>(
-            new StreamConsumerFactory<>(new MessageListenerForwardingHandler(messageListener))),
-        new AsyncStreamHandler<>(
-            new StreamConsumerFactory<>(new MessageListenerForwardingHandler(messageListener))));
+    List<String> command = new ArrayList<>(parameters);
+    command.add(0, gcloud.toString());
+    return new CommandRunner(command, null, null, new CommandExecutorFactory(), stdOut, stdErr);
+  }
+
+  /**
+   * Returns a new {@link CommandCaller} instance.
+   *
+   * @param parameters parameters to configure a single gcloud execution
+   * @return a {@link CommandCaller} configured to run the command and return the result
+   */
+  public CommandCaller newCaller(List<String> parameters) {
+    AsyncStreamSaver stdOut = new AsyncByteConsumer(new CollectingByteHandler());
+    AsyncStreamSaver stdErr = new AsyncByteConsumer(new CollectingByteHandler());
+
+    List<String> command = new ArrayList<>(parameters);
+    command.add(0, gcloud.toString());
+    return new CommandCaller(command, null, null, new CommandExecutorFactory(), stdOut, stdErr);
   }
 }

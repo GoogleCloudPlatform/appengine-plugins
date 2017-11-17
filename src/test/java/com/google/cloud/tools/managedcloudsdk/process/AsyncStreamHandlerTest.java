@@ -18,21 +18,25 @@ package com.google.cloud.tools.managedcloudsdk.process;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.SettableFuture;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.concurrent.Callable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 public class AsyncStreamHandlerTest {
 
+  private static final String TEST_STRING = "test line1\ntest line2\n";
+  private InputStream fakeInputStream = new ByteArrayInputStream(TEST_STRING.getBytes());
+
   @Mock private ListeningExecutorService mockExecutorService;
-  @Mock private StreamConsumerFactory<String> mockStreamConsumerFactory;
+  @Mock private ByteHandler mockByteHandler;
   @Mock private InputStream mockInputStream;
-  @Mock private Callable<String> mockCallable;
   @Mock private SettableFuture<String> mockFuture;
 
   @Before
@@ -43,13 +47,12 @@ public class AsyncStreamHandlerTest {
   @Test
   public void testHandleStream() {
     Mockito.when(mockExecutorService.isShutdown()).thenReturn(false);
-    Mockito.when(mockStreamConsumerFactory.newConsumer(mockInputStream)).thenReturn(mockCallable);
 
-    new AsyncStreamHandler<>(mockStreamConsumerFactory, mockExecutorService, mockFuture)
+    new AsyncByteConsumer(mockByteHandler, mockExecutorService, mockFuture)
         .handleStream(mockInputStream);
 
     Mockito.verify(mockExecutorService).isShutdown();
-    Mockito.verify(mockExecutorService).submit(mockCallable);
+    Mockito.verify(mockExecutorService).submit(Mockito.any(Callable.class));
     Mockito.verify(mockExecutorService).shutdown();
     Mockito.verifyNoMoreInteractions(mockExecutorService);
   }
@@ -59,12 +62,33 @@ public class AsyncStreamHandlerTest {
     Mockito.when(mockExecutorService.isShutdown()).thenReturn(true);
 
     try {
-      new AsyncStreamHandler<>(mockStreamConsumerFactory, mockExecutorService, mockFuture)
+      new AsyncByteConsumer(mockByteHandler, mockExecutorService, mockFuture)
           .handleStream(mockInputStream);
       Assert.fail("IllegalStateException expected but not thrown");
     } catch (IllegalStateException ex) {
       // pass
-      Assert.assertEquals("Cannot re-use " + AsyncStreamHandler.class.getName(), ex.getMessage());
+      Assert.assertEquals("Cannot re-use " + AsyncByteConsumer.class.getName(), ex.getMessage());
     }
+  }
+
+  @Test
+  public void testConsumeBytes() throws Exception {
+
+    new AsyncByteConsumer(mockByteHandler, mockExecutorService, mockFuture)
+        .consumeBytes(fakeInputStream, mockByteHandler);
+
+    ArgumentCaptor<byte[]> bytes = ArgumentCaptor.forClass(byte[].class);
+    ArgumentCaptor<Integer> nBytes = ArgumentCaptor.forClass(Integer.class);
+    Mockito.verify(mockByteHandler, Mockito.atLeastOnce()).bytes(bytes.capture(), nBytes.capture());
+
+    int count = bytes.getAllValues().size();
+    StringBuilder result = new StringBuilder("");
+    for (int i = 0; i < count; i++) {
+      result.append(new String(bytes.getAllValues().get(i), 0, nBytes.getAllValues().get(i)));
+    }
+    Assert.assertEquals(TEST_STRING, result.toString());
+
+    Mockito.verify(mockByteHandler).getResult();
+    Mockito.verifyNoMoreInteractions(mockByteHandler);
   }
 }
