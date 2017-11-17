@@ -17,27 +17,20 @@
 package com.google.cloud.tools.managedcloudsdk.update;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.executors.SdkExecutorServiceFactory;
-import com.google.cloud.tools.managedcloudsdk.executors.SingleThreadExecutorServiceFactory;
-import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandFactory;
+import com.google.cloud.tools.managedcloudsdk.gcloud.AsyncGcloudRunnerWrapper;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /** Update an SDK. */
 public class SdkUpdater {
 
-  private final GcloudCommandFactory commandFactory;
-  private final SdkExecutorServiceFactory executorServiceFactory;
+  private final AsyncGcloudRunnerWrapper asyncGcloudRunnerWrapper;
 
   /** Use {@link #newUpdater} to instantiate. */
-  SdkUpdater(
-      GcloudCommandFactory commandFactory, SdkExecutorServiceFactory executorServiceFactory) {
-    this.commandFactory = commandFactory;
-    this.executorServiceFactory = executorServiceFactory;
+  public SdkUpdater(AsyncGcloudRunnerWrapper asyncGcloudRunnerWrapper) {
+    this.asyncGcloudRunnerWrapper = asyncGcloudRunnerWrapper;
   }
 
   /**
@@ -47,18 +40,7 @@ public class SdkUpdater {
    * @return a resultless future for controlling the process
    */
   public ListenableFuture<Void> update(final MessageListener messageListener) {
-    ListeningExecutorService executorService = executorServiceFactory.newExecutorService();
-    ListenableFuture<Void> resultFuture =
-        executorService.submit(
-            new Callable<Void>() {
-              @Override
-              public Void call() throws Exception {
-                commandFactory.newCommand(getParameters(), messageListener).run();
-                return null;
-              }
-            });
-    executorService.shutdown(); // shutdown executor after install
-    return resultFuture;
+    return asyncGcloudRunnerWrapper.runCommand(getParameters(), messageListener);
   }
 
   List<String> getParameters() {
@@ -78,9 +60,6 @@ public class SdkUpdater {
    * @return a new configured Cloud Sdk updater
    */
   public static SdkUpdater newUpdater(Path gcloud) {
-    GcloudCommandFactory gcloudCommandFactory = new GcloudCommandFactory(gcloud);
-    SdkExecutorServiceFactory executorServiceFactory = new SingleThreadExecutorServiceFactory();
-
-    return new SdkUpdater(gcloudCommandFactory, executorServiceFactory);
+    return new SdkUpdater(AsyncGcloudRunnerWrapper.newRunnerWrapper(gcloud));
   }
 }

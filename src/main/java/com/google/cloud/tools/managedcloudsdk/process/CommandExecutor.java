@@ -27,17 +27,10 @@ import java.util.concurrent.ExecutionException;
 public class CommandExecutor {
 
   private ProcessBuilderFactory processBuilderFactory = new ProcessBuilderFactory();
-  private Map<String, String> environment;
-  private Path workingDirectory;
 
-  /** Sets the environment variables to run the command with. */
-  public CommandExecutor setEnvironment(Map<String, String> environmentMap) {
-    this.environment = environmentMap;
-    return this;
-  }
-
-  public CommandExecutor setWorkingDirectory(Path workingDirectory) {
-    this.workingDirectory = workingDirectory;
+  @VisibleForTesting
+  CommandExecutor setProcessBuilderFactory(ProcessBuilderFactory processBuilderFactory) {
+    this.processBuilderFactory = processBuilderFactory;
     return this;
   }
 
@@ -48,19 +41,18 @@ public class CommandExecutor {
     }
   }
 
-  @VisibleForTesting
-  CommandExecutor setProcessBuilderFactory(ProcessBuilderFactory processBuilderFactory) {
-    this.processBuilderFactory = processBuilderFactory;
-    return this;
-  }
-
   /**
    * Runs the command.
    *
    * @param command the list of command line tokens
    * @return exitcode from the process
    */
-  public int run(List<String> command, AsyncStreamHandler stdout, AsyncStreamHandler stderr)
+  public int run(
+      List<String> command,
+      Path workingDirectory,
+      Map<String, String> environment,
+      AsyncStreamHandler stdout,
+      AsyncStreamHandler stderr)
       throws IOException, ExecutionException {
 
     // Builds the command to execute.

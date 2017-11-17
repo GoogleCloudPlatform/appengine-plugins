@@ -16,14 +16,11 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandExitException;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
-import com.google.common.util.concurrent.ListenableFuture;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -42,107 +39,74 @@ public class InstallerTest {
   @Mock private InstallScriptProvider mockInstallScriptProvider;
   @Mock private CommandExecutorFactory mockCommandExecutorFactory;
   @Mock private CommandExecutor mockCommandExecutor;
-  @Mock private MessageListener mockMessageListener;
-  @Mock private AsyncStreamHandler<Void> mockStreamHandler;
-  @Mock private ListenableFuture<Void> mockResult;
+  @Mock private AsyncStreamHandler mockStreamHandler;
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
+  private Path fakeWorkingDirectory;
   private List<String> fakeCommand = Arrays.asList("scriptexec", "test-install.script");
 
+  private Installer<?> testInstaller;
+
   @Before
-  public void initializeAndConfigureMocks()
-      throws IOException, ExecutionException, InterruptedException {
+  public void setUp() throws IOException, ExecutionException, InterruptedException {
     MockitoAnnotations.initMocks(this);
 
+    fakeWorkingDirectory = tmp.getRoot().toPath();
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
     Mockito.when(mockCommandExecutorFactory.newCommandExecutor()).thenReturn(mockCommandExecutor);
-    Mockito.when(
-            mockCommandExecutor.run(
-                Mockito.<String>anyList(),
-                Mockito.any(AsyncStreamHandler.class),
-                Mockito.any(AsyncStreamHandler.class)))
-        .thenReturn(0);
-    Mockito.when(mockStreamHandler.getResult()).thenReturn(mockResult);
-    Mockito.when(mockResult.get()).thenReturn(null);
-  }
 
-  @Test
-  public void testCall() throws Exception {
-    Installer installer =
+    testInstaller =
         new Installer<>(
             tmp.getRoot().toPath(),
             mockInstallScriptProvider,
             false,
-            mockMessageListener,
             mockCommandExecutorFactory,
             mockStreamHandler,
             mockStreamHandler);
-    installer.install();
+    Mockito.when(
+            mockCommandExecutor.run(
+                testInstaller.getCommand(),
+                fakeWorkingDirectory,
+                null,
+                mockStreamHandler,
+                mockStreamHandler))
+        .thenReturn(0);
+  }
 
-    Mockito.verify(mockCommandExecutor).setWorkingDirectory(tmp.getRoot().toPath());
+  private void verifyInstallerExecution() throws IOException, ExecutionException {
     Mockito.verify(mockCommandExecutor)
-        .run(getExpectedCommand(false), mockStreamHandler, mockStreamHandler);
+        .run(
+            testInstaller.getCommand(),
+            fakeWorkingDirectory,
+            null,
+            mockStreamHandler,
+            mockStreamHandler);
     Mockito.verifyNoMoreInteractions(mockCommandExecutor);
   }
 
   @Test
-  public void testCall_withUsageReporting() throws Exception {
+  public void testCall() throws Exception {
+    testInstaller.install();
+    verifyInstallerExecution();
+  }
+
+  @Test
+  public void testGetCommand_usageReportingFalse() {
+    Assert.assertTrue(testInstaller.getCommand().contains("--usage-reporting=false"));
+  }
+
+  @Test
+  public void testGetCommand_usageReportingTrue() throws Exception {
     Installer installer =
         new Installer<>(
             tmp.getRoot().toPath(),
             mockInstallScriptProvider,
             true,
-            mockMessageListener,
             mockCommandExecutorFactory,
             mockStreamHandler,
             mockStreamHandler);
-    installer.install();
 
-    Mockito.verify(mockCommandExecutor).setWorkingDirectory(tmp.getRoot().toPath());
-    Mockito.verify(mockCommandExecutor)
-        .run(getExpectedCommand(true), mockStreamHandler, mockStreamHandler);
-    Mockito.verifyNoMoreInteractions(mockCommandExecutor);
-  }
-
-  @Test
-  public void testCall_nonZeroExit() throws Exception {
-    Mockito.when(
-            mockCommandExecutor.run(
-                Mockito.<String>anyList(),
-                Mockito.eq(mockStreamHandler),
-                Mockito.eq(mockStreamHandler)))
-        .thenReturn(10);
-
-    Installer installer =
-        new Installer<>(
-            tmp.getRoot().toPath(),
-            mockInstallScriptProvider,
-            false,
-            mockMessageListener,
-            mockCommandExecutorFactory,
-            mockStreamHandler,
-            mockStreamHandler);
-    try {
-      installer.install();
-      Assert.fail("GcloudCommandExitException expected but not found.");
-    } catch (GcloudCommandExitException ex) {
-      Assert.assertEquals("Installer exited with non-zero exit code: 10", ex.getMessage());
-    }
-    Mockito.verify(mockCommandExecutor).setWorkingDirectory(tmp.getRoot().toPath());
-    Mockito.verify(mockCommandExecutor)
-        .run(getExpectedCommand(false), mockStreamHandler, mockStreamHandler);
-    Mockito.verifyNoMoreInteractions(mockCommandExecutor);
-  }
-
-  private List<String> getExpectedCommand(boolean usageReporting) {
-    List<String> command = new ArrayList<>(6);
-    command.add("scriptexec");
-    command.add("test-install.script");
-    command.add("--path-update=false");
-    command.add("--command-completion=false");
-    command.add("--quiet");
-    command.add("--usage-reporting=" + usageReporting);
-    return command;
+    Assert.assertTrue(installer.getCommand().contains("--usage-reporting=true"));
   }
 }
