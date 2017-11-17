@@ -16,13 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.process;
 
-/**
- * Handle bytes from a stream consumer.
- *
- * @param <T> use {@code Void} if you don't want to store the result
- */
-public interface ByteHandler<T> {
+/** Handle bytes from a stream consumer. */
+public interface ByteHandler {
   void bytes(byte[] bytes, int length);
 
-  T getResult();
+  String getResult();
 }

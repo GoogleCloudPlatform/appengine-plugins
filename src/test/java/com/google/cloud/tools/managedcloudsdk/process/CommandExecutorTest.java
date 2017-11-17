@@ -36,9 +36,9 @@ import org.mockito.MockitoAnnotations;
 /** Tests for CommandExecutor */
 public class CommandExecutorTest {
 
-  @Mock private CommandExecutor.ProcessBuilderFactory processBuilderFactoryMock;
-  @Mock private ProcessBuilder processBuilderMock;
-  @Mock private Process processMock;
+  @Mock private CommandExecutor.ProcessBuilderFactory mockProcessBuilderFactory;
+  @Mock private ProcessBuilder mockProcessBuilder;
+  @Mock private Process mockProcess;
   @Mock private InputStream mockStdOut;
   @Mock private InputStream mockStdErr;
   @Mock private AsyncStreamHandler mockStreamHandler;
@@ -50,34 +50,37 @@ public class CommandExecutorTest {
   public void setup() throws IOException, InterruptedException {
     MockitoAnnotations.initMocks(this);
 
-    Mockito.when(processBuilderFactoryMock.createProcessBuilder()).thenReturn(processBuilderMock);
-    Mockito.when(processBuilderMock.start()).thenReturn(processMock);
-    Mockito.when(processMock.waitFor()).thenReturn(0);
-    Mockito.when(processMock.getInputStream()).thenReturn(mockStdOut);
-    Mockito.when(processMock.getErrorStream()).thenReturn(mockStdErr);
+    Mockito.when(mockProcessBuilderFactory.createProcessBuilder()).thenReturn(mockProcessBuilder);
+    Mockito.when(mockProcessBuilder.start()).thenReturn(mockProcess);
+    Mockito.when(mockProcess.waitFor()).thenReturn(0);
+    Mockito.when(mockProcess.getInputStream()).thenReturn(mockStdOut);
+    Mockito.when(mockProcess.getErrorStream()).thenReturn(mockStdErr);
   }
 
   @Test
   public void testRun() throws IOException, InterruptedException, ExecutionException {
-    // Mocks the environment for the processBuilderMock to put the environment map in.
+    // Mocks the environment for the mockProcessBuilder to put the environment map in.
     Map<String, String> environmentInput = new HashMap<>();
     environmentInput.put("ENV1", "val1");
     environmentInput.put("ENV2", "val2");
     Map<String, String> processEnvironment = new HashMap<>();
-    Mockito.when(processBuilderMock.environment()).thenReturn(processEnvironment);
+    Mockito.when(mockProcessBuilder.environment()).thenReturn(processEnvironment);
 
     Path fakeWorkingDirectory = Paths.get("/tmp/fake/working/dir");
 
     int result =
         new CommandExecutor()
-            .setWorkingDirectory(fakeWorkingDirectory)
-            .setEnvironment(environmentInput)
-            .setProcessBuilderFactory(processBuilderFactoryMock)
-            .run(command, mockStreamHandler, mockStreamHandler);
+            .setProcessBuilderFactory(mockProcessBuilderFactory)
+            .run(
+                command,
+                fakeWorkingDirectory,
+                environmentInput,
+                mockStreamHandler,
+                mockStreamHandler);
 
     verifyProcessBuilding(command);
-    Mockito.verify(processBuilderMock).environment();
-    Mockito.verify(processBuilderMock).directory(fakeWorkingDirectory.toFile());
+    Mockito.verify(mockProcessBuilder).environment();
+    Mockito.verify(mockProcessBuilder).directory(fakeWorkingDirectory.toFile());
     Assert.assertEquals(environmentInput, processEnvironment);
 
     Mockito.verify(mockStreamHandler).handleStream(mockStdOut);
@@ -89,12 +92,12 @@ public class CommandExecutorTest {
   public void testRun_nonZeroExitCodePassthrough()
       throws IOException, InterruptedException, ExecutionException {
 
-    Mockito.when(processMock.waitFor()).thenReturn(123);
+    Mockito.when(mockProcess.waitFor()).thenReturn(123);
 
     int exitCode =
         new CommandExecutor()
-            .setProcessBuilderFactory(processBuilderFactoryMock)
-            .run(command, mockStreamHandler, mockStreamHandler);
+            .setProcessBuilderFactory(mockProcessBuilderFactory)
+            .run(command, null, null, mockStreamHandler, mockStreamHandler);
 
     Assert.assertEquals(123, exitCode);
   }
@@ -103,24 +106,24 @@ public class CommandExecutorTest {
   public void testRun_interruptedWaitingForProcess() throws IOException, InterruptedException {
 
     // force an interruption to simulate a cancel.
-    Mockito.when(processMock.waitFor()).thenThrow(InterruptedException.class);
+    Mockito.when(mockProcess.waitFor()).thenThrow(InterruptedException.class);
 
     try {
       new CommandExecutor()
-          .setProcessBuilderFactory(processBuilderFactoryMock)
-          .run(command, mockStreamHandler, mockStreamHandler);
+          .setProcessBuilderFactory(mockProcessBuilderFactory)
+          .run(command, null, null, mockStreamHandler, mockStreamHandler);
       Assert.fail("Execution exception expected but not thrown.");
     } catch (ExecutionException ex) {
       Assert.assertEquals("Process cancelled.", ex.getMessage());
     }
 
-    Mockito.verify(processMock).destroy();
+    Mockito.verify(mockProcess).destroy();
   }
 
   private void verifyProcessBuilding(List<String> command) throws IOException {
-    Mockito.verify(processBuilderMock).command(command);
-    Mockito.verify(processBuilderMock).start();
-    Mockito.verify(processMock).getInputStream();
-    Mockito.verify(processMock).getErrorStream();
+    Mockito.verify(mockProcessBuilder).command(command);
+    Mockito.verify(mockProcessBuilder).start();
+    Mockito.verify(mockProcess).getInputStream();
+    Mockito.verify(mockProcess).getErrorStream();
   }
 }

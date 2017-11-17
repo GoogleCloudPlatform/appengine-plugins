@@ -19,7 +19,7 @@ package com.google.cloud.tools.managedcloudsdk;
 import com.google.cloud.tools.managedcloudsdk.process.ByteHandler;
 
 /** {@link ByteHandler} that redirects to {@link MessageListener}. */
-public class MessageListenerForwardingHandler implements ByteHandler<Void> {
+public class MessageListenerForwardingHandler implements ByteHandler {
 
   private final MessageListener messageListener;
 
@@ -33,7 +33,7 @@ public class MessageListenerForwardingHandler implements ByteHandler<Void> {
   }
 
   @Override
-  public Void getResult() {
+  public String getResult() {
     return null;
   }
 }

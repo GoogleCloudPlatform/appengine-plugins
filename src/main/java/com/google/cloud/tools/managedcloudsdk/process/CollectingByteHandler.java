@@ -17,7 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.process;
 
 /** A line handler that collects lines and returns a single result string. */
-public class CollectingByteHandler implements ByteHandler<String> {
+public class CollectingByteHandler implements ByteHandler {
 
   private final StringBuilder result = new StringBuilder("");
 

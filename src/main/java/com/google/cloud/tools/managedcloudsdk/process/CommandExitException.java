@@ -16,23 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.process;
 
-import java.io.InputStream;
-import java.util.concurrent.Callable;
-
-/**
- * {@link StreamConsumer} factory.
- *
- * @param <T> use {@code Void} if you do not want to store the result
- */
-public class StreamConsumerFactory<T> {
-
-  private final ByteHandler<T> byteHandler;
-
-  public StreamConsumerFactory(ByteHandler<T> byteHandler) {
-    this.byteHandler = byteHandler;
-  }
-
-  public Callable<T> newConsumer(InputStream inputStream) {
-    return new StreamConsumer<>(inputStream, byteHandler);
+/** Exception when sdk command fails. */
+public class CommandExitException extends Exception {
+  public CommandExitException(String message) {
+    super(message);
   }
 }

@@ -17,15 +17,10 @@
 package com.google.cloud.tools.managedcloudsdk.update;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.executors.SdkExecutorServiceFactory;
-import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommand;
-import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandExitException;
-import com.google.cloud.tools.managedcloudsdk.gcloud.GcloudCommandFactory;
+import com.google.cloud.tools.managedcloudsdk.gcloud.AsyncGcloudRunnerWrapper;
+import com.google.cloud.tools.managedcloudsdk.process.CommandExitException;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,37 +35,21 @@ public class SdkUpdaterTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private GcloudCommandFactory mockGcloudCommandFactory;
-  @Mock private GcloudCommand mockGcloudCommand;
   @Mock private MessageListener mockMessageListener;
-  @Mock private SdkExecutorServiceFactory mockExecutorServiceFactory;
+  @Mock private AsyncGcloudRunnerWrapper mockAsyncGcloudRunnerWrapper;
 
   private ListeningExecutorService testExecutorService;
 
   @Before
   public void setUpFakesAndMocks() throws IOException {
     MockitoAnnotations.initMocks(this);
-
-    testExecutorService = Mockito.spy(MoreExecutors.newDirectExecutorService());
-    Mockito.when(mockExecutorServiceFactory.newExecutorService()).thenReturn(testExecutorService);
-    Mockito.when(
-            mockGcloudCommandFactory.newCommand(
-                Mockito.any(List.class), Mockito.eq(mockMessageListener)))
-        .thenReturn(mockGcloudCommand);
   }
 
   @Test
-  public void testUpdate_successRun()
-      throws GcloudCommandExitException, ExecutionException, IOException {
-    SdkUpdater testUpdater = new SdkUpdater(mockGcloudCommandFactory, mockExecutorServiceFactory);
+  public void testUpdate_successRun() throws CommandExitException, ExecutionException, IOException {
+    SdkUpdater testUpdater = new SdkUpdater(mockAsyncGcloudRunnerWrapper);
     testUpdater.update(mockMessageListener);
-
-    Mockito.verify(mockExecutorServiceFactory).newExecutorService();
-    Mockito.verify(testExecutorService).submit(Mockito.any(Callable.class));
-    Mockito.verify(mockGcloudCommandFactory)
-        .newCommand(testUpdater.getParameters(), mockMessageListener);
-    Mockito.verifyNoMoreInteractions(mockExecutorServiceFactory);
-    Mockito.verify(mockGcloudCommand).run();
-    Mockito.verifyNoMoreInteractions(mockGcloudCommand);
+    Mockito.verify(mockAsyncGcloudRunnerWrapper)
+        .runCommand(testUpdater.getParameters(), mockMessageListener);
   }
 }

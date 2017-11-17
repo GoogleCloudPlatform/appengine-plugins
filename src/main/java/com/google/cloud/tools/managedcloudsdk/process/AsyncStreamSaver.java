@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.gcloud;
+package com.google.cloud.tools.managedcloudsdk.process;
 
-/** Exception when sdk command fails. */
-public class GcloudCommandExitException extends Exception {
-  public GcloudCommandExitException(String message) {
-    super(message);
-  }
+import java.util.concurrent.Future;
+
+/** An {@link AsyncStreamHandler} that saves the output. */
+public interface AsyncStreamSaver extends AsyncStreamHandler {
+
+  /** Returns a future to a fully saved process inputStream. */
+  Future<String> getResult();
 }
