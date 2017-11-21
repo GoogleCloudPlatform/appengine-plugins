@@ -42,7 +42,7 @@ public class CommandRunner implements CommandExecutor<Void> {
    * @param workingDirectory the working directory to run in, can be {@code null}
    * @param environment map of environment variables, can be {@code null}
    */
-  public CommandRunner(
+  CommandRunner(
       List<String> command,
       Path workingDirectory,
       Map<String, String> environment,

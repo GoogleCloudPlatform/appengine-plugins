@@ -45,7 +45,7 @@ public class CommandCaller implements CommandExecutor<String> {
    * @param workingDirectory the working directory to run in, can be {@code null}
    * @param environment map of environment variables, can be {@code null}
    */
-  public CommandCaller(
+  CommandCaller(
       List<String> command,
       Path workingDirectory,
       Map<String, String> environment,
@@ -60,7 +60,7 @@ public class CommandCaller implements CommandExecutor<String> {
     this.stdErrListener = stdErrListener;
   }
 
-  /** Runs the command and returns stdout as a result. */
+  /** Runs the command and returns a string of the process's stdout. */
   @Override
   public String execute() throws IOException, ExecutionException, CommandExitException {
     ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
