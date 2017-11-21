@@ -40,7 +40,7 @@ public class CommandExecutorTest {
   @Mock private Process processMock;
   @Mock private InputStream mockStdOut;
   @Mock private InputStream mockStdErr;
-  @Mock private AsyncStreamHandler mockStreamHandler;
+  @Mock private AsyncStreamHandler<?> mockStreamHandler;
   private final List<String> command = Arrays.asList("someCommand", "someOption");
 
   @Before
@@ -65,12 +65,11 @@ public class CommandExecutorTest {
 
     Path fakeWorkingDirectory = Paths.get("/tmp/fake/working/dir");
 
-    int result =
-        new CommandExecutor()
-            .setWorkingDirectory(fakeWorkingDirectory)
-            .setEnvironment(environmentInput)
-            .setProcessBuilderFactory(processBuilderFactoryMock)
-            .run(command, mockStreamHandler, mockStreamHandler);
+    new CommandExecutor()
+        .setWorkingDirectory(fakeWorkingDirectory)
+        .setEnvironment(environmentInput)
+        .setProcessBuilderFactory(processBuilderFactoryMock)
+        .run(command, mockStreamHandler, mockStreamHandler);
 
     verifyProcessBuilding(command);
     Mockito.verify(processBuilderMock).environment();

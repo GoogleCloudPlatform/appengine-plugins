@@ -69,7 +69,7 @@ public class InstallerTest {
 
   @Test
   public void testCall() throws Exception {
-    Installer installer =
+    Installer<InstallScriptProvider> installer =
         new Installer<>(
             tmp.getRoot().toPath(),
             mockInstallScriptProvider,
@@ -88,7 +88,7 @@ public class InstallerTest {
 
   @Test
   public void testCall_withUsageReporting() throws Exception {
-    Installer installer =
+    Installer<InstallScriptProvider> installer =
         new Installer<>(
             tmp.getRoot().toPath(),
             mockInstallScriptProvider,
@@ -114,7 +114,7 @@ public class InstallerTest {
                 Mockito.eq(mockStreamHandler)))
         .thenReturn(10);
 
-    Installer installer =
+    Installer<InstallScriptProvider> installer =
         new Installer<>(
             tmp.getRoot().toPath(),
             mockInstallScriptProvider,
