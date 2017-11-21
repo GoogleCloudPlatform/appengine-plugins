@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.gcloud;
+package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.executors.SdkExecutorServiceFactory;
-import com.google.cloud.tools.managedcloudsdk.process.CommandExitException;
-import com.google.cloud.tools.managedcloudsdk.process.CommandRunner;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,13 +34,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-/** Tests for {@link com.google.cloud.tools.managedcloudsdk.gcloud.AsyncGcloudRunnerWrapper} */
-public class AsyncGcloudRunnerWrapperTest {
+/** Tests for {@link AsyncCommandWrapper} */
+public class AsyncCommandWrapperTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private GcloudCommandFactory mockGcloudCommandFactory;
-  @Mock private CommandRunner mockGcloudRunner;
+  @Mock private CommandRunner mockCommandRunner;
+  @Mock private CommandCaller mockCommandCaller;
   @Mock private MessageListener mockMessageListener;
   @Mock private SdkExecutorServiceFactory mockExecutorServiceFactory;
   @Mock private List<String> mockCommand;
@@ -48,29 +48,39 @@ public class AsyncGcloudRunnerWrapperTest {
   private ListeningExecutorService testExecutorService;
 
   @Before
-  public void setUpFakesAndMocks() throws IOException {
+  public void setUpFakesAndMocks() throws IOException, ExecutionException, CommandExitException {
     MockitoAnnotations.initMocks(this);
 
     testExecutorService = Mockito.spy(MoreExecutors.newDirectExecutorService());
     Mockito.when(mockExecutorServiceFactory.newExecutorService()).thenReturn(testExecutorService);
-    Mockito.when(
-            mockGcloudCommandFactory.newRunner(
-                Mockito.<String>anyList(), Mockito.eq(mockMessageListener)))
-        .thenReturn(mockGcloudRunner);
+    Mockito.when(mockCommandCaller.call()).thenReturn("test-string");
   }
 
   @Test
   public void testRunCommand_smokeTest()
       throws CommandExitException, ExecutionException, IOException {
-    AsyncGcloudRunnerWrapper testWrapper =
-        new AsyncGcloudRunnerWrapper(mockGcloudCommandFactory, mockExecutorServiceFactory);
-    testWrapper.runCommand(mockCommand, mockMessageListener);
+    AsyncCommandWrapper testWrapper = new AsyncCommandWrapper(mockExecutorServiceFactory);
+    testWrapper.run(mockCommandRunner);
 
     Mockito.verify(mockExecutorServiceFactory).newExecutorService();
     Mockito.verify(testExecutorService).submit(Mockito.any(Callable.class));
-    Mockito.verify(mockGcloudCommandFactory).newRunner(mockCommand, mockMessageListener);
     Mockito.verifyNoMoreInteractions(mockExecutorServiceFactory);
-    Mockito.verify(mockGcloudRunner).run();
-    Mockito.verifyNoMoreInteractions(mockGcloudRunner);
+    Mockito.verify(mockCommandRunner).run();
+    Mockito.verifyNoMoreInteractions(mockCommandRunner);
+  }
+
+  @Test
+  public void testCallCommand_smokeTest()
+      throws CommandExitException, ExecutionException, IOException, InterruptedException {
+    AsyncCommandWrapper testWrapper = new AsyncCommandWrapper(mockExecutorServiceFactory);
+    ListenableFuture<String> result = testWrapper.call(mockCommandCaller);
+
+    Mockito.verify(mockExecutorServiceFactory).newExecutorService();
+    Mockito.verify(testExecutorService).submit(Mockito.any(Callable.class));
+    Mockito.verifyNoMoreInteractions(mockExecutorServiceFactory);
+    Mockito.verify(mockCommandCaller).call();
+    Mockito.verifyNoMoreInteractions(mockCommandCaller);
+
+    Assert.assertEquals("test-string", result.get());
   }
 }

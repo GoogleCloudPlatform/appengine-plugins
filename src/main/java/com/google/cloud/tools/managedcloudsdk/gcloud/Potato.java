@@ -1,0 +1,78 @@
+/*
+ * Copyright 2017 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.cloud.tools.managedcloudsdk.gcloud;
+
+import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.MessageListenerForwardingHandler;
+import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
+import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncByteConsumer;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamSaver;
+import com.google.cloud.tools.managedcloudsdk.process.CollectingByteHandler;
+import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+/** {@link CommandRunner} factory for running gcloud commands. */
+public class Potato {
+
+  private final Path gcloud;
+
+  /**
+   * Configure a new CommandFactory.
+   *
+   * @param gcloud full path to gcloud
+   */
+  public Potato(Path gcloud) {
+    this.gcloud = gcloud;
+  }
+
+  /**
+   * Returns a new {@link CommandRunner} instance.
+   *
+   * @param parameters parameters to configure a single gcloud execution
+   * @param messageListener listener on installer script output
+   * @return a {@link CommandRunner} configured to run the command
+   */
+  public CommandRunner newRunner(List<String> parameters, MessageListener messageListener) {
+    AsyncStreamHandler stdOut =
+        new AsyncByteConsumer(new MessageListenerForwardingHandler(messageListener));
+    AsyncStreamHandler stdErr =
+        new AsyncByteConsumer(new MessageListenerForwardingHandler(messageListener));
+
+    List<String> command = new ArrayList<>(parameters);
+    command.add(0, gcloud.toString());
+    return new CommandRunner(command, null, null, new ProcessExecutorFactory(), stdOut, stdErr);
+  }
+
+  /**
+   * Returns a new {@link CommandCaller} instance.
+   *
+   * @param parameters parameters to configure a single gcloud execution
+   * @return a {@link CommandCaller} configured to run the command and return the result
+   */
+  public CommandCaller newCaller(List<String> parameters) {
+    AsyncStreamSaver stdOut = new AsyncByteConsumer(new CollectingByteHandler());
+    AsyncStreamSaver stdErr = new AsyncByteConsumer(new CollectingByteHandler());
+
+    List<String> command = new ArrayList<>(parameters);
+    command.add(0, gcloud.toString());
+    return new CommandCaller(command, null, null, new ProcessExecutorFactory(), stdOut, stdErr);
+  }
+}

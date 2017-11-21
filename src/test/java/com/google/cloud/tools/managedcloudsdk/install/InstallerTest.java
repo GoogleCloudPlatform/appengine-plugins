@@ -16,9 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
-import com.google.cloud.tools.managedcloudsdk.process.CommandExecutor;
-import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
+import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
+import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -37,9 +37,9 @@ import org.mockito.MockitoAnnotations;
 public class InstallerTest {
 
   @Mock private InstallScriptProvider mockInstallScriptProvider;
-  @Mock private CommandExecutorFactory mockCommandExecutorFactory;
-  @Mock private CommandExecutor mockCommandExecutor;
-  @Mock private AsyncStreamHandler mockStreamHandler;
+  @Mock private CommandFactory mockCommandFactory;
+  @Mock private CommandRunner mockCommandRunner;
+  @Mock private MessageListener mockMessageListener;
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -54,35 +54,25 @@ public class InstallerTest {
 
     fakeWorkingDirectory = tmp.getRoot().toPath();
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
-    Mockito.when(mockCommandExecutorFactory.newCommandExecutor()).thenReturn(mockCommandExecutor);
 
     testInstaller =
         new Installer<>(
-            tmp.getRoot().toPath(),
+            fakeWorkingDirectory,
             mockInstallScriptProvider,
             false,
-            mockCommandExecutorFactory,
-            mockStreamHandler,
-            mockStreamHandler);
+            mockCommandFactory,
+            mockMessageListener);
+
     Mockito.when(
-            mockCommandExecutor.run(
-                testInstaller.getCommand(),
-                fakeWorkingDirectory,
-                null,
-                mockStreamHandler,
-                mockStreamHandler))
-        .thenReturn(0);
+            mockCommandFactory.newRunner(
+                testInstaller.getCommand(), fakeWorkingDirectory, null, mockMessageListener))
+        .thenReturn(mockCommandRunner);
   }
 
   private void verifyInstallerExecution() throws IOException, ExecutionException {
-    Mockito.verify(mockCommandExecutor)
-        .run(
-            testInstaller.getCommand(),
-            fakeWorkingDirectory,
-            null,
-            mockStreamHandler,
-            mockStreamHandler);
-    Mockito.verifyNoMoreInteractions(mockCommandExecutor);
+    Mockito.verify(mockCommandFactory)
+        .newRunner(testInstaller.getCommand(), fakeWorkingDirectory, null, mockMessageListener);
+    Mockito.verifyNoMoreInteractions(mockCommandFactory);
   }
 
   @Test
@@ -92,7 +82,7 @@ public class InstallerTest {
   }
 
   @Test
-  public void testGetCommand_usageReportingFalse() {
+  public void testGetCommand() {
     Assert.assertTrue(testInstaller.getCommand().contains("--usage-reporting=false"));
   }
 
@@ -103,9 +93,8 @@ public class InstallerTest {
             tmp.getRoot().toPath(),
             mockInstallScriptProvider,
             true,
-            mockCommandExecutorFactory,
-            mockStreamHandler,
-            mockStreamHandler);
+            mockCommandFactory,
+            mockMessageListener);
 
     Assert.assertTrue(installer.getCommand().contains("--usage-reporting=true"));
   }

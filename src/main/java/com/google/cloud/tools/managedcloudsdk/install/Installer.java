@@ -16,10 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
-import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
-import com.google.cloud.tools.managedcloudsdk.process.CommandExitException;
-import com.google.cloud.tools.managedcloudsdk.process.CommandRunner;
+import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
+import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -33,36 +32,26 @@ final class Installer<T extends InstallScriptProvider> {
   private final Path installedSdkRoot;
   private final InstallScriptProvider installScriptProvider;
   private final boolean usageReporting;
-  private final CommandExecutorFactory commandExecutorFactory;
-  private final AsyncStreamHandler stdOutConsumer;
-  private final AsyncStreamHandler stdErrConsumer;
+  private final CommandFactory commandFactory;
+  private final MessageListener messageListener;
 
   /** Instantiated by {@link InstallerFactory}. */
   Installer(
       Path installedSdkRoot,
       InstallScriptProvider installScriptProvider,
       boolean usageReporting,
-      CommandExecutorFactory commandExecutorFactory,
-      AsyncStreamHandler stdOutConsumer,
-      AsyncStreamHandler stdErrConsumer) {
+      CommandFactory commandFactory,
+      MessageListener messageListener) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;
     this.usageReporting = usageReporting;
-    this.commandExecutorFactory = commandExecutorFactory;
-    this.stdOutConsumer = stdOutConsumer;
-    this.stdErrConsumer = stdErrConsumer;
+    this.commandFactory = commandFactory;
+    this.messageListener = messageListener;
   }
 
   /** Install a cloud sdk (only run this on LATEST). */
   public void install() throws CommandExitException, ExecutionException, IOException {
-    new CommandRunner(
-            getCommand(),
-            installedSdkRoot,
-            null,
-            commandExecutorFactory,
-            stdOutConsumer,
-            stdErrConsumer)
-        .run();
+    commandFactory.newRunner(getCommand(), installedSdkRoot, null, messageListener).run();
   }
 
   List<String> getCommand() {

@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.process;
+package com.google.cloud.tools.managedcloudsdk.command;
 
-/** {@link CommandExecutor} Factory. */
-public class CommandExecutorFactory {
-
-  /** Returns a new default commandExecutor. */
-  public CommandExecutor newCommandExecutor() {
-    return new CommandExecutor();
+/** Exception when sdk command fails. */
+public class CommandExitException extends Exception {
+  public CommandExitException(String message) {
+    super(message);
   }
 }

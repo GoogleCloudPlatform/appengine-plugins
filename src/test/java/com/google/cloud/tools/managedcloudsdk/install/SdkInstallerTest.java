@@ -17,7 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.process.CommandExitException;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import java.io.IOException;
 import java.net.URL;

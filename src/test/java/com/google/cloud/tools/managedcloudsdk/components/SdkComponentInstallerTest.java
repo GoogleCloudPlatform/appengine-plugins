@@ -17,8 +17,15 @@
 package com.google.cloud.tools.managedcloudsdk.components;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.gcloud.AsyncGcloudRunnerWrapper;
+import com.google.cloud.tools.managedcloudsdk.command.AsyncCommandWrapper;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
+import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
+import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,20 +40,32 @@ public class SdkComponentInstallerTest {
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
   @Mock private MessageListener mockMessageListener;
-  @Mock private AsyncGcloudRunnerWrapper mockAsyncGcloudRunnerWrapper;
+  @Mock private AsyncCommandWrapper mockAsyncCommandWrapper;
+  @Mock private CommandFactory mockCommandFactory;
+  @Mock private CommandRunner mockCommandRunner;
 
+  private Path fakeGcloud;
   private SdkComponent testComponent = SdkComponent.APP_ENGINE_JAVA;
 
   @Before
   public void setUpMocks() throws IOException {
     MockitoAnnotations.initMocks(this);
+    fakeGcloud = testDir.getRoot().toPath().resolve("fake-gcloud");
+    Mockito.when(mockCommandFactory.newRunner(expectedCommand(), null, null, mockMessageListener))
+        .thenReturn(mockCommandRunner);
   }
 
   @Test
-  public void testInstallComponent_successRun() {
-    SdkComponentInstaller testInstaller = new SdkComponentInstaller(mockAsyncGcloudRunnerWrapper);
+  public void testInstallComponent_successRun()
+      throws CommandExitException, ExecutionException, IOException {
+    SdkComponentInstaller testInstaller =
+        new SdkComponentInstaller(fakeGcloud, mockCommandFactory, mockAsyncCommandWrapper);
     testInstaller.installComponent(testComponent, mockMessageListener);
-    Mockito.verify(mockAsyncGcloudRunnerWrapper)
-        .runCommand(testInstaller.getParameters(testComponent), mockMessageListener);
+    Mockito.verify(mockAsyncCommandWrapper).run(mockCommandRunner);
+  }
+
+  private List<String> expectedCommand() {
+    return Arrays.asList(
+        fakeGcloud.toString(), "components", "install", testComponent.toString(), "--quiet");
   }
 }

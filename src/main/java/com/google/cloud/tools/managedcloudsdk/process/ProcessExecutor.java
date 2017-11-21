@@ -24,12 +24,12 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /** Executes a shell command. */
-public class CommandExecutor {
+public class ProcessExecutor {
 
   private ProcessBuilderFactory processBuilderFactory = new ProcessBuilderFactory();
 
   @VisibleForTesting
-  CommandExecutor setProcessBuilderFactory(ProcessBuilderFactory processBuilderFactory) {
+  ProcessExecutor setProcessBuilderFactory(ProcessBuilderFactory processBuilderFactory) {
     this.processBuilderFactory = processBuilderFactory;
     return this;
   }

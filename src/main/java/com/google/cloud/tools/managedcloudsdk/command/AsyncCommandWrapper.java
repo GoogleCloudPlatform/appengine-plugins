@@ -14,52 +14,59 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.gcloud;
+package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.executors.SdkExecutorServiceFactory;
 import com.google.cloud.tools.managedcloudsdk.executors.SingleThreadExecutorServiceFactory;
-import com.google.cloud.tools.managedcloudsdk.process.CommandRunner;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.Callable;
 
-/** Wrapper around {@link CommandRunner} command to run gcloud commands asynchronously. */
-public class AsyncGcloudRunnerWrapper {
+/** Wrapper around {@link CommandRunner}/{@link CommandCaller} to asynchronous execution. */
+public class AsyncCommandWrapper {
 
-  private final GcloudCommandFactory commandFactory;
   private final SdkExecutorServiceFactory executorServiceFactory;
 
-  AsyncGcloudRunnerWrapper(
-      GcloudCommandFactory commandFactory, SdkExecutorServiceFactory executorServiceFactory) {
-    this.commandFactory = commandFactory;
+  AsyncCommandWrapper(SdkExecutorServiceFactory executorServiceFactory) {
     this.executorServiceFactory = executorServiceFactory;
   }
 
-  /** Run a command and return a resultless control future. */
-  public ListenableFuture<Void> runCommand(
-      final List<String> parameters, final MessageListener messageListener) {
+  /** Wrap a command runner and return a resultless future. */
+  public ListenableFuture<Void> run(final CommandRunner commandRunner) {
     ListeningExecutorService executorService = executorServiceFactory.newExecutorService();
     ListenableFuture<Void> resultFuture =
         executorService.submit(
             new Callable<Void>() {
               @Override
               public Void call() throws Exception {
-                commandFactory.newRunner(parameters, messageListener).run();
+                commandRunner.run();
                 return null;
               }
             });
-    executorService.shutdown(); // shutdown executor after install
+    executorService.shutdown();
+    return resultFuture;
+  }
+
+  /** Wrap a {@link CommandCaller} and return a string result future. */
+  public ListenableFuture<String> call(final CommandCaller commandCaller) {
+    ListeningExecutorService executorService = executorServiceFactory.newExecutorService();
+    ListenableFuture<String> resultFuture =
+        executorService.submit(
+            new Callable<String>() {
+              @Override
+              public String call() throws Exception {
+                return commandCaller.call();
+              }
+            });
+    executorService.shutdown();
     return resultFuture;
   }
 
   /** Static factory, creates a new runner wrapper for gcloud commands. */
-  public static AsyncGcloudRunnerWrapper newRunnerWrapper(Path gcloud) {
-    GcloudCommandFactory commandFactory = new GcloudCommandFactory(gcloud);
+  public static AsyncCommandWrapper newRunnerWrapper() {
+    CommandFactory commandFactory = new CommandFactory();
     SdkExecutorServiceFactory executorServiceFactory = new SingleThreadExecutorServiceFactory();
 
-    return new AsyncGcloudRunnerWrapper(commandFactory, executorServiceFactory);
+    return new AsyncCommandWrapper(executorServiceFactory);
   }
 }

@@ -17,20 +17,25 @@
 package com.google.cloud.tools.managedcloudsdk.update;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.gcloud.AsyncGcloudRunnerWrapper;
+import com.google.cloud.tools.managedcloudsdk.command.AsyncCommandWrapper;
+import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** Update an SDK. */
 public class SdkUpdater {
 
-  private final AsyncGcloudRunnerWrapper asyncGcloudRunnerWrapper;
+  private final Path gcloud;
+  private final CommandFactory commandFactory;
+  private final AsyncCommandWrapper asyncCommandWrapper;
 
   /** Use {@link #newUpdater} to instantiate. */
-  public SdkUpdater(AsyncGcloudRunnerWrapper asyncGcloudRunnerWrapper) {
-    this.asyncGcloudRunnerWrapper = asyncGcloudRunnerWrapper;
+  SdkUpdater(Path gcloud, CommandFactory commandFactory, AsyncCommandWrapper asyncCommandWrapper) {
+    this.gcloud = gcloud;
+    this.commandFactory = commandFactory;
+    this.asyncCommandWrapper = asyncCommandWrapper;
   }
 
   /**
@@ -40,17 +45,12 @@ public class SdkUpdater {
    * @return a resultless future for controlling the process
    */
   public ListenableFuture<Void> update(final MessageListener messageListener) {
-    return asyncGcloudRunnerWrapper.runCommand(getParameters(), messageListener);
+    return asyncCommandWrapper.run(
+        commandFactory.newRunner(getParameters(), null, null, messageListener));
   }
 
   List<String> getParameters() {
-    List<String> command = new ArrayList<>();
-    // now configure parameters (not OS specific)
-    command.add("components");
-    command.add("update");
-    command.add("--quiet");
-
-    return command;
+    return Arrays.asList(gcloud.toString(), "components", "update", "--quiet");
   }
 
   /**
@@ -60,6 +60,6 @@ public class SdkUpdater {
    * @return a new configured Cloud Sdk updater
    */
   public static SdkUpdater newUpdater(Path gcloud) {
-    return new SdkUpdater(AsyncGcloudRunnerWrapper.newRunnerWrapper(gcloud));
+    return new SdkUpdater(gcloud, new CommandFactory(), AsyncCommandWrapper.newRunnerWrapper());
   }
 }

@@ -17,20 +17,26 @@
 package com.google.cloud.tools.managedcloudsdk.components;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.gcloud.AsyncGcloudRunnerWrapper;
+import com.google.cloud.tools.managedcloudsdk.command.AsyncCommandWrapper;
+import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** Install an SDK component. */
 public class SdkComponentInstaller {
 
-  private final AsyncGcloudRunnerWrapper asyncGcloudRunnerWrapper;
+  private final AsyncCommandWrapper asyncCommandWrapper;
+  private final CommandFactory commandFactory;
+  private final Path gcloud;
 
   /** Use {@link #newComponentInstaller} to instantiate. */
-  public SdkComponentInstaller(AsyncGcloudRunnerWrapper asyncGcloudRunnerWrapper) {
-    this.asyncGcloudRunnerWrapper = asyncGcloudRunnerWrapper;
+  SdkComponentInstaller(
+      Path gcloud, CommandFactory commandFactory, AsyncCommandWrapper asyncCommandWrapper) {
+    this.gcloud = gcloud;
+    this.commandFactory = commandFactory;
+    this.asyncCommandWrapper = asyncCommandWrapper;
   }
 
   /**
@@ -42,16 +48,13 @@ public class SdkComponentInstaller {
    */
   public ListenableFuture<Void> installComponent(
       final SdkComponent component, final MessageListener messageListener) {
-    return asyncGcloudRunnerWrapper.runCommand(getParameters(component), messageListener);
+    return asyncCommandWrapper.run(
+        commandFactory.newRunner(getCommand(component), null, null, messageListener));
   }
 
-  List<String> getParameters(SdkComponent component) {
-    List<String> command = new ArrayList<>();
-    command.add("components");
-    command.add("install");
-    command.add(component.toString());
-    command.add("--quiet");
-    return command;
+  private List<String> getCommand(SdkComponent component) {
+    return Arrays.asList(
+        gcloud.toString(), "components", "install", component.toString(), "--quiet");
   }
 
   /**
@@ -61,6 +64,7 @@ public class SdkComponentInstaller {
    * @return a new configured Cloud Sdk component installer
    */
   public static SdkComponentInstaller newComponentInstaller(Path gcloud) {
-    return new SdkComponentInstaller(AsyncGcloudRunnerWrapper.newRunnerWrapper(gcloud));
+    return new SdkComponentInstaller(
+        gcloud, new CommandFactory(), AsyncCommandWrapper.newRunnerWrapper());
   }
 }

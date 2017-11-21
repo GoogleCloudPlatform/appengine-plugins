@@ -19,7 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.Version;
-import com.google.cloud.tools.managedcloudsdk.process.CommandExitException;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;

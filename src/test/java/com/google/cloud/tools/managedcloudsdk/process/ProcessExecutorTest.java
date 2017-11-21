@@ -33,10 +33,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-/** Tests for CommandExecutor */
-public class CommandExecutorTest {
+/** Tests for ProcessExecutor */
+public class ProcessExecutorTest {
 
-  @Mock private CommandExecutor.ProcessBuilderFactory mockProcessBuilderFactory;
+  @Mock private ProcessExecutor.ProcessBuilderFactory mockProcessBuilderFactory;
   @Mock private ProcessBuilder mockProcessBuilder;
   @Mock private Process mockProcess;
   @Mock private InputStream mockStdOut;
@@ -69,7 +69,7 @@ public class CommandExecutorTest {
     Path fakeWorkingDirectory = Paths.get("/tmp/fake/working/dir");
 
     int result =
-        new CommandExecutor()
+        new ProcessExecutor()
             .setProcessBuilderFactory(mockProcessBuilderFactory)
             .run(
                 command,
@@ -95,7 +95,7 @@ public class CommandExecutorTest {
     Mockito.when(mockProcess.waitFor()).thenReturn(123);
 
     int exitCode =
-        new CommandExecutor()
+        new ProcessExecutor()
             .setProcessBuilderFactory(mockProcessBuilderFactory)
             .run(command, null, null, mockStreamHandler, mockStreamHandler);
 
@@ -109,7 +109,7 @@ public class CommandExecutorTest {
     Mockito.when(mockProcess.waitFor()).thenThrow(InterruptedException.class);
 
     try {
-      new CommandExecutor()
+      new ProcessExecutor()
           .setProcessBuilderFactory(mockProcessBuilderFactory)
           .run(command, null, null, mockStreamHandler, mockStreamHandler);
       Assert.fail("Execution exception expected but not thrown.");

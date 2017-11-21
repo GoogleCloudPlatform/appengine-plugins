@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.gcloud;
+package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.MessageListenerForwardingHandler;
@@ -22,57 +22,51 @@ import com.google.cloud.tools.managedcloudsdk.process.AsyncByteConsumer;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamSaver;
 import com.google.cloud.tools.managedcloudsdk.process.CollectingByteHandler;
-import com.google.cloud.tools.managedcloudsdk.process.CommandCaller;
-import com.google.cloud.tools.managedcloudsdk.process.CommandExecutorFactory;
-import com.google.cloud.tools.managedcloudsdk.process.CommandRunner;
+import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-/** {@link CommandRunner} factory for running gcloud commands. */
-public class GcloudCommandFactory {
-
-  private final Path gcloud;
-
-  /**
-   * Configure a new CommandFactory.
-   *
-   * @param gcloud full path to gcloud
-   */
-  public GcloudCommandFactory(Path gcloud) {
-    this.gcloud = gcloud;
-  }
+/** {@link CommandRunner}/{@link CommandCaller} factory for convenience. */
+public class CommandFactory {
 
   /**
    * Returns a new {@link CommandRunner} instance.
    *
-   * @param parameters parameters to configure a single gcloud execution
-   * @param messageListener listener on installer script output
+   * @param command command to run
+   * @param workingDirectory the working directory to run in, can be {@code null}
+   * @param environment map of environment variables, can be {@code null}
+   * @param messageListener listener on command output
    * @return a {@link CommandRunner} configured to run the command
    */
-  public CommandRunner newRunner(List<String> parameters, MessageListener messageListener) {
+  public CommandRunner newRunner(
+      List<String> command,
+      Path workingDirectory,
+      Map<String, String> environment,
+      MessageListener messageListener) {
     AsyncStreamHandler stdOut =
         new AsyncByteConsumer(new MessageListenerForwardingHandler(messageListener));
     AsyncStreamHandler stdErr =
         new AsyncByteConsumer(new MessageListenerForwardingHandler(messageListener));
 
-    List<String> command = new ArrayList<>(parameters);
-    command.add(0, gcloud.toString());
-    return new CommandRunner(command, null, null, new CommandExecutorFactory(), stdOut, stdErr);
+    return new CommandRunner(
+        command, workingDirectory, environment, new ProcessExecutorFactory(), stdOut, stdErr);
   }
 
   /**
    * Returns a new {@link CommandCaller} instance.
    *
-   * @param parameters parameters to configure a single gcloud execution
+   * @param command command to run
+   * @param workingDirectory the working directory to run in, can be {@code null}
+   * @param environment map of environment variables, can be {@code null}
    * @return a {@link CommandCaller} configured to run the command and return the result
    */
-  public CommandCaller newCaller(List<String> parameters) {
+  public CommandCaller newCaller(
+      List<String> command, Path workingDirectory, Map<String, String> environment) {
     AsyncStreamSaver stdOut = new AsyncByteConsumer(new CollectingByteHandler());
     AsyncStreamSaver stdErr = new AsyncByteConsumer(new CollectingByteHandler());
 
-    List<String> command = new ArrayList<>(parameters);
-    command.add(0, gcloud.toString());
-    return new CommandCaller(command, null, null, new CommandExecutorFactory(), stdOut, stdErr);
+    return new CommandCaller(
+        command, workingDirectory, environment, new ProcessExecutorFactory(), stdOut, stdErr);
   }
 }

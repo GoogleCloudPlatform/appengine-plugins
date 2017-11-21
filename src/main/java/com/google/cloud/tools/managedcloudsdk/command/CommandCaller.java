@@ -14,54 +14,71 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.process;
+package com.google.cloud.tools.managedcloudsdk.command;
 
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamSaver;
+import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
+import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
-/** Execute a command and redirect output to handlers. */
-public class CommandRunner {
+/** Execute a command and save and return stdout. */
+public class CommandCaller {
   private final List<String> command;
   private final Path workingDirectory;
   private final Map<String, String> environment;
-  private final CommandExecutorFactory commandExecutorFactory;
-  private final AsyncStreamHandler stdOutListener;
-  private final AsyncStreamHandler stdErrListener;
+  private final ProcessExecutorFactory processExecutorFactory;
+  private final AsyncStreamSaver stdOutListener;
+  private final AsyncStreamSaver stdErrListener;
+
+  private final Logger logger = Logger.getLogger(CommandCaller.class.getName());
 
   /**
-   * Create a new Command Runner.
+   * Create a new Command Caller.
    *
    * @param command a command to run
    * @param workingDirectory the working directory to run in, can be {@code null}
    * @param environment map of environment variables, can be {@code null}
    */
-  public CommandRunner(
+  public CommandCaller(
       List<String> command,
       Path workingDirectory,
       Map<String, String> environment,
-      CommandExecutorFactory commandExecutorFactory,
-      AsyncStreamHandler stdOutListener,
-      AsyncStreamHandler stdErrListener) {
+      ProcessExecutorFactory processExecutorFactory,
+      AsyncStreamSaver stdOutListener,
+      AsyncStreamSaver stdErrListener) {
     this.command = ImmutableList.copyOf(command);
     this.workingDirectory = workingDirectory;
     this.environment = environment;
-    this.commandExecutorFactory = commandExecutorFactory;
+    this.processExecutorFactory = processExecutorFactory;
     this.stdOutListener = stdOutListener;
     this.stdErrListener = stdErrListener;
   }
 
-  /** Run the command. */
-  public void run() throws IOException, ExecutionException, CommandExitException {
-    CommandExecutor commandExecutor = commandExecutorFactory.newCommandExecutor();
+  /** Runs the command and returns stdout as a result. */
+  public String call() throws IOException, ExecutionException, CommandExitException {
+    ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
 
     int exitCode =
-        commandExecutor.run(command, workingDirectory, environment, stdOutListener, stdErrListener);
+        processExecutor.run(command, workingDirectory, environment, stdOutListener, stdErrListener);
     if (exitCode != 0) {
+      try {
+        // only log stdErr if we encounter an error.
+        logger.severe(stdErrListener.getResult().get());
+      } catch (InterruptedException ignored) {
+        // ignored
+      }
       throw new CommandExitException("Process exited with non-zero exit code: " + exitCode);
+    }
+    try {
+      return stdOutListener.getResult().get();
+    } catch (InterruptedException ex) {
+      throw new ExecutionException("Interrupted obtaining result.", ex);
     }
   }
 }

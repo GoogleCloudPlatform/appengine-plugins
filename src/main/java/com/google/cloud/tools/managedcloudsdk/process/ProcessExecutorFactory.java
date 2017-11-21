@@ -16,9 +16,11 @@
 
 package com.google.cloud.tools.managedcloudsdk.process;
 
-/** Exception when sdk command fails. */
-public class CommandExitException extends Exception {
-  public CommandExitException(String message) {
-    super(message);
+/** {@link ProcessExecutor} Factory. */
+public class ProcessExecutorFactory {
+
+  /** Returns a new default commandExecutor. */
+  public ProcessExecutor newCommandExecutor() {
+    return new ProcessExecutor();
   }
 }

@@ -29,7 +29,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class AsyncStreamHandlerTest {
+public class AsyncByteConsumerTest {
 
   private static final String TEST_STRING = "test line1\ntest line2\n";
   private InputStream fakeInputStream = new ByteArrayInputStream(TEST_STRING.getBytes());

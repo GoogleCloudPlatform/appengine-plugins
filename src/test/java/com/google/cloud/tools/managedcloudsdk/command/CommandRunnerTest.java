@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.process;
+package com.google.cloud.tools.managedcloudsdk.command;
 
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
+import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
+import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.util.concurrent.ListenableFuture;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -33,21 +35,20 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-/** Tests for {@link com.google.cloud.tools.managedcloudsdk.process.CommandCaller} */
-public class CommandCallerTest {
+/** Tests for {@link CommandRunner} */
+public class CommandRunnerTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private CommandExecutorFactory mockCommandExecutorFactory;
-  @Mock private CommandExecutor mockCommandExecutor;
-  @Mock private AsyncStreamSaver mockStreamSaver;
-  @Mock private ListenableFuture<String> mockResult;
+  @Mock private ProcessExecutorFactory mockProcessExecutorFactory;
+  @Mock private ProcessExecutor mockProcessExecutor;
+  @Mock private AsyncStreamHandler mockStreamHandler;
 
   private List<String> fakeCommand;
   private Path fakeWorkingDirectory;
   private Map<String, String> fakeEnvironment;
 
-  private CommandCaller testCommandCaller;
+  private CommandRunner testCommandRunner;
 
   @Before
   public void setUp() throws IOException, ExecutionException, InterruptedException {
@@ -57,69 +58,59 @@ public class CommandCallerTest {
     fakeWorkingDirectory = testDir.getRoot().toPath();
     fakeEnvironment = ImmutableMap.of("testKey", "testValue");
 
-    Mockito.when(mockCommandExecutorFactory.newCommandExecutor()).thenReturn(mockCommandExecutor);
+    Mockito.when(mockProcessExecutorFactory.newCommandExecutor()).thenReturn(mockProcessExecutor);
     Mockito.when(
-            mockCommandExecutor.run(
+            mockProcessExecutor.run(
                 fakeCommand,
                 fakeWorkingDirectory,
                 fakeEnvironment,
-                mockStreamSaver,
-                mockStreamSaver))
+                mockStreamHandler,
+                mockStreamHandler))
         .thenReturn(0);
-    Mockito.when(mockStreamSaver.getResult()).thenReturn(mockResult);
-    Mockito.when(mockResult.get()).thenReturn("testAnswer");
 
-    testCommandCaller =
-        new CommandCaller(
+    testCommandRunner =
+        new CommandRunner(
             fakeCommand,
             fakeWorkingDirectory,
             fakeEnvironment,
-            mockCommandExecutorFactory,
-            mockStreamSaver,
-            mockStreamSaver);
+            mockProcessExecutorFactory,
+            mockStreamHandler,
+            mockStreamHandler);
   }
 
   private void verifyCommandExecution() throws IOException, ExecutionException {
-    Mockito.verify(mockCommandExecutor)
-        .run(fakeCommand, fakeWorkingDirectory, fakeEnvironment, mockStreamSaver, mockStreamSaver);
-    Mockito.verifyNoMoreInteractions(mockCommandExecutor);
+    Mockito.verify(mockProcessExecutor)
+        .run(
+            fakeCommand,
+            fakeWorkingDirectory,
+            fakeEnvironment,
+            mockStreamHandler,
+            mockStreamHandler);
+    Mockito.verifyNoMoreInteractions(mockProcessExecutor);
   }
 
   @Test
-  public void testCall() throws CommandExitException, ExecutionException, IOException {
-    Assert.assertEquals("testAnswer", testCommandCaller.call());
+  public void testRun() throws CommandExitException, ExecutionException, IOException {
+    testCommandRunner.run();
     verifyCommandExecution();
   }
 
   @Test
   public void testCall_nonZeroExit() throws Exception {
     Mockito.when(
-            mockCommandExecutor.run(
+            mockProcessExecutor.run(
                 fakeCommand,
                 fakeWorkingDirectory,
                 fakeEnvironment,
-                mockStreamSaver,
-                mockStreamSaver))
+                mockStreamHandler,
+                mockStreamHandler))
         .thenReturn(10);
 
     try {
-      testCommandCaller.call();
+      testCommandRunner.run();
       Assert.fail("CommandExitException expected but not found.");
     } catch (CommandExitException ex) {
       Assert.assertEquals("Process exited with non-zero exit code: 10", ex.getMessage());
-    }
-    verifyCommandExecution();
-  }
-
-  @Test
-  public void testCall_outputConsumptionInterrupted() throws Exception {
-    Mockito.when(mockResult.get()).thenThrow(InterruptedException.class);
-
-    try {
-      testCommandCaller.call();
-      Assert.fail("ExecutionException expected but not found.");
-    } catch (ExecutionException ex) {
-      Assert.assertEquals("Interrupted obtaining result.", ex.getMessage());
     }
     verifyCommandExecution();
   }
