@@ -60,34 +60,28 @@ public class CommandCaller implements CommandExecutor<String> {
     this.stdErrListener = stdErrListener;
   }
 
-  /** Runs the command and returns a string of the process's stdout. */
+  /** Runs the command and returns process's stdout stream as a string. */
   @Override
-  public String execute() throws IOException, ExecutionException, CommandExitException {
+  public String execute()
+      throws CommandExitException, CommandExecutionException, InterruptedException {
     ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
 
-    int exitCode =
-        processExecutor.run(command, workingDirectory, environment, stdOutListener, stdErrListener);
-    if (exitCode != 0) {
-      try {
-        // only log stdErr if we encounter an error
-        logger.severe(stdErrListener.getResult().get());
-      } catch (InterruptedException ignored) {
-        // ignored
-      }
-      throw new CommandExitException("Process exited with non-zero exit code: " + exitCode);
-    }
-    else {
-      try {
-        // log to info if succeeded
-        logger.info(stdErrListener.getResult().get());
-      } catch (InterruptedException ignored) {
-        logger.warning("Command stderr logging interrupted.");
-      }
-    }
     try {
+      int exitCode =
+          processExecutor.run(
+              command, workingDirectory, environment, stdOutListener, stdErrListener);
+      if (exitCode != 0) {
+        try {
+          // only log stdErr if we encounter an error
+          logger.severe(stdErrListener.getResult().get());
+        } catch (InterruptedException ignored) {
+          // ignored
+        }
+        throw new CommandExitException("Process exited with non-zero exit code: " + exitCode);
+      }
       return stdOutListener.getResult().get();
-    } catch (InterruptedException ex) {
-      throw new ExecutionException("Interrupted obtaining result.", ex);
+    } catch (IOException | ExecutionException ex) {
+      throw new CommandExecutionException(ex);
     }
   }
 }

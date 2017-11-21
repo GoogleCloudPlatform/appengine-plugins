@@ -19,6 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.Version;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -27,7 +28,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
 /** Install an SDK by downloading, extracting and if necessary installing. */
@@ -77,7 +77,7 @@ public class SdkInstaller {
 
   Path downloadSdkSync(final MessageListener messageListener)
       throws IOException, InterruptedException, SdkInstallerException, UnknownArchiveTypeException,
-          ExecutionException, CommandExitException {
+          CommandExecutionException, CommandExitException {
 
     FileResourceProvider fileResourceProvider =
         fileResourceProviderFactory.newFileResourceProvider();

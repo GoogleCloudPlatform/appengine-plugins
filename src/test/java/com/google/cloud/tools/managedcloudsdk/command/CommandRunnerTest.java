@@ -78,7 +78,7 @@ public class CommandRunnerTest {
             mockStreamHandler);
   }
 
-  private void verifyCommandExecution() throws IOException, ExecutionException {
+  private void verifyCommandExecution() throws IOException, InterruptedException {
     Mockito.verify(mockProcessExecutor)
         .run(
             fakeCommand,
@@ -90,7 +90,8 @@ public class CommandRunnerTest {
   }
 
   @Test
-  public void testRun() throws CommandExitException, ExecutionException, IOException {
+  public void testRun()
+      throws InterruptedException, CommandExitException, CommandExecutionException, IOException {
     testCommandRunner.execute();
     verifyCommandExecution();
   }

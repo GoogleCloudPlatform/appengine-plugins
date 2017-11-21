@@ -112,8 +112,8 @@ public class ProcessExecutorTest {
       new ProcessExecutor()
           .setProcessBuilderFactory(mockProcessBuilderFactory)
           .run(command, null, null, mockStreamHandler, mockStreamHandler);
-      Assert.fail("Execution exception expected but not thrown.");
-    } catch (ExecutionException ex) {
+      Assert.fail("Interrupted exception expected but not thrown.");
+    } catch (InterruptedException ex) {
       Assert.assertEquals("Process cancelled.", ex.getMessage());
     }
 

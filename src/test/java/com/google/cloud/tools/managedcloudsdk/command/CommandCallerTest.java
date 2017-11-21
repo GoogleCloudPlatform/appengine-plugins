@@ -53,7 +53,7 @@ public class CommandCallerTest {
   private CommandCaller testCommandCaller;
 
   @Before
-  public void setUp() throws IOException, ExecutionException, InterruptedException {
+  public void setUp() throws IOException, InterruptedException, ExecutionException {
     MockitoAnnotations.initMocks(this);
 
     fakeCommand = Arrays.asList("gcloud", "test", "--option");
@@ -82,14 +82,15 @@ public class CommandCallerTest {
             mockStreamSaver);
   }
 
-  private void verifyCommandExecution() throws IOException, ExecutionException {
+  private void verifyCommandExecution() throws IOException, InterruptedException {
     Mockito.verify(mockProcessExecutor)
         .run(fakeCommand, fakeWorkingDirectory, fakeEnvironment, mockStreamSaver, mockStreamSaver);
     Mockito.verifyNoMoreInteractions(mockProcessExecutor);
   }
 
   @Test
-  public void testCall() throws CommandExitException, ExecutionException, IOException {
+  public void testCall()
+      throws IOException, InterruptedException, CommandExecutionException, CommandExitException {
     Assert.assertEquals("testAnswer", testCommandCaller.execute());
     verifyCommandExecution();
   }
@@ -115,15 +116,18 @@ public class CommandCallerTest {
   }
 
   @Test
-  public void testCall_outputConsumptionInterrupted() throws Exception {
+  public void testCall_interruptedExceptionPassthrough()
+      throws CommandExecutionException, CommandExitException, ExecutionException,
+          InterruptedException, IOException {
     Mockito.when(mockResult.get()).thenThrow(InterruptedException.class);
 
     try {
       testCommandCaller.execute();
-      Assert.fail("ExecutionException expected but not found.");
-    } catch (ExecutionException ex) {
-      Assert.assertEquals("Interrupted obtaining result.", ex.getMessage());
+      Assert.fail("InterruptedException expected but not found.");
+    } catch (InterruptedException ex) {
+      // pass
     }
+
     verifyCommandExecution();
   }
 }

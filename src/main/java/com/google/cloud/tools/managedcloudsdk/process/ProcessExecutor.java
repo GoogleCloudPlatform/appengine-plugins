@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /** Executes a shell command. */
 public class ProcessExecutor {
@@ -53,7 +52,7 @@ public class ProcessExecutor {
       Map<String, String> environment,
       AsyncStreamHandler stdout,
       AsyncStreamHandler stderr)
-      throws IOException, ExecutionException {
+      throws IOException, InterruptedException {
 
     // Builds the command to execute.
     ProcessBuilder processBuilder = processBuilderFactory.createProcessBuilder();
@@ -74,7 +73,7 @@ public class ProcessExecutor {
       exitCode = process.waitFor();
     } catch (InterruptedException ex) {
       process.destroy();
-      throw new ExecutionException("Process cancelled.", ex);
+      throw new InterruptedException("Process cancelled.");
     }
 
     return exitCode;

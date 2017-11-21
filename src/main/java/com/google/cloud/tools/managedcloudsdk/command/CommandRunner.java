@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 /** Execute a command and redirect output to handlers. */
 public class CommandRunner implements CommandExecutor<Void> {
@@ -59,15 +58,21 @@ public class CommandRunner implements CommandExecutor<Void> {
 
   /** Run the command and wait for completion. */
   @Override
-  public Void execute() throws IOException, ExecutionException, CommandExitException {
+  public Void execute()
+      throws CommandExecutionException, CommandExitException, InterruptedException {
     ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
 
-    int exitCode =
-        processExecutor.run(command, workingDirectory, environment, stdOutListener, stdErrListener);
-    if (exitCode != 0) {
-      throw new CommandExitException("Process exited with non-zero exit code: " + exitCode);
+    try {
+      int exitCode;
+      exitCode =
+          processExecutor.run(
+              command, workingDirectory, environment, stdOutListener, stdErrListener);
+      if (exitCode != 0) {
+        throw new CommandExitException("Process exited with non-zero exit code: " + exitCode);
+      }
+    } catch (IOException ex) {
+      throw new CommandExecutionException(ex);
     }
-
     return null;
   }
 }

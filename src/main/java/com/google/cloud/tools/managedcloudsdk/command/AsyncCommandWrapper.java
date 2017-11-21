@@ -34,8 +34,8 @@ public class AsyncCommandWrapper {
   /**
    * Executes a {@link CommandExecutor} asynchronously and returns a future.
    *
-   * Using {@link CommandRunner} will return a resultless Void future.
-   * Using {@link CommandCaller} will return a string future.
+   * <p>Using {@link CommandRunner} will return a resultless Void future. Using {@link
+   * CommandCaller} will return a string future.
    */
   public <T> ListenableFuture<T> execute(final CommandExecutor<T> commandExecutor) {
     ListeningExecutorService executorService = executorServiceFactory.newExecutorService();

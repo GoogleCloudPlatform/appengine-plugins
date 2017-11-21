@@ -16,8 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-/** Executes a command. */
-public interface CommandExecutor<T> {
-  /** Executes and returns result, result can be {@code null}. */
-  T execute() throws CommandExitException, CommandExecutionException, InterruptedException;
+/** Exception thrown when a command failed to execute completely. */
+public class CommandExecutionException extends Exception {
+  public CommandExecutionException(Throwable cause) {
+    super(cause);
+  }
 }

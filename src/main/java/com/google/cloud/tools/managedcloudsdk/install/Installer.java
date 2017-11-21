@@ -17,14 +17,13 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
 import com.google.common.annotations.VisibleForTesting;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 /** Installer for running install scripts in a Cloud SDK download. */
 final class Installer<T extends InstallScriptProvider> {
@@ -50,7 +49,8 @@ final class Installer<T extends InstallScriptProvider> {
   }
 
   /** Install a cloud sdk (only run this on LATEST). */
-  public void install() throws CommandExitException, ExecutionException, IOException {
+  public void install()
+      throws CommandExitException, CommandExecutionException, InterruptedException {
     commandFactory.newRunner(getCommand(), installedSdkRoot, null, messageListener).execute();
   }
 

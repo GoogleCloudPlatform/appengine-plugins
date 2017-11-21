@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class SdkInstallerTest {
   @Before
   public void setUpMocksAndFakes()
       throws IOException, InterruptedException, UnknownArchiveTypeException, ExecutionException,
-          CommandExitException {
+          CommandExitException, CommandExecutionException {
     MockitoAnnotations.initMocks(this);
 
     Path managedSdkRoot = testDir.newFolder("managed-sdk-test-home").toPath();
@@ -165,8 +166,8 @@ public class SdkInstallerTest {
 
   @Test
   public void testDownloadSdk_successRun()
-      throws InterruptedException, ExecutionException, SdkInstallerException,
-          UnknownArchiveTypeException, IOException, CommandExitException {
+      throws CommandExecutionException, InterruptedException, IOException, CommandExitException,
+          SdkInstallerException, UnknownArchiveTypeException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
@@ -182,8 +183,8 @@ public class SdkInstallerTest {
 
   @Test
   public void testDownloadSdk_successRunWithoutExplicitInstall()
-      throws InterruptedException, ExecutionException, SdkInstallerException,
-          UnknownArchiveTypeException, IOException, CommandExitException {
+      throws CommandExecutionException, InterruptedException, IOException, CommandExitException,
+          SdkInstallerException, UnknownArchiveTypeException {
     SdkInstaller testInstaller =
         new SdkInstaller(
             fileResourceProviderFactory,
@@ -198,8 +199,8 @@ public class SdkInstallerTest {
 
   @Test
   public void testDownloadSdk_failedDownload()
-      throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException,
-          CommandExitException {
+      throws InterruptedException, CommandExecutionException, CommandExitException,
+          UnknownArchiveTypeException, IOException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
@@ -221,7 +222,7 @@ public class SdkInstallerTest {
   @Test
   public void testDownloadSdk_failedExtraction()
       throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException,
-          CommandExitException {
+          CommandExitException, CommandExecutionException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
@@ -243,7 +244,7 @@ public class SdkInstallerTest {
   @Test
   public void testDownloadSdk_failedInstallation()
       throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException,
-          CommandExitException {
+          CommandExitException, CommandExecutionException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(

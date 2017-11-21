@@ -21,7 +21,6 @@ import com.google.cloud.tools.managedcloudsdk.executors.SdkExecutorServiceFactor
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -48,7 +47,8 @@ public class AsyncCommandWrapperTest {
   private ListeningExecutorService testExecutorService;
 
   @Before
-  public void setUpFakesAndMocks() throws IOException, ExecutionException, CommandExitException {
+  public void setUpFakesAndMocks()
+      throws CommandExecutionException, CommandExitException, InterruptedException {
     MockitoAnnotations.initMocks(this);
 
     testExecutorService = Mockito.spy(MoreExecutors.newDirectExecutorService());
@@ -58,7 +58,7 @@ public class AsyncCommandWrapperTest {
 
   @Test
   public void testWrap_commandRunner()
-      throws CommandExitException, ExecutionException, IOException {
+      throws CommandExitException, CommandExecutionException, InterruptedException {
     AsyncCommandWrapper testWrapper = new AsyncCommandWrapper(mockExecutorServiceFactory);
     testWrapper.execute(mockCommandRunner);
 
@@ -71,7 +71,8 @@ public class AsyncCommandWrapperTest {
 
   @Test
   public void testWrap_commandCaller()
-      throws CommandExitException, ExecutionException, IOException, InterruptedException {
+      throws CommandExitException, InterruptedException, CommandExecutionException,
+          ExecutionException {
     AsyncCommandWrapper testWrapper = new AsyncCommandWrapper(mockExecutorServiceFactory);
     ListenableFuture<String> result = testWrapper.execute(mockCommandCaller);
 
