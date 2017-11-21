@@ -60,7 +60,7 @@ public class SdkUpdaterTest {
     SdkUpdater testUpdater =
         new SdkUpdater(fakeGcloud, mockCommandFactory, mockAsyncCommandWrapper);
     testUpdater.update(mockMessageListener);
-    Mockito.verify(mockAsyncCommandWrapper).run(mockCommandRunner);
+    Mockito.verify(mockAsyncCommandWrapper).execute(mockCommandRunner);
     Mockito.verify(mockCommandFactory)
         .newRunner(expectedCommand(), null, null, mockMessageListener);
   }

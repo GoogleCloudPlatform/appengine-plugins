@@ -61,7 +61,7 @@ public class SdkComponentInstallerTest {
     SdkComponentInstaller testInstaller =
         new SdkComponentInstaller(fakeGcloud, mockCommandFactory, mockAsyncCommandWrapper);
     testInstaller.installComponent(testComponent, mockMessageListener);
-    Mockito.verify(mockAsyncCommandWrapper).run(mockCommandRunner);
+    Mockito.verify(mockAsyncCommandWrapper).execute(mockCommandRunner);
   }
 
   private List<String> expectedCommand() {

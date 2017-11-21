@@ -22,7 +22,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import java.util.concurrent.Callable;
 
-/** Wrapper around {@link CommandRunner}/{@link CommandCaller} to asynchronous execution. */
+/** Wrapper around {@link CommandExecutor} to asynchronous execution. */
 public class AsyncCommandWrapper {
 
   private final SdkExecutorServiceFactory executorServiceFactory;
@@ -31,42 +31,29 @@ public class AsyncCommandWrapper {
     this.executorServiceFactory = executorServiceFactory;
   }
 
-  /** Wrap a command runner and return a resultless future. */
-  public ListenableFuture<Void> run(final CommandRunner commandRunner) {
+  /**
+   * Executes a {@link CommandExecutor} asynchronously and returns a future.
+   *
+   * Using {@link CommandRunner} will return a resultless Void future.
+   * Using {@link CommandCaller} will return a string future.
+   */
+  public <T> ListenableFuture<T> execute(final CommandExecutor<T> commandExecutor) {
     ListeningExecutorService executorService = executorServiceFactory.newExecutorService();
-    ListenableFuture<Void> resultFuture =
+    ListenableFuture<T> resultFuture =
         executorService.submit(
-            new Callable<Void>() {
+            new Callable<T>() {
               @Override
-              public Void call() throws Exception {
-                commandRunner.run();
-                return null;
+              public T call() throws Exception {
+                return commandExecutor.execute();
               }
             });
     executorService.shutdown();
     return resultFuture;
   }
 
-  /** Wrap a {@link CommandCaller} and return a string result future. */
-  public ListenableFuture<String> call(final CommandCaller commandCaller) {
-    ListeningExecutorService executorService = executorServiceFactory.newExecutorService();
-    ListenableFuture<String> resultFuture =
-        executorService.submit(
-            new Callable<String>() {
-              @Override
-              public String call() throws Exception {
-                return commandCaller.call();
-              }
-            });
-    executorService.shutdown();
-    return resultFuture;
-  }
-
-  /** Static factory, creates a new runner wrapper for gcloud commands. */
-  public static AsyncCommandWrapper newRunnerWrapper() {
-    CommandFactory commandFactory = new CommandFactory();
+  /** Static factory, creates a new async wrapper for commands. */
+  public static AsyncCommandWrapper newCommandWrapper() {
     SdkExecutorServiceFactory executorServiceFactory = new SingleThreadExecutorServiceFactory();
-
     return new AsyncCommandWrapper(executorServiceFactory);
   }
 }

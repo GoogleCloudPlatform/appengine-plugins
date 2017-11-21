@@ -45,7 +45,7 @@ public class SdkUpdater {
    * @return a resultless future for controlling the process
    */
   public ListenableFuture<Void> update(final MessageListener messageListener) {
-    return asyncCommandWrapper.run(
+    return asyncCommandWrapper.execute(
         commandFactory.newRunner(getParameters(), null, null, messageListener));
   }
 
@@ -60,6 +60,6 @@ public class SdkUpdater {
    * @return a new configured Cloud Sdk updater
    */
   public static SdkUpdater newUpdater(Path gcloud) {
-    return new SdkUpdater(gcloud, new CommandFactory(), AsyncCommandWrapper.newRunnerWrapper());
+    return new SdkUpdater(gcloud, new CommandFactory(), AsyncCommandWrapper.newCommandWrapper());
   }
 }

@@ -91,7 +91,7 @@ public class CommandRunnerTest {
 
   @Test
   public void testRun() throws CommandExitException, ExecutionException, IOException {
-    testCommandRunner.run();
+    testCommandRunner.execute();
     verifyCommandExecution();
   }
 
@@ -107,7 +107,7 @@ public class CommandRunnerTest {
         .thenReturn(10);
 
     try {
-      testCommandRunner.run();
+      testCommandRunner.execute();
       Assert.fail("CommandExitException expected but not found.");
     } catch (CommandExitException ex) {
       Assert.assertEquals("Process exited with non-zero exit code: 10", ex.getMessage());

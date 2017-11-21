@@ -53,32 +53,32 @@ public class AsyncCommandWrapperTest {
 
     testExecutorService = Mockito.spy(MoreExecutors.newDirectExecutorService());
     Mockito.when(mockExecutorServiceFactory.newExecutorService()).thenReturn(testExecutorService);
-    Mockito.when(mockCommandCaller.call()).thenReturn("test-string");
+    Mockito.when(mockCommandCaller.execute()).thenReturn("test-string");
   }
 
   @Test
-  public void testRunCommand_smokeTest()
+  public void testWrap_commandRunner()
       throws CommandExitException, ExecutionException, IOException {
     AsyncCommandWrapper testWrapper = new AsyncCommandWrapper(mockExecutorServiceFactory);
-    testWrapper.run(mockCommandRunner);
+    testWrapper.execute(mockCommandRunner);
 
     Mockito.verify(mockExecutorServiceFactory).newExecutorService();
     Mockito.verify(testExecutorService).submit(Mockito.any(Callable.class));
     Mockito.verifyNoMoreInteractions(mockExecutorServiceFactory);
-    Mockito.verify(mockCommandRunner).run();
+    Mockito.verify(mockCommandRunner).execute();
     Mockito.verifyNoMoreInteractions(mockCommandRunner);
   }
 
   @Test
-  public void testCallCommand_smokeTest()
+  public void testWrap_commandCaller()
       throws CommandExitException, ExecutionException, IOException, InterruptedException {
     AsyncCommandWrapper testWrapper = new AsyncCommandWrapper(mockExecutorServiceFactory);
-    ListenableFuture<String> result = testWrapper.call(mockCommandCaller);
+    ListenableFuture<String> result = testWrapper.execute(mockCommandCaller);
 
     Mockito.verify(mockExecutorServiceFactory).newExecutorService();
     Mockito.verify(testExecutorService).submit(Mockito.any(Callable.class));
     Mockito.verifyNoMoreInteractions(mockExecutorServiceFactory);
-    Mockito.verify(mockCommandCaller).call();
+    Mockito.verify(mockCommandCaller).execute();
     Mockito.verifyNoMoreInteractions(mockCommandCaller);
 
     Assert.assertEquals("test-string", result.get());

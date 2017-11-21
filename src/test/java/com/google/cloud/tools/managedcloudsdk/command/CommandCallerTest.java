@@ -90,7 +90,7 @@ public class CommandCallerTest {
 
   @Test
   public void testCall() throws CommandExitException, ExecutionException, IOException {
-    Assert.assertEquals("testAnswer", testCommandCaller.call());
+    Assert.assertEquals("testAnswer", testCommandCaller.execute());
     verifyCommandExecution();
   }
 
@@ -106,7 +106,7 @@ public class CommandCallerTest {
         .thenReturn(10);
 
     try {
-      testCommandCaller.call();
+      testCommandCaller.execute();
       Assert.fail("CommandExitException expected but not found.");
     } catch (CommandExitException ex) {
       Assert.assertEquals("Process exited with non-zero exit code: 10", ex.getMessage());
@@ -119,7 +119,7 @@ public class CommandCallerTest {
     Mockito.when(mockResult.get()).thenThrow(InterruptedException.class);
 
     try {
-      testCommandCaller.call();
+      testCommandCaller.execute();
       Assert.fail("ExecutionException expected but not found.");
     } catch (ExecutionException ex) {
       Assert.assertEquals("Interrupted obtaining result.", ex.getMessage());

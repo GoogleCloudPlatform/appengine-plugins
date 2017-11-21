@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 /** Execute a command and save and return stdout. */
-public class CommandCaller {
+public class CommandCaller implements CommandExecutor<String> {
   private final List<String> command;
   private final Path workingDirectory;
   private final Map<String, String> environment;
@@ -61,19 +61,28 @@ public class CommandCaller {
   }
 
   /** Runs the command and returns stdout as a result. */
-  public String call() throws IOException, ExecutionException, CommandExitException {
+  @Override
+  public String execute() throws IOException, ExecutionException, CommandExitException {
     ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
 
     int exitCode =
         processExecutor.run(command, workingDirectory, environment, stdOutListener, stdErrListener);
     if (exitCode != 0) {
       try {
-        // only log stdErr if we encounter an error.
+        // only log stdErr if we encounter an error
         logger.severe(stdErrListener.getResult().get());
       } catch (InterruptedException ignored) {
         // ignored
       }
       throw new CommandExitException("Process exited with non-zero exit code: " + exitCode);
+    }
+    else {
+      try {
+        // log to info if succeeded
+        logger.info(stdErrListener.getResult().get());
+      } catch (InterruptedException ignored) {
+        logger.warning("Command stderr logging interrupted.");
+      }
     }
     try {
       return stdOutListener.getResult().get();

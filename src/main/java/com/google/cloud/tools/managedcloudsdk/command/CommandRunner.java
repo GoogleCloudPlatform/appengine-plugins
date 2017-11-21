@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /** Execute a command and redirect output to handlers. */
-public class CommandRunner {
+public class CommandRunner implements CommandExecutor<Void> {
   private final List<String> command;
   private final Path workingDirectory;
   private final Map<String, String> environment;
@@ -58,7 +58,8 @@ public class CommandRunner {
   }
 
   /** Run the command and wait for completion. */
-  public void run() throws IOException, ExecutionException, CommandExitException {
+  @Override
+  public Void execute() throws IOException, ExecutionException, CommandExitException {
     ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
 
     int exitCode =
@@ -66,5 +67,7 @@ public class CommandRunner {
     if (exitCode != 0) {
       throw new CommandExitException("Process exited with non-zero exit code: " + exitCode);
     }
+
+    return null;
   }
 }

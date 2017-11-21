@@ -48,7 +48,7 @@ public class SdkComponentInstaller {
    */
   public ListenableFuture<Void> installComponent(
       final SdkComponent component, final MessageListener messageListener) {
-    return asyncCommandWrapper.run(
+    return asyncCommandWrapper.execute(
         commandFactory.newRunner(getCommand(component), null, null, messageListener));
   }
 
@@ -65,6 +65,6 @@ public class SdkComponentInstaller {
    */
   public static SdkComponentInstaller newComponentInstaller(Path gcloud) {
     return new SdkComponentInstaller(
-        gcloud, new CommandFactory(), AsyncCommandWrapper.newRunnerWrapper());
+        gcloud, new CommandFactory(), AsyncCommandWrapper.newCommandWrapper());
   }
 }
