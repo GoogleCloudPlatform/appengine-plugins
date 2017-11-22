@@ -19,7 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.update;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
-import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
+import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -28,12 +28,12 @@ import java.util.List;
 public class SdkUpdater {
 
   private final Path gcloud;
-  private final CommandFactory commandFactory;
+  private final CommandRunner commandRunner;
 
   /** Use {@link #newUpdater} to instantiate. */
-  SdkUpdater(Path gcloud, CommandFactory commandFactory) {
+  SdkUpdater(Path gcloud, CommandRunner commandRunner) {
     this.gcloud = gcloud;
-    this.commandFactory = commandFactory;
+    this.commandRunner = commandRunner;
   }
 
   /**
@@ -43,11 +43,8 @@ public class SdkUpdater {
    */
   public void update(final MessageListener messageListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    commandFactory.newRunner(getParameters(), null, null, messageListener).run();
-  }
-
-  List<String> getParameters() {
-    return Arrays.asList(gcloud.toString(), "components", "update", "--quiet");
+    List<String> command = Arrays.asList(gcloud.toString(), "components", "update", "--quiet");
+    commandRunner.run(command, null, null, messageListener);
   }
 
   /**
@@ -57,6 +54,6 @@ public class SdkUpdater {
    * @return a new configured Cloud Sdk updater
    */
   public static SdkUpdater newUpdater(Path gcloud) {
-    return new SdkUpdater(gcloud, new CommandFactory());
+    return new SdkUpdater(gcloud, CommandRunner.newRunner());
   }
 }

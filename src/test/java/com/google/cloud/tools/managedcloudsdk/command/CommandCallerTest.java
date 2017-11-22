@@ -44,6 +44,7 @@ public class CommandCallerTest {
   @Mock private ProcessExecutorFactory mockProcessExecutorFactory;
   @Mock private ProcessExecutor mockProcessExecutor;
   @Mock private AsyncStreamSaver mockStreamSaver;
+  @Mock private AsyncStreamSaverFactory mockStreamSaverFactory;
   @Mock private ListenableFuture<String> mockResult;
 
   private List<String> fakeCommand;
@@ -61,6 +62,7 @@ public class CommandCallerTest {
     fakeEnvironment = ImmutableMap.of("testKey", "testValue");
 
     Mockito.when(mockProcessExecutorFactory.newCommandExecutor()).thenReturn(mockProcessExecutor);
+    Mockito.when(mockStreamSaverFactory.newSaver()).thenReturn(mockStreamSaver);
     Mockito.when(
             mockProcessExecutor.run(
                 fakeCommand,
@@ -72,14 +74,7 @@ public class CommandCallerTest {
     Mockito.when(mockStreamSaver.getResult()).thenReturn(mockResult);
     Mockito.when(mockResult.get()).thenReturn("testAnswer");
 
-    testCommandCaller =
-        new CommandCaller(
-            fakeCommand,
-            fakeWorkingDirectory,
-            fakeEnvironment,
-            mockProcessExecutorFactory,
-            mockStreamSaver,
-            mockStreamSaver);
+    testCommandCaller = new CommandCaller(mockProcessExecutorFactory, mockStreamSaverFactory);
   }
 
   private void verifyCommandExecution() throws IOException, InterruptedException {
@@ -91,7 +86,8 @@ public class CommandCallerTest {
   @Test
   public void testCall()
       throws IOException, InterruptedException, CommandExecutionException, CommandExitException {
-    Assert.assertEquals("testAnswer", testCommandCaller.call());
+    Assert.assertEquals(
+        "testAnswer", testCommandCaller.call(fakeCommand, fakeWorkingDirectory, fakeEnvironment));
     verifyCommandExecution();
   }
 
@@ -107,7 +103,7 @@ public class CommandCallerTest {
         .thenReturn(10);
 
     try {
-      testCommandCaller.call();
+      testCommandCaller.call(fakeCommand, fakeWorkingDirectory, fakeEnvironment);
       Assert.fail("CommandExitException expected but not found.");
     } catch (CommandExitException ex) {
       Assert.assertEquals("Process failed with exit code: 10", ex.getMessage());
@@ -124,7 +120,7 @@ public class CommandCallerTest {
     Mockito.when(mockResult.get()).thenThrow(InterruptedException.class);
 
     try {
-      testCommandCaller.call();
+      testCommandCaller.call(fakeCommand, fakeWorkingDirectory, fakeEnvironment);
       Assert.fail("InterruptedException expected but not found.");
     } catch (InterruptedException ex) {
       // pass

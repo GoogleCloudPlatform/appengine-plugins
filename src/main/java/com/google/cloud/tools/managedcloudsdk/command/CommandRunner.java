@@ -16,10 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
+import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
-import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -27,49 +26,41 @@ import java.util.Map;
 
 /** Execute a command and redirect output to handlers. */
 public class CommandRunner {
-  private final List<String> command;
-  private final Path workingDirectory;
-  private final Map<String, String> environment;
   private final ProcessExecutorFactory processExecutorFactory;
-  private final AsyncStreamHandler stdOutListener;
-  private final AsyncStreamHandler stdErrListener;
+  private final AsyncStreamHandlerFactory streamHandlerFactory;
 
-  /**
-   * Create a new Command Runner.
-   *
-   * @param command a command to run
-   * @param workingDirectory the working directory to run in, can be {@code null}
-   * @param environment map of environment variables, can be {@code null}
-   */
   CommandRunner(
-      List<String> command,
-      Path workingDirectory,
-      Map<String, String> environment,
       ProcessExecutorFactory processExecutorFactory,
-      AsyncStreamHandler stdOutListener,
-      AsyncStreamHandler stdErrListener) {
-    this.command = ImmutableList.copyOf(command);
-    this.workingDirectory = workingDirectory;
-    this.environment = environment;
+      AsyncStreamHandlerFactory streamHandlerFactory) {
     this.processExecutorFactory = processExecutorFactory;
-    this.stdOutListener = stdOutListener;
-    this.stdErrListener = stdErrListener;
+    this.streamHandlerFactory = streamHandlerFactory;
   }
 
   /** Run the command and wait for completion. */
-  public Void run() throws CommandExecutionException, CommandExitException, InterruptedException {
+  public void run(
+      List<String> command,
+      Path workingDirectory,
+      Map<String, String> environment,
+      MessageListener messageListener)
+      throws InterruptedException, CommandExitException, CommandExecutionException {
     ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
-
     try {
       int exitCode =
           processExecutor.run(
-              command, workingDirectory, environment, stdOutListener, stdErrListener);
+              command,
+              workingDirectory,
+              environment,
+              streamHandlerFactory.newHandler(messageListener),
+              streamHandlerFactory.newHandler(messageListener));
       if (exitCode != 0) {
         throw new CommandExitException(exitCode, null);
       }
     } catch (IOException ex) {
       throw new CommandExecutionException(ex);
     }
-    return null;
+  }
+
+  public static CommandRunner newRunner() {
+    return new CommandRunner(new ProcessExecutorFactory(), new AsyncStreamHandlerFactory());
   }
 }

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.process;
+package com.google.cloud.tools.managedcloudsdk.command;
 
+import com.google.cloud.tools.managedcloudsdk.command.AsyncStreamSaverFactory.CollectingByteHandler;
 import org.junit.Assert;
 import org.junit.Test;
 

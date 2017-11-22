@@ -19,7 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
-import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
+import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import com.google.common.annotations.VisibleForTesting;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -31,37 +31,33 @@ final class Installer<T extends InstallScriptProvider> {
   private final Path installedSdkRoot;
   private final InstallScriptProvider installScriptProvider;
   private final boolean usageReporting;
-  private final CommandFactory commandFactory;
   private final MessageListener messageListener;
+  private final CommandRunner commandRunner;
 
   /** Instantiated by {@link InstallerFactory}. */
   Installer(
       Path installedSdkRoot,
       InstallScriptProvider installScriptProvider,
       boolean usageReporting,
-      CommandFactory commandFactory,
-      MessageListener messageListener) {
+      MessageListener messageListener,
+      CommandRunner commandRunner) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;
     this.usageReporting = usageReporting;
-    this.commandFactory = commandFactory;
     this.messageListener = messageListener;
+    this.commandRunner = commandRunner;
   }
 
   /** Install a cloud sdk (only run this on LATEST). */
   public void install()
       throws CommandExitException, CommandExecutionException, InterruptedException {
-    commandFactory.newRunner(getCommand(), installedSdkRoot, null, messageListener).run();
-  }
-
-  List<String> getCommand() {
     List<String> command = new ArrayList<>(installScriptProvider.getScriptCommandLine());
     command.add("--path-update=false"); // don't update user's path
     command.add("--command-completion=false"); // don't add command completion
     command.add("--quiet"); // don't accept user input during install
     command.add("--usage-reporting=" + usageReporting); // usage reporing passthrough
 
-    return command;
+    commandRunner.run(command, installedSdkRoot, null, messageListener);
   }
 
   @VisibleForTesting

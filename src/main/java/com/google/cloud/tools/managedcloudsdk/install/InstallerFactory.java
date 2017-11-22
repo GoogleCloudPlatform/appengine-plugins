@@ -18,7 +18,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
-import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
+import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.nio.file.Path;
 
 /** {@link Installer} Factory. */
@@ -53,8 +53,8 @@ final class InstallerFactory {
         installedSdkRoot,
         getInstallScriptProvider(),
         usageReporting,
-        new CommandFactory(),
-        messageListener);
+        messageListener,
+        CommandRunner.newRunner());
   }
 
   private InstallScriptProvider getInstallScriptProvider() {

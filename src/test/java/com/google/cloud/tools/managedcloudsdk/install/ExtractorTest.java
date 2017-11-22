@@ -59,7 +59,7 @@ public class ExtractorTest {
         .when(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
 
-    Extractor extractor =
+    Extractor<ExtractorProvider> extractor =
         new Extractor<>(
             extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
     extractor.extract();
@@ -89,7 +89,7 @@ public class ExtractorTest {
         .when(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
 
-    Extractor extractor =
+    Extractor<ExtractorProvider> extractor =
         new Extractor<>(
             extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
 

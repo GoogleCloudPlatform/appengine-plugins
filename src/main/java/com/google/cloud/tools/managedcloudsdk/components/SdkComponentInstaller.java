@@ -19,7 +19,7 @@ package com.google.cloud.tools.managedcloudsdk.components;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
-import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
+import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -27,13 +27,13 @@ import java.util.List;
 /** Install an SDK component. */
 public class SdkComponentInstaller {
 
-  private final CommandFactory commandFactory;
   private final Path gcloud;
+  private final CommandRunner commandRunner;
 
   /** Use {@link #newComponentInstaller} to instantiate. */
-  SdkComponentInstaller(Path gcloud, CommandFactory commandFactory) {
+  SdkComponentInstaller(Path gcloud, CommandRunner commandRunner) {
     this.gcloud = gcloud;
-    this.commandFactory = commandFactory;
+    this.commandRunner = commandRunner;
   }
 
   /**
@@ -44,12 +44,9 @@ public class SdkComponentInstaller {
    */
   public void installComponent(SdkComponent component, MessageListener messageListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    commandFactory.newRunner(getCommand(component), null, null, messageListener).run();
-  }
-
-  private List<String> getCommand(SdkComponent component) {
-    return Arrays.asList(
-        gcloud.toString(), "components", "install", component.toString(), "--quiet");
+    List<String> command =
+        Arrays.asList(gcloud.toString(), "components", "install", component.toString(), "--quiet");
+    commandRunner.run(command, null, null, messageListener);
   }
 
   /**
@@ -59,6 +56,6 @@ public class SdkComponentInstaller {
    * @return a new configured Cloud Sdk component installer
    */
   public static SdkComponentInstaller newComponentInstaller(Path gcloud) {
-    return new SdkComponentInstaller(gcloud, new CommandFactory());
+    return new SdkComponentInstaller(gcloud, CommandRunner.newRunner());
   }
 }

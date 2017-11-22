@@ -19,7 +19,6 @@ package com.google.cloud.tools.managedcloudsdk.install;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -41,7 +40,6 @@ public class SdkInstallerTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private ListeningExecutorService executorService;
   @Mock private FileResourceProviderFactory fileResourceProviderFactory;
   @Mock private MessageListener messageListener;
 
@@ -207,7 +205,7 @@ public class SdkInstallerTest {
             successfulLatestExtractorFactory,
             successfulInstallerFactory);
     try {
-      Path result = testInstaller.install(messageListener);
+      testInstaller.install(messageListener);
       Assert.fail("SdKInstallerException expected but not thrown");
     } catch (SdkInstallerException ex) {
       Assert.assertEquals(
@@ -228,7 +226,7 @@ public class SdkInstallerTest {
             failureExtractorFactory,
             successfulInstallerFactory);
     try {
-      Path result = testInstaller.install(messageListener);
+      testInstaller.install(messageListener);
       Assert.fail("SdKInstallerException expected but not thrown");
     } catch (SdkInstallerException ex) {
       Assert.assertEquals(
@@ -249,7 +247,7 @@ public class SdkInstallerTest {
             successfulLatestExtractorFactory,
             failureInstallerFactory);
     try {
-      Path result = testInstaller.install(messageListener);
+      testInstaller.install(messageListener);
       Assert.fail("SdKInstallerException expected but not thrown");
     } catch (SdkInstallerException ex) {
       Assert.assertEquals(

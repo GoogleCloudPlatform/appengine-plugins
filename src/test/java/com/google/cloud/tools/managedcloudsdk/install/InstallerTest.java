@@ -17,14 +17,15 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,7 +38,6 @@ import org.mockito.MockitoAnnotations;
 public class InstallerTest {
 
   @Mock private InstallScriptProvider mockInstallScriptProvider;
-  @Mock private CommandFactory mockCommandFactory;
   @Mock private CommandRunner mockCommandRunner;
   @Mock private MessageListener mockMessageListener;
 
@@ -46,56 +46,54 @@ public class InstallerTest {
   private Path fakeWorkingDirectory;
   private List<String> fakeCommand = Arrays.asList("scriptexec", "test-install.script");
 
-  private Installer<?> testInstaller;
-
   @Before
   public void setUp() throws IOException, ExecutionException, InterruptedException {
     MockitoAnnotations.initMocks(this);
 
     fakeWorkingDirectory = tmp.getRoot().toPath();
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
-
-    testInstaller =
-        new Installer<>(
-            fakeWorkingDirectory,
-            mockInstallScriptProvider,
-            false,
-            mockCommandFactory,
-            mockMessageListener);
-
-    Mockito.when(
-            mockCommandFactory.newRunner(
-                testInstaller.getCommand(), fakeWorkingDirectory, null, mockMessageListener))
-        .thenReturn(mockCommandRunner);
   }
 
-  private void verifyInstallerExecution() throws IOException, ExecutionException {
-    Mockito.verify(mockCommandFactory)
-        .newRunner(testInstaller.getCommand(), fakeWorkingDirectory, null, mockMessageListener);
-    Mockito.verifyNoMoreInteractions(mockCommandFactory);
+  private void verifyInstallerExecution(boolean usageReporting)
+      throws InterruptedException, CommandExitException, CommandExecutionException {
+    Mockito.verify(mockCommandRunner)
+        .run(expectedCommand(usageReporting), fakeWorkingDirectory, null, mockMessageListener);
+    Mockito.verifyNoMoreInteractions(mockCommandRunner);
   }
 
   @Test
   public void testCall() throws Exception {
-    testInstaller.install();
-    verifyInstallerExecution();
+    new Installer<>(
+            fakeWorkingDirectory,
+            mockInstallScriptProvider,
+            false,
+            mockMessageListener,
+            mockCommandRunner)
+        .install();
+
+    verifyInstallerExecution(false);
   }
 
   @Test
-  public void testGetCommand() {
-    Assert.assertTrue(testInstaller.getCommand().contains("--usage-reporting=false"));
-  }
-
-  @Test
-  public void testGetCommand_usageReportingTrue() throws Exception {
-    Installer installer =
-        new Installer<>(
+  public void testCall_withUsageReporting() throws Exception {
+    new Installer<>(
             tmp.getRoot().toPath(),
             mockInstallScriptProvider,
             true,
-            mockCommandFactory,
-            mockMessageListener);
+            mockMessageListener,
+            mockCommandRunner)
+        .install();
 
-    Assert.assertTrue(installer.getCommand().contains("--usage-reporting=true"));
+    verifyInstallerExecution(true);
+  }
+
+  private List<String> expectedCommand(boolean usageReporting) {
+    List<String> command = new ArrayList<>(fakeCommand);
+    command.add("--path-update=false");
+    command.add("--command-completion=false");
+    command.add("--quiet");
+    command.add("--usage-reporting=" + usageReporting);
+
+    return command;
   }
 }
