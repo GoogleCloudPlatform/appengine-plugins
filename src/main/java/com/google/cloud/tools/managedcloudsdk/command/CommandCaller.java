@@ -25,18 +25,15 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
 
-/** Execute a command and save and return stdout. */
-public class CommandCaller implements CommandExecutor<String> {
+/** Execute a command synchronously and save and return stdout. */
+public class CommandCaller {
   private final List<String> command;
   private final Path workingDirectory;
   private final Map<String, String> environment;
   private final ProcessExecutorFactory processExecutorFactory;
   private final AsyncStreamSaver stdOutListener;
   private final AsyncStreamSaver stdErrListener;
-
-  private final Logger logger = Logger.getLogger(CommandCaller.class.getName());
 
   /**
    * Create a new Command Caller.
@@ -61,8 +58,7 @@ public class CommandCaller implements CommandExecutor<String> {
   }
 
   /** Runs the command and returns process's stdout stream as a string. */
-  @Override
-  public String execute()
+  public String call()
       throws CommandExitException, CommandExecutionException, InterruptedException {
     ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
 
@@ -71,13 +67,19 @@ public class CommandCaller implements CommandExecutor<String> {
           processExecutor.run(
               command, workingDirectory, environment, stdOutListener, stdErrListener);
       if (exitCode != 0) {
+        String stdOut;
+        String stdErr;
         try {
-          // only log stdErr if we encounter an error
-          logger.severe(stdErrListener.getResult().get());
+          stdOut = stdOutListener.getResult().get();
         } catch (InterruptedException ignored) {
-          // ignored
+          stdOut = "stdout collection interrupted";
         }
-        throw new CommandExitException("Process exited with non-zero exit code: " + exitCode);
+        try {
+          stdErr = stdErrListener.getResult().get();
+        } catch (InterruptedException ignored) {
+          stdErr = "stderr collection interrupted";
+        }
+        throw new CommandExitException(exitCode, stdOut + "\n" + stdErr);
       }
       return stdOutListener.getResult().get();
     } catch (IOException | ExecutionException ex) {

@@ -17,7 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.update;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.command.AsyncCommandWrapper;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,7 +39,6 @@ public class SdkUpdaterTest {
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
   @Mock private MessageListener mockMessageListener;
-  @Mock private AsyncCommandWrapper mockAsyncCommandWrapper;
   @Mock private CommandFactory mockCommandFactory;
   @Mock private CommandRunner mockCommandRunner;
 
@@ -56,13 +54,11 @@ public class SdkUpdaterTest {
   }
 
   @Test
-  public void testUpdate_successRun() throws CommandExitException, ExecutionException, IOException {
-    SdkUpdater testUpdater =
-        new SdkUpdater(fakeGcloud, mockCommandFactory, mockAsyncCommandWrapper);
+  public void testUpdate_successRun()
+      throws InterruptedException, CommandExitException, CommandExecutionException {
+    SdkUpdater testUpdater = new SdkUpdater(fakeGcloud, mockCommandFactory);
     testUpdater.update(mockMessageListener);
-    Mockito.verify(mockAsyncCommandWrapper).execute(mockCommandRunner);
-    Mockito.verify(mockCommandFactory)
-        .newRunner(expectedCommand(), null, null, mockMessageListener);
+    Mockito.verify(mockCommandRunner).run();
   }
 
   private List<String> expectedCommand() {

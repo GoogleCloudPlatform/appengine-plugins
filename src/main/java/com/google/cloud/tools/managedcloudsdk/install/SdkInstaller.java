@@ -21,19 +21,13 @@ import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.Version;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 
 /** Install an SDK by downloading, extracting and if necessary installing. */
 public class SdkInstaller {
 
-  private final ListeningExecutorService executorService;
   private final FileResourceProviderFactory fileResourceProviderFactory;
   private final ExtractorFactory extractorFactory;
   private final DownloaderFactory downloaderFactory;
@@ -44,38 +38,15 @@ public class SdkInstaller {
       FileResourceProviderFactory fileResourceProviderFactory,
       DownloaderFactory downloaderFactory,
       ExtractorFactory extractorFactory,
-      InstallerFactory installerFactory,
-      ListeningExecutorService executorService) {
+      InstallerFactory installerFactory) {
     this.fileResourceProviderFactory = fileResourceProviderFactory;
-    this.executorService = executorService;
     this.downloaderFactory = downloaderFactory;
     this.extractorFactory = extractorFactory;
     this.installerFactory = installerFactory;
   }
 
-  /**
-   * Download a Cloud SDK asynchronously.
-   *
-   * @param messageListener a listener on installer output
-   * @return a path to the Cloud SDK home directory (wrapped in a listenable future)
-   */
-  public ListenableFuture<Path> downloadSdk(final MessageListener messageListener) {
-    if (executorService.isShutdown()) {
-      throw new IllegalStateException("downloadSdk has already run");
-    }
-    ListenableFuture<Path> resultFuture =
-        executorService.submit(
-            new Callable<Path>() {
-              @Override
-              public Path call() throws Exception {
-                return downloadSdkSync(messageListener);
-              }
-            });
-    executorService.shutdown(); // shutdown executor after install
-    return resultFuture;
-  }
-
-  Path downloadSdkSync(final MessageListener messageListener)
+  /** Download and install a new Cloud SDK. */
+  public Path install(final MessageListener messageListener)
       throws IOException, InterruptedException, SdkInstallerException, UnknownArchiveTypeException,
           CommandExecutionException, CommandExitException {
 
@@ -167,14 +138,7 @@ public class SdkInstaller {
     FileResourceProviderFactory fileResourceProviderFactory =
         new FileResourceProviderFactory(version, osInfo, managedSdkDirectory);
 
-    ListeningExecutorService executorService =
-        MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
-
     return new SdkInstaller(
-        fileResourceProviderFactory,
-        downloaderFactory,
-        extractorFactory,
-        installerFactory,
-        executorService);
+        fileResourceProviderFactory, downloaderFactory, extractorFactory, installerFactory);
   }
 }

@@ -17,9 +17,9 @@
 package com.google.cloud.tools.managedcloudsdk.update;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.command.AsyncCommandWrapper;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
-import com.google.common.util.concurrent.ListenableFuture;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -29,24 +29,21 @@ public class SdkUpdater {
 
   private final Path gcloud;
   private final CommandFactory commandFactory;
-  private final AsyncCommandWrapper asyncCommandWrapper;
 
   /** Use {@link #newUpdater} to instantiate. */
-  SdkUpdater(Path gcloud, CommandFactory commandFactory, AsyncCommandWrapper asyncCommandWrapper) {
+  SdkUpdater(Path gcloud, CommandFactory commandFactory) {
     this.gcloud = gcloud;
     this.commandFactory = commandFactory;
-    this.asyncCommandWrapper = asyncCommandWrapper;
   }
 
   /**
    * Update the Cloud SDK.
    *
    * @param messageListener listener to receive feedback on
-   * @return a resultless future for controlling the process
    */
-  public ListenableFuture<Void> update(final MessageListener messageListener) {
-    return asyncCommandWrapper.execute(
-        commandFactory.newRunner(getParameters(), null, null, messageListener));
+  public void update(final MessageListener messageListener)
+      throws InterruptedException, CommandExitException, CommandExecutionException {
+    commandFactory.newRunner(getParameters(), null, null, messageListener).run();
   }
 
   List<String> getParameters() {
@@ -60,6 +57,6 @@ public class SdkUpdater {
    * @return a new configured Cloud Sdk updater
    */
   public static SdkUpdater newUpdater(Path gcloud) {
-    return new SdkUpdater(gcloud, new CommandFactory(), AsyncCommandWrapper.newCommandWrapper());
+    return new SdkUpdater(gcloud, new CommandFactory());
   }
 }

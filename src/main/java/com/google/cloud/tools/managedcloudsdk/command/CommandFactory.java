@@ -17,7 +17,6 @@
 package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.MessageListenerForwardingHandler;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncByteConsumer;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamSaver;

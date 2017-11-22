@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /** Execute a command and redirect output to handlers. */
-public class CommandRunner implements CommandExecutor<Void> {
+public class CommandRunner {
   private final List<String> command;
   private final Path workingDirectory;
   private final Map<String, String> environment;
@@ -57,18 +57,15 @@ public class CommandRunner implements CommandExecutor<Void> {
   }
 
   /** Run the command and wait for completion. */
-  @Override
-  public Void execute()
-      throws CommandExecutionException, CommandExitException, InterruptedException {
+  public Void run() throws CommandExecutionException, CommandExitException, InterruptedException {
     ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
 
     try {
-      int exitCode;
-      exitCode =
+      int exitCode =
           processExecutor.run(
               command, workingDirectory, environment, stdOutListener, stdErrListener);
       if (exitCode != 0) {
-        throw new CommandExitException("Process exited with non-zero exit code: " + exitCode);
+        throw new CommandExitException(exitCode, null);
       }
     } catch (IOException ex) {
       throw new CommandExecutionException(ex);

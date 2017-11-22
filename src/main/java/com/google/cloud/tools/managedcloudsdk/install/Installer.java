@@ -51,7 +51,7 @@ final class Installer<T extends InstallScriptProvider> {
   /** Install a cloud sdk (only run this on LATEST). */
   public void install()
       throws CommandExitException, CommandExecutionException, InterruptedException {
-    commandFactory.newRunner(getCommand(), installedSdkRoot, null, messageListener).execute();
+    commandFactory.newRunner(getCommand(), installedSdkRoot, null, messageListener).run();
   }
 
   List<String> getCommand() {

@@ -174,9 +174,8 @@ public class SdkInstallerTest {
             fileResourceProviderFactory,
             successfulDownloaderFactory,
             successfulLatestExtractorFactory,
-            successfulInstallerFactory,
-            null);
-    Path result = testInstaller.downloadSdkSync(messageListener);
+            successfulInstallerFactory);
+    Path result = testInstaller.install(messageListener);
 
     Assert.assertEquals(fakeSdkHome, result);
   }
@@ -190,9 +189,8 @@ public class SdkInstallerTest {
             fileResourceProviderFactory,
             successfulDownloaderFactory,
             successfulVersionedExtractorFactory,
-            null,
             null);
-    Path result = testInstaller.downloadSdkSync(messageListener);
+    Path result = testInstaller.install(messageListener);
 
     Assert.assertEquals(fakeSdkHome, result);
   }
@@ -207,10 +205,9 @@ public class SdkInstallerTest {
             fileResourceProviderFactory,
             failureDownloaderFactory,
             successfulLatestExtractorFactory,
-            successfulInstallerFactory,
-            null);
+            successfulInstallerFactory);
     try {
-      Path result = testInstaller.downloadSdkSync(messageListener);
+      Path result = testInstaller.install(messageListener);
       Assert.fail("SdKInstallerException expected but not thrown");
     } catch (SdkInstallerException ex) {
       Assert.assertEquals(
@@ -229,10 +226,9 @@ public class SdkInstallerTest {
             fileResourceProviderFactory,
             successfulDownloaderFactory,
             failureExtractorFactory,
-            successfulInstallerFactory,
-            null);
+            successfulInstallerFactory);
     try {
-      Path result = testInstaller.downloadSdkSync(messageListener);
+      Path result = testInstaller.install(messageListener);
       Assert.fail("SdKInstallerException expected but not thrown");
     } catch (SdkInstallerException ex) {
       Assert.assertEquals(
@@ -251,10 +247,9 @@ public class SdkInstallerTest {
             fileResourceProviderFactory,
             successfulDownloaderFactory,
             successfulLatestExtractorFactory,
-            failureInstallerFactory,
-            null);
+            failureInstallerFactory);
     try {
-      Path result = testInstaller.downloadSdkSync(messageListener);
+      Path result = testInstaller.install(messageListener);
       Assert.fail("SdKInstallerException expected but not thrown");
     } catch (SdkInstallerException ex) {
       Assert.assertEquals(

@@ -82,6 +82,7 @@ public class AsyncByteConsumer implements AsyncStreamSaver {
     return byteHandler.getResult();
   }
 
+  @Override
   public ListenableFuture<String> getResult() {
     return result;
   }

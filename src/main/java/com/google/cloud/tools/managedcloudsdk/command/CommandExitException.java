@@ -18,7 +18,26 @@ package com.google.cloud.tools.managedcloudsdk.command;
 
 /** Exception when sdk command fails. */
 public class CommandExitException extends Exception {
-  public CommandExitException(String message) {
-    super(message);
+  private final int exitCode;
+  private final String errLog;
+
+  /**
+   * Create a new exception.
+   *
+   * @param exitCode the process exit code
+   * @param errLog additional loggable error information, can be {@code null}
+   */
+  public CommandExitException(int exitCode, String errLog) {
+    super("Process failed with exit code: " + exitCode);
+    this.exitCode = exitCode;
+    this.errLog = errLog;
+  }
+
+  public int getExitCode() {
+    return exitCode;
+  }
+
+  public String getErrorLog() {
+    return errLog;
   }
 }

@@ -17,7 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.components;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.command.AsyncCommandWrapper;
+import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandFactory;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,7 +39,6 @@ public class SdkComponentInstallerTest {
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
   @Mock private MessageListener mockMessageListener;
-  @Mock private AsyncCommandWrapper mockAsyncCommandWrapper;
   @Mock private CommandFactory mockCommandFactory;
   @Mock private CommandRunner mockCommandRunner;
 
@@ -57,11 +55,10 @@ public class SdkComponentInstallerTest {
 
   @Test
   public void testInstallComponent_successRun()
-      throws CommandExitException, ExecutionException, IOException {
-    SdkComponentInstaller testInstaller =
-        new SdkComponentInstaller(fakeGcloud, mockCommandFactory, mockAsyncCommandWrapper);
+      throws InterruptedException, CommandExitException, CommandExecutionException {
+    SdkComponentInstaller testInstaller = new SdkComponentInstaller(fakeGcloud, mockCommandFactory);
     testInstaller.installComponent(testComponent, mockMessageListener);
-    Mockito.verify(mockAsyncCommandWrapper).execute(mockCommandRunner);
+    Mockito.verify(mockCommandRunner).run();
   }
 
   private List<String> expectedCommand() {

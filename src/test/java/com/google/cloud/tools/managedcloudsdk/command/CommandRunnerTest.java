@@ -92,7 +92,7 @@ public class CommandRunnerTest {
   @Test
   public void testRun()
       throws InterruptedException, CommandExitException, CommandExecutionException, IOException {
-    testCommandRunner.execute();
+    testCommandRunner.run();
     verifyCommandExecution();
   }
 
@@ -108,10 +108,12 @@ public class CommandRunnerTest {
         .thenReturn(10);
 
     try {
-      testCommandRunner.execute();
+      testCommandRunner.run();
       Assert.fail("CommandExitException expected but not found.");
     } catch (CommandExitException ex) {
-      Assert.assertEquals("Process exited with non-zero exit code: 10", ex.getMessage());
+      Assert.assertEquals("Process failed with exit code: 10", ex.getMessage());
+      Assert.assertEquals(10, ex.getExitCode());
+      Assert.assertEquals(null, ex.getErrorLog());
     }
     verifyCommandExecution();
   }

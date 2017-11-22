@@ -16,8 +16,25 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-/** Executes a command. */
-public interface CommandExecutor<T> {
-  /** Executes and returns result, result can be {@code null}. */
-  T execute() throws CommandExitException, CommandExecutionException, InterruptedException;
+import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.process.ByteHandler;
+
+/** {@link ByteHandler} that redirects to {@link MessageListener}. */
+class MessageListenerForwardingHandler implements ByteHandler {
+
+  private final MessageListener messageListener;
+
+  public MessageListenerForwardingHandler(MessageListener messageListener) {
+    this.messageListener = messageListener;
+  }
+
+  @Override
+  public void bytes(byte[] bytes, int length) {
+    messageListener.message(new String(bytes, 0, length));
+  }
+
+  @Override
+  public String getResult() {
+    return null;
+  }
 }
