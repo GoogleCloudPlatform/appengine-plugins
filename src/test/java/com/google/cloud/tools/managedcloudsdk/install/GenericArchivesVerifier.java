@@ -25,7 +25,6 @@ import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.internal.util.MockUtil;
 
@@ -68,8 +67,6 @@ public class GenericArchivesVerifier {
     if (!MockUtil.isMock(messageListener)) {
       throw new IllegalArgumentException("Listener must be a mock.");
     }
-
-    ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
 
     // tars allow for duplicate entries
     Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(ROOT) + "\n");

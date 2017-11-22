@@ -60,7 +60,7 @@ public class CommandExecutor {
    * @param command the list of command line tokens
    * @return exitcode from the process
    */
-  public int run(List<String> command, AsyncStreamHandler stdout, AsyncStreamHandler stderr)
+  public int run(List<String> command, AsyncStreamHandler<?> stdout, AsyncStreamHandler<?> stderr)
       throws IOException, ExecutionException {
 
     // Builds the command to execute.

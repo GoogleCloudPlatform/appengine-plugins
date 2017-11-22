@@ -59,7 +59,7 @@ public class ExtractorTest {
         .when(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
 
-    Extractor extractor =
+    Extractor<ExtractorProvider> extractor =
         new Extractor<>(
             extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
     extractor.extract();
@@ -89,12 +89,12 @@ public class ExtractorTest {
         .when(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
 
-    Extractor extractor =
-        new Extractor<>(
-            extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
-
     try {
+      Extractor<ExtractorProvider> extractor =
+          new Extractor<>(
+              extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
       extractor.extract();
+
       Assert.fail("IOException expected but thrown - test infrastructure failure");
     } catch (IOException ex) {
       // ensure we are rethrowing after cleanup

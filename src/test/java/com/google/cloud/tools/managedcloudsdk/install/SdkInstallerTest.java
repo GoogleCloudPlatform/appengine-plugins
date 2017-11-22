@@ -209,7 +209,7 @@ public class SdkInstallerTest {
             successfulInstallerFactory,
             null);
     try {
-      Path result = testInstaller.downloadSdkSync(messageListener);
+      testInstaller.downloadSdkSync(messageListener);
       Assert.fail("SdKInstallerException expected but not thrown");
     } catch (SdkInstallerException ex) {
       Assert.assertEquals(
@@ -231,7 +231,7 @@ public class SdkInstallerTest {
             successfulInstallerFactory,
             null);
     try {
-      Path result = testInstaller.downloadSdkSync(messageListener);
+      testInstaller.downloadSdkSync(messageListener);
       Assert.fail("SdKInstallerException expected but not thrown");
     } catch (SdkInstallerException ex) {
       Assert.assertEquals(
@@ -253,7 +253,7 @@ public class SdkInstallerTest {
             failureInstallerFactory,
             null);
     try {
-      Path result = testInstaller.downloadSdkSync(messageListener);
+      testInstaller.downloadSdkSync(messageListener);
       Assert.fail("SdKInstallerException expected but not thrown");
     } catch (SdkInstallerException ex) {
       Assert.assertEquals(
