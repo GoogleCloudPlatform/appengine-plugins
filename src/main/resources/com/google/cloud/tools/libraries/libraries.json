@@ -19,7 +19,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-speech",
-         "version": "0.29.0-alpha"
+         "version": "0.30.0-alpha"
        }
       }
     ]
@@ -50,7 +50,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-resourcemanager",
-         "version": "0.29.0-alpha"
+         "version": "0.30.0-alpha"
        }
       }
     ]
@@ -75,7 +75,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dlp",
-         "version": "0.29.0-beta"
+         "version": "0.30.0-beta"
        }
       }
     ]
@@ -99,7 +99,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-video-intelligence",
-         "version": "0.29.0-beta"
+         "version": "0.30.0-beta"
        }
       }
     ]
@@ -136,7 +136,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-compute",
-         "version": "0.29.0-alpha"
+         "version": "0.30.0-alpha"
        }
       }
     ]
@@ -169,7 +169,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-monitoring",
-         "version": "0.29.0-beta"
+         "version": "0.30.0-beta"
        }
       }
     ]
@@ -200,7 +200,31 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-errorreporting",
-         "version": "0.29.0-beta"
+         "version": "0.30.0-beta"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Google Cloud Firestore",
+    "id": "cloudfirestore",
+    "serviceName": "firestore.googleapis.com",
+    "documentation": "https://cloud.google.com/firestore/docs/",
+    "description": "A NoSQL document database built for automatic scaling.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for Google Cloud Firestore",
+      "language": "java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/firestore/package-summary.html",
+      "infotip": "The com.google.cloud.firestore packages",
+      "launchStage": "beta",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-firestore",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-firestore",
+         "version": "0.30.0-beta"
        }
       }
     ]
@@ -230,7 +254,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-trace",
-         "version": "0.29.0-beta"
+         "version": "0.30.0-beta"
        }
       }
     ]
@@ -261,7 +285,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dns",
-         "version": "0.29.0-alpha"
+         "version": "0.30.0-alpha"
         }
       }
     ]
@@ -280,13 +304,13 @@
       "site": "https://cloud.google.com/vision/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/vision/v1/package-summary.html",
       "infotip": "The com.google.cloud.vision.v1 packages",
-      "launchStage": "beta",  
+      "launchStage": "GA",  
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-vision",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-vision",
-         "version": "0.29.0-beta"
+         "version": "1.12.0"
        }
       }
     ]
@@ -312,7 +336,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-language",
-         "version": "1.11.0"
+         "version": "1.12.0"
        }
       }
     ]
@@ -345,7 +369,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-spanner",
-         "version": "0.29.0-beta"
+         "version": "0.30.0-beta"
        }
       }
     ]
@@ -378,7 +402,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-pubsub",
-         "version": "0.29.0-beta"
+         "version": "0.30.0-beta"
        }
       }
     ]
@@ -412,7 +436,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-bigquery",
-         "version": "0.29.0-beta"
+         "version": "0.30.0-beta"
        }
       }
     ]
@@ -445,7 +469,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-datastore",
-         "version": "1.11.0"
+         "version": "1.12.0"
        }
       }
     ]
@@ -477,7 +501,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-storage",
-         "version": "1.11.0"
+         "version": "1.12.0"
        }
       }
     ]
@@ -502,7 +526,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-translate",
-         "version": "1.11.0"
+         "version": "1.12.0"
        }
       }
     ]
@@ -535,7 +559,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-logging",
-         "version": "1.11.0"
+         "version": "1.12.0"
        }
       }
     ]
