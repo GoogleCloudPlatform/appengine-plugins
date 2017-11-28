@@ -87,8 +87,15 @@ public class CloudSdkComponentTest {
   }
 
   @Test
+  public void testStateIsInstalled_trueWithUpdateAvailable() {
+    CloudSdkComponent.State state = new CloudSdkComponent.State();
+    state.setName("Update Available");
+    assertTrue(state.isInstalled());
+  }
+
+  @Test
   public void testStateIsInstalled_false() {
-    List<String> notInstalledStates = Arrays.asList("uninstalled", "not installed", "", null);
+    List<String> notInstalledStates = Arrays.asList("Not Installed", "", null);
     for (String stateName : notInstalledStates) {
       CloudSdkComponent.State state = new CloudSdkComponent.State();
       state.setName(stateName);

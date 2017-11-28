@@ -125,11 +125,11 @@ public class CloudSdkComponent {
     this.state = state;
   }
 
-  static class State {
+  public static class State {
     private String name;
 
     public boolean isInstalled() {
-      return "Installed".equals(name);
+      return "Installed".equals(name) || "Update Available".equals(name);
     }
 
     public String getName() {

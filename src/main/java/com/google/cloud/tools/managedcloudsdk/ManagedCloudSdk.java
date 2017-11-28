@@ -18,6 +18,7 @@ package com.google.cloud.tools.managedcloudsdk;
 
 import static com.google.cloud.tools.managedcloudsdk.OsInfo.Name.WINDOWS;
 
+import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
 import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
@@ -105,11 +106,15 @@ public class ManagedCloudSdk {
             "components",
             "list",
             "--format=json",
-            "--filter=id:" + component + " AND state.name:Not Installed");
+            "--filter=id:" + component);
 
     try {
       String result = CommandCaller.newCaller().call(listComponentCommand, null, null);
-      return !result.contains(component.toString());
+      List<CloudSdkComponent> components = CloudSdkComponent.fromJsonList(result);
+      if (components.size() != 1) {
+        throw new ManagedSdkVerificationException("Invalid component" + component);
+      }
+      return !components.get(0).getState().getName().equals("Not Installed");
     } catch (CommandExecutionException | InterruptedException | CommandExitException ex) {
       throw new ManagedSdkVerificationException(ex);
     }
@@ -135,7 +140,12 @@ public class ManagedCloudSdk {
 
     try {
       String result = CommandCaller.newCaller().call(updateAvailableCommand, null, null);
-      return !result.contains("Update Available");
+      for (CloudSdkComponent component : CloudSdkComponent.fromJsonList(result)) {
+        if (component.getState().getName().equals("Update Available")) {
+          return false;
+        }
+      }
+      return true;
     } catch (CommandExecutionException | InterruptedException | CommandExitException ex) {
       throw new ManagedSdkVerificationException(ex);
     }

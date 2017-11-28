@@ -20,4 +20,8 @@ public class ManagedSdkVerificationException extends Exception {
   public ManagedSdkVerificationException(Throwable cause) {
     super(cause);
   }
+
+  public ManagedSdkVerificationException(String message) {
+    super(message);
+  }
 }
