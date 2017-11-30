@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.process;
+package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
  * AsyncWrapper to handle stream consumption on a separate thread. Do not re-use this on streams -
  * it can only handle one stream per instance.
  */
-public class AsyncByteConsumer implements AsyncStreamSaver {
+class AsyncByteConsumer implements AsyncStreamSaver {
 
   private final ByteHandler byteHandler;
   private final ListeningExecutorService executorService;
@@ -38,7 +38,7 @@ public class AsyncByteConsumer implements AsyncStreamSaver {
   private static final int BUFFER_SIZE = 1024;
 
   /** Create a new instance. */
-  public AsyncByteConsumer(ByteHandler byteHandler) {
+  AsyncByteConsumer(ByteHandler byteHandler) {
     this(
         byteHandler,
         MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()),
@@ -56,6 +56,7 @@ public class AsyncByteConsumer implements AsyncStreamSaver {
   }
 
   /** Handle an input stream on a separate thread. */
+  @Override
   public void handleStream(final InputStream inputStream) {
     if (executorService.isShutdown()) {
       throw new IllegalStateException("Cannot re-use " + this.getClass().getName());
@@ -65,13 +66,14 @@ public class AsyncByteConsumer implements AsyncStreamSaver {
             new Callable<String>() {
               @Override
               public String call() throws Exception {
-                return consumeBytes(inputStream, byteHandler);
+                return consumeBytes(inputStream);
               }
             }));
     executorService.shutdown();
   }
 
-  String consumeBytes(final InputStream inputStream, ByteHandler byteHandler) throws IOException {
+  @VisibleForTesting
+  String consumeBytes(final InputStream inputStream) throws IOException {
     byte[] byteBuffer = new byte[BUFFER_SIZE];
     int bytesRead;
     try (InputStream in = inputStream) {

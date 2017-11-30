@@ -19,8 +19,8 @@ package com.google.cloud.tools.managedcloudsdk.process;
 /** {@link ProcessExecutor} Factory. */
 public class ProcessExecutorFactory {
 
-  /** Returns a new default commandExecutor. */
-  public ProcessExecutor newCommandExecutor() {
+  /** Returns a new default ProcessExecutor. */
+  public ProcessExecutor newProcessExecutor() {
     return new ProcessExecutor();
   }
 }

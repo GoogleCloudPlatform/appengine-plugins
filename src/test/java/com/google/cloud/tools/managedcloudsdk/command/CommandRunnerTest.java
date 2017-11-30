@@ -61,7 +61,7 @@ public class CommandRunnerTest {
     fakeWorkingDirectory = testDir.getRoot().toPath();
     fakeEnvironment = ImmutableMap.of("testKey", "testValue");
 
-    Mockito.when(mockProcessExecutorFactory.newCommandExecutor()).thenReturn(mockProcessExecutor);
+    Mockito.when(mockProcessExecutorFactory.newProcessExecutor()).thenReturn(mockProcessExecutor);
     Mockito.when(mockStreamHandlerFactory.newHandler(mockMessageListener))
         .thenReturn(mockStreamHandler);
     Mockito.when(

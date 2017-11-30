@@ -19,16 +19,19 @@ package com.google.cloud.tools.managedcloudsdk.command;
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /** Execute a command and redirect output to handlers. */
 public class CommandRunner {
   private final ProcessExecutorFactory processExecutorFactory;
   private final AsyncStreamHandlerFactory streamHandlerFactory;
 
+  @VisibleForTesting
   CommandRunner(
       ProcessExecutorFactory processExecutorFactory,
       AsyncStreamHandlerFactory streamHandlerFactory) {
@@ -39,11 +42,11 @@ public class CommandRunner {
   /** Run the command and wait for completion. */
   public void run(
       List<String> command,
-      Path workingDirectory,
-      Map<String, String> environment,
+      @Nullable Path workingDirectory,
+      @Nullable Map<String, String> environment,
       MessageListener messageListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
+    ProcessExecutor processExecutor = processExecutorFactory.newProcessExecutor();
     try {
       int exitCode =
           processExecutor.run(

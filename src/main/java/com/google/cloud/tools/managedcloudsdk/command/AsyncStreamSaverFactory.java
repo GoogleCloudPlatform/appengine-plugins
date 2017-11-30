@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.process.AsyncByteConsumer;
-import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamSaver;
-import com.google.cloud.tools.managedcloudsdk.process.ByteHandler;
+import com.google.common.base.Charsets;
 
 /** Factory to create default implementations of {@link AsyncStreamSaver}. */
 class AsyncStreamSaverFactory {
@@ -30,11 +28,11 @@ class AsyncStreamSaverFactory {
 
   static class CollectingByteHandler implements ByteHandler {
 
-    private final StringBuilder result = new StringBuilder("");
+    private final StringBuilder result = new StringBuilder();
 
     @Override
     public void bytes(byte[] bytes, int length) {
-      result.append(new String(bytes, 0, length));
+      result.append(new String(bytes, 0, length, Charsets.UTF_8));
     }
 
     @Override

@@ -16,20 +16,22 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamSaver;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import javax.annotation.Nullable;
 
 /** Execute a command synchronously and save and return stdout. */
 public class CommandCaller {
   private final ProcessExecutorFactory processExecutorFactory;
   private final AsyncStreamSaverFactory streamSaverFactory;
 
+  @VisibleForTesting
   CommandCaller(
       ProcessExecutorFactory processExecutorFactory, AsyncStreamSaverFactory streamSaverFactory) {
     this.processExecutorFactory = processExecutorFactory;
@@ -37,9 +39,9 @@ public class CommandCaller {
   }
 
   /** Runs the command and returns process's stdout stream as a string. */
-  public String call(List<String> command, Path workingDirectory, Map<String, String> environment)
+  public String call(List<String> command, @Nullable Path workingDirectory, @Nullable Map<String, String> environment)
       throws CommandExitException, CommandExecutionException, InterruptedException {
-    ProcessExecutor processExecutor = processExecutorFactory.newCommandExecutor();
+    ProcessExecutor processExecutor = processExecutorFactory.newProcessExecutor();
 
     AsyncStreamSaver stdOutSaver = streamSaverFactory.newSaver();
     AsyncStreamSaver stdErrSaver = streamSaverFactory.newSaver();

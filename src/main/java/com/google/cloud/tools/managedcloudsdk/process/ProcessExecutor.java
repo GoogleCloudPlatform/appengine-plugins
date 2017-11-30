@@ -73,7 +73,7 @@ public class ProcessExecutor {
       exitCode = process.waitFor();
     } catch (InterruptedException ex) {
       process.destroy();
-      throw new InterruptedException("Process cancelled.");
+      throw ex; // rethrow after cleanup
     }
 
     return exitCode;

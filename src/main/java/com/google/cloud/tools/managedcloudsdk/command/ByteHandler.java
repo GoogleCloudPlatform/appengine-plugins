@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.process;
+package com.google.cloud.tools.managedcloudsdk.command;
 
-/** Handle bytes from a stream consumer. */
-public interface ByteHandler {
+/** Handle bytes from a stream consumer.
+ *
+ * You do not need to implement this, use {@link AsyncStreamSaverFactory} or {@link AsyncStreamHandlerFactory}
+ */
+interface ByteHandler {
   void bytes(byte[] bytes, int length);
 
   String getResult();

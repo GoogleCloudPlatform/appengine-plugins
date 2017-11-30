@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamSaver;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import com.google.common.collect.ImmutableMap;
@@ -61,7 +60,7 @@ public class CommandCallerTest {
     fakeWorkingDirectory = testDir.getRoot().toPath();
     fakeEnvironment = ImmutableMap.of("testKey", "testValue");
 
-    Mockito.when(mockProcessExecutorFactory.newCommandExecutor()).thenReturn(mockProcessExecutor);
+    Mockito.when(mockProcessExecutorFactory.newProcessExecutor()).thenReturn(mockProcessExecutor);
     Mockito.when(mockStreamSaverFactory.newSaver()).thenReturn(mockStreamSaver);
     Mockito.when(
             mockProcessExecutor.run(

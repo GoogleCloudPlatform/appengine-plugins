@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.process;
+package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.SettableFuture;
@@ -75,14 +75,14 @@ public class AsyncByteConsumerTest {
   public void testConsumeBytes() throws Exception {
 
     new AsyncByteConsumer(mockByteHandler, mockExecutorService, mockFuture)
-        .consumeBytes(fakeInputStream, mockByteHandler);
+        .consumeBytes(fakeInputStream);
 
     ArgumentCaptor<byte[]> bytes = ArgumentCaptor.forClass(byte[].class);
     ArgumentCaptor<Integer> nBytes = ArgumentCaptor.forClass(Integer.class);
     Mockito.verify(mockByteHandler, Mockito.atLeastOnce()).bytes(bytes.capture(), nBytes.capture());
 
     int count = bytes.getAllValues().size();
-    StringBuilder result = new StringBuilder("");
+    StringBuilder result = new StringBuilder();
     for (int i = 0; i < count; i++) {
       result.append(new String(bytes.getAllValues().get(i), 0, nBytes.getAllValues().get(i)));
     }

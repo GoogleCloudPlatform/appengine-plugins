@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.process;
+package com.google.cloud.tools.managedcloudsdk.command;
 
+import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import java.util.concurrent.Future;
 
 /** An {@link AsyncStreamHandler} that saves the output. */
-public interface AsyncStreamSaver extends AsyncStreamHandler {
+interface AsyncStreamSaver extends AsyncStreamHandler {
 
   /** Returns a future to a fully saved process inputStream. */
   Future<String> getResult();
