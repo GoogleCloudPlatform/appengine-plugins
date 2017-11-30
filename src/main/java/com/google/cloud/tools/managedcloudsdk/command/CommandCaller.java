@@ -39,7 +39,10 @@ public class CommandCaller {
   }
 
   /** Runs the command and returns process's stdout stream as a string. */
-  public String call(List<String> command, @Nullable Path workingDirectory, @Nullable Map<String, String> environment)
+  public String call(
+      List<String> command,
+      @Nullable Path workingDirectory,
+      @Nullable Map<String, String> environment)
       throws CommandExitException, CommandExecutionException, InterruptedException {
     ProcessExecutor processExecutor = processExecutorFactory.newProcessExecutor();
 

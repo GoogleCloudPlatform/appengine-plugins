@@ -43,8 +43,12 @@ public class ProcessExecutor {
   /**
    * Runs the command.
    *
-   * @param command the list of command line tokens
-   * @return exitcode from the process
+   * @param command list of command line tokens
+   * @param workingDirectory the working directory to run the command from
+   * @param environment a map of environment variables
+   * @param stdout a stdout stream handler that must run on a separate thread
+   * @param stderr a stderr stream handler that must run on a separate thread
+   * @return exit code from the process
    */
   public int run(
       List<String> command,
