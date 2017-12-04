@@ -31,8 +31,8 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
-/** Integration tests for {@link ManagedCloudSdk} and all supporting classes. */
-public class ManagedCloudSdkIntegrationTest {
+/** Tests for full functionality of the {@link ManagedCloudSdk}. */
+public class ManagedCloudSdkTest {
 
   @Rule public TemporaryFolder tempDir = new TemporaryFolder();
 
@@ -50,7 +50,7 @@ public class ManagedCloudSdkIntegrationTest {
       };
 
   @Test
-  public void testManagedCloudSdk_versionedInstall()
+  public void testManagedCloudSdk_fixedVersion()
       throws BadCloudSdkVersionException, UnsupportedOsException, IOException, CommandExitException,
           InterruptedException, ManagedSdkVerificationException, ManagedSdkVersionMismatchException,
           UnknownArchiveTypeException, CommandExecutionException, SdkInstallerException {
@@ -74,12 +74,17 @@ public class ManagedCloudSdkIntegrationTest {
     Assert.assertTrue(testSdk.hasComponent(testComponent));
     Assert.assertTrue(testSdk.isUpToDate());
 
-    // make sure we cant update a versioned cloud sdk
-    Assert.assertEquals(null, testSdk.newUpdater());
+    // Make sure we cant update a versioned cloud sdk
+    try {
+      testSdk.newUpdater();
+      Assert.fail("UnsupportedOperationException expected but not thrown");
+    } catch (UnsupportedOperationException ex) {
+      Assert.assertEquals("Cannot update a fixed version SDK.", ex.getMessage());
+    }
   }
 
   @Test
-  public void testManagedCloudSdk_latestInstall()
+  public void testManagedCloudSdk_latest()
       throws UnsupportedOsException, ManagedSdkVerificationException,
           ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
           CommandExitException, UnknownArchiveTypeException, IOException, SdkInstallerException {
@@ -87,31 +92,6 @@ public class ManagedCloudSdkIntegrationTest {
         new ManagedCloudSdk(Version.LATEST, tempDir.getRoot().toPath(), OsInfo.getSystemOsInfo());
 
     Assert.assertFalse(testSdk.isInstalled());
-    Assert.assertFalse(testSdk.hasComponent(testComponent));
-    Assert.assertFalse(testSdk.isUpToDate());
-
-    testSdk.newInstaller().install(testListener);
-
-    Assert.assertTrue(testSdk.isInstalled());
-    Assert.assertFalse(testSdk.hasComponent(testComponent));
-    Assert.assertTrue(testSdk.isUpToDate());
-
-    testSdk.newComponentInstaller().installComponent(testComponent, testListener);
-
-    Assert.assertTrue(testSdk.isInstalled());
-    Assert.assertTrue(testSdk.hasComponent(testComponent));
-    Assert.assertTrue(testSdk.isUpToDate());
-  }
-
-  @Test
-  public void testManagedCloudSdk_updateLatest()
-      throws ManagedSdkVerificationException, UnsupportedOsException, InterruptedException,
-          ManagedSdkVersionMismatchException, CommandExecutionException, CommandExitException,
-          UnknownArchiveTypeException, IOException, SdkInstallerException {
-    ManagedCloudSdk testSdk =
-        new ManagedCloudSdk(Version.LATEST, tempDir.getRoot().toPath(), OsInfo.getSystemOsInfo());
-
-    Assert.assertFalse(testSdk.isInstalled());
     Assert.assertFalse(testSdk.isUpToDate());
 
     testSdk.newInstaller().install(testListener);
@@ -119,7 +99,7 @@ public class ManagedCloudSdkIntegrationTest {
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.isUpToDate());
 
-    // forcibly downgrade the cloud SDK so we can test updating.
+    // Forcibly downgrade the cloud SDK so we can test updating.
     CommandRunner.newRunner()
         .run(
             Arrays.asList(
@@ -138,6 +118,13 @@ public class ManagedCloudSdkIntegrationTest {
     testSdk.newUpdater().update(testListener);
 
     Assert.assertTrue(testSdk.isInstalled());
+    Assert.assertFalse(testSdk.hasComponent(testComponent));
+    Assert.assertTrue(testSdk.isUpToDate());
+
+    testSdk.newComponentInstaller().installComponent(testComponent, testListener);
+
+    Assert.assertTrue(testSdk.isInstalled());
+    Assert.assertTrue(testSdk.hasComponent(testComponent));
     Assert.assertTrue(testSdk.isUpToDate());
   }
 

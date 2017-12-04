@@ -70,7 +70,7 @@ public class ManagedCloudSdk {
     if (!Files.isRegularFile(getGcloud())) {
       return false;
     }
-    // verify the versions match up for fixed version installs
+    // Verify the versions match up for fixed version installs
     if (version != Version.LATEST) {
       try {
         String versionFileContents =
@@ -161,10 +161,15 @@ public class ManagedCloudSdk {
     return SdkComponentInstaller.newComponentInstaller(getGcloud());
   }
 
-  /** Return a new updater if a 'LATEST' sdk, returns {@code null} for versioned SDKs. */
+  /**
+   * For "LATEST" version SDKs, the client tooling must keep the SDK up-to-date manually, check with
+   * {@link #isUpToDate()} before using, returns a new updater if sdk is "LATEST", it will throw a
+   * {@link UnsupportedOperationException} if SDK is a fixed version (fixed versions should never be
+   * udpated).
+   */
   public SdkUpdater newUpdater() {
     if (version != Version.LATEST) {
-      return null;
+      throw new UnsupportedOperationException("Cannot update a fixed version SDK.");
     }
     return SdkUpdater.newUpdater(getGcloud());
   }
