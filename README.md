@@ -57,3 +57,34 @@ configuration.setVersion("v1");
 // deploy
 deployment.deploy(deployConfiguration);
 ```
+
+## SDK Manager/Downloader
+
+When using the Cloud SDK manager/downloader to provide a cloud SDK to users, the implementer must manage all operations.
+
+```java
+// Create a new Managed SDK instance
+ManagedCloudSdk sdk = ManagedCloudSdk.newManagedSdk("123.123.123") // SDK fixed at version.
+ManagedCloudSdk sdk = ManagedCloudSdk.newManagedSdk() // 'LATEST' sdk, can be updated.
+
+// Implement the listener interface to listen to operation output
+MessageListener listener = new MessageListener() {...};
+
+// Always check if operations are needed before running them
+if (!sdk.isInstalled()) {
+  sdk.newInstaller().install(listener);
+}
+
+// use SdkComponent to reference a Cloud Sdk component
+if (!sdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)) {
+  sdk.newComponentInstaller().installComponent(SdkComponent.APP_ENGINE_JAVA, listener);
+}
+
+// updates will only occur on 'LATEST' sdks
+if (!sdk.isUpToDate) {
+  sdk.newUpdater().update(listener);
+}
+
+// You can then create an SDK from a managed SDK instance
+new CloudSdk.Builder().sdkPath(sdk.getSdkHome())...;
+```
