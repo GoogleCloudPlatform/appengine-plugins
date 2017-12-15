@@ -60,7 +60,7 @@ deployment.deploy(deployConfiguration);
 
 ## SDK Manager
 
-When using the Cloud SDK manager to provide a cloud SDK to users, the implementer must manage all operations. The operations are intended to run asynchronously, either on an executor or through mechanisms provided by an IDE.
+This library provides a mechanism for installing, adding components and updating the Cloud SDK. The operations are intended to run asynchronously, either on an executor or through mechanisms provided by an IDE.
 
 ```java
 // Create a new Managed SDK instance
