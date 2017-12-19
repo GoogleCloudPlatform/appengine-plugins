@@ -5,7 +5,7 @@
 
 IMPORTANT:
 This library is used by Google internal plugin development teams to share App Engine
-related code.  It's use for any other purpose is highly discouraged and unsupported. Visit our
+related code.  Its use for any other purpose is highly discouraged and unsupported. Visit our
 [App Engine documentation](https://cloud.google.com/appengine/docs/admin-api/) for more information 
 on Google supported clients for App Engine administration.
  
