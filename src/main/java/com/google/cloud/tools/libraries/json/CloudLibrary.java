@@ -47,7 +47,7 @@ public final class CloudLibrary {
     return id;
   }
 
-  /** Returns the serviceName of this library. */
+  /** Returns the serviceName associated with this library. */
   @Nullable
   public String getServiceName() {
     return serviceName;
