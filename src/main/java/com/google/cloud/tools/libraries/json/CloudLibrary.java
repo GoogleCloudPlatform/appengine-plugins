@@ -47,13 +47,13 @@ public final class CloudLibrary {
     return id;
   }
 
-  /** Returns the serviceName associated with this library. */
+  /** Returns the service name associated with this library. */
   @Nullable
   public String getServiceName() {
     return serviceName;
   }
 
-  /** Returns the serviceRoles associated with this library. */
+  /** Returns the service roles associated with this library. */
   @Nullable
   public List<String> getServiceRoles() {
     return serviceRoles;
