@@ -24,6 +24,8 @@ public final class CloudLibrary {
 
   private String name;
   private String id;
+  private String serviceName;
+  private List<String> serviceRoles;
   private String documentation;
   private String description;
   private String icon;
@@ -43,6 +45,18 @@ public final class CloudLibrary {
   @Nullable
   public String getId() {
     return id;
+  }
+
+  /** Returns the service name associated with this library. */
+  @Nullable
+  public String getServiceName() {
+    return serviceName;
+  }
+
+  /** Returns the service roles associated with this library. */
+  @Nullable
+  public List<String> getServiceRoles() {
+    return serviceRoles;
   }
 
   /** Returns a URL to the documentation for this library. */

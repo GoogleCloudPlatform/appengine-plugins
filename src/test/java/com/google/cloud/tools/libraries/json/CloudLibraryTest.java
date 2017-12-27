@@ -30,6 +30,8 @@ public final class CloudLibraryTest {
 
   private static final String NAME = "My API";
   private static final String ID = "myapi";
+  private static final String SERVICE_NAME = "myservice.googleapis.com";
+  private static final String SERVICE_ROLE = "roles/myrole";
   private static final String DOCUMENTATION = "http://documentation";
   private static final String DESCRIPTION = "My example API";
   private static final String TRANSPORT = "grpc";
@@ -51,9 +53,12 @@ public final class CloudLibraryTest {
     CloudLibrary library = parse(createFullyPopulatedJson());
     CloudLibraryClient client = Iterables.getOnlyElement(library.getClients());
     CloudLibraryClientMavenCoordinates mavenCoordinates = client.getMavenCoordinates();
+    String serviceRole = Iterables.getOnlyElement(library.getServiceRoles());
 
     assertEquals(NAME, library.getName());
     assertEquals(ID, library.getId());
+    assertEquals(SERVICE_NAME, library.getServiceName());
+    assertEquals(SERVICE_ROLE, serviceRole);
     assertEquals(DOCUMENTATION, library.getDocumentation());
     assertEquals(DESCRIPTION, library.getDescription());
     assertEquals(TRANSPORT, Iterables.getOnlyElement(library.getTransports()));
@@ -149,12 +154,14 @@ public final class CloudLibraryTest {
    */
   private static String createFullyPopulatedJson() {
     return String.format(
-        "{name:%s,id:%s,documentation:%s,description:%s,transports:[%s],icon:%s,clients:["
-            + "{name:%s,language:%s,site:%s,apireference:%s,infotip:%s,launchStage:%s,source:%s,"
-            + "languageLevel:%s,mavenCoordinates:{groupId:%s,artifactId:%s,version:%s}}"
-            + "]}",
+        "{name:%s,id:%s,serviceName:%s,serviceRoles:[%s],documentation:%s,description:%s,"
+            + "transports:[%s],icon:%s,clients:[{name:%s,language:%s,site:%s,apireference:%s,"
+            + "infotip:%s,launchStage:%s,source:%s,languageLevel:%s,mavenCoordinates:{groupId:%s,"
+            + "artifactId:%s,version:%s}}]}",
         wrap(NAME),
         wrap(ID),
+        wrap(SERVICE_NAME),
+        wrap(SERVICE_ROLE),
         wrap(DOCUMENTATION),
         wrap(DESCRIPTION),
         wrap(TRANSPORT),
