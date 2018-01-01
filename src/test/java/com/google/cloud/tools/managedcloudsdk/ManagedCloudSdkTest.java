@@ -74,7 +74,7 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.hasComponent(testComponent));
     Assert.assertTrue(testSdk.isUpToDate());
 
-    // Make sure we cant update a versioned cloud sdk
+    // Make sure we can't update a versioned cloud SDK.
     try {
       testSdk.newUpdater();
       Assert.fail("UnsupportedOperationException expected but not thrown");

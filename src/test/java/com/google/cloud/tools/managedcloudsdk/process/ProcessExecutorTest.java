@@ -28,7 +28,6 @@ import java.util.concurrent.ExecutionException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -43,8 +42,6 @@ public class ProcessExecutorTest {
   @Mock private InputStream mockStdErr;
   @Mock private AsyncStreamHandler mockStreamHandler;
   private final List<String> command = Arrays.asList("someCommand", "someOption");
-
-  private InOrder loggerInOrder;
 
   @Before
   public void setup() throws IOException, InterruptedException {
@@ -68,15 +65,9 @@ public class ProcessExecutorTest {
 
     Path fakeWorkingDirectory = Paths.get("/tmp/fake/working/dir");
 
-    int result =
-        new ProcessExecutor()
-            .setProcessBuilderFactory(mockProcessBuilderFactory)
-            .run(
-                command,
-                fakeWorkingDirectory,
-                environmentInput,
-                mockStreamHandler,
-                mockStreamHandler);
+    new ProcessExecutor()
+        .setProcessBuilderFactory(mockProcessBuilderFactory)
+        .run(command, fakeWorkingDirectory, environmentInput, mockStreamHandler, mockStreamHandler);
 
     verifyProcessBuilding(command);
     Mockito.verify(mockProcessBuilder).environment();

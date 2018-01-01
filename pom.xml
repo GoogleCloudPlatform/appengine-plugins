@@ -336,7 +336,7 @@
                     </configurator>
                   </action>
                 </pluginExecution>
-                <!-- m2eclipe does not support fmt-maven-plugin -->
+                <!-- m2e does not support fmt-maven-plugin -->
                 <pluginExecution>
                   <pluginExecutionFilter>
                     <groupId>com.coveo</groupId>
