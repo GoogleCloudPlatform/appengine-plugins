@@ -47,8 +47,8 @@ public class SdkInstaller {
 
   /** Download and install a new Cloud SDK. */
   public Path install(final MessageListener messageListener)
-      throws IOException, InterruptedException, SdkInstallerException, UnknownArchiveTypeException,
-          CommandExecutionException, CommandExitException {
+      throws IOException, InterruptedException, SdkInstallerException, CommandExecutionException,
+          CommandExitException {
 
     FileResourceProvider fileResourceProvider =
         fileResourceProviderFactory.newFileResourceProvider();
@@ -83,17 +83,23 @@ public class SdkInstaller {
               + fileResourceProvider.getArchiveDestination());
     }
 
-    // extract and verify
-    extractorFactory
-        .newExtractor(
-            fileResourceProvider.getArchiveDestination(),
-            fileResourceProvider.getArchiveExtractionDestination(),
-            messageListener)
-        .extract();
-    if (!Files.isDirectory(fileResourceProvider.getExtractedSdkHome())) {
-      throw new SdkInstallerException(
-          "Extraction succeeded but valid sdk home not found at "
-              + fileResourceProvider.getExtractedSdkHome());
+    try {
+      // extract and verify
+      extractorFactory
+          .newExtractor(
+              fileResourceProvider.getArchiveDestination(),
+              fileResourceProvider.getArchiveExtractionDestination(),
+              messageListener)
+          .extract();
+      if (!Files.isDirectory(fileResourceProvider.getExtractedSdkHome())) {
+        throw new SdkInstallerException(
+            "Extraction succeeded but valid sdk home not found at "
+                + fileResourceProvider.getExtractedSdkHome());
+      }
+    } catch (UnknownArchiveTypeException e) {
+      // fileResourceProviderFactory.newFileResourceProvider() creates a fileResourceProvider that
+      // either returns .tar.gz or .zip for getArchiveDestination().
+      throw new RuntimeException();
     }
 
     // install if necessary
