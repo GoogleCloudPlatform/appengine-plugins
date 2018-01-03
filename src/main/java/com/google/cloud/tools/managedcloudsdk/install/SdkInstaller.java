@@ -99,7 +99,7 @@ public class SdkInstaller {
     } catch (UnknownArchiveTypeException e) {
       // fileResourceProviderFactory.newFileResourceProvider() creates a fileResourceProvider that
       // returns either .tar.gz or .zip for getArchiveDestination().
-      throw new RuntimeException();
+      throw new RuntimeException(e);
     }
 
     // install if necessary
