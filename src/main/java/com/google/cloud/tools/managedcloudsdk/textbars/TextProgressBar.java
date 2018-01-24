@@ -32,7 +32,6 @@ public class TextProgressBar {
   private static final long BARS = 58;
 
   private final MessageListener messageListener;
-  // private final double updateThreshold;
   private final long total;
   private long currentProgress = 0;
   private long currentBars = 0;
@@ -40,7 +39,6 @@ public class TextProgressBar {
   TextProgressBar(MessageListener messageListener, long total) {
     this.messageListener = messageListener;
     this.total = total;
-    // this.updateThreshold = ((double) total) / BARS;
   }
 
   /** Call when started to writing the starting characters to the progress bar. */
@@ -58,7 +56,7 @@ public class TextProgressBar {
     long targetBars = currentProgress * 58 / total;
     while (currentBars < targetBars && currentBars < BARS) {
       messageListener.message("=");
-      currentBars = currentBars + 1;
+      currentBars++;
     }
   }
 
