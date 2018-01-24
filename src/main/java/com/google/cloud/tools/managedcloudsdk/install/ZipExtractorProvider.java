@@ -17,6 +17,8 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.textbars.TextBarFactory;
+import com.google.cloud.tools.managedcloudsdk.textbars.TextProgressBar;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -45,19 +47,34 @@ final class ZipExtractorProvider implements ExtractorProvider {
   @Override
   public void extract(Path archive, Path destination, MessageListener messageListener)
       throws IOException {
+    extract(archive, destination, messageListener, new TextBarFactory());
+  }
 
+  public void extract(
+      Path archive,
+      Path destination,
+      MessageListener messageListener,
+      TextBarFactory textBarFactory)
+      throws IOException {
     // Use ZipFile instead of ZipArchiveInputStream so that we can obtain file permissions
     // on unix-like systems via getUnixMode(). ZipArchiveInputStream doesn't have access to
     // all the zip file data and will return "0" for any call to getUnixMode().
     try (ZipFile zipFile = new ZipFile(archive.toFile())) {
+      long count = 0;
+      Enumeration<ZipArchiveEntry> zipEntriesCounter = zipFile.getEntries();
+      while (zipEntriesCounter.hasMoreElements()) {
+        zipEntriesCounter.nextElement();
+        count++;
+      }
+
+      TextProgressBar progressBar = textBarFactory.newProgressBar(messageListener, count);
+      progressBar.start();
       Enumeration<ZipArchiveEntry> zipEntries = zipFile.getEntries();
       while (zipEntries.hasMoreElements()) {
         ZipArchiveEntry entry = zipEntries.nextElement();
         final Path entryTarget = destination.resolve(entry.getName());
 
-        if (messageListener != null) {
-          messageListener.message(entryTarget + "\n");
-        }
+        progressBar.update(1);
 
         if (entry.isDirectory()) {
           if (!Files.exists(entryTarget)) {
@@ -80,6 +97,7 @@ final class ZipExtractorProvider implements ExtractorProvider {
           }
         }
       }
+      progressBar.done();
     }
   }
 }

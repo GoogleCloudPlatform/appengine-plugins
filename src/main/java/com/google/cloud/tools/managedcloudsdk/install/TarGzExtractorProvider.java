@@ -17,6 +17,8 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.textbars.TextBarFactory;
+import com.google.cloud.tools.managedcloudsdk.textbars.TextProgressBar;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -42,15 +44,23 @@ final class TarGzExtractorProvider implements ExtractorProvider {
   @Override
   public void extract(Path archive, Path destination, MessageListener messageListener)
       throws IOException {
+    extract(archive, destination, messageListener, new TextBarFactory());
+  }
 
+  public void extract(
+      Path archive,
+      Path destination,
+      MessageListener messageListener,
+      TextBarFactory textBarFactory)
+      throws IOException {
+    TextProgressBar progressBar = textBarFactory.newProgressBar(messageListener, 2L);
+    progressBar.start();
     GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(Files.newInputStream(archive));
     try (TarArchiveInputStream in = new TarArchiveInputStream(gzipIn)) {
+      progressBar.update(1); // this is hack to not have to read and count out the tar entries size
       TarArchiveEntry entry;
       while ((entry = in.getNextTarEntry()) != null) {
         final Path entryTarget = destination.resolve(entry.getName());
-        if (messageListener != null) {
-          messageListener.message(entryTarget + "\n");
-        }
         if (entry.isDirectory()) {
           if (!Files.exists(entryTarget)) {
             Files.createDirectories(entryTarget);
@@ -74,6 +84,7 @@ final class TarGzExtractorProvider implements ExtractorProvider {
           }
         }
       }
+      progressBar.done();
     }
   }
 }

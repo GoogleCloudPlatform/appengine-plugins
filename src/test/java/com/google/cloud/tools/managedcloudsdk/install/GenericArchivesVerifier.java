@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,8 +24,6 @@ import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.mockito.Mockito;
-import org.mockito.internal.util.MockUtil;
 
 /** Helper for archives in src/test/resources/genericArchives */
 public class GenericArchivesVerifier {
@@ -60,18 +57,5 @@ public class GenericArchivesVerifier {
     Assert.assertThat(
         allAttributesFile2.readAttributes().permissions(),
         Matchers.containsInAnyOrder(PosixFilePermission.values()));
-  }
-
-  public static void assertListenerReceivedExtractionMessages(
-      MessageListener messageListener, Path testRoot) {
-    if (!MockUtil.isMock(messageListener)) {
-      throw new IllegalArgumentException("Listener must be a mock.");
-    }
-
-    // tars allow for duplicate entries
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(ROOT) + "\n");
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(FILE_1) + "\n");
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(SUB) + "\n");
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(FILE_2) + "\n");
   }
 }

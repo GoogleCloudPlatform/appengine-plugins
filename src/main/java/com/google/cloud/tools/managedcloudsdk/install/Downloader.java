@@ -17,6 +17,9 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.textbars.TextBarFactory;
+import com.google.cloud.tools.managedcloudsdk.textbars.TextProgressBar;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +34,6 @@ import java.nio.file.StandardOpenOption;
 final class Downloader {
 
   static final int BUFFER_SIZE = 8 * 1024;
-  static final int UPDATE_THRESHOLD = 1024 * 1024; // update every megabyte
   private final URL address;
   private final Path destinationFile;
   private final String userAgentString;
@@ -48,6 +50,11 @@ final class Downloader {
 
   /** Download an archive, this will NOT overwrite a previously existing file. */
   public void download() throws IOException, InterruptedException {
+    download(new TextBarFactory());
+  }
+
+  @VisibleForTesting
+  void download(TextBarFactory textBarFactory) throws IOException, InterruptedException {
     if (!Files.exists(destinationFile.getParent())) {
       Files.createDirectories(destinationFile.getParent());
     }
@@ -55,7 +62,6 @@ final class Downloader {
     if (Files.exists(destinationFile)) {
       throw new FileAlreadyExistsException(destinationFile.toString());
     }
-
     URLConnection connection = address.openConnection();
     connection.setRequestProperty("User-Agent", userAgentString);
 
@@ -67,13 +73,18 @@ final class Downloader {
       try (BufferedOutputStream out =
           new BufferedOutputStream(
               Files.newOutputStream(destinationFile, StandardOpenOption.CREATE_NEW))) {
+
+        textBarFactory.newDividerBar(messageListener).show();
+        textBarFactory
+            .newInfoBar(
+                messageListener, "Downloading SDK (" + String.valueOf(contentLength) + " bytes)")
+            .show();
+        TextProgressBar progressBar = textBarFactory.newProgressBar(messageListener, contentLength);
+        progressBar.start();
+
         int bytesRead;
         byte[] buffer = new byte[BUFFER_SIZE];
 
-        long lastUpdated = 0;
-        long totalBytesRead = 0;
-
-        messageListener.message("Downloading " + String.valueOf(contentLength) + " bytes\n");
         while ((bytesRead = in.read(buffer)) != -1) {
           if (Thread.currentThread().isInterrupted()) {
             messageListener.message("Download was interrupted\n");
@@ -81,19 +92,14 @@ final class Downloader {
             cleanUp();
             throw new InterruptedException("Download was interrupted");
           }
-          out.write(buffer, 0, bytesRead);
 
+          out.write(buffer, 0, bytesRead);
           // update progress
-          totalBytesRead += bytesRead;
-          long bytesSinceLastUpdate = totalBytesRead - lastUpdated;
-          if (totalBytesRead == contentLength || bytesSinceLastUpdate > UPDATE_THRESHOLD) {
-            messageListener.message(".");
-            lastUpdated = totalBytesRead;
-          }
+          progressBar.update(bytesRead);
         }
+        progressBar.done();
       }
     }
-    messageListener.message("done.\n");
   }
 
   private void cleanUp() throws IOException {

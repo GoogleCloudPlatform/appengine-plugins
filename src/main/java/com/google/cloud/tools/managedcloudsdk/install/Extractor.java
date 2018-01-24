@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.textbars.TextBarFactory;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,7 +43,14 @@ final class Extractor<T extends ExtractorProvider> {
 
   /** Extract an archive. */
   public void extract() throws IOException, InterruptedException {
-    messageListener.message("Extracting archive: " + archive + "\n");
+    extract(new TextBarFactory());
+  }
+
+  @VisibleForTesting
+  void extract(TextBarFactory textBarFactory) throws IOException, InterruptedException {
+    textBarFactory
+        .newInfoBar(messageListener, "Extracting archive: " + archive.getFileName())
+        .show();
 
     try {
       extractorProvider.extract(archive, destination, messageListener);

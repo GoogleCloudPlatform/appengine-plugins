@@ -17,6 +17,8 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.textbars.TextBarFactory;
+import com.google.cloud.tools.managedcloudsdk.textbars.TextInfoBar;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,6 +38,8 @@ public class ExtractorTest {
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
   @Mock private MessageListener mockMessageListener;
   @Mock private ExtractorProvider mockExtractorProvider;
+  @Mock private TextBarFactory mockTextBarFactory;
+  @Mock private TextInfoBar mockInfoBar;
 
   @Before
   public void setupMocks() {
@@ -59,13 +63,18 @@ public class ExtractorTest {
         .when(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
 
+    Mockito.when(
+            mockTextBarFactory.newInfoBar(
+                mockMessageListener, "Extracting archive: " + extractionSource.getFileName()))
+        .thenReturn(mockInfoBar);
+
     Extractor<ExtractorProvider> extractor =
         new Extractor<>(
             extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
-    extractor.extract();
+    extractor.extract(mockTextBarFactory);
 
     Assert.assertTrue(Files.exists(extractionDestination));
-    Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource + "\n");
+    Mockito.verify(mockInfoBar).show();
     Mockito.verify(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
     Mockito.verifyNoMoreInteractions(mockMessageListener);
@@ -89,12 +98,17 @@ public class ExtractorTest {
         .when(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
 
+    Mockito.when(
+            mockTextBarFactory.newInfoBar(
+                mockMessageListener, "Extracting archive: " + extractionSource.getFileName()))
+        .thenReturn(mockInfoBar);
+
     Extractor<ExtractorProvider> extractor =
         new Extractor<>(
             extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
 
     try {
-      extractor.extract();
+      extractor.extract(mockTextBarFactory);
       Assert.fail("IOException expected but thrown - test infrastructure failure");
     } catch (IOException ex) {
       // ensure we are rethrowing after cleanup
@@ -102,7 +116,7 @@ public class ExtractorTest {
     }
 
     Assert.assertFalse(Files.exists(extractionDestination));
-    Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource + "\n");
+    Mockito.verify(mockInfoBar).show();
     Mockito.verify(mockMessageListener)
         .message("Extraction failed, cleaning up " + extractionDestination + "\n");
     Mockito.verify(mockExtractorProvider)
