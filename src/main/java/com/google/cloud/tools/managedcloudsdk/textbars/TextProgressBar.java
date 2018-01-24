@@ -18,18 +18,29 @@ package com.google.cloud.tools.managedcloudsdk.textbars;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 
+/**
+ * Creates single line text progress indicators.
+ *
+ * <pre>
+ * Start:    #=
+ * Progress: #=========
+ * Finish:   #============================================================#
+ * </pre>
+ */
 public class TextProgressBar {
 
   private static final long BARS = 58;
 
   private final MessageListener messageListener;
-  private final double updateThreshold;
-  private double totalRead = 0;
-  private double progress = 0;
+  // private final double updateThreshold;
+  private final long total;
+  private long currentProgress = 0;
+  private long currentBars = 0;
 
   TextProgressBar(MessageListener messageListener, long total) {
     this.messageListener = messageListener;
-    this.updateThreshold = ((double) total) / BARS;
+    this.total = total;
+    // this.updateThreshold = ((double) total) / BARS;
   }
 
   /** Call when started to writing the starting characters to the progress bar. */
@@ -43,22 +54,19 @@ public class TextProgressBar {
    * @param value change since last update call
    */
   public void update(long value) {
-    totalRead = totalRead + value;
-    double diff = totalRead - (progress * updateThreshold);
-    if (diff > updateThreshold) {
-      int newBars = (int) (diff / updateThreshold);
-      for (int i = 0; i < newBars; i++) {
-        messageListener.message("=");
-      }
-      progress = progress + newBars;
+    currentProgress += value;
+    long targetBars = currentProgress * 58 / total;
+    while (currentBars < targetBars && currentBars < BARS) {
+      messageListener.message("=");
+      currentBars = currentBars + 1;
     }
   }
 
   /** Call when done to close out the progress bar. */
   public void done() {
-    while (progress < BARS) {
+    while (currentBars < BARS) {
       messageListener.message("=");
-      progress++;
+      currentBars++;
     }
     messageListener.message("=#\n");
   }

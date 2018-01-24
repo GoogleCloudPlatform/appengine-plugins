@@ -127,17 +127,4 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.hasComponent(testComponent));
     Assert.assertTrue(testSdk.isUpToDate());
   }
-
-  private static class MessageCollector implements MessageListener {
-    StringBuilder output = new StringBuilder("");
-
-    @Override
-    public void message(String rawString) {
-      output.append(rawString);
-    }
-
-    public String getOutput() {
-      return output.toString();
-    }
-  }
 }

@@ -18,6 +18,14 @@ package com.google.cloud.tools.managedcloudsdk.textbars;
 
 import com.google.cloud.tools.managedcloudsdk.MessageListener;
 
+/**
+ * Helper to create Cloud SDK style progress messages. Pads or truncates as necessary.
+ *
+ * <pre>
+ * Short lines: #= A message                                                =#
+ * Long lines:  #= A message that is very long and really really needs t... =#
+ * </pre>
+ */
 public class TextInfoBar {
 
   static final int AVAILABLE_SPACE = 56; // characters
