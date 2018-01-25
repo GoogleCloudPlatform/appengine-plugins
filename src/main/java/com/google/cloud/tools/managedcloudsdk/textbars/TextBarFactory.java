@@ -28,7 +28,7 @@ public class TextBarFactory {
     return new TextInfoBar(messageListener, text);
   }
 
-  public TextProgressBar newProgressBar(MessageListener messageListener, Long contentSize) {
+  public TextProgressBar newProgressBar(MessageListener messageListener, long contentSize) {
     return new TextProgressBar(messageListener, contentSize);
   }
 }
