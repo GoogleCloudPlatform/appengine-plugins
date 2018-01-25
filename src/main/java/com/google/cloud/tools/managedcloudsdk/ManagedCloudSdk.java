@@ -111,10 +111,11 @@ public class ManagedCloudSdk {
     try {
       String result = CommandCaller.newCaller().call(listComponentCommand, null, null);
       List<CloudSdkComponent> components = CloudSdkComponent.fromJsonList(result);
-      if (components.size() != 1) {
-        throw new ManagedSdkVerificationException("Invalid component" + component);
+      if (components.size() > 1) {
+        // not a unique component id
+        throw new ManagedSdkVerificationException("Invalid component " + component);
       }
-      return !components.get(0).getState().getName().equals("Not Installed");
+      return !components.isEmpty();
     } catch (CommandExecutionException | InterruptedException | CommandExitException ex) {
       throw new ManagedSdkVerificationException(ex);
     }
