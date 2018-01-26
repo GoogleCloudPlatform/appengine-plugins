@@ -36,7 +36,7 @@ public class ManagedCloudSdkTest {
 
   @Rule public TemporaryFolder tempDir = new TemporaryFolder();
 
-  private static final String FIXED_VERSION = "174.0.0";
+  private static final String FIXED_VERSION = "178.0.0";
   private final MessageCollector testListener = new MessageCollector();
   private final SdkComponent testComponent = SdkComponent.APP_ENGINE_JAVA;
 
