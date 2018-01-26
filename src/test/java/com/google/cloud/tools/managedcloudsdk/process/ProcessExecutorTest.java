@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +54,7 @@ public class ProcessExecutorTest {
   }
 
   @Test
-  public void testRun() throws IOException, InterruptedException, ExecutionException {
+  public void testRun() throws IOException, InterruptedException {
     // Mocks the environment for the mockProcessBuilder to put the environment map in.
     Map<String, String> environmentInput = new HashMap<>();
     environmentInput.put("ENV1", "val1");
@@ -80,8 +79,7 @@ public class ProcessExecutorTest {
   }
 
   @Test
-  public void testRun_nonZeroExitCodePassthrough()
-      throws IOException, InterruptedException, ExecutionException {
+  public void testRun_nonZeroExitCodePassthrough() throws IOException, InterruptedException {
 
     Mockito.when(mockProcess.waitFor()).thenReturn(123);
 
