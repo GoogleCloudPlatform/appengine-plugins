@@ -19,7 +19,57 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-speech",
-         "version": "0.30.0-alpha"
+         "version": "0.33.0-alpha"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Cloud OS Login",
+    "id": "cloudoslogin",
+    "serviceName": "oslogin.googleapis.com",
+    "documentation": "https://cloud.google.com/compute/docs/oslogin/rest/",
+    "description": "Google Cloud OS Login manages OS login configuration for Directory API users.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Cloud OS Login API",
+      "language": "java",
+      "site": "https://cloud.google.com/compute/docs/oslogin/rest/",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/oslogin/v1/package-summary.html",
+      "infotip": "The com.google.cloud.oslogin.v1 packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-os-login",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-os-login",
+         "version": "0.33.0-alpha"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Dialogflow",
+    "id": "dialogflow",
+    "serviceName": "dialogflow.googleapis.com",
+    "documentation": "https://dialogflow.com/",
+    "description": "An NLU platform for designing and integrating conversational user interfaces into mobile apps, web applications, devices, and bots.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Dialogflow API",
+      "language": "java",
+      "site": "https://dialogflow.com/",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/dialogflow/v2beta1/package-summary.html",
+      "infotip": "The com.google.cloud.dialogflow.v2beta1 packages",
+      "launchStage": "alpha",  
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-os-login",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-dialogflow",
+         "version": "0.33.0-alpha"
        }
       }
     ]
@@ -50,7 +100,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-resourcemanager",
-         "version": "0.30.0-alpha"
+         "version": "0.33.0-alpha"
        }
       }
     ]
@@ -75,7 +125,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dlp",
-         "version": "0.30.0-beta"
+         "version": "0.33.0-beta"
        }
       }
     ]
@@ -99,7 +149,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-video-intelligence",
-         "version": "0.30.0-beta"
+         "version": "0.33.0-beta"
        }
       }
     ]
@@ -136,7 +186,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-compute",
-         "version": "0.30.0-alpha"
+         "version": "0.33.0-alpha"
        }
       }
     ]
@@ -169,7 +219,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-monitoring",
-         "version": "0.30.0-beta"
+         "version": "0.33.0-beta"
        }
       }
     ]
@@ -200,7 +250,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-errorreporting",
-         "version": "0.30.0-beta"
+         "version": "0.33.0-beta"
        }
       }
     ]
@@ -224,7 +274,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-firestore",
-         "version": "0.30.0-beta"
+         "version": "0.33.0-beta"
        }
       }
     ]
@@ -254,7 +304,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-trace",
-         "version": "0.30.0-beta"
+         "version": "0.33.0-beta"
        }
       }
     ]
@@ -285,7 +335,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dns",
-         "version": "0.30.0-alpha"
+         "version": "0.33.0-alpha"
         }
       }
     ]
@@ -310,7 +360,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-vision",
-         "version": "1.12.0"
+         "version": "1.15.0"
        }
       }
     ]
@@ -336,7 +386,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-language",
-         "version": "1.12.0"
+         "version": "1.15.0"
        }
       }
     ]
@@ -369,7 +419,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-spanner",
-         "version": "0.30.0-beta"
+         "version": "0.33.0-beta"
        }
       }
     ]
@@ -402,7 +452,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-pubsub",
-         "version": "0.30.0-beta"
+         "version": "0.33.0-beta"
        }
       }
     ]
@@ -436,7 +486,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-bigquery",
-         "version": "0.30.0-beta"
+         "version": "0.33.0-beta"
        }
       }
     ]
@@ -469,7 +519,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-datastore",
-         "version": "1.12.0"
+         "version": "1.15.0"
        }
       }
     ]
@@ -501,7 +551,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-storage",
-         "version": "1.12.0"
+         "version": "1.15.0"
        }
       }
     ]
@@ -526,7 +576,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-translate",
-         "version": "1.12.0"
+         "version": "1.15.0"
        }
       }
     ]
@@ -559,7 +609,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-logging",
-         "version": "1.12.0"
+         "version": "1.15.0"
        }
       }
     ]
