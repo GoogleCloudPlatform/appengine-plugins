@@ -24,11 +24,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -44,8 +42,6 @@ public class ProcessExecutorTest {
   @Mock private AsyncStreamHandler mockStreamHandler;
   private final List<String> command = Arrays.asList("someCommand", "someOption");
 
-  private InOrder loggerInOrder;
-
   @Before
   public void setup() throws IOException, InterruptedException {
     MockitoAnnotations.initMocks(this);
@@ -58,7 +54,7 @@ public class ProcessExecutorTest {
   }
 
   @Test
-  public void testRun() throws IOException, InterruptedException, ExecutionException {
+  public void testRun() throws IOException, InterruptedException {
     // Mocks the environment for the mockProcessBuilder to put the environment map in.
     Map<String, String> environmentInput = new HashMap<>();
     environmentInput.put("ENV1", "val1");
@@ -68,15 +64,9 @@ public class ProcessExecutorTest {
 
     Path fakeWorkingDirectory = Paths.get("/tmp/fake/working/dir");
 
-    int result =
-        new ProcessExecutor()
-            .setProcessBuilderFactory(mockProcessBuilderFactory)
-            .run(
-                command,
-                fakeWorkingDirectory,
-                environmentInput,
-                mockStreamHandler,
-                mockStreamHandler);
+    new ProcessExecutor()
+        .setProcessBuilderFactory(mockProcessBuilderFactory)
+        .run(command, fakeWorkingDirectory, environmentInput, mockStreamHandler, mockStreamHandler);
 
     verifyProcessBuilding(command);
     Mockito.verify(mockProcessBuilder).environment();
@@ -89,8 +79,7 @@ public class ProcessExecutorTest {
   }
 
   @Test
-  public void testRun_nonZeroExitCodePassthrough()
-      throws IOException, InterruptedException, ExecutionException {
+  public void testRun_nonZeroExitCodePassthrough() throws IOException, InterruptedException {
 
     Mockito.when(mockProcess.waitFor()).thenReturn(123);
 

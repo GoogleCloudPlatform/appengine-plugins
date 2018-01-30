@@ -23,7 +23,7 @@ import org.junit.Test;
 public class VersionTest {
 
   @Test
-  public void testNewVersion_defaultLatest() throws BadCloudSdkVersionException {
+  public void testNewVersion_defaultLatest() {
     Assert.assertEquals("LATEST", Version.LATEST.getVersion());
   }
 

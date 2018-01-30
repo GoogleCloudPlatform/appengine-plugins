@@ -114,7 +114,7 @@ public class DownloaderTest {
   }
 
   @Test
-  public void testDownload_userAgentSet() throws IOException, InterruptedException {
+  public void testDownload_userAgentSet() throws IOException {
     Path destination = tmp.getRoot().toPath().resolve("destination-file");
 
     final URLConnection mockConnection = Mockito.mock(URLConnection.class);
