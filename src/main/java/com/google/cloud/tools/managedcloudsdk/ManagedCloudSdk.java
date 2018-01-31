@@ -91,9 +91,8 @@ public class ManagedCloudSdk {
   }
 
   /**
-   * Query gcloud to see if component is installed. Gcloud makes a call to the server to check this,
-   * in future version we can explore the use of '--local-state-only' but that's a relatively new
-   * flag and may not work for all cases.
+   * Query gcloud to see if component is installed. Uses gcloud's '--local-state-only' to avoid
+   * network accesses.
    */
   public boolean hasComponent(SdkComponent component) throws ManagedSdkVerificationException {
     if (!Files.isRegularFile(getGcloud())) {
@@ -105,16 +104,18 @@ public class ManagedCloudSdk {
             getGcloud().toString(),
             "components",
             "list",
+            "--only-local-state",
             "--format=json",
             "--filter=id:" + component);
 
     try {
       String result = CommandCaller.newCaller().call(listComponentCommand, null, null);
       List<CloudSdkComponent> components = CloudSdkComponent.fromJsonList(result);
-      if (components.size() != 1) {
-        throw new ManagedSdkVerificationException("Invalid component" + component);
+      if (components.size() > 1) {
+        // not a unique component id
+        throw new ManagedSdkVerificationException("Invalid component " + component);
       }
-      return !components.get(0).getState().getName().equals("Not Installed");
+      return !components.isEmpty();
     } catch (CommandExecutionException | InterruptedException | CommandExitException ex) {
       throw new ManagedSdkVerificationException(ex);
     }
