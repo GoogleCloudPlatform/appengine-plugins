@@ -17,12 +17,15 @@
 package com.google.cloud.tools.libraries.json;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import java.util.List;
 import org.junit.Test;
 
 /** Unit tests for {@link CloudLibrary}. */
@@ -53,6 +56,7 @@ public final class CloudLibraryTest {
     CloudLibrary library = parse(createFullyPopulatedJson());
     CloudLibraryClient client = Iterables.getOnlyElement(library.getClients());
     CloudLibraryClientMavenCoordinates mavenCoordinates = client.getMavenCoordinates();
+    assertNotNull(mavenCoordinates);
     String serviceRole = Iterables.getOnlyElement(library.getServiceRoles());
 
     assertEquals(NAME, library.getName());
@@ -97,8 +101,10 @@ public final class CloudLibraryTest {
     String json = String.format("{transports:[%s, %s]}", transport1, transport2);
     CloudLibrary library = parse(json);
 
-    assertEquals(transport1, library.getTransports().get(0));
-    assertEquals(transport2, library.getTransports().get(1));
+    List<String> transports = library.getTransports();
+    assertTrue("expected 2 transports", transports != null && transports.size() == 2);
+    assertEquals(transport1, transports.get(0));
+    assertEquals(transport2, transports.get(1));
   }
 
   @Test
@@ -110,8 +116,10 @@ public final class CloudLibraryTest {
     String json = String.format("{clients:[%s, %s]}", client1Json, client2Json);
     CloudLibrary library = parse(json);
 
-    assertEquals(client1, library.getClients().get(0).getName());
-    assertEquals(client2, library.getClients().get(1).getName());
+    List<CloudLibraryClient> clients = library.getClients();
+    assertTrue("expected 2 clients", clients != null && clients.size() == 2);
+    assertEquals(client1, clients.get(0).getName());
+    assertEquals(client2, clients.get(1).getName());
   }
 
   @Test

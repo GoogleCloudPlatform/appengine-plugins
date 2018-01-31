@@ -20,12 +20,10 @@ import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +45,7 @@ public class InstallerTest {
   private List<String> fakeCommand = Arrays.asList("scriptexec", "test-install.script");
 
   @Before
-  public void setUp() throws IOException, ExecutionException, InterruptedException {
+  public void setUp() {
     MockitoAnnotations.initMocks(this);
 
     fakeWorkingDirectory = tmp.getRoot().toPath();

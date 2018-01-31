@@ -21,7 +21,6 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import com.google.cloud.tools.managedcloudsdk.components.SdkComponent;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstallerException;
-import com.google.cloud.tools.managedcloudsdk.install.UnknownArchiveTypeException;
 import java.io.IOException;
 import java.util.Arrays;
 import org.junit.Assert;
@@ -53,7 +52,7 @@ public class ManagedCloudSdkTest {
   public void testManagedCloudSdk_fixedVersion()
       throws BadCloudSdkVersionException, UnsupportedOsException, IOException, CommandExitException,
           InterruptedException, ManagedSdkVerificationException, ManagedSdkVersionMismatchException,
-          UnknownArchiveTypeException, CommandExecutionException, SdkInstallerException {
+          CommandExecutionException, SdkInstallerException {
     ManagedCloudSdk testSdk =
         new ManagedCloudSdk(
             new Version(FIXED_VERSION), tempDir.getRoot().toPath(), OsInfo.getSystemOsInfo());
@@ -87,7 +86,7 @@ public class ManagedCloudSdkTest {
   public void testManagedCloudSdk_latest()
       throws UnsupportedOsException, ManagedSdkVerificationException,
           ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
-          CommandExitException, UnknownArchiveTypeException, IOException, SdkInstallerException {
+          CommandExitException, IOException, SdkInstallerException {
     ManagedCloudSdk testSdk =
         new ManagedCloudSdk(Version.LATEST, tempDir.getRoot().toPath(), OsInfo.getSystemOsInfo());
 

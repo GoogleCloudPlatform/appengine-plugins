@@ -153,7 +153,7 @@ public class ManagedCloudSdk {
   }
 
   // TODO : fix passthrough for useragent and client side usage reporting
-  public SdkInstaller newInstaller() throws UnsupportedOsException {
+  public SdkInstaller newInstaller() {
     String userAgentString = "google-cloud-tools-java";
     return SdkInstaller.newInstaller(managedSdkDirectory, version, osInfo, userAgentString, false);
   }
