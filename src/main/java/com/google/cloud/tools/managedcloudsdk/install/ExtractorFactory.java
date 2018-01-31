@@ -16,9 +16,8 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import java.nio.file.Path;
-
 import com.google.cloud.tools.io.LineListener;
+import java.nio.file.Path;
 
 /** {@link Extractor} Factory. */
 final class ExtractorFactory {

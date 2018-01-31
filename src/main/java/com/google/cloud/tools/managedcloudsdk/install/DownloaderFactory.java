@@ -16,10 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.cloud.tools.io.LineListener;
 import java.net.URL;
 import java.nio.file.Path;
-
-import com.google.cloud.tools.io.LineListener;
 
 /** Downloader factory. */
 final class DownloaderFactory {

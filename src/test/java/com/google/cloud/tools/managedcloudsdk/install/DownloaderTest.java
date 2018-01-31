@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.cloud.tools.io.LineListener;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -35,8 +36,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import com.google.cloud.tools.io.LineListener;
 
 public class DownloaderTest {
 

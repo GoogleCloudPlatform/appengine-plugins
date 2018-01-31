@@ -16,10 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.cloud.tools.io.LineListener;
 import java.io.IOException;
 import java.nio.file.Path;
-
-import com.google.cloud.tools.io.LineListener;
 
 /** Provide a archive extractor implementation. */
 interface ExtractorProvider {

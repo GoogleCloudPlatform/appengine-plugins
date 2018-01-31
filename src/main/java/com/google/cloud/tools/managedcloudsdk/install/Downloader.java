@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.cloud.tools.io.LineListener;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +26,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-
-import com.google.cloud.tools.io.LineListener;
 
 /** Downloader for downloading a single Cloud SDK archive. */
 final class Downloader {
