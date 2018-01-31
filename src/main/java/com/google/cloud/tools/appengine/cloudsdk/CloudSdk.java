@@ -24,11 +24,11 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunner;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.WaitingProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.StringBuilderProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
+import com.google.cloud.tools.io.LineListener;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -223,8 +223,8 @@ public class CloudSdk {
             false, /* async */
             ImmutableList.<ProcessExitListener>of(exitListener), /* exitListeners */
             ImmutableList.<ProcessStartListener>of(), /* startListeners */
-            ImmutableList.<ProcessOutputLineListener>of(stdOutListener), /* stdOutLineListeners */
-            ImmutableList.<ProcessOutputLineListener>of()); /* stdErrLineListeners */
+            ImmutableList.<LineListener>of(stdOutListener), /* stdOutLineListeners */
+            ImmutableList.<LineListener>of()); /* stdErrLineListeners */
 
     // build and run the command
     List<String> command =
@@ -553,8 +553,8 @@ public class CloudSdk {
     private String appCommandOutputFormat;
     private String appCommandShowStructuredLogs;
     private boolean async = false;
-    private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
-    private List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
+    private List<LineListener> stdOutLineListeners = new ArrayList<>();
+    private List<LineListener> stdErrLineListeners = new ArrayList<>();
     private List<ProcessExitListener> exitListeners = new ArrayList<>();
     private List<ProcessStartListener> startListeners = new ArrayList<>();
     private List<CloudSdkResolver> resolvers;
@@ -621,7 +621,7 @@ public class CloudSdk {
      * Adds a client consumer of process standard output. If none, output will be inherited by
      * parent process.
      */
-    public Builder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
+    public Builder addStdOutLineListener(LineListener stdOutLineListener) {
       // Verify there aren't listeners if subprocess inherits output.
       // If output is inherited, then listeners won't receive anything.
       if (inheritProcessOutput) {
@@ -636,7 +636,7 @@ public class CloudSdk {
      * Adds a client consumer of process error output. If none, output will be inherited by parent
      * process.
      */
-    public Builder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
+    public Builder addStdErrLineListener(LineListener stdErrLineListener) {
       // Verify there aren't listeners if subprocess inherits output.
       // If output is inherited, then listeners won't receive anything.
       if (inheritProcessOutput) {
@@ -803,12 +803,12 @@ public class CloudSdk {
     }
 
     @VisibleForTesting
-    List<ProcessOutputLineListener> getStdOutLineListeners() {
+    List<LineListener> getStdOutLineListeners() {
       return stdOutLineListeners;
     }
 
     @VisibleForTesting
-    List<ProcessOutputLineListener> getStdErrLineListeners() {
+    List<LineListener> getStdErrLineListeners() {
       return stdErrLineListeners;
     }
 

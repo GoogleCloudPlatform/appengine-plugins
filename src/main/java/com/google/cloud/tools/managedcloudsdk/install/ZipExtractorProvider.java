@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -43,7 +43,7 @@ final class ZipExtractorProvider implements ExtractorProvider {
   ZipExtractorProvider() {}
 
   @Override
-  public void extract(Path archive, Path destination, MessageListener messageListener)
+  public void extract(Path archive, Path destination, LineListener messageListener)
       throws IOException {
 
     // Use ZipFile instead of ZipArchiveInputStream so that we can obtain file permissions
@@ -56,7 +56,7 @@ final class ZipExtractorProvider implements ExtractorProvider {
         final Path entryTarget = destination.resolve(entry.getName());
 
         if (messageListener != null) {
-          messageListener.message(entryTarget + "\n");
+          messageListener.onOutputLine(entryTarget + "\n");
         }
 
         if (entry.isDirectory()) {

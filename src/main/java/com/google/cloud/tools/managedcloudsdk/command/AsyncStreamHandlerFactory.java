@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.common.base.Charsets;
 
@@ -27,21 +27,21 @@ class AsyncStreamHandlerFactory {
    * Create a new AsyncStreamHandler using the {@link MessageListenerForwardingHandler}
    * implementation.
    */
-  AsyncStreamHandler newHandler(MessageListener messageListener) {
+  AsyncStreamHandler newHandler(LineListener messageListener) {
     return new AsyncByteConsumer(new MessageListenerForwardingHandler(messageListener));
   }
 
   static class MessageListenerForwardingHandler implements ByteHandler {
 
-    private final MessageListener messageListener;
+    private final LineListener messageListener;
 
-    MessageListenerForwardingHandler(MessageListener messageListener) {
+    MessageListenerForwardingHandler(LineListener messageListener) {
       this.messageListener = messageListener;
     }
 
     @Override
     public void bytes(byte[] bytes, int length) {
-      messageListener.message(new String(bytes, 0, length, Charsets.UTF_8));
+      messageListener.onOutputLine(new String(bytes, 0, length, Charsets.UTF_8));
     }
 
     @Override

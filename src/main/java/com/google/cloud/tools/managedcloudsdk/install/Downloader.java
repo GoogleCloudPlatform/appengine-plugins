@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import com.google.cloud.tools.io.LineListener;
+
 /** Downloader for downloading a single Cloud SDK archive. */
 final class Downloader {
 
@@ -35,11 +36,11 @@ final class Downloader {
   private final URL address;
   private final Path destinationFile;
   private final String userAgentString;
-  private final MessageListener messageListener;
+  private final LineListener messageListener;
 
   /** Use {@link DownloaderFactory} to instantiate. */
   Downloader(
-      URL source, Path destinationFile, String userAgentString, MessageListener messageListener) {
+      URL source, Path destinationFile, String userAgentString, LineListener messageListener) {
     this.address = source;
     this.destinationFile = destinationFile;
     this.userAgentString = userAgentString;
@@ -62,7 +63,7 @@ final class Downloader {
     try (InputStream in = connection.getInputStream()) {
       long contentLength = connection.getContentLengthLong();
 
-      messageListener.message("Downloading " + address + "\n");
+      messageListener.onOutputLine("Downloading " + address + "\n");
 
       try (BufferedOutputStream out =
           new BufferedOutputStream(
@@ -73,11 +74,11 @@ final class Downloader {
         long lastUpdated = 0;
         long totalBytesRead = 0;
 
-        messageListener.message("Downloading " + String.valueOf(contentLength) + " bytes\n");
+        messageListener.onOutputLine("Downloading " + String.valueOf(contentLength) + " bytes\n");
         while ((bytesRead = in.read(buffer)) != -1) {
           if (Thread.currentThread().isInterrupted()) {
-            messageListener.message("Download was interrupted\n");
-            messageListener.message("Cleaning up...\n");
+            messageListener.onOutputLine("Download was interrupted\n");
+            messageListener.onOutputLine("Cleaning up...\n");
             cleanUp();
             throw new InterruptedException("Download was interrupted");
           }
@@ -87,13 +88,13 @@ final class Downloader {
           totalBytesRead += bytesRead;
           long bytesSinceLastUpdate = totalBytesRead - lastUpdated;
           if (totalBytesRead == contentLength || bytesSinceLastUpdate > UPDATE_THRESHOLD) {
-            messageListener.message(".");
+            messageListener.onOutputLine(".");
             lastUpdated = totalBytesRead;
           }
         }
       }
     }
-    messageListener.message("done.\n");
+    messageListener.onOutputLine("done.\n");
   }
 
   private void cleanUp() throws IOException {

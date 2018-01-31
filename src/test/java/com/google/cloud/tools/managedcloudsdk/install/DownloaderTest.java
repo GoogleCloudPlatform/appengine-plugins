@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -37,10 +36,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.google.cloud.tools.io.LineListener;
+
 public class DownloaderTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
-  @Mock private MessageListener messageListener;
+  @Mock private LineListener messageListener;
 
   @Before
   public void setupMocks() {
@@ -98,7 +99,7 @@ public class DownloaderTest {
     Assert.assertArrayEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(messageCaptor.capture());
+    Mockito.verify(messageListener, Mockito.atLeastOnce()).onOutputLine(messageCaptor.capture());
 
     List<String> values = messageCaptor.getAllValues();
     Assert.assertEquals("Downloading " + fakeRemoteResource.toString() + "\n", values.get(0));
@@ -185,11 +186,11 @@ public class DownloaderTest {
     testThreadToInterrupt.join();
 
     Assert.assertFalse(Files.exists(destination));
-    Mockito.verify(messageListener).message("Downloading " + fakeRemoteResource + "\n");
+    Mockito.verify(messageListener).onOutputLine("Downloading " + fakeRemoteResource + "\n");
     Mockito.verify(messageListener)
-        .message("Downloading " + String.valueOf(testFileSize) + " bytes\n");
-    Mockito.verify(messageListener).message("Download was interrupted\n");
-    Mockito.verify(messageListener).message("Cleaning up...\n");
+        .onOutputLine("Downloading " + String.valueOf(testFileSize) + " bytes\n");
+    Mockito.verify(messageListener).onOutputLine("Download was interrupted\n");
+    Mockito.verify(messageListener).onOutputLine("Cleaning up...\n");
     Mockito.verifyNoMoreInteractions(messageListener);
   }
 }

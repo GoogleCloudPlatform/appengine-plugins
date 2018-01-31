@@ -16,8 +16,10 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
+import com.google.cloud.tools.io.LineListener;
+
 /** A ProcessOutputLineListener that uses a StringBuffer to store the contents of all lines. */
-public class StringBuilderProcessOutputLineListener implements ProcessOutputLineListener {
+public class StringBuilderProcessOutputLineListener implements LineListener {
 
   // This used to be a StringBuilder but that wasn't thread safe.
   private final StringBuffer buffer = new StringBuffer();

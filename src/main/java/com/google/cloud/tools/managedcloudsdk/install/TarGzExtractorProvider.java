@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -40,7 +40,7 @@ final class TarGzExtractorProvider implements ExtractorProvider {
   TarGzExtractorProvider() {}
 
   @Override
-  public void extract(Path archive, Path destination, MessageListener messageListener)
+  public void extract(Path archive, Path destination, LineListener messageListener)
       throws IOException {
 
     GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(Files.newInputStream(archive));
@@ -49,7 +49,7 @@ final class TarGzExtractorProvider implements ExtractorProvider {
       while ((entry = in.getNextTarEntry()) != null) {
         final Path entryTarget = destination.resolve(entry.getName());
         if (messageListener != null) {
-          messageListener.message(entryTarget + "\n");
+          messageListener.onOutputLine(entryTarget + "\n");
         }
         if (entry.isDirectory()) {
           if (!Files.exists(entryTarget)) {
@@ -70,7 +70,8 @@ final class TarGzExtractorProvider implements ExtractorProvider {
         } else {
           // we don't know what kind of entry this is (we only process directories and files).
           if (messageListener != null) {
-            messageListener.message("Skipping entry (unknown type): " + entry.getName() + "\n");
+            messageListener.onOutputLine(
+                "Skipping entry (unknown type): " + entry.getName() + "\n");
           }
         }
       }

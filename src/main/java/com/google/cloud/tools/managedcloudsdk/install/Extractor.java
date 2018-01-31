@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,10 +30,10 @@ final class Extractor<T extends ExtractorProvider> {
   private final Path archive;
   private final Path destination;
   private final ExtractorProvider extractorProvider;
-  private final MessageListener messageListener;
+  private final LineListener messageListener;
 
   /** Use {@link ExtractorFactory} to instantiate. */
-  Extractor(Path archive, Path destination, T extractorProvider, MessageListener messageListener) {
+  Extractor(Path archive, Path destination, T extractorProvider, LineListener messageListener) {
     this.archive = archive;
     this.destination = destination;
     this.extractorProvider = extractorProvider;
@@ -42,16 +42,16 @@ final class Extractor<T extends ExtractorProvider> {
 
   /** Extract an archive. */
   public void extract() throws IOException, InterruptedException {
-    messageListener.message("Extracting archive: " + archive + "\n");
+    messageListener.onOutputLine("Extracting archive: " + archive + "\n");
 
     try {
       extractorProvider.extract(archive, destination, messageListener);
     } catch (IOException ex) {
       try {
-        messageListener.message("Extraction failed, cleaning up " + destination + "\n");
+        messageListener.onOutputLine("Extraction failed, cleaning up " + destination + "\n");
         cleanUp(destination);
       } catch (IOException exx) {
-        messageListener.message("Failed to cleanup directory\n");
+        messageListener.onOutputLine("Failed to cleanup directory\n");
       }
       // intentional rethrow after cleanup
       throw ex;
@@ -60,7 +60,7 @@ final class Extractor<T extends ExtractorProvider> {
     // we do not allow interrupt mid extraction, so catch it here, we still end up
     // with a valid directory though, so don't clean it up.
     if (Thread.currentThread().isInterrupted()) {
-      messageListener.message("Process was interrupted\n");
+      messageListener.onOutputLine("Process was interrupted\n");
       throw new InterruptedException("Process was interrupted");
     }
   }
@@ -70,7 +70,7 @@ final class Extractor<T extends ExtractorProvider> {
     return extractorProvider;
   }
 
-  // TODO: After move to Java8, use guava 21.0 recursive delete.
+  // TODO: After move to Java8, use Guava 21.0 recursive delete.
   private void cleanUp(final Path target) throws IOException {
     Files.walkFileTree(target, new FileDeleteVisitor());
   }
