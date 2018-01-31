@@ -20,7 +20,6 @@ import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +43,7 @@ public class SdkComponentInstallerTest {
   private SdkComponent testComponent = SdkComponent.APP_ENGINE_JAVA;
 
   @Before
-  public void setUpMocks() throws IOException {
+  public void setUpMocks() {
     MockitoAnnotations.initMocks(this);
     fakeGcloud = testDir.getRoot().toPath().resolve("fake-gcloud");
   }

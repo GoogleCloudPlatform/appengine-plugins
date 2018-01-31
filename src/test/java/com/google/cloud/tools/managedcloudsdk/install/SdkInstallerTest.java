@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.ExecutionException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -71,8 +70,8 @@ public class SdkInstallerTest {
 
   @Before
   public void setUpMocksAndFakes()
-      throws IOException, InterruptedException, UnknownArchiveTypeException, ExecutionException,
-          CommandExitException, CommandExecutionException {
+      throws IOException, InterruptedException, UnknownArchiveTypeException, CommandExitException,
+          CommandExecutionException {
     MockitoAnnotations.initMocks(this);
 
     Path managedSdkRoot = testDir.newFolder("managed-sdk-test-home").toPath();
@@ -167,7 +166,7 @@ public class SdkInstallerTest {
   @Test
   public void testDownloadSdk_successRun()
       throws CommandExecutionException, InterruptedException, IOException, CommandExitException,
-          SdkInstallerException, UnknownArchiveTypeException {
+          SdkInstallerException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
@@ -183,7 +182,7 @@ public class SdkInstallerTest {
   @Test
   public void testDownloadSdk_successRunWithoutExplicitInstall()
       throws CommandExecutionException, InterruptedException, IOException, CommandExitException,
-          SdkInstallerException, UnknownArchiveTypeException {
+          SdkInstallerException {
     SdkInstaller testInstaller =
         new SdkInstaller(
             fileResourceProviderFactory,
@@ -197,8 +196,7 @@ public class SdkInstallerTest {
 
   @Test
   public void testDownloadSdk_failedDownload()
-      throws InterruptedException, CommandExecutionException, CommandExitException,
-          UnknownArchiveTypeException, IOException {
+      throws InterruptedException, CommandExecutionException, CommandExitException, IOException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
@@ -218,8 +216,7 @@ public class SdkInstallerTest {
 
   @Test
   public void testDownloadSdk_failedExtraction()
-      throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException,
-          CommandExitException, CommandExecutionException {
+      throws InterruptedException, IOException, CommandExitException, CommandExecutionException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(
@@ -239,8 +236,7 @@ public class SdkInstallerTest {
 
   @Test
   public void testDownloadSdk_failedInstallation()
-      throws InterruptedException, ExecutionException, UnknownArchiveTypeException, IOException,
-          CommandExitException, CommandExecutionException {
+      throws InterruptedException, IOException, CommandExitException, CommandExecutionException {
 
     SdkInstaller testInstaller =
         new SdkInstaller(

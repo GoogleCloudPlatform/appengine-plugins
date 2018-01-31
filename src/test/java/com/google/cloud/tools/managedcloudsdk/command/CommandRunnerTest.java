@@ -26,7 +26,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -54,7 +53,7 @@ public class CommandRunnerTest {
   private CommandRunner testCommandRunner;
 
   @Before
-  public void setUp() throws IOException, ExecutionException, InterruptedException {
+  public void setUp() throws IOException, InterruptedException {
     MockitoAnnotations.initMocks(this);
 
     fakeCommand = Arrays.asList("gcloud", "test", "--option");
