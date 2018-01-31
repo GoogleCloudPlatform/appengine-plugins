@@ -16,9 +16,8 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
-import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
+import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -39,7 +38,8 @@ public class InstallerTest {
 
   @Mock private InstallScriptProvider mockInstallScriptProvider;
   @Mock private CommandRunner mockCommandRunner;
-  @Mock private MessageListener mockMessageListener;
+  @Mock private ProgressListener mockProgressListener;
+  @Mock private ConsoleListener mockConsoleListener;
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
@@ -54,24 +54,25 @@ public class InstallerTest {
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
   }
 
-  private void verifyInstallerExecution(boolean usageReporting)
-      throws InterruptedException, CommandExitException, CommandExecutionException {
-    Mockito.verify(mockCommandRunner)
-        .run(expectedCommand(usageReporting), fakeWorkingDirectory, null, mockMessageListener);
-    Mockito.verifyNoMoreInteractions(mockCommandRunner);
-  }
-
   @Test
   public void testCall() throws Exception {
     new Installer<>(
             fakeWorkingDirectory,
             mockInstallScriptProvider,
             false,
-            mockMessageListener,
+            mockProgressListener,
+            mockConsoleListener,
             mockCommandRunner)
         .install();
 
-    verifyInstallerExecution(false);
+    Mockito.verify(mockCommandRunner)
+        .run(expectedCommand(false), fakeWorkingDirectory, null, mockConsoleListener);
+    Mockito.verifyNoMoreInteractions(mockCommandRunner);
+
+    Mockito.verify(mockProgressListener).update("Installing Cloud SDK");
+    Mockito.verify(mockProgressListener).update(250);
+    Mockito.verify(mockProgressListener).update(300);
+    Mockito.verifyNoMoreInteractions(mockProgressListener);
   }
 
   @Test
@@ -80,11 +81,14 @@ public class InstallerTest {
             tmp.getRoot().toPath(),
             mockInstallScriptProvider,
             true,
-            mockMessageListener,
+            mockProgressListener,
+            mockConsoleListener,
             mockCommandRunner)
         .install();
 
-    verifyInstallerExecution(true);
+    Mockito.verify(mockCommandRunner)
+        .run(expectedCommand(true), fakeWorkingDirectory, null, mockConsoleListener);
+    Mockito.verifyNoMoreInteractions(mockCommandRunner);
   }
 
   private List<String> expectedCommand(boolean usageReporting) {

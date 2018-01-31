@@ -16,17 +16,21 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.Version;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.logging.Logger;
 
 /** Install an SDK by downloading, extracting and if necessary installing. */
 public class SdkInstaller {
+
+  private static final Logger logger = Logger.getLogger(SdkInstaller.class.getName());
 
   private final FileResourceProviderFactory fileResourceProviderFactory;
   private final ExtractorFactory extractorFactory;
@@ -46,7 +50,8 @@ public class SdkInstaller {
   }
 
   /** Download and install a new Cloud SDK. */
-  public Path install(final MessageListener messageListener)
+  public Path install(
+      final ProgressListener progressListener, final ConsoleListener consoleListener)
       throws IOException, InterruptedException, SdkInstallerException, CommandExecutionException,
           CommandExitException {
 
@@ -55,27 +60,27 @@ public class SdkInstaller {
 
     // CLEANUP: remove old downloaded archive if exists
     if (Files.isRegularFile(fileResourceProvider.getArchiveDestination())) {
-      messageListener.message(
-          "Removing stale archive: " + fileResourceProvider.getArchiveDestination() + "\n");
+      logger.info("Removing stale archive: " + fileResourceProvider.getArchiveDestination());
       Files.delete(fileResourceProvider.getArchiveDestination());
     }
 
     // CLEANUP: Remove old SDK directory if exists
     if (Files.exists(fileResourceProvider.getArchiveExtractionDestination())) {
-      messageListener.message(
-          "Removing stale install: "
-              + fileResourceProvider.getArchiveExtractionDestination()
-              + "\n");
+      logger.info(
+          "Removing stale install: " + fileResourceProvider.getArchiveExtractionDestination());
+
       Files.walkFileTree(
           fileResourceProvider.getArchiveExtractionDestination(), new FileDeleteVisitor());
     }
+
+    progressListener.start("Installing Cloud SDK", 300);
 
     // Download and verify
     downloaderFactory
         .newDownloader(
             fileResourceProvider.getArchiveSource(),
             fileResourceProvider.getArchiveDestination(),
-            messageListener)
+            progressListener)
         .download();
     if (!Files.isRegularFile(fileResourceProvider.getArchiveDestination())) {
       throw new SdkInstallerException(
@@ -89,7 +94,7 @@ public class SdkInstaller {
           .newExtractor(
               fileResourceProvider.getArchiveDestination(),
               fileResourceProvider.getArchiveExtractionDestination(),
-              messageListener)
+              progressListener)
           .extract();
       if (!Files.isDirectory(fileResourceProvider.getExtractedSdkHome())) {
         throw new SdkInstallerException(
@@ -105,7 +110,8 @@ public class SdkInstaller {
     // install if necessary
     if (installerFactory != null) {
       installerFactory
-          .newInstaller(fileResourceProvider.getExtractedSdkHome(), messageListener)
+          .newInstaller(
+              fileResourceProvider.getExtractedSdkHome(), progressListener, consoleListener)
           .install();
     }
 
@@ -116,6 +122,8 @@ public class SdkInstaller {
               + fileResourceProvider.getExtractedGcloud());
     }
 
+    progressListener.update("done");
+    progressListener.done();
     return fileResourceProvider.getExtractedSdkHome();
   }
 

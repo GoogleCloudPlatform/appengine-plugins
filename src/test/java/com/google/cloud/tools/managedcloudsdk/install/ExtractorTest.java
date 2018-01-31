@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.textbars.TextBarFactory;
-import com.google.cloud.tools.managedcloudsdk.textbars.TextInfoBar;
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,10 +34,8 @@ import org.mockito.stubbing.Answer;
 public class ExtractorTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
-  @Mock private MessageListener mockMessageListener;
+  @Mock private ProgressListener mockProgressListener;
   @Mock private ExtractorProvider mockExtractorProvider;
-  @Mock private TextBarFactory mockTextBarFactory;
-  @Mock private TextInfoBar mockInfoBar;
 
   @Before
   public void setupMocks() {
@@ -61,23 +57,21 @@ public class ExtractorTest {
               }
             })
         .when(mockExtractorProvider)
-        .extract(extractionSource, extractionDestination, mockMessageListener);
-
-    Mockito.when(
-            mockTextBarFactory.newInfoBar(
-                mockMessageListener, "Extracting archive: " + extractionSource.getFileName()))
-        .thenReturn(mockInfoBar);
+        .extract(extractionSource, extractionDestination);
 
     Extractor<ExtractorProvider> extractor =
         new Extractor<>(
-            extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
-    extractor.extract(mockTextBarFactory);
+            extractionSource, extractionDestination, mockExtractorProvider, mockProgressListener);
+
+    extractor.extract();
 
     Assert.assertTrue(Files.exists(extractionDestination));
-    Mockito.verify(mockInfoBar).show();
-    Mockito.verify(mockExtractorProvider)
-        .extract(extractionSource, extractionDestination, mockMessageListener);
-    Mockito.verifyNoMoreInteractions(mockMessageListener);
+    Mockito.verify(mockExtractorProvider).extract(extractionSource, extractionDestination);
+    Mockito.verify(mockProgressListener)
+        .update("Extracting archive: " + extractionSource.getFileName());
+    Mockito.verify(mockProgressListener).update(150);
+    Mockito.verify(mockProgressListener).update(200);
+    Mockito.verifyNoMoreInteractions(mockProgressListener);
   }
 
   @Test
@@ -96,19 +90,14 @@ public class ExtractorTest {
               }
             })
         .when(mockExtractorProvider)
-        .extract(extractionSource, extractionDestination, mockMessageListener);
-
-    Mockito.when(
-            mockTextBarFactory.newInfoBar(
-                mockMessageListener, "Extracting archive: " + extractionSource.getFileName()))
-        .thenReturn(mockInfoBar);
+        .extract(extractionSource, extractionDestination);
 
     Extractor<ExtractorProvider> extractor =
         new Extractor<>(
-            extractionSource, extractionDestination, mockExtractorProvider, mockMessageListener);
+            extractionSource, extractionDestination, mockExtractorProvider, mockProgressListener);
 
     try {
-      extractor.extract(mockTextBarFactory);
+      extractor.extract();
       Assert.fail("IOException expected but thrown - test infrastructure failure");
     } catch (IOException ex) {
       // ensure we are rethrowing after cleanup
@@ -116,11 +105,11 @@ public class ExtractorTest {
     }
 
     Assert.assertFalse(Files.exists(extractionDestination));
-    Mockito.verify(mockInfoBar).show();
-    Mockito.verify(mockMessageListener)
-        .message("Extraction failed, cleaning up " + extractionDestination + "\n");
-    Mockito.verify(mockExtractorProvider)
-        .extract(extractionSource, extractionDestination, mockMessageListener);
-    Mockito.verifyNoMoreInteractions(mockMessageListener);
+    Mockito.verify(mockProgressListener)
+        .update("Extracting archive: " + extractionSource.getFileName());
+    Mockito.verify(mockProgressListener).update(150);
+    Mockito.verify(mockExtractorProvider).extract(extractionSource, extractionDestination);
+    Mockito.verify(mockProgressListener, Mockito.never()).update(200);
+    Mockito.verifyNoMoreInteractions(mockProgressListener);
   }
 }

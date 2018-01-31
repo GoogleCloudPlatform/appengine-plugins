@@ -16,15 +16,13 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.textbars.TextBarFactory;
-import com.google.cloud.tools.managedcloudsdk.textbars.TextProgressBar;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFileAttributeView;
+import java.util.logging.Logger;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -38,29 +36,19 @@ import org.apache.commons.compress.utils.IOUtils;
  */
 final class TarGzExtractorProvider implements ExtractorProvider {
 
+  private static final Logger logger = Logger.getLogger(TarGzExtractorProvider.class.getName());
+
   /** Only instantiated in {@link ExtractorFactory}. */
   TarGzExtractorProvider() {}
 
   @Override
-  public void extract(Path archive, Path destination, MessageListener messageListener)
-      throws IOException {
-    extract(archive, destination, messageListener, new TextBarFactory());
-  }
-
-  public void extract(
-      Path archive,
-      Path destination,
-      MessageListener messageListener,
-      TextBarFactory textBarFactory)
-      throws IOException {
-    TextProgressBar progressBar = textBarFactory.newProgressBar(messageListener, 2L);
-    progressBar.start();
+  public void extract(Path archive, Path destination) throws IOException {
     GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(Files.newInputStream(archive));
     try (TarArchiveInputStream in = new TarArchiveInputStream(gzipIn)) {
-      progressBar.update(1); // this is hack to not have to read and count out the tar entries size
       TarArchiveEntry entry;
       while ((entry = in.getNextTarEntry()) != null) {
         final Path entryTarget = destination.resolve(entry.getName());
+        logger.fine(entryTarget.toString());
         if (entry.isDirectory()) {
           if (!Files.exists(entryTarget)) {
             Files.createDirectories(entryTarget);
@@ -79,12 +67,9 @@ final class TarGzExtractorProvider implements ExtractorProvider {
           }
         } else {
           // we don't know what kind of entry this is (we only process directories and files).
-          if (messageListener != null) {
-            messageListener.message("Skipping entry (unknown type): " + entry.getName() + "\n");
-          }
+          logger.warning("Skipping entry (unknown type): " + entry.getName());
         }
       }
-      progressBar.done();
     }
   }
 }

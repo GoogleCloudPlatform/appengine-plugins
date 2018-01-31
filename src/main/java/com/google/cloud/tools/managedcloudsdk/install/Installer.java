@@ -16,7 +16,8 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -31,7 +32,8 @@ final class Installer<T extends InstallScriptProvider> {
   private final Path installedSdkRoot;
   private final InstallScriptProvider installScriptProvider;
   private final boolean usageReporting;
-  private final MessageListener messageListener;
+  private final ProgressListener progressListener;
+  private final ConsoleListener consoleListener;
   private final CommandRunner commandRunner;
 
   /** Instantiated by {@link InstallerFactory}. */
@@ -39,12 +41,14 @@ final class Installer<T extends InstallScriptProvider> {
       Path installedSdkRoot,
       InstallScriptProvider installScriptProvider,
       boolean usageReporting,
-      MessageListener messageListener,
+      ProgressListener progressListener,
+      ConsoleListener consoleListener,
       CommandRunner commandRunner) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;
     this.usageReporting = usageReporting;
-    this.messageListener = messageListener;
+    this.progressListener = progressListener;
+    this.consoleListener = consoleListener;
     this.commandRunner = commandRunner;
   }
 
@@ -57,7 +61,10 @@ final class Installer<T extends InstallScriptProvider> {
     command.add("--quiet"); // don't accept user input during install
     command.add("--usage-reporting=" + usageReporting); // usage reporing passthrough
 
-    commandRunner.run(command, installedSdkRoot, null, messageListener);
+    progressListener.update("Installing Cloud SDK");
+    progressListener.update(250);
+    commandRunner.run(command, installedSdkRoot, null, consoleListener);
+    progressListener.update(300);
   }
 
   @VisibleForTesting

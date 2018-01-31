@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import com.google.common.annotations.VisibleForTesting;
@@ -44,7 +44,7 @@ public class CommandRunner {
       List<String> command,
       @Nullable Path workingDirectory,
       @Nullable Map<String, String> environment,
-      MessageListener messageListener)
+      ConsoleListener consoleListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
     ProcessExecutor processExecutor = processExecutorFactory.newProcessExecutor();
     try {
@@ -53,8 +53,8 @@ public class CommandRunner {
               command,
               workingDirectory,
               environment,
-              streamHandlerFactory.newHandler(messageListener),
-              streamHandlerFactory.newHandler(messageListener));
+              streamHandlerFactory.newHandler(consoleListener),
+              streamHandlerFactory.newHandler(consoleListener));
       if (exitCode != 0) {
         throw new CommandExitException(exitCode, null);
       }

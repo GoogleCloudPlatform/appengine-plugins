@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import java.net.URL;
 import java.nio.file.Path;
 
@@ -40,10 +40,10 @@ final class DownloaderFactory {
    *
    * @param source URL of file to download (remote)
    * @param destination Path on local file system to save the file
-   * @param messageListener Message handler
+   * @param progressListener Progress feedback handler
    * @return a {@link Downloader} instance
    */
-  public Downloader newDownloader(URL source, Path destination, MessageListener messageListener) {
-    return new Downloader(source, destination, userAgentString, messageListener);
+  public Downloader newDownloader(URL source, Path destination, ProgressListener progressListener) {
+    return new Downloader(source, destination, userAgentString, progressListener);
   }
 }

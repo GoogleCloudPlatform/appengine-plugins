@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.update;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -37,7 +37,7 @@ public class SdkUpdaterTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private MessageListener mockMessageListener;
+  @Mock private ConsoleListener mockConsoleListener;
   @Mock private CommandRunner mockCommandRunner;
 
   private Path fakeGcloud;
@@ -52,8 +52,8 @@ public class SdkUpdaterTest {
   public void testUpdate_successRun()
       throws InterruptedException, CommandExitException, CommandExecutionException {
     SdkUpdater testUpdater = new SdkUpdater(fakeGcloud, mockCommandRunner);
-    testUpdater.update(mockMessageListener);
-    Mockito.verify(mockCommandRunner).run(expectedCommand(), null, null, mockMessageListener);
+    testUpdater.update(mockConsoleListener);
+    Mockito.verify(mockCommandRunner).run(expectedCommand(), null, null, mockConsoleListener);
   }
 
   private List<String> expectedCommand() {

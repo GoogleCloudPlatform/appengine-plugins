@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.common.base.Charsets;
 
@@ -24,24 +24,24 @@ import com.google.common.base.Charsets;
 class AsyncStreamHandlerFactory {
 
   /**
-   * Create a new AsyncStreamHandler using the {@link MessageListenerForwardingHandler}
+   * Create a new AsyncStreamHandler using the {@link ConsoleListenerForwardingByteHandler}
    * implementation.
    */
-  AsyncStreamHandler newHandler(MessageListener messageListener) {
-    return new AsyncByteConsumer(new MessageListenerForwardingHandler(messageListener));
+  AsyncStreamHandler newHandler(ConsoleListener consoleListener) {
+    return new AsyncByteConsumer(new ConsoleListenerForwardingByteHandler(consoleListener));
   }
 
-  static class MessageListenerForwardingHandler implements ByteHandler {
+  static class ConsoleListenerForwardingByteHandler implements ByteHandler {
 
-    private final MessageListener messageListener;
+    private final ConsoleListener consoleListener;
 
-    MessageListenerForwardingHandler(MessageListener messageListener) {
-      this.messageListener = messageListener;
+    ConsoleListenerForwardingByteHandler(ConsoleListener consoleListener) {
+      this.consoleListener = consoleListener;
     }
 
     @Override
     public void bytes(byte[] bytes, int length) {
-      messageListener.message(new String(bytes, 0, length, Charsets.UTF_8));
+      consoleListener.console(new String(bytes, 0, length, Charsets.UTF_8));
     }
 
     @Override

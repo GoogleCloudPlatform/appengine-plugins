@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.textbars;
+package com.google.cloud.tools.managedcloudsdk;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
-
-public class TextDividerBar {
-  private final MessageListener messageListener;
-
-  TextDividerBar(MessageListener messageListener) {
-    this.messageListener = messageListener;
-  }
-
-  public void show() {
-    messageListener.message("#============================================================#\n");
-  }
+public interface ConsoleListener {
+  /**
+   * Process a raw message. Implementers should not add a newline to the end, it may contain newline
+   * characters of its own.
+   *
+   * @param rawString a partial or full message with all necessary newlines
+   */
+  void console(String rawString);
 }

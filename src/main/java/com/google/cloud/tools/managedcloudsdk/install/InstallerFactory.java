@@ -16,8 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.nio.file.Path;
 
@@ -43,17 +44,18 @@ final class InstallerFactory {
    * Returns a new {@link Installer} instance.
    *
    * @param installedSdkRoot path to the Cloud SDK directory
-   * @param messageListener listener on installer script output
+   * @param progressListener listener on installer script output
    * @return a {@link Installer} instance.
    */
   Installer<? extends InstallScriptProvider> newInstaller(
-      Path installedSdkRoot, MessageListener messageListener) {
+      Path installedSdkRoot, ProgressListener progressListener, ConsoleListener consoleListener) {
 
     return new Installer<>(
         installedSdkRoot,
         getInstallScriptProvider(),
         usageReporting,
-        messageListener,
+        progressListener,
+        consoleListener,
         CommandRunner.newRunner());
   }
 

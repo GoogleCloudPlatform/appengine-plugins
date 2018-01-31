@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
@@ -43,7 +43,7 @@ public class CommandRunnerTest {
 
   @Mock private ProcessExecutorFactory mockProcessExecutorFactory;
   @Mock private ProcessExecutor mockProcessExecutor;
-  @Mock private MessageListener mockMessageListener;
+  @Mock private ConsoleListener mockConsoleListener;
   @Mock private AsyncStreamHandler mockStreamHandler;
   @Mock private AsyncStreamHandlerFactory mockStreamHandlerFactory;
 
@@ -62,7 +62,7 @@ public class CommandRunnerTest {
     fakeEnvironment = ImmutableMap.of("testKey", "testValue");
 
     Mockito.when(mockProcessExecutorFactory.newProcessExecutor()).thenReturn(mockProcessExecutor);
-    Mockito.when(mockStreamHandlerFactory.newHandler(mockMessageListener))
+    Mockito.when(mockStreamHandlerFactory.newHandler(mockConsoleListener))
         .thenReturn(mockStreamHandler);
     Mockito.when(
             mockProcessExecutor.run(
@@ -90,7 +90,7 @@ public class CommandRunnerTest {
   @Test
   public void testRun()
       throws InterruptedException, CommandExitException, CommandExecutionException, IOException {
-    testCommandRunner.run(fakeCommand, fakeWorkingDirectory, fakeEnvironment, mockMessageListener);
+    testCommandRunner.run(fakeCommand, fakeWorkingDirectory, fakeEnvironment, mockConsoleListener);
     verifyCommandExecution();
   }
 
@@ -107,7 +107,7 @@ public class CommandRunnerTest {
 
     try {
       testCommandRunner.run(
-          fakeCommand, fakeWorkingDirectory, fakeEnvironment, mockMessageListener);
+          fakeCommand, fakeWorkingDirectory, fakeEnvironment, mockConsoleListener);
       Assert.fail("CommandExitException expected but not found.");
     } catch (CommandExitException ex) {
       Assert.assertEquals("Process failed with exit code: 10", ex.getMessage());

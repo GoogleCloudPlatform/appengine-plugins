@@ -16,11 +16,11 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
-public class MessageCollector implements MessageListener {
+public class MessageCollector implements ConsoleListener {
   StringBuilder output = new StringBuilder("");
 
   @Override
-  public void message(String rawString) {
+  public void console(String rawString) {
     output.append(rawString);
   }
 

@@ -50,7 +50,7 @@ public class InstallerFactoryTest {
 
   @Test
   public void testNewInstaller_latestVersion() {
-    Installer<?> installer = new InstallerFactory(os, false).newInstaller(null, null);
+    Installer<?> installer = new InstallerFactory(os, false).newInstaller(null, null, null);
     Assert.assertEquals(
         expectedInstallScriptProviderClass, installer.getInstallScriptProvider().getClass());
   }

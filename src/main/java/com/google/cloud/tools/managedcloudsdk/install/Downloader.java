@@ -16,10 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.textbars.TextBarFactory;
-import com.google.cloud.tools.managedcloudsdk.textbars.TextProgressBar;
-import com.google.common.annotations.VisibleForTesting;
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,32 +26,30 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.logging.Logger;
 
 /** Downloader for downloading a single Cloud SDK archive. */
 final class Downloader {
+
+  private static final Logger logger = Logger.getLogger(Downloader.class.getName());
 
   static final int BUFFER_SIZE = 8 * 1024;
   private final URL address;
   private final Path destinationFile;
   private final String userAgentString;
-  private final MessageListener messageListener;
+  private final ProgressListener progressListener;
 
   /** Use {@link DownloaderFactory} to instantiate. */
   Downloader(
-      URL source, Path destinationFile, String userAgentString, MessageListener messageListener) {
+      URL source, Path destinationFile, String userAgentString, ProgressListener progressListener) {
     this.address = source;
     this.destinationFile = destinationFile;
     this.userAgentString = userAgentString;
-    this.messageListener = messageListener;
+    this.progressListener = progressListener;
   }
 
   /** Download an archive, this will NOT overwrite a previously existing file. */
   public void download() throws IOException, InterruptedException {
-    download(new TextBarFactory());
-  }
-
-  @VisibleForTesting
-  void download(TextBarFactory textBarFactory) throws IOException, InterruptedException {
     if (!Files.exists(destinationFile.getParent())) {
       Files.createDirectories(destinationFile.getParent());
     }
@@ -68,36 +63,30 @@ final class Downloader {
     try (InputStream in = connection.getInputStream()) {
       long contentLength = connection.getContentLengthLong();
 
-      messageListener.message("Downloading " + address + "\n");
+      logger.info("Downloading " + address + " to " + destinationFile);
 
       try (BufferedOutputStream out =
           new BufferedOutputStream(
               Files.newOutputStream(destinationFile, StandardOpenOption.CREATE_NEW))) {
 
-        textBarFactory.newDividerBar(messageListener).show();
-        textBarFactory
-            .newInfoBar(
-                messageListener, "Downloading SDK (" + String.valueOf(contentLength) + " bytes)")
-            .show();
-        TextProgressBar progressBar = textBarFactory.newProgressBar(messageListener, contentLength);
-        progressBar.start();
+        progressListener.update("Downloading " + String.valueOf(contentLength) + " bytes");
 
         int bytesRead;
+        long totalRead = 0;
         byte[] buffer = new byte[BUFFER_SIZE];
 
         while ((bytesRead = in.read(buffer)) != -1) {
           if (Thread.currentThread().isInterrupted()) {
-            messageListener.message("Download was interrupted\n");
-            messageListener.message("Cleaning up...\n");
+            logger.warning("Download was interrupted\n");
             cleanUp();
             throw new InterruptedException("Download was interrupted");
           }
 
           out.write(buffer, 0, bytesRead);
-          // update progress
-          progressBar.update(bytesRead);
+          totalRead = totalRead + bytesRead;
+          // update progress, normalize to 100
+          progressListener.update((int) (totalRead * 100 / contentLength));
         }
-        progressBar.done();
       }
     }
   }

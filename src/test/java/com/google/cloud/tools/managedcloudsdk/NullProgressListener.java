@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.textbars;
+package com.google.cloud.tools.managedcloudsdk;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+public class NullProgressListener implements ProgressListener {
+  @Override
+  public void start(String message, int totalWork) {}
 
-public class TextBarFactory {
+  @Override
+  public void update(String message) {}
 
-  public TextDividerBar newDividerBar(MessageListener messageListener) {
-    return new TextDividerBar(messageListener);
-  }
+  @Override
+  public void update(int workDone) {}
 
-  public TextInfoBar newInfoBar(MessageListener messageListener, String text) {
-    return new TextInfoBar(messageListener, text);
-  }
-
-  public TextProgressBar newProgressBar(MessageListener messageListener, long contentSize) {
-    return new TextProgressBar(messageListener, contentSize);
-  }
+  @Override
+  public void done() {}
 }

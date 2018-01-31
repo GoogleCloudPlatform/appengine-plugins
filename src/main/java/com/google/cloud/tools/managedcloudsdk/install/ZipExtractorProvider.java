@@ -16,9 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
-import com.google.cloud.tools.managedcloudsdk.textbars.TextBarFactory;
-import com.google.cloud.tools.managedcloudsdk.textbars.TextProgressBar;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -28,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.IOUtils;
@@ -40,22 +38,14 @@ import org.apache.commons.compress.utils.IOUtils;
  */
 final class ZipExtractorProvider implements ExtractorProvider {
 
+  private static final Logger logger = Logger.getLogger(ZipExtractorProvider.class.getName());
+
   /** Only instantiated in {@link ExtractorFactory}. */
   @VisibleForTesting
   ZipExtractorProvider() {}
 
   @Override
-  public void extract(Path archive, Path destination, MessageListener messageListener)
-      throws IOException {
-    extract(archive, destination, messageListener, new TextBarFactory());
-  }
-
-  public void extract(
-      Path archive,
-      Path destination,
-      MessageListener messageListener,
-      TextBarFactory textBarFactory)
-      throws IOException {
+  public void extract(Path archive, Path destination) throws IOException {
     // Use ZipFile instead of ZipArchiveInputStream so that we can obtain file permissions
     // on unix-like systems via getUnixMode(). ZipArchiveInputStream doesn't have access to
     // all the zip file data and will return "0" for any call to getUnixMode().
@@ -67,14 +57,13 @@ final class ZipExtractorProvider implements ExtractorProvider {
         count++;
       }
 
-      TextProgressBar progressBar = textBarFactory.newProgressBar(messageListener, count);
-      progressBar.start();
+      // TextProgressBar progressBar = textBarFactory.newProgressBar(messageListener, count);
       Enumeration<ZipArchiveEntry> zipEntries = zipFile.getEntries();
       while (zipEntries.hasMoreElements()) {
         ZipArchiveEntry entry = zipEntries.nextElement();
         final Path entryTarget = destination.resolve(entry.getName());
 
-        progressBar.update(1);
+        logger.fine(entryTarget.toString());
 
         if (entry.isDirectory()) {
           if (!Files.exists(entryTarget)) {
@@ -97,7 +86,6 @@ final class ZipExtractorProvider implements ExtractorProvider {
           }
         }
       }
-      progressBar.done();
     }
   }
 }

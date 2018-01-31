@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.components;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -37,7 +37,7 @@ public class SdkComponentInstallerTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private MessageListener mockMessageListener;
+  @Mock private ConsoleListener mockConsoleListener;
   @Mock private CommandRunner mockCommandRunner;
 
   private Path fakeGcloud;
@@ -53,8 +53,8 @@ public class SdkComponentInstallerTest {
   public void testInstallComponent_successRun()
       throws InterruptedException, CommandExitException, CommandExecutionException {
     SdkComponentInstaller testInstaller = new SdkComponentInstaller(fakeGcloud, mockCommandRunner);
-    testInstaller.installComponent(testComponent, mockMessageListener);
-    Mockito.verify(mockCommandRunner).run(expectedCommand(), null, null, mockMessageListener);
+    testInstaller.installComponent(testComponent, mockConsoleListener);
+    Mockito.verify(mockCommandRunner).run(expectedCommand(), null, null, mockConsoleListener);
   }
 
   private List<String> expectedCommand() {

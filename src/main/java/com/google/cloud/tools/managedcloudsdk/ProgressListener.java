@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
-public interface MessageListener {
-  /**
-   * Process a raw message. Implementers should not add a newline to the end, it may contain newline
-   * characters of its own.
-   *
-   * @param rawString a partial or full messages with all necessary newlines
-   */
-  void message(String rawString);
+public interface ProgressListener {
+  // progress
+  void start(String message, int totalWork);
+
+  void update(String message);
+
+  void update(int workDone);
+
+  void done();
 }

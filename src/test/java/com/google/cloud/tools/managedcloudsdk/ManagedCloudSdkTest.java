@@ -38,6 +38,7 @@ public class ManagedCloudSdkTest {
 
   private static final String FIXED_VERSION = "174.0.0";
   private final MessageCollector testListener = new MessageCollector();
+  private final ProgressListener testProgressListener = new NullProgressListener();
   private final SdkComponent testComponent = SdkComponent.APP_ENGINE_JAVA;
 
   @Rule
@@ -62,7 +63,7 @@ public class ManagedCloudSdkTest {
     Assert.assertFalse(testSdk.hasComponent(testComponent));
     Assert.assertFalse(testSdk.isUpToDate());
 
-    testSdk.newInstaller().install(testListener);
+    testSdk.newInstaller().install(testProgressListener, testListener);
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertFalse(testSdk.hasComponent(testComponent));
@@ -94,7 +95,7 @@ public class ManagedCloudSdkTest {
     Assert.assertFalse(testSdk.isInstalled());
     Assert.assertFalse(testSdk.isUpToDate());
 
-    testSdk.newInstaller().install(testListener);
+    testSdk.newInstaller().install(testProgressListener, testListener);
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.isUpToDate());
