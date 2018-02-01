@@ -69,10 +69,10 @@ final class Downloader {
           new BufferedOutputStream(
               Files.newOutputStream(destinationFile, StandardOpenOption.CREATE_NEW))) {
 
-        progressListener.update("Downloading " + String.valueOf(contentLength) + " bytes");
+        progressListener.start(
+            "Downloading " + String.valueOf(contentLength) + " bytes", contentLength);
 
         int bytesRead;
-        long totalRead = 0;
         byte[] buffer = new byte[BUFFER_SIZE];
 
         while ((bytesRead = in.read(buffer)) != -1) {
@@ -83,13 +83,11 @@ final class Downloader {
           }
 
           out.write(buffer, 0, bytesRead);
-          totalRead = totalRead + bytesRead;
-          // The installer is responsible for progress from [0 to 100], if you plan on reusing this,
-          // pass the offset in as a parameter. We normalize progress to 100.
-          progressListener.update((int) (totalRead * 100 / contentLength));
+          progressListener.update(bytesRead);
         }
       }
     }
+    progressListener.done();
   }
 
   private void cleanUp() throws IOException {

@@ -47,10 +47,10 @@ final class Extractor<T extends ExtractorProvider> {
 
   /** Extract an archive. */
   public void extract() throws IOException, InterruptedException {
-    progressListener.update("Extracting archive: " + archive.getFileName());
+    progressListener.start("Extracting archive: " + archive.getFileName(), 2);
     // The extractor is responsible for progress from [100 to 200], if you plan on reusing this,
     // pass the offset in as a parameter.
-    progressListener.update(150);
+    progressListener.update(1);
 
     try {
       extractorProvider.extract(archive, destination);
@@ -71,7 +71,8 @@ final class Extractor<T extends ExtractorProvider> {
       logger.warning("Process was interrupted");
       throw new InterruptedException("Process was interrupted");
     }
-    progressListener.update(200);
+    progressListener.update(1);
+    progressListener.done();
   }
 
   @VisibleForTesting

@@ -67,11 +67,8 @@ public class ExtractorTest {
 
     Assert.assertTrue(Files.exists(extractionDestination));
     Mockito.verify(mockExtractorProvider).extract(extractionSource, extractionDestination);
-    Mockito.verify(mockProgressListener)
-        .update("Extracting archive: " + extractionSource.getFileName());
-    Mockito.verify(mockProgressListener).update(150);
-    Mockito.verify(mockProgressListener).update(200);
-    Mockito.verifyNoMoreInteractions(mockProgressListener);
+    ProgressVerifier.verifyProgress(
+        mockProgressListener, "Extracting archive: " + extractionSource.getFileName());
   }
 
   @Test
@@ -105,11 +102,7 @@ public class ExtractorTest {
     }
 
     Assert.assertFalse(Files.exists(extractionDestination));
-    Mockito.verify(mockProgressListener)
-        .update("Extracting archive: " + extractionSource.getFileName());
-    Mockito.verify(mockProgressListener).update(150);
     Mockito.verify(mockExtractorProvider).extract(extractionSource, extractionDestination);
-    Mockito.verify(mockProgressListener, Mockito.never()).update(200);
-    Mockito.verifyNoMoreInteractions(mockProgressListener);
+    Mockito.verify(mockProgressListener, Mockito.never()).done();
   }
 }

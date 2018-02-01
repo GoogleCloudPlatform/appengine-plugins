@@ -93,6 +93,8 @@ public class SdkInstallerTest {
     Mockito.when(fileResourceProviderFactory.newFileResourceProvider())
         .thenReturn(fakeFileResourceProvider);
 
+    Mockito.when(progressListener.newChild(Mockito.any(Long.class))).thenReturn(progressListener);
+
     // SUCCESS MOCKS
     Mockito.when(
             successfulDownloaderFactory.newDownloader(

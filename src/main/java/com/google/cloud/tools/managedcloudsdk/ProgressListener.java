@@ -17,11 +17,18 @@
 package com.google.cloud.tools.managedcloudsdk;
 
 public interface ProgressListener {
-  void start(String message, int totalWork);
+  void start(String message, long totalWork);
 
-  void update(String message);
-
-  void update(int workDone);
+  void update(long workDone); // not cumulative
 
   void done();
+
+  /**
+   * Create a new progressListener child, allocation is how the amount of work of this child has
+   * been assigned by the parent. The implementer of child listeners must normalize their values to
+   * allocation.
+   *
+   * <pre>totalWorkDoneNormalized = totalWorkDone * allocation / totalWork</pre>
+   */
+  ProgressListener newChild(long allocation);
 }

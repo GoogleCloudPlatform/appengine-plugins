@@ -18,14 +18,16 @@ package com.google.cloud.tools.managedcloudsdk;
 
 public class NullProgressListener implements ProgressListener {
   @Override
-  public void start(String message, int totalWork) {}
+  public void start(String message, long totalWork) {}
 
   @Override
-  public void update(String message) {}
-
-  @Override
-  public void update(int workDone) {}
+  public void update(long workDone) {}
 
   @Override
   public void done() {}
+
+  @Override
+  public ProgressListener newChild(long allocation) {
+    return new NullProgressListener();
+  }
 }

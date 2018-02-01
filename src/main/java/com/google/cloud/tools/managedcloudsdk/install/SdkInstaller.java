@@ -58,13 +58,13 @@ public class SdkInstaller {
     FileResourceProvider fileResourceProvider =
         fileResourceProviderFactory.newFileResourceProvider();
 
-    // CLEANUP: remove old downloaded archive if exists
+    // Cleanup, remove old downloaded archive if exists
     if (Files.isRegularFile(fileResourceProvider.getArchiveDestination())) {
       logger.info("Removing stale archive: " + fileResourceProvider.getArchiveDestination());
       Files.delete(fileResourceProvider.getArchiveDestination());
     }
 
-    // CLEANUP: Remove old SDK directory if exists
+    // Cleanup, remove old SDK directory if exists
     if (Files.exists(fileResourceProvider.getArchiveExtractionDestination())) {
       logger.info(
           "Removing stale install: " + fileResourceProvider.getArchiveExtractionDestination());
@@ -73,15 +73,15 @@ public class SdkInstaller {
           fileResourceProvider.getArchiveExtractionDestination(), new FileDeleteVisitor());
     }
 
-    progressListener.start("Installing Cloud SDK", 300);
+    progressListener.start("Installing Cloud SDK", installerFactory != null ? 300 : 200);
 
-    // Download and verify
-    downloaderFactory
-        .newDownloader(
+    // download and verify
+    Downloader x =
+        downloaderFactory.newDownloader(
             fileResourceProvider.getArchiveSource(),
             fileResourceProvider.getArchiveDestination(),
-            progressListener)
-        .download();
+            progressListener.newChild(100));
+    x.download();
     if (!Files.isRegularFile(fileResourceProvider.getArchiveDestination())) {
       throw new SdkInstallerException(
           "Download succeeded but valid archive not found at "
@@ -94,7 +94,7 @@ public class SdkInstaller {
           .newExtractor(
               fileResourceProvider.getArchiveDestination(),
               fileResourceProvider.getArchiveExtractionDestination(),
-              progressListener)
+              progressListener.newChild(100))
           .extract();
       if (!Files.isDirectory(fileResourceProvider.getExtractedSdkHome())) {
         throw new SdkInstallerException(
@@ -111,7 +111,9 @@ public class SdkInstaller {
     if (installerFactory != null) {
       installerFactory
           .newInstaller(
-              fileResourceProvider.getExtractedSdkHome(), progressListener, consoleListener)
+              fileResourceProvider.getExtractedSdkHome(),
+              progressListener.newChild(100),
+              consoleListener)
           .install();
     }
 
@@ -122,7 +124,6 @@ public class SdkInstaller {
               + fileResourceProvider.getExtractedGcloud());
     }
 
-    progressListener.update("done");
     progressListener.done();
     return fileResourceProvider.getExtractedSdkHome();
   }

@@ -31,7 +31,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.AdditionalMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -99,11 +98,8 @@ public class DownloaderTest {
     Assert.assertTrue(Files.exists(destination));
     Assert.assertArrayEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
 
-    Mockito.verify(mockProgressListener)
-        .update("Downloading " + String.valueOf(testFileSize) + " bytes");
-    Mockito.verify(mockProgressListener, Mockito.atLeastOnce()).update(AdditionalMatchers.leq(99));
-    Mockito.verify(mockProgressListener).update(100);
-    Mockito.verifyNoMoreInteractions(mockProgressListener);
+    ProgressVerifier.verifyProgress(
+        mockProgressListener, "Downloading " + String.valueOf(testFileSize) + " bytes");
   }
 
   @Test
