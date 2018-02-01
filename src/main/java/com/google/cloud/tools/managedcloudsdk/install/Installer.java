@@ -62,6 +62,8 @@ final class Installer<T extends InstallScriptProvider> {
     command.add("--usage-reporting=" + usageReporting); // usage reporing passthrough
 
     progressListener.update("Installing Cloud SDK");
+    // the installer is responsible for progress from [200 to 300], if you plan on reusing this,
+    // pass the offset in as a parameter.
     progressListener.update(250);
     commandRunner.run(command, installedSdkRoot, null, consoleListener);
     progressListener.update(300);

@@ -17,7 +17,6 @@
 package com.google.cloud.tools.managedcloudsdk;
 
 public interface ProgressListener {
-  // progress
   void start(String message, int totalWork);
 
   void update(String message);

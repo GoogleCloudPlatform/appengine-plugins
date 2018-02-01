@@ -84,7 +84,8 @@ final class Downloader {
 
           out.write(buffer, 0, bytesRead);
           totalRead = totalRead + bytesRead;
-          // update progress, normalize to 100
+          // The installer is responsible for progress from [0 to 100], if you plan on reusing this,
+          // pass the offset in as a parameter. We normalize progress to 100.
           progressListener.update((int) (totalRead * 100 / contentLength));
         }
       }

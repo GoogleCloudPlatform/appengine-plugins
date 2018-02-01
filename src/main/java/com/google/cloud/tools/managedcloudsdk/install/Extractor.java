@@ -48,6 +48,8 @@ final class Extractor<T extends ExtractorProvider> {
   /** Extract an archive. */
   public void extract() throws IOException, InterruptedException {
     progressListener.update("Extracting archive: " + archive.getFileName());
+    // The extractor is responsible for progress from [100 to 200], if you plan on reusing this,
+    // pass the offset in as a parameter.
     progressListener.update(150);
 
     try {

@@ -50,13 +50,6 @@ final class ZipExtractorProvider implements ExtractorProvider {
     // on unix-like systems via getUnixMode(). ZipArchiveInputStream doesn't have access to
     // all the zip file data and will return "0" for any call to getUnixMode().
     try (ZipFile zipFile = new ZipFile(archive.toFile())) {
-      long count = 0;
-      Enumeration<ZipArchiveEntry> zipEntriesCounter = zipFile.getEntries();
-      while (zipEntriesCounter.hasMoreElements()) {
-        zipEntriesCounter.nextElement();
-        count++;
-      }
-
       // TextProgressBar progressBar = textBarFactory.newProgressBar(messageListener, count);
       Enumeration<ZipArchiveEntry> zipEntries = zipFile.getEntries();
       while (zipEntries.hasMoreElements()) {
