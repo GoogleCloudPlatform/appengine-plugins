@@ -17,10 +17,22 @@
 package com.google.cloud.tools.managedcloudsdk;
 
 public interface ProgressListener {
+  /**
+   * Start tracking progress for this task.
+   *
+   * @param message a message to display on the progress bar
+   * @param totalWork a total amount of work this progress listener handles, can special case to -1
+   *     where it is an unknown amount of work.
+   */
   void start(String message, long totalWork);
 
-  void update(long workDone); // not cumulative
+  /**
+   * Update the progress with an amount of work done since start or update was last called. It is
+   * NOT the total work done so far by this task.
+   */
+  void update(long workDone);
 
+  /** Task is complete. */
   void done();
 
   /**
@@ -28,7 +40,7 @@ public interface ProgressListener {
    * been assigned by the parent. The implementer of child listeners must normalize their values to
    * allocation.
    *
-   * <pre>totalWorkDoneNormalized = totalWorkDone * allocation / totalWork</pre>
+   * <pre>nomalizedTotalWorkDone = totalWorkDone * allocation / totalWork</pre>
    */
   ProgressListener newChild(long allocation);
 }
