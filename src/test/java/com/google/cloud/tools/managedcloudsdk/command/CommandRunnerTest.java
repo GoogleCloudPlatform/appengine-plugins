@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
@@ -42,7 +42,7 @@ public class CommandRunnerTest {
 
   @Mock private ProcessExecutorFactory mockProcessExecutorFactory;
   @Mock private ProcessExecutor mockProcessExecutor;
-  @Mock private MessageListener mockMessageListener;
+  @Mock private LineListener mockMessageListener;
   @Mock private AsyncStreamHandler mockStreamHandler;
   @Mock private AsyncStreamHandlerFactory mockStreamHandlerFactory;
 

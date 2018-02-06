@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import java.nio.file.Path;
 
 /** {@link Extractor} Factory. */
@@ -35,7 +35,7 @@ final class ExtractorFactory {
    * @throws UnknownArchiveTypeException if not ".tar.gz" or ".zip"
    */
   public Extractor<? extends ExtractorProvider> newExtractor(
-      Path archive, Path destination, MessageListener messageListener)
+      Path archive, Path destination, LineListener messageListener)
       throws UnknownArchiveTypeException {
 
     if (archive.toString().toLowerCase().endsWith(".tar.gz")) {

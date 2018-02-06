@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -31,5 +31,5 @@ interface ExtractorProvider {
    * @param messageListener a listener for extraction messages
    * @throws IOException if extractor fails
    */
-  void extract(Path archive, Path destination, MessageListener messageListener) throws IOException;
+  void extract(Path archive, Path destination, LineListener messageListener) throws IOException;
 }

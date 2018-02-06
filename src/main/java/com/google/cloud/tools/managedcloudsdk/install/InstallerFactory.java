@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.nio.file.Path;
@@ -47,7 +47,7 @@ final class InstallerFactory {
    * @return a {@link Installer} instance.
    */
   Installer<? extends InstallScriptProvider> newInstaller(
-      Path installedSdkRoot, MessageListener messageListener) {
+      Path installedSdkRoot, LineListener messageListener) {
 
     return new Installer<>(
         installedSdkRoot,

@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
+import com.google.cloud.tools.io.LineListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -127,11 +128,11 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.isUpToDate());
   }
 
-  private static class MessageCollector implements MessageListener {
+  private static class MessageCollector implements LineListener {
     StringBuilder output = new StringBuilder("");
 
     @Override
-    public void message(String rawString) {
+    public void onOutputLine(String rawString) {
       output.append(rawString);
     }
 

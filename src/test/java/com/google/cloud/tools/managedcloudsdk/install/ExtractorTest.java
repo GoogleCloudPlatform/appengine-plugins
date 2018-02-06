@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,7 +34,7 @@ import org.mockito.stubbing.Answer;
 public class ExtractorTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
-  @Mock private MessageListener mockMessageListener;
+  @Mock private LineListener mockMessageListener;
   @Mock private ExtractorProvider mockExtractorProvider;
 
   @Before
@@ -65,7 +65,8 @@ public class ExtractorTest {
     extractor.extract();
 
     Assert.assertTrue(Files.exists(extractionDestination));
-    Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource + "\n");
+    Mockito.verify(mockMessageListener)
+        .onOutputLine("Extracting archive: " + extractionSource + "\n");
     Mockito.verify(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
     Mockito.verifyNoMoreInteractions(mockMessageListener);
@@ -102,9 +103,10 @@ public class ExtractorTest {
     }
 
     Assert.assertFalse(Files.exists(extractionDestination));
-    Mockito.verify(mockMessageListener).message("Extracting archive: " + extractionSource + "\n");
     Mockito.verify(mockMessageListener)
-        .message("Extraction failed, cleaning up " + extractionDestination + "\n");
+        .onOutputLine("Extracting archive: " + extractionSource + "\n");
+    Mockito.verify(mockMessageListener)
+        .onOutputLine("Extraction failed, cleaning up " + extractionDestination + "\n");
     Mockito.verify(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockMessageListener);
     Mockito.verifyNoMoreInteractions(mockMessageListener);

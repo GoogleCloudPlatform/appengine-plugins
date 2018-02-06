@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class SdkInstallerTest {
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
   @Mock private FileResourceProviderFactory fileResourceProviderFactory;
-  @Mock private MessageListener messageListener;
+  @Mock private LineListener messageListener;
 
   @Mock private DownloaderFactory successfulDownloaderFactory;
   @Mock private Downloader successfulDownloader;

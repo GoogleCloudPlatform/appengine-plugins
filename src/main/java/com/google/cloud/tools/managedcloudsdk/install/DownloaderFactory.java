@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import java.net.URL;
 import java.nio.file.Path;
 
@@ -43,7 +43,7 @@ final class DownloaderFactory {
    * @param messageListener Message handler
    * @return a {@link Downloader} instance
    */
-  public Downloader newDownloader(URL source, Path destination, MessageListener messageListener) {
+  public Downloader newDownloader(URL source, Path destination, LineListener messageListener) {
     return new Downloader(source, destination, userAgentString, messageListener);
   }
 }

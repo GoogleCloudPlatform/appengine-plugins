@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -63,15 +63,19 @@ public class GenericArchivesVerifier {
   }
 
   public static void assertListenerReceivedExtractionMessages(
-      MessageListener messageListener, Path testRoot) {
+      LineListener messageListener, Path testRoot) {
     if (!MockUtil.isMock(messageListener)) {
       throw new IllegalArgumentException("Listener must be a mock.");
     }
 
     // tars allow for duplicate entries
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(ROOT) + "\n");
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(FILE_1) + "\n");
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(SUB) + "\n");
-    Mockito.verify(messageListener, Mockito.atLeastOnce()).message(testRoot.resolve(FILE_2) + "\n");
+    Mockito.verify(messageListener, Mockito.atLeastOnce())
+        .onOutputLine(testRoot.resolve(ROOT) + "\n");
+    Mockito.verify(messageListener, Mockito.atLeastOnce())
+        .onOutputLine(testRoot.resolve(FILE_1) + "\n");
+    Mockito.verify(messageListener, Mockito.atLeastOnce())
+        .onOutputLine(testRoot.resolve(SUB) + "\n");
+    Mockito.verify(messageListener, Mockito.atLeastOnce())
+        .onOutputLine(testRoot.resolve(FILE_2) + "\n");
   }
 }

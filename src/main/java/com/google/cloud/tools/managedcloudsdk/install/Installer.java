@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -31,7 +31,7 @@ final class Installer<T extends InstallScriptProvider> {
   private final Path installedSdkRoot;
   private final InstallScriptProvider installScriptProvider;
   private final boolean usageReporting;
-  private final MessageListener messageListener;
+  private final LineListener messageListener;
   private final CommandRunner commandRunner;
 
   /** Instantiated by {@link InstallerFactory}. */
@@ -39,7 +39,7 @@ final class Installer<T extends InstallScriptProvider> {
       Path installedSdkRoot,
       InstallScriptProvider installScriptProvider,
       boolean usageReporting,
-      MessageListener messageListener,
+      LineListener messageListener,
       CommandRunner commandRunner) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;

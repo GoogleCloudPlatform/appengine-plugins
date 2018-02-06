@@ -17,7 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
+import com.google.cloud.tools.io.LineListener;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -25,8 +25,7 @@ import java.util.concurrent.TimeUnit;
  * Provides a mechanism to wait for a successful start of a process by monitoring the process output
  * and checking for a specific message in it.
  */
-public class WaitingProcessOutputLineListener
-    implements ProcessOutputLineListener, ProcessExitListener {
+public class WaitingProcessOutputLineListener implements LineListener, ProcessExitListener {
   private final String message;
   private final int timeoutSeconds;
   private CountDownLatch waitLatch;

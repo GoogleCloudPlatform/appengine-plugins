@@ -19,8 +19,8 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 import static java.lang.ProcessBuilder.Redirect;
 
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.common.base.Charsets;
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +35,8 @@ import java.util.Scanner;
  */
 public class DefaultProcessRunner implements ProcessRunner {
   private final boolean async;
-  private final List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
-  private final List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
+  private final List<LineListener> stdOutLineListeners = new ArrayList<>();
+  private final List<LineListener> stdErrLineListeners = new ArrayList<>();
   private final List<ProcessExitListener> exitListeners;
   private final List<ProcessStartListener> startListeners;
   private final boolean inheritProcessOutput;
@@ -77,8 +77,8 @@ public class DefaultProcessRunner implements ProcessRunner {
       boolean async,
       List<ProcessExitListener> exitListeners,
       List<ProcessStartListener> startListeners,
-      List<ProcessOutputLineListener> stdOutLineListeners,
-      List<ProcessOutputLineListener> stdErrLineListeners) {
+      List<LineListener> stdOutLineListeners,
+      List<LineListener> stdErrLineListeners) {
     this(async, exitListeners, startListeners, false /* inheritProcessOutput */);
     this.stdOutLineListeners.addAll(stdOutLineListeners);
     this.stdErrLineListeners.addAll(stdErrLineListeners);
@@ -162,7 +162,7 @@ public class DefaultProcessRunner implements ProcessRunner {
           public void run() {
             while (stdOut.hasNextLine() && !Thread.interrupted()) {
               String line = stdOut.nextLine();
-              for (ProcessOutputLineListener stdOutLineListener : stdOutLineListeners) {
+              for (LineListener stdOutLineListener : stdOutLineListeners) {
                 stdOutLineListener.onOutputLine(line);
               }
             }
@@ -182,7 +182,7 @@ public class DefaultProcessRunner implements ProcessRunner {
           public void run() {
             while (stdErr.hasNextLine() && !Thread.interrupted()) {
               String line = stdErr.nextLine();
-              for (ProcessOutputLineListener stdErrLineListener : stdErrLineListeners) {
+              for (LineListener stdErrLineListener : stdErrLineListeners) {
                 stdErrLineListener.onOutputLine(line);
               }
             }

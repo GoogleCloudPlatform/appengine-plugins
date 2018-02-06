@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.components;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -36,7 +36,7 @@ public class SdkComponentInstallerTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private MessageListener mockMessageListener;
+  @Mock private LineListener mockMessageListener;
   @Mock private CommandRunner mockCommandRunner;
 
   private Path fakeGcloud;

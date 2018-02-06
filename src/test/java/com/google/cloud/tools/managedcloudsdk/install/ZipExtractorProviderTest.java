@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,7 +37,7 @@ public class ZipExtractorProviderTest {
     Path testArchive =
         Paths.get(getClass().getClassLoader().getResource("genericArchives/test.zip").toURI());
     Assert.assertTrue(Files.exists(testArchive));
-    MessageListener messageListener = Mockito.mock(MessageListener.class);
+    LineListener messageListener = Mockito.mock(LineListener.class);
 
     ZipExtractorProvider zipExtractorProvider = new ZipExtractorProvider();
 

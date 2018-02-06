@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -37,7 +37,7 @@ public class InstallerTest {
 
   @Mock private InstallScriptProvider mockInstallScriptProvider;
   @Mock private CommandRunner mockCommandRunner;
-  @Mock private MessageListener mockMessageListener;
+  @Mock private LineListener mockMessageListener;
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 

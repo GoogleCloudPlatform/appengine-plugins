@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.managedcloudsdk.MessageListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.Version;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
@@ -46,7 +46,7 @@ public class SdkInstaller {
   }
 
   /** Download and install a new Cloud SDK. */
-  public Path install(final MessageListener messageListener)
+  public Path install(final LineListener messageListener)
       throws IOException, InterruptedException, SdkInstallerException, CommandExecutionException,
           CommandExitException {
 
@@ -55,14 +55,14 @@ public class SdkInstaller {
 
     // CLEANUP: remove old downloaded archive if exists
     if (Files.isRegularFile(fileResourceProvider.getArchiveDestination())) {
-      messageListener.message(
+      messageListener.onOutputLine(
           "Removing stale archive: " + fileResourceProvider.getArchiveDestination() + "\n");
       Files.delete(fileResourceProvider.getArchiveDestination());
     }
 
     // CLEANUP: Remove old SDK directory if exists
     if (Files.exists(fileResourceProvider.getArchiveExtractionDestination())) {
-      messageListener.message(
+      messageListener.onOutputLine(
           "Removing stale install: "
               + fileResourceProvider.getArchiveExtractionDestination()
               + "\n");

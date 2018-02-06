@@ -29,7 +29,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
+import com.google.cloud.tools.io.LineListener;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class CloudSdkTest {
   private Path root;
   private CloudSdk.Builder builder;
 
-  @Mock private ProcessOutputLineListener outputListener;
+  @Mock private LineListener outputListener;
 
   @Before
   public void setup() {
