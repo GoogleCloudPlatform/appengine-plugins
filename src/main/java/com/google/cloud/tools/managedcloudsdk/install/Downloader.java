@@ -61,6 +61,7 @@ final class Downloader {
     connection.setRequestProperty("User-Agent", userAgentString);
 
     try (InputStream in = connection.getInputStream()) {
+      // note : contentLength can potentially be -1 if it is unknown.
       long contentLength = connection.getContentLengthLong();
 
       logger.info("Downloading " + address + " to " + destinationFile);

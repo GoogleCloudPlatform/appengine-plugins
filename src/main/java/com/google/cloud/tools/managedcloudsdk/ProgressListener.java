@@ -27,7 +27,7 @@ public interface ProgressListener {
   void start(String message, long totalWork);
 
   /**
-   * Update the progress with an amount of work done since start or update was last called. It is
+   * Update the progress with an increment of work done since start or update was last called. It is
    * NOT the total work done so far by this task.
    */
   void update(long workDone);
@@ -40,7 +40,7 @@ public interface ProgressListener {
    * been assigned by the parent. The implementer of child listeners must normalize their values to
    * allocation.
    *
-   * <pre>nomalizedTotalWorkDone = totalWorkDone * allocation / totalWork</pre>
+   * <pre>normalizedWorkDone = workDone * allocation / totalWork</pre>
    */
   ProgressListener newChild(long allocation);
 }
