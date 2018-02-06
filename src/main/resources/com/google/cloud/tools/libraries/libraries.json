@@ -13,7 +13,7 @@
       "site": "https://cloud.google.com/speech/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/speech/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.speech.v1 packages",
-      "launchStage": "alpha",  
+      "launchStage": "alpha",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-speech",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -38,7 +38,7 @@
       "site": "https://cloud.google.com/compute/docs/oslogin/rest/",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/oslogin/v1/package-summary.html",
       "infotip": "The com.google.cloud.oslogin.v1 packages",
-      "launchStage": "alpha",  
+      "launchStage": "alpha",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-os-login",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -63,7 +63,7 @@
       "site": "https://dialogflow.com/",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/dialogflow/v2beta1/package-summary.html",
       "infotip": "The com.google.cloud.dialogflow.v2beta1 packages",
-      "launchStage": "alpha",  
+      "launchStage": "alpha",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-os-login",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -94,7 +94,7 @@
       "site": "https://cloud.google.com/speech/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/?com/google/cloud/resourcemanager/package-summary.html",
       "infotip": "The com.google.cloud.speech.resourcemanager packages",
-      "launchStage": "alpha",  
+      "launchStage": "alpha",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-resourcemanager",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -119,7 +119,7 @@
       "site": "https://cloud.google.com/dlp/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/dlp/v2beta1/package-summary.html",
       "infotip": "The com.google.cloud.dlp.v2beta1 packages",
-      "launchStage": "beta",  
+      "launchStage": "beta",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-dlp",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -143,50 +143,13 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/videointelligence/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.videointelligence packages",
-      "launchStage": "beta",  
+      "launchStage": "beta",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-video-intelligence",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-video-intelligence",
          "version": "0.33.0-beta"
-       }
-      }
-    ]
-  },
-  {
-    "name": "Compute Engine",
-    "id": "computeengine",
-    "serviceName": "compute.googleapis.com",
-    "serviceRoles": [
-      "roles/compute.admin",
-      "roles/compute.imageUser",
-      "roles/compute.instanceAdmin",
-      "roles/compute.instanceAdmin.v1",
-      "roles/compute.loadBalancerAdmin",
-      "roles/compute.networkAdmin",
-      "roles/compute.networkUser",
-      "roles/compute.networkViewer",
-      "roles/compute.securityAdmin"
-    ],
-    "documentation": "https://cloud.google.com/compute/docs/apis",
-    "description": "Google Compute Engine lets you create and run virtual machines on Google infrastructure.",
-    "transports": ["http"],
-    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/compute-engine.svg",
-    "clients": [
-      {
-      "name": "Java Client Libraries for the Google Compute Engine API (deprecated)",
-      "language": "java",
-      "site": "https://cloud.google.com/compute/docs/api/libraries#google_apis_java_client_library",
-      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/compute/deprecated/package-summary.html",
-      "infotip": "The com.google.cloud.compute packages",
-      "launchStage": "alpha",  
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-compute",
-      "languageLevel": "1.7.0",
-      "mavenCoordinates": {
-         "groupId": "com.google.cloud",
-         "artifactId": "google-cloud-compute",
-         "version": "0.33.0-alpha"
        }
       }
     ]
@@ -213,7 +176,7 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/monitoring/v3/package-summary.html",
       "infotip": "The com.google.cloud.monitoring.v3 packages",
-      "launchStage": "beta",  
+      "launchStage": "beta",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-monitoring",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -244,7 +207,7 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/errorreporting/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.errorreporting.v1beta1 packages",
-      "launchStage": "beta",  
+      "launchStage": "beta",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-errorreporting",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -268,7 +231,7 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/firestore/package-summary.html",
       "infotip": "The com.google.cloud.firestore packages",
-      "launchStage": "beta",  
+      "launchStage": "beta",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-firestore",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -298,7 +261,7 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/trace/v1/package-summary.html",
       "infotip": "The com.google.cloud.trace.v1 packages",
-      "launchStage": "beta",  
+      "launchStage": "beta",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-trace",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -329,7 +292,7 @@
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/dns/package-summary.html",
       "infotip": "The com.google.cloud.dns packages",
-      "launchStage": "alpha",  
+      "launchStage": "alpha",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-dns",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -354,7 +317,7 @@
       "site": "https://cloud.google.com/vision/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/vision/v1/package-summary.html",
       "infotip": "The com.google.cloud.vision.v1 packages",
-      "launchStage": "GA",  
+      "launchStage": "GA",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-vision",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -380,7 +343,7 @@
       "site": "https://cloud.google.com/natural-language/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/language/v1/package-summary.html",
       "infotip": "The com.google.cloud.language.v1 packages",
-      "launchStage": "GA",  
+      "launchStage": "GA",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-language",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -413,7 +376,7 @@
       "site": "https://cloud.google.com/spanner/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/spanner/package-summary.html",
       "infotip": "The com.google.cloud.spanner packages",
-      "launchStage": "beta",  
+      "launchStage": "beta",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-spanner",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -446,7 +409,7 @@
       "site": "https://cloud.google.com/pubsub/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/pubsub/v1/package-summary.html",
       "infotip": "The com.google.cloud.pubsub.v1 packages",
-      "launchStage": "beta",  
+      "launchStage": "beta",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-pubsub",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -480,7 +443,7 @@
       "site": "https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/bigquery/package-summary.html",
       "infotip": "The com.google.cloud.bigquery packages",
-      "launchStage": "beta",  
+      "launchStage": "beta",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -513,7 +476,7 @@
       "site": "https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/datastore/package-summary.html",
       "infotip": "The com.google.cloud.datastore packages",
-      "launchStage": "GA",  
+      "launchStage": "GA",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-datastore",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -545,7 +508,7 @@
       "site": "https://cloud.google.com/storage/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/storage/package-summary.html",
       "infotip": "The com.google.cloud.storage packages for client side access to GCS",
-      "launchStage": "GA",  
+      "launchStage": "GA",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-storage",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -570,7 +533,7 @@
       "site": "https://cloud.google.com/translate/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/translate/package-summary.html",
       "infotip": "The com.google.cloud.translate packages for client side access to the Google Cloud Translation API",
-      "launchStage": "GA",  
+      "launchStage": "GA",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-translate",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -603,7 +566,7 @@
       "site": "https://cloud.google.com/logging/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/logging/package-summary.html",
       "infotip": "The com.google.cloud.logging packages for controlling Stackdriver logging",
-      "launchStage": "GA",  
+      "launchStage": "GA",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-logging",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
