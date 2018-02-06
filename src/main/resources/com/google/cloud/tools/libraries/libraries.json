@@ -175,10 +175,10 @@
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/compute-engine.svg",
     "clients": [
       {
-      "name": "Java Client Libraries for the Google Compute Engine API",
+      "name": "Java Client Libraries for the Google Compute Engine API (deprecated)",
       "language": "java",
       "site": "https://cloud.google.com/compute/docs/api/libraries#google_apis_java_client_library",
-      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/compute/package-summary.html",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/compute/deprecated/package-summary.html",
       "infotip": "The com.google.cloud.compute packages",
       "launchStage": "alpha",  
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-compute",
