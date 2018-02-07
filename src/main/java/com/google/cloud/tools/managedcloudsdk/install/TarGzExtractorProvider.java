@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -42,13 +43,20 @@ final class TarGzExtractorProvider implements ExtractorProvider {
   TarGzExtractorProvider() {}
 
   @Override
-  public void extract(Path archive, Path destination) throws IOException {
+  public void extract(Path archive, Path destination, ProgressListener progressListener)
+      throws IOException {
+
+    progressListener.start("Extracting archive: " + archive.getFileName(), -1);
+
     GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(Files.newInputStream(archive));
     try (TarArchiveInputStream in = new TarArchiveInputStream(gzipIn)) {
       TarArchiveEntry entry;
       while ((entry = in.getNextTarEntry()) != null) {
         final Path entryTarget = destination.resolve(entry.getName());
+
+        progressListener.update(1);
         logger.fine(entryTarget.toString());
+
         if (entry.isDirectory()) {
           if (!Files.exists(entryTarget)) {
             Files.createDirectories(entryTarget);
@@ -70,6 +78,7 @@ final class TarGzExtractorProvider implements ExtractorProvider {
           logger.warning("Skipping entry (unknown type): " + entry.getName());
         }
       }
+      progressListener.done();
     }
   }
 }

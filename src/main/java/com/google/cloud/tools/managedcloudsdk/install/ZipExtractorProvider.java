@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -45,7 +46,11 @@ final class ZipExtractorProvider implements ExtractorProvider {
   ZipExtractorProvider() {}
 
   @Override
-  public void extract(Path archive, Path destination) throws IOException {
+  public void extract(Path archive, Path destination, ProgressListener progressListener)
+      throws IOException {
+
+    progressListener.start("Extracting archive: " + archive.getFileName(), -1);
+
     // Use ZipFile instead of ZipArchiveInputStream so that we can obtain file permissions
     // on unix-like systems via getUnixMode(). ZipArchiveInputStream doesn't have access to
     // all the zip file data and will return "0" for any call to getUnixMode().
@@ -56,6 +61,7 @@ final class ZipExtractorProvider implements ExtractorProvider {
         ZipArchiveEntry entry = zipEntries.nextElement();
         final Path entryTarget = destination.resolve(entry.getName());
 
+        progressListener.update(1);
         logger.fine(entryTarget.toString());
 
         if (entry.isDirectory()) {
@@ -80,5 +86,6 @@ final class ZipExtractorProvider implements ExtractorProvider {
         }
       }
     }
+    progressListener.done();
   }
 }

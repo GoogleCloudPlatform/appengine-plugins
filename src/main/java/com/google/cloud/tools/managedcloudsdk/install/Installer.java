@@ -61,10 +61,8 @@ final class Installer<T extends InstallScriptProvider> {
     command.add("--quiet"); // don't accept user input during install
     command.add("--usage-reporting=" + usageReporting); // usage reporing passthrough
 
-    progressListener.start("Installing Cloud SDK", 2);
-    progressListener.update(1);
+    progressListener.start("Installing Cloud SDK", -1);
     commandRunner.run(command, installedSdkRoot, null, consoleListener);
-    progressListener.update(1);
     progressListener.done();
   }
 

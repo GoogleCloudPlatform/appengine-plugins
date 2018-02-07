@@ -24,6 +24,9 @@ public class NullProgressListener implements ProgressListener {
   public void update(long workDone) {}
 
   @Override
+  public void update(String message) {}
+
+  @Override
   public void done() {}
 
   @Override

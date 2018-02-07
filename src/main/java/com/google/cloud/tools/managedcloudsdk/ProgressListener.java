@@ -18,6 +18,12 @@ package com.google.cloud.tools.managedcloudsdk;
 
 public interface ProgressListener {
   /**
+   * For tasks where total work cannot be determined pass UNKNOWN. update(long) can still be called
+   * with increments of work done.
+   */
+  long UNKNOWN = -1;
+
+  /**
    * Start tracking progress for this task.
    *
    * @param message a message to display on the progress bar
@@ -31,6 +37,9 @@ public interface ProgressListener {
    * NOT the total work done so far by this task.
    */
   void update(long workDone);
+
+  /** Update the progress message. */
+  void update(String message);
 
   /** Task is complete. */
   void done();

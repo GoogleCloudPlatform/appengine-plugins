@@ -47,11 +47,9 @@ final class Extractor<T extends ExtractorProvider> {
 
   /** Extract an archive. */
   public void extract() throws IOException, InterruptedException {
-    progressListener.start("Extracting archive: " + archive.getFileName(), 2);
-    progressListener.update(1);
 
     try {
-      extractorProvider.extract(archive, destination);
+      extractorProvider.extract(archive, destination, progressListener);
     } catch (IOException ex) {
       try {
         logger.warning("Extraction failed, cleaning up " + destination);
@@ -69,8 +67,6 @@ final class Extractor<T extends ExtractorProvider> {
       logger.warning("Process was interrupted");
       throw new InterruptedException("Process was interrupted");
     }
-    progressListener.update(1);
-    progressListener.done();
   }
 
   @VisibleForTesting

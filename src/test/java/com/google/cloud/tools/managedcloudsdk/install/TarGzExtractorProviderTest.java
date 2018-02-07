@@ -16,18 +16,28 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class TarGzExtractorProviderTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
+  @Mock private ProgressListener mockProgressListener;
+
+  @Before
+  public void initMocks() {
+    MockitoAnnotations.initMocks(this);
+  }
 
   @Test
   public void testCall() throws Exception {
@@ -38,12 +48,15 @@ public class TarGzExtractorProviderTest {
 
     TarGzExtractorProvider tarGzExtractorProvider = new TarGzExtractorProvider();
 
-    tarGzExtractorProvider.extract(testArchive, extractionRoot);
+    tarGzExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
 
     GenericArchivesVerifier.assertArchiveExtraction(extractionRoot);
     // only check file permissions on non-windows
     if (!System.getProperty("os.name").toLowerCase(Locale.ENGLISH).contains("windows")) {
       GenericArchivesVerifier.assertFilePermissions(extractionRoot);
     }
+
+    ProgressVerifier.verifyUnknownProgress(
+        mockProgressListener, "Extracting archive: " + testArchive.getFileName());
   }
 }

@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -27,7 +28,9 @@ interface ExtractorProvider {
    *
    * @param archive the archive to extract
    * @param destination the destination folder for extracted files
+   * @param progressListener the progress listener passthrough from the extractor
    * @throws IOException if extractor fails
    */
-  void extract(Path archive, Path destination) throws IOException;
+  void extract(Path archive, Path destination, ProgressListener progressListener)
+      throws IOException;
 }

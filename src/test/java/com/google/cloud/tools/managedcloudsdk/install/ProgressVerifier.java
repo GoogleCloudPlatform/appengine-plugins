@@ -40,4 +40,10 @@ public class ProgressVerifier {
     Mockito.verify(mockProgressListener).done();
     Mockito.verifyNoMoreInteractions(mockProgressListener);
   }
+
+  public static void verifyUnknownProgress(ProgressListener mockProgressListener, String message) {
+    Mockito.verify(mockProgressListener).start(message, -1);
+    // any update calls are irrelevant, they may or may not be called
+    Mockito.verify(mockProgressListener).done();
+  }
 }

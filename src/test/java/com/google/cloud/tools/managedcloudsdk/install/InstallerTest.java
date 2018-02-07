@@ -67,7 +67,7 @@ public class InstallerTest {
         .run(expectedCommand(false), fakeWorkingDirectory, null, mockConsoleListener);
     Mockito.verifyNoMoreInteractions(mockCommandRunner);
 
-    ProgressVerifier.verifyProgress(mockProgressListener, "Installing Cloud SDK");
+    ProgressVerifier.verifyUnknownProgress(mockProgressListener, "Installing Cloud SDK");
   }
 
   @Test
