@@ -49,7 +49,8 @@ final class ZipExtractorProvider implements ExtractorProvider {
   public void extract(Path archive, Path destination, ProgressListener progressListener)
       throws IOException {
 
-    progressListener.start("Extracting archive: " + archive.getFileName(), -1);
+    progressListener.start(
+        "Extracting archive: " + archive.getFileName(), ProgressListener.UNKNOWN);
 
     // Use ZipFile instead of ZipArchiveInputStream so that we can obtain file permissions
     // on unix-like systems via getUnixMode(). ZipArchiveInputStream doesn't have access to

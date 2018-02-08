@@ -46,7 +46,8 @@ final class TarGzExtractorProvider implements ExtractorProvider {
   public void extract(Path archive, Path destination, ProgressListener progressListener)
       throws IOException {
 
-    progressListener.start("Extracting archive: " + archive.getFileName(), -1);
+    progressListener.start(
+        "Extracting archive: " + archive.getFileName(), ProgressListener.UNKNOWN);
 
     GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(Files.newInputStream(archive));
     try (TarArchiveInputStream in = new TarArchiveInputStream(gzipIn)) {
