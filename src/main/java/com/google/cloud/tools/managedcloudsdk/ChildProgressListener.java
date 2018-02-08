@@ -16,16 +16,20 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
+import com.google.common.base.Preconditions;
+
 /** Default implementation of a child listener. Should satisfy the simple use case. */
 public class ChildProgressListener implements ProgressListener {
 
   private final ProgressListener parent;
+  private boolean isStarted = false;
+  private boolean isDone = false;
 
   private long totalWork;
   private long totalWorkDone = 0;
 
   private final long totalAllocatedWork;
-  private long totalAllocatedWorkDone = 0;
+  private long totalReportedAllocatedWorkDone = 0;
 
   /**
    * Create a child progress listener that performs a subtask for a parent.
@@ -40,12 +44,15 @@ public class ChildProgressListener implements ProgressListener {
 
   @Override
   public void start(String message, long totalWork) {
+    Preconditions.checkArgument(!isStarted && !isDone);
+    isStarted = true;
     parent.update(message);
     this.totalWork = totalWork;
   }
 
   @Override
   public void update(long workDone) {
+    Preconditions.checkArgument(isStarted && !isDone);
     totalWorkDone += workDone;
 
     if (totalWork == UNKNOWN) {
@@ -54,25 +61,26 @@ public class ChildProgressListener implements ProgressListener {
       return;
     }
 
-    // normalized work done since last update
-    long normalizedWorkDone =
-        totalWorkDone * totalAllocatedWork / totalWork - totalAllocatedWorkDone;
+    long totalAllocatedWorkDone = totalWorkDone * totalAllocatedWork / totalWork;
 
-    if (normalizedWorkDone > 0) {
-      parent.update(normalizedWorkDone);
-      totalAllocatedWorkDone += normalizedWorkDone;
+    if (totalAllocatedWorkDone > totalReportedAllocatedWorkDone) {
+      parent.update(totalAllocatedWorkDone - totalReportedAllocatedWorkDone);
+      totalReportedAllocatedWorkDone = totalAllocatedWorkDone;
     }
   }
 
   @Override
   public void update(String message) {
+    Preconditions.checkArgument(isStarted && !isDone);
     parent.update(message);
   }
 
   @Override
   public void done() {
-    if (totalAllocatedWorkDone < totalAllocatedWork) {
-      parent.update(totalAllocatedWork - totalAllocatedWorkDone);
+    Preconditions.checkArgument(isStarted && !isDone);
+    isDone = true;
+    if (totalReportedAllocatedWorkDone < totalAllocatedWork) {
+      parent.update(totalAllocatedWork - totalReportedAllocatedWorkDone);
     }
   }
 

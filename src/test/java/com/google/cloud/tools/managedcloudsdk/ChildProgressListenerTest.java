@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -134,5 +135,96 @@ public class ChildProgressListenerTest {
     verifier.verify(mockParent).update("start");
     verifier.verify(mockParent).update(100);
     verifier.verifyNoMoreInteractions();
+  }
+
+  @Test
+  public void testChildProgressListener_doneBeforeAnything() {
+    ChildProgressListener testListener = new ChildProgressListener(mockParent, 100);
+
+    try {
+      testListener.done();
+      Assert.fail("expected illegal argument exception");
+    } catch (IllegalArgumentException ex) {
+      // pass
+    }
+  }
+
+  @Test
+  public void testChildProgressListener_startAfterStart() {
+    ChildProgressListener testListener = new ChildProgressListener(mockParent, 100);
+
+    testListener.start("asdf", 100);
+    try {
+      testListener.start("asdf", 100);
+      Assert.fail("expected illegal argument exception");
+    } catch (IllegalArgumentException ex) {
+      // pass
+    }
+  }
+
+  @Test
+  public void testChildProgressListener_updateWorkBeforeStart() {
+    ChildProgressListener testListener = new ChildProgressListener(mockParent, 100);
+
+    try {
+      testListener.update(100);
+      Assert.fail("expected illegal argument exception");
+    } catch (IllegalArgumentException ex) {
+      // pass
+    }
+  }
+
+  @Test
+  public void testChildProgressListener_updateMessageBeforeStart() {
+    ChildProgressListener testListener = new ChildProgressListener(mockParent, 100);
+
+    try {
+      testListener.update("hello");
+      Assert.fail("expected illegal argument exception");
+    } catch (IllegalArgumentException ex) {
+      // pass
+    }
+  }
+
+  @Test
+  public void testChildProgressListener_updateWorkAfterDone() {
+    ChildProgressListener testListener = new ChildProgressListener(mockParent, 100);
+
+    testListener.start("asdf", 100);
+    testListener.done();
+    try {
+      testListener.update(100);
+      Assert.fail("expected illegal argument exception");
+    } catch (IllegalArgumentException ex) {
+      // pass
+    }
+  }
+
+  @Test
+  public void testChildProgressListener_updateMessageAfterDone() {
+    ChildProgressListener testListener = new ChildProgressListener(mockParent, 100);
+
+    testListener.start("asdf", 100);
+    testListener.done();
+    try {
+      testListener.update("hello");
+      Assert.fail("expected illegal argument exception");
+    } catch (IllegalArgumentException ex) {
+      // pass
+    }
+  }
+
+  @Test
+  public void testChildProgressListener_startAfterDone() {
+    ChildProgressListener testListener = new ChildProgressListener(mockParent, 100);
+
+    testListener.start("asdf", 100);
+    testListener.done();
+    try {
+      testListener.start("asdf", 1000);
+      Assert.fail("expected illegal argument exception");
+    } catch (IllegalArgumentException ex) {
+      // pass
+    }
   }
 }
