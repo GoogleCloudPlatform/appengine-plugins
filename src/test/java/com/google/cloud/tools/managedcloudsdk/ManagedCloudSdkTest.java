@@ -21,8 +21,14 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import com.google.cloud.tools.managedcloudsdk.components.SdkComponent;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstallerException;
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Properties;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -126,5 +132,73 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.hasComponent(testComponent));
     Assert.assertTrue(testSdk.isUpToDate());
+  }
+
+  private static final Path cloudSdkPartialPath =
+      Paths.get("google-cloud-tools-java").resolve("managed-cloud-sdk");
+
+  @Test
+  public void testGetOsSpecificManagedSdk() throws InvalidOsStateException, IOException {
+    Path userHome = tempDir.getRoot().toPath();
+    Path macDir =
+        Files.createDirectories(userHome.resolve("Library").resolve("Application Support"));
+    Path linuxDir = userHome.resolve(".cache");
+    Properties fakeProperties = getFakeProperties(userHome.toString());
+
+    Path windowsPath =
+        ManagedCloudSdk.getOsSpecificManagedSdkHome(
+            OsInfo.Name.WINDOWS, fakeProperties, ImmutableMap.of("LOCALAPPDATA", "bob/bob"));
+    Assert.assertEquals(Paths.get("bob/bob").resolve(cloudSdkPartialPath), windowsPath);
+
+    Path macPath =
+        ManagedCloudSdk.getOsSpecificManagedSdkHome(
+            OsInfo.Name.MAC, fakeProperties, Collections.<String, String>emptyMap());
+    Assert.assertEquals(macDir.resolve(cloudSdkPartialPath), macPath);
+
+    Path linuxPath =
+        ManagedCloudSdk.getOsSpecificManagedSdkHome(
+            OsInfo.Name.LINUX, fakeProperties, Collections.<String, String>emptyMap());
+    Assert.assertEquals(linuxDir.resolve(cloudSdkPartialPath), linuxPath);
+  }
+
+  @Test
+  public void testGetOsSpecificManagedSdk_windowsFail() throws InvalidOsStateException {
+    Properties fakeProperties = getFakeProperties("userhome");
+    try {
+      ManagedCloudSdk.getOsSpecificManagedSdkHome(
+          OsInfo.Name.WINDOWS, fakeProperties, Collections.<String, String>emptyMap());
+      Assert.fail("InvalidOsStateException expected but not thrown");
+    } catch (InvalidOsStateException ex) {
+      // pass
+    }
+  }
+
+  @Test
+  public void testGetOsSpecificManagedSdk_macosFail() throws InvalidOsStateException {
+    Properties fakeProperties =
+        getFakeProperties(tempDir.getRoot().toPath().resolve("non-existant folder").toString());
+
+    try {
+      ManagedCloudSdk.getOsSpecificManagedSdkHome(
+          OsInfo.Name.MAC, fakeProperties, Collections.<String, String>emptyMap());
+      Assert.fail("InvalidOsStateException expected but not thrown");
+    } catch (InvalidOsStateException ex) {
+      // pass
+    }
+  }
+
+  @Test
+  public void testGetOsSpecificManagedSdk_integrationTest()
+      throws UnsupportedOsException, InvalidOsStateException {
+    // this test should throw no exceptions, if it does, then our assumptions about the systems
+    // that we target are wrong.
+    ManagedCloudSdk.getOsSpecificManagedSdkHome(
+        OsInfo.getSystemOsInfo().name(), System.getProperties(), System.getenv());
+  }
+
+  private static Properties getFakeProperties(String userHome) {
+    Properties properties = new Properties();
+    properties.put("user.home", userHome);
+    return properties;
   }
 }

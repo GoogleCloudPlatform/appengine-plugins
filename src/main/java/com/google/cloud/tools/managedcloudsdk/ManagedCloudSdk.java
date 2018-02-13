@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
+import static com.google.cloud.tools.managedcloudsdk.OsInfo.Name.LINUX;
+import static com.google.cloud.tools.managedcloudsdk.OsInfo.Name.MAC;
 import static com.google.cloud.tools.managedcloudsdk.OsInfo.Name.WINDOWS;
 
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
@@ -26,12 +28,15 @@ import com.google.cloud.tools.managedcloudsdk.components.SdkComponent;
 import com.google.cloud.tools.managedcloudsdk.components.SdkComponentInstaller;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstaller;
 import com.google.cloud.tools.managedcloudsdk.update.SdkUpdater;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /** A manager for installing, configuring and updating the Cloud SDK. */
 public class ManagedCloudSdk {
@@ -176,15 +181,49 @@ public class ManagedCloudSdk {
   }
 
   /** Get a new {@link ManagedCloudSdk} instance for @{link Version} specified. */
-  public static ManagedCloudSdk newManagedSdk(Version version) throws UnsupportedOsException {
+  public static ManagedCloudSdk newManagedSdk(Version version)
+      throws UnsupportedOsException, InvalidOsStateException {
+    OsInfo osInfo = OsInfo.getSystemOsInfo();
     return new ManagedCloudSdk(
         version,
-        Paths.get(System.getProperty("user.home"), ".google-cloud-tools-java", "managed-cloud-sdk"),
-        OsInfo.getSystemOsInfo());
+        getOsSpecificManagedSdkHome(osInfo.name(), System.getProperties(), System.getenv()),
+        osInfo);
   }
 
   /** Convenience method to obtain a new LATEST {@link ManagedCloudSdk} instance. */
-  public static ManagedCloudSdk newManagedSdk() throws UnsupportedOsException {
+  public static ManagedCloudSdk newManagedSdk()
+      throws UnsupportedOsException, InvalidOsStateException {
     return newManagedSdk(Version.LATEST);
+  }
+
+  @VisibleForTesting
+  static Path getOsSpecificManagedSdkHome(
+      OsInfo.Name osName, Properties systemProperties, Map<String, String> environment)
+      throws InvalidOsStateException {
+    Path userHome = Paths.get(systemProperties.getProperty("user.home"));
+    Path cloudSdkPartialPath = Paths.get("google-cloud-tools-java", "managed-cloud-sdk");
+
+    switch (osName) {
+      case WINDOWS:
+        String localAppData = environment.get("LOCALAPPDATA");
+        if (localAppData == null || localAppData.trim().isEmpty()) {
+          throw new InvalidOsStateException("LOCALAPPDATA environment is invalid or missing");
+        }
+        return Paths.get(localAppData).resolve(cloudSdkPartialPath);
+
+      case MAC:
+        Path applicationSupport = userHome.resolve("Library").resolve("Application Support");
+        if (!Files.exists(applicationSupport)) {
+          throw new InvalidOsStateException(applicationSupport.toString() + " does not exist");
+        }
+        return applicationSupport.resolve(cloudSdkPartialPath);
+
+      case LINUX:
+        return userHome.resolve(".cache").resolve(cloudSdkPartialPath);
+
+      default:
+        // we can't actually get here
+        throw new RuntimeException();
+    }
   }
 }
