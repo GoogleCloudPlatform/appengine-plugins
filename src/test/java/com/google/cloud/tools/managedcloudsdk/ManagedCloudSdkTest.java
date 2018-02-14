@@ -140,12 +140,15 @@ public class ManagedCloudSdkTest {
   @Test
   public void testGetOsSpecificManagedSdk_windowsStandard() throws IOException {
     Path userHome = tempDir.getRoot().toPath();
+    Path localAppData = Files.createDirectories(userHome.resolve("AppData").resolve("Local"));
     Properties fakeProperties = getFakeProperties(userHome.toString());
     Path windowsPath =
         ManagedCloudSdk.getOsSpecificManagedSdkHome(
-            OsInfo.Name.WINDOWS, fakeProperties, ImmutableMap.of("LOCALAPPDATA", "bob/bob"));
+            OsInfo.Name.WINDOWS,
+            fakeProperties,
+            ImmutableMap.of("LOCALAPPDATA", localAppData.toString()));
 
-    Assert.assertEquals(Paths.get("bob/bob").resolve(cloudSdkPartialPath), windowsPath);
+    Assert.assertEquals(localAppData.resolve(cloudSdkPartialPath), windowsPath);
   }
 
   @Test
@@ -173,7 +176,7 @@ public class ManagedCloudSdkTest {
   }
 
   @Test
-  public void testGetOsSpecificManagedSdk_windowsFallback() {
+  public void testGetOsSpecificManagedSdk_windowsFallbackLocalAppDataEnvNotSet() {
     Path userHome = tempDir.getRoot().toPath();
     Properties fakeProperties = getFakeProperties(userHome.toString());
     Path expectedPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
@@ -181,6 +184,22 @@ public class ManagedCloudSdkTest {
     Path windowsPath =
         ManagedCloudSdk.getOsSpecificManagedSdkHome(
             OsInfo.Name.WINDOWS, fakeProperties, Collections.<String, String>emptyMap());
+
+    Assert.assertEquals(expectedPath, windowsPath);
+  }
+
+  @Test
+  public void testGetOsSpecificManagedSdk_windowsFallbackLocalAppDataDoesntExist() {
+    Path userHome = tempDir.getRoot().toPath();
+    Path localAppData = userHome.resolve("AppData").resolve("Local"); // not created
+    Properties fakeProperties = getFakeProperties(userHome.toString());
+    Path expectedPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
+
+    Path windowsPath =
+        ManagedCloudSdk.getOsSpecificManagedSdkHome(
+            OsInfo.Name.WINDOWS,
+            fakeProperties,
+            ImmutableMap.of("LOCALAPPDATA", localAppData.toString()));
 
     Assert.assertEquals(expectedPath, windowsPath);
   }

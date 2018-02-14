@@ -206,12 +206,17 @@ public class ManagedCloudSdk {
 
     switch (osName) {
       case WINDOWS:
-        String localAppData = environment.get("LOCALAPPDATA");
-        if (localAppData == null || localAppData.trim().isEmpty()) {
+        String localAppDataEnv = environment.get("LOCALAPPDATA");
+        if (localAppDataEnv == null || localAppDataEnv.trim().isEmpty()) {
           logger.warning("LOCALAPPDATA environment is invalid or missing");
           return xdgPath;
         }
-        return Paths.get(localAppData).resolve(cloudSdkPartialPath);
+        Path localAppData = Paths.get(localAppDataEnv);
+        if (!Files.exists(localAppData)) {
+          logger.warning(localAppData.toString() + " does not exist");
+          return xdgPath;
+        }
+        return localAppData.resolve(cloudSdkPartialPath);
 
       case MAC:
         Path applicationSupport = userHome.resolve("Library").resolve("Application Support");
