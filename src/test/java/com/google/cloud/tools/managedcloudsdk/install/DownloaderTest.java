@@ -26,6 +26,7 @@ import java.nio.charset.Charset;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -99,7 +100,9 @@ public class DownloaderTest {
     Assert.assertArrayEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
 
     ProgressVerifier.verifyProgress(
-        mockProgressListener, "Downloading " + String.valueOf(testFileSize) + " bytes");
+        mockProgressListener,
+        String.format(
+            Locale.getDefault(), "Downloading %.2f MB", testFileSize / 1024.0f / 1024.0f));
   }
 
   @Test

@@ -26,6 +26,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 /** Downloader for downloading a single Cloud SDK archive. */
@@ -71,7 +72,9 @@ final class Downloader {
               Files.newOutputStream(destinationFile, StandardOpenOption.CREATE_NEW))) {
 
         progressListener.start(
-            "Downloading " + String.valueOf(contentLength) + " bytes", contentLength);
+            String.format(
+                Locale.getDefault(), "Downloading %.2f MB", contentLength / 1024.0f / 1024.0f),
+            contentLength);
 
         int bytesRead;
         byte[] buffer = new byte[BUFFER_SIZE];
