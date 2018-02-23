@@ -99,9 +99,18 @@ public class DownloaderTest {
     Assert.assertTrue(Files.exists(destination));
     Assert.assertArrayEquals(Files.readAllBytes(destination), Files.readAllBytes(testSourceFile));
 
-    ProgressVerifier.verifyProgress(
-        mockProgressListener,
-        String.format(Locale.getDefault(), "Downloading %.2f MB", 0.078125954f));
+    ProgressVerifier.verifyProgress(mockProgressListener, "Downloading 0.08 MB");
+  }
+
+  @Test
+  public void testGetDownloadStatus() {
+    Assert.assertEquals("Downloading 0.08 MB", Downloader.getDownloadStatus(81921, Locale.ENGLISH));
+    Assert.assertEquals("Downloading 0,08 MB", Downloader.getDownloadStatus(81921, Locale.GERMAN));
+
+    Assert.assertEquals(
+        "Downloading 1,000.00 MB", Downloader.getDownloadStatus(1048576000, Locale.ENGLISH));
+    Assert.assertEquals(
+        "Downloading 1.000,00 MB", Downloader.getDownloadStatus(1048576000, Locale.GERMAN));
   }
 
   @Test

@@ -72,9 +72,7 @@ final class Downloader {
               Files.newOutputStream(destinationFile, StandardOpenOption.CREATE_NEW))) {
 
         progressListener.start(
-            String.format(
-                Locale.getDefault(), "Downloading %.2f MB", contentLength / 1024.0f / 1024.0f),
-            contentLength);
+            getDownloadStatus(contentLength, Locale.getDefault()), contentLength);
 
         int bytesRead;
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -96,5 +94,9 @@ final class Downloader {
 
   private void cleanUp() throws IOException {
     Files.deleteIfExists(destinationFile);
+  }
+
+  static String getDownloadStatus(long bytes, Locale locale) {
+    return String.format(locale, "Downloading %,.2f MB", bytes / 1024.0f / 1024.0f);
   }
 }
