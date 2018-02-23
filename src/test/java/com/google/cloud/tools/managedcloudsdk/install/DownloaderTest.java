@@ -101,8 +101,7 @@ public class DownloaderTest {
 
     ProgressVerifier.verifyProgress(
         mockProgressListener,
-        String.format(
-            Locale.getDefault(), "Downloading %.2f MB", testFileSize / 1024.0f / 1024.0f));
+        String.format(Locale.getDefault(), "Downloading %.2f MB", 0.078125954f));
   }
 
   @Test
