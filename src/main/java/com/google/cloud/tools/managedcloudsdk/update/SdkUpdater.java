@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.update;
 
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -39,12 +40,15 @@ public class SdkUpdater {
   /**
    * Update the Cloud SDK.
    *
-   * @param consoleListener listener to receive feedback on
+   * @param progressListener listener to action progress feedback
+   * @param consoleListener listener to process console feedback
    */
-  public void update(final ConsoleListener consoleListener)
+  public void update(ProgressListener progressListener, ConsoleListener consoleListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
+    progressListener.start("Updating Cloud SDK", -1);
     List<String> command = Arrays.asList(gcloud.toString(), "components", "update", "--quiet");
     commandRunner.run(command, null, null, consoleListener);
+    progressListener.done();
   }
 
   /**

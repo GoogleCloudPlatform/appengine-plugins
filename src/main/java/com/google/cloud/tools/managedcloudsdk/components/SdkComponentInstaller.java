@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.components;
 
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
+import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -40,13 +41,17 @@ public class SdkComponentInstaller {
    * Install a component.
    *
    * @param component component to install
-   * @param consoleListener listener to receive feedback
+   * @param progressListener listener to action progress feedback
+   * @param consoleListener listener to process console feedback
    */
-  public void installComponent(SdkComponent component, ConsoleListener consoleListener)
+  public void installComponent(
+      SdkComponent component, ProgressListener progressListener, ConsoleListener consoleListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
+    progressListener.start("Installing " + component.toString(), -1);
     List<String> command =
         Arrays.asList(gcloud.toString(), "components", "install", component.toString(), "--quiet");
     commandRunner.run(command, null, null, consoleListener);
+    progressListener.done();
   }
 
   /**

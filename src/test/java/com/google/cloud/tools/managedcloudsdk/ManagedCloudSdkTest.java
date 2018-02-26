@@ -74,7 +74,9 @@ public class ManagedCloudSdkTest {
     Assert.assertFalse(testSdk.hasComponent(testComponent));
     Assert.assertTrue(testSdk.isUpToDate());
 
-    testSdk.newComponentInstaller().installComponent(testComponent, testListener);
+    testSdk
+        .newComponentInstaller()
+        .installComponent(testComponent, testProgressListener, testListener);
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.hasComponent(testComponent));
@@ -121,13 +123,15 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertFalse(testSdk.isUpToDate());
 
-    testSdk.newUpdater().update(testListener);
+    testSdk.newUpdater().update(testProgressListener, testListener);
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertFalse(testSdk.hasComponent(testComponent));
     Assert.assertTrue(testSdk.isUpToDate());
 
-    testSdk.newComponentInstaller().installComponent(testComponent, testListener);
+    testSdk
+        .newComponentInstaller()
+        .installComponent(testComponent, testProgressListener, testListener);
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.hasComponent(testComponent));
