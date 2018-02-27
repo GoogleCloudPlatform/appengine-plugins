@@ -45,7 +45,7 @@ public class SdkUpdater {
    */
   public void update(ProgressListener progressListener, ConsoleListener consoleListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    progressListener.start("Updating Cloud SDK", -1);
+    progressListener.start("Updating Cloud SDK", ProgressListener.UNKNOWN);
     List<String> command = Arrays.asList(gcloud.toString(), "components", "update", "--quiet");
     commandRunner.run(command, null, null, consoleListener);
     progressListener.done();

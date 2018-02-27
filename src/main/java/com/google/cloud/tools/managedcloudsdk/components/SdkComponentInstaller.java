@@ -47,7 +47,7 @@ public class SdkComponentInstaller {
   public void installComponent(
       SdkComponent component, ProgressListener progressListener, ConsoleListener consoleListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    progressListener.start("Installing " + component.toString(), -1);
+    progressListener.start("Installing " + component.toString(), ProgressListener.UNKNOWN);
     List<String> command =
         Arrays.asList(gcloud.toString(), "components", "install", component.toString(), "--quiet");
     commandRunner.run(command, null, null, consoleListener);
