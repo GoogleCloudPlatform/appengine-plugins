@@ -110,8 +110,7 @@ public class FileResourceProviderFactoryTest {
     Assert.assertEquals(
         new URL(FileResourceProviderFactory.LATEST_BASE_URL + latestFilename),
         provider.getArchiveSource());
-    Assert.assertEquals(
-        fakeDownloadsDir.resolve("google-cloud-sdk.tar.gz"), provider.getArchiveDestination());
+    Assert.assertEquals(fakeDownloadsDir.resolve(latestFilename), provider.getArchiveDestination());
     Assert.assertEquals(fakeSdkHome.resolve("LATEST"), provider.getArchiveExtractionDestination());
     Assert.assertEquals(
         fakeSdkHome.resolve("LATEST").resolve("google-cloud-sdk"), provider.getExtractedSdkHome());

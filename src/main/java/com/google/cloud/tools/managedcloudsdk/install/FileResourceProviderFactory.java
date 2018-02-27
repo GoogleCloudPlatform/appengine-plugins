@@ -52,7 +52,7 @@ class FileResourceProviderFactory {
     if (version.equals(Version.LATEST)) {
       return new FileResourceProvider(
           new URL(LATEST_BASE_URL + getLatestFilename()),
-          downloads.resolve("google-cloud-sdk.tar.gz"),
+          downloads.resolve(getLatestFilename()),
           managedSdkDirectory.resolve(version.getVersion()),
           getGcloudExecutableName());
     } else { // versioned
