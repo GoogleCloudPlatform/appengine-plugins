@@ -46,23 +46,37 @@ public class FileResourceProviderFactoryTest {
         new Object[][] {
           {
             new OsInfo(OsInfo.Name.WINDOWS, OsInfo.Architecture.X86),
-            "windows-x86.zip",
+            "google-cloud-sdk-windows-bundled-python.zip",
+            "windows-x86-bundled-python.zip",
             "gcloud.cmd"
           },
           {
             new OsInfo(OsInfo.Name.WINDOWS, OsInfo.Architecture.X86_64),
-            "windows-x86_64.zip",
+            "google-cloud-sdk-windows-x86_64-bundled-python.zip",
+            "windows-x86_64-bundled-python.zip",
             "gcloud.cmd"
           },
-          {new OsInfo(OsInfo.Name.MAC, OsInfo.Architecture.X86), "darwin-x86.tar.gz", "gcloud"},
+          {
+            new OsInfo(OsInfo.Name.MAC, OsInfo.Architecture.X86),
+            "google-cloud-sdk.tar.gz",
+            "darwin-x86.tar.gz",
+            "gcloud"
+          },
           {
             new OsInfo(OsInfo.Name.MAC, OsInfo.Architecture.X86_64),
+            "google-cloud-sdk.tar.gz",
             "darwin-x86_64.tar.gz",
             "gcloud"
           },
-          {new OsInfo(OsInfo.Name.LINUX, OsInfo.Architecture.X86), "linux-x86.tar.gz", "gcloud"},
+          {
+            new OsInfo(OsInfo.Name.LINUX, OsInfo.Architecture.X86),
+            "google-cloud-sdk.tar.gz",
+            "linux-x86.tar.gz",
+            "gcloud"
+          },
           {
             new OsInfo(OsInfo.Name.LINUX, OsInfo.Architecture.X86_64),
+            "google-cloud-sdk.tar.gz",
             "linux-x86_64.tar.gz",
             "gcloud"
           },
@@ -73,9 +87,12 @@ public class FileResourceProviderFactoryTest {
   public OsInfo osInfo;
 
   @Parameterized.Parameter(1)
-  public String versionedFilenameTail;
+  public String latestFilename;
 
   @Parameterized.Parameter(2)
+  public String versionedFilenameTail;
+
+  @Parameterized.Parameter(3)
   public String gcloudExecutable;
 
   @Before
@@ -91,7 +108,8 @@ public class FileResourceProviderFactoryTest {
     FileResourceProvider provider = factory.newFileResourceProvider();
 
     Assert.assertEquals(
-        new URL(FileResourceProviderFactory.LATEST_URL), provider.getArchiveSource());
+        new URL(FileResourceProviderFactory.LATEST_BASE_URL + latestFilename),
+        provider.getArchiveSource());
     Assert.assertEquals(
         fakeDownloadsDir.resolve("google-cloud-sdk.tar.gz"), provider.getArchiveDestination());
     Assert.assertEquals(fakeSdkHome.resolve("LATEST"), provider.getArchiveExtractionDestination());

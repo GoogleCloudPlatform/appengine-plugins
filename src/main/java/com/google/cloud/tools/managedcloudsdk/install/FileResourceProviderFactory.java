@@ -27,8 +27,7 @@ import java.nio.file.Path;
 /** Factory for {@link FileResourceProvider}. * */
 class FileResourceProviderFactory {
 
-  static final String LATEST_URL =
-      "https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz";
+  static final String LATEST_BASE_URL = "https://dl.google.com/dl/cloudsdk/channels/rapid/";
   static final String VERSIONED_BASE_URL = "https://storage.googleapis.com/cloud-sdk-release/";
 
   private final Version version;
@@ -52,7 +51,7 @@ class FileResourceProviderFactory {
     Path downloads = managedSdkDirectory.resolve("downloads");
     if (version.equals(Version.LATEST)) {
       return new FileResourceProvider(
-          new URL(LATEST_URL),
+          new URL(LATEST_BASE_URL + getLatestFilename()),
           downloads.resolve("google-cloud-sdk.tar.gz"),
           managedSdkDirectory.resolve(version.getVersion()),
           getGcloudExecutableName());
@@ -65,26 +64,33 @@ class FileResourceProviderFactory {
     }
   }
 
+  private String getLatestFilename() {
+    switch (os.name()) {
+      case WINDOWS:
+        String architecture = os.arch().equals(X86_64) ? "-x86_64-" : "-";
+        return "google-cloud-sdk-windows" + architecture + "bundled-python.zip";
+      default:
+        return "google-cloud-sdk.tar.gz";
+    }
+  }
+
   private String getVersionedFilename() {
     return "google-cloud-sdk-" + version.getVersion() + "-" + getVersionedOsExtension();
   }
 
   private String getVersionedOsExtension() {
+    String architecture = os.arch().equals(X86_64) ? "x86_64" : "x86";
     switch (os.name()) {
       case WINDOWS:
-        return "windows-" + getArchitectureString() + ".zip";
+        return "windows-" + architecture + "-bundled-python.zip";
       case MAC:
-        return "darwin-" + getArchitectureString() + ".tar.gz";
+        return "darwin-" + architecture + ".tar.gz";
       case LINUX:
-        return "linux-" + getArchitectureString() + ".tar.gz";
+        return "linux-" + architecture + ".tar.gz";
       default:
         // we can't actually get here
         throw new RuntimeException();
     }
-  }
-
-  private String getArchitectureString() {
-    return os.arch().equals(X86_64) ? "x86_64" : "x86";
   }
 
   private String getGcloudExecutableName() {
