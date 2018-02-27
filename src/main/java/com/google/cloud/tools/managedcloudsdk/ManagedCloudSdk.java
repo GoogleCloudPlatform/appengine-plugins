@@ -180,7 +180,7 @@ public class ManagedCloudSdk {
     if (version != Version.LATEST) {
       throw new UnsupportedOperationException("Cannot update a fixed version SDK.");
     }
-    return SdkUpdater.newUpdater(getGcloud());
+    return SdkUpdater.newUpdater(osInfo.name(), getGcloud());
   }
 
   /** Get a new {@link ManagedCloudSdk} instance for @{link Version} specified. */

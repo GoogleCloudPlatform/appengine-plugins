@@ -17,7 +17,9 @@
 package com.google.cloud.tools.managedcloudsdk.update;
 
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
+import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
+import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -26,30 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /** Update an SDK. */
-public class SdkUpdater {
+public interface SdkUpdater {
 
-  private final Path gcloud;
-  private final CommandRunner commandRunner;
-
-  /** Use {@link #newUpdater} to instantiate. */
-  SdkUpdater(Path gcloud, CommandRunner commandRunner) {
-    this.gcloud = gcloud;
-    this.commandRunner = commandRunner;
-  }
-
-  /**
-   * Update the Cloud SDK.
-   *
-   * @param progressListener listener to action progress feedback
-   * @param consoleListener listener to process console feedback
-   */
-  public void update(ProgressListener progressListener, ConsoleListener consoleListener)
-      throws InterruptedException, CommandExitException, CommandExecutionException {
-    progressListener.start("Updating Cloud SDK", -1);
-    List<String> command = Arrays.asList(gcloud.toString(), "components", "update", "--quiet");
-    commandRunner.run(command, null, null, consoleListener);
-    progressListener.done();
-  }
+  void update(ProgressListener progressListener, ConsoleListener consoleListener)
+      throws InterruptedException, CommandExitException, CommandExecutionException;
 
   /**
    * Configure and create a new Updater instance.
@@ -57,7 +39,14 @@ public class SdkUpdater {
    * @param gcloud path to gcloud in the cloud sdk
    * @return a new configured Cloud Sdk updater
    */
-  public static SdkUpdater newUpdater(Path gcloud) {
-    return new SdkUpdater(gcloud, CommandRunner.newRunner());
+  static SdkUpdater newUpdater(OsInfo.Name osName, Path gcloud) {
+    List<String> updaterParams = Arrays.asList("components", "update", "--quiet");
+    switch (osName) {
+      case WINDOWS:
+        return new WindowsUpdater(
+            gcloud, CommandCaller.newCaller(), CommandRunner.newRunner(), updaterParams);
+      default:
+        return new UnixUpdater(gcloud, CommandRunner.newRunner(), updaterParams);
+    }
   }
 }
