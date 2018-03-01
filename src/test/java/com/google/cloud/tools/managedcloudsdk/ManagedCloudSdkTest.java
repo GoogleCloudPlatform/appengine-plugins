@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
+import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -28,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -108,17 +110,7 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.isUpToDate());
 
     // Forcibly downgrade the cloud SDK so we can test updating.
-    CommandRunner.newRunner()
-        .run(
-            Arrays.asList(
-                testSdk.getGcloud().toString(),
-                "components",
-                "update",
-                "--quiet",
-                "--version=" + FIXED_VERSION),
-            null,
-            null,
-            testListener);
+    downgradeCloudSdk(testSdk);
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertFalse(testSdk.isUpToDate());
@@ -224,5 +216,32 @@ public class ManagedCloudSdkTest {
     Properties properties = new Properties();
     properties.put("user.home", userHome);
     return properties;
+  }
+
+  public void downgradeCloudSdk(ManagedCloudSdk testSdk)
+      throws InterruptedException, CommandExitException, CommandExecutionException,
+          UnsupportedOsException {
+    Map<String, String> env = null;
+    if (OsInfo.getSystemOsInfo().name().equals(OsInfo.Name.WINDOWS)) {
+      String copiedPython =
+          CommandCaller.newCaller()
+              .call(
+                  Arrays.asList(
+                      testSdk.getGcloud().toString(), "components", "copy-bundled-python"),
+                  null,
+                  null);
+      env = ImmutableMap.of("CLOUDSDK_PYTHON", copiedPython);
+    }
+    CommandRunner.newRunner()
+        .run(
+            Arrays.asList(
+                testSdk.getGcloud().toString(),
+                "components",
+                "update",
+                "--quiet",
+                "--version=" + FIXED_VERSION),
+            null,
+            env,
+            testListener);
   }
 }
