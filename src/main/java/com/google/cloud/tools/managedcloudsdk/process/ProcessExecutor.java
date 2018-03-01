@@ -61,7 +61,6 @@ public class ProcessExecutor {
       AsyncStreamHandler stderr)
       throws IOException, InterruptedException {
 
-
     logger.fine("Running command : " + command);
     if (workingDirectory != null) {
       logger.fine("In working directory : " + workingDirectory.toString());
