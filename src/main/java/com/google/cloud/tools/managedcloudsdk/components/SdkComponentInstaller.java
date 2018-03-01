@@ -17,24 +17,31 @@
 package com.google.cloud.tools.managedcloudsdk.components;
 
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
+import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
+import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import javax.annotation.Nullable;
 
 /** Install an SDK component. */
 public class SdkComponentInstaller {
 
   private final Path gcloud;
   private final CommandRunner commandRunner;
+  private final BundledPythonCopier pythonCopier;
 
   /** Use {@link #newComponentInstaller} to instantiate. */
-  SdkComponentInstaller(Path gcloud, CommandRunner commandRunner) {
+  SdkComponentInstaller(
+      Path gcloud, CommandRunner commandRunner, @Nullable BundledPythonCopier pythonCopier) {
     this.gcloud = gcloud;
     this.commandRunner = commandRunner;
+    this.pythonCopier = pythonCopier;
   }
 
   /**
@@ -48,9 +55,15 @@ public class SdkComponentInstaller {
       SdkComponent component, ProgressListener progressListener, ConsoleListener consoleListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
     progressListener.start("Installing " + component.toString(), -1);
+
+    Map<String, String> environment = null;
+    if (pythonCopier != null) {
+      environment = pythonCopier.copyPython();
+    }
+
     List<String> command =
         Arrays.asList(gcloud.toString(), "components", "install", component.toString(), "--quiet");
-    commandRunner.run(command, null, null, consoleListener);
+    commandRunner.run(command, null, environment, consoleListener);
     progressListener.done();
   }
 
@@ -60,7 +73,15 @@ public class SdkComponentInstaller {
    * @param gcloud full path to gcloud in the cloud sdk
    * @return a new configured Cloud Sdk component installer
    */
-  public static SdkComponentInstaller newComponentInstaller(Path gcloud) {
-    return new SdkComponentInstaller(gcloud, CommandRunner.newRunner());
+  public static SdkComponentInstaller newComponentInstaller(OsInfo.Name osName, Path gcloud) {
+    switch (osName) {
+      case WINDOWS:
+        return new SdkComponentInstaller(
+            gcloud,
+            CommandRunner.newRunner(),
+            new WindowsBundledPythonCopier(gcloud, CommandCaller.newCaller()));
+      default:
+        return new SdkComponentInstaller(gcloud, CommandRunner.newRunner(), null);
+    }
   }
 }

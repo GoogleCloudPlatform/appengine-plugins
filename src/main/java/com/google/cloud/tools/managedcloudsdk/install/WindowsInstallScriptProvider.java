@@ -28,8 +28,7 @@ final class WindowsInstallScriptProvider implements InstallScriptProvider {
   @Override
   public List<String> getScriptCommandLine() {
     List<String> script = new ArrayList<>(3);
-    script.add("cmd.exe");
-    script.add("/c");
+    script.add("call");
     script.add("install.bat");
     return script;
   }

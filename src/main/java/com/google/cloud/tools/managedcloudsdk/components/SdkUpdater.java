@@ -14,28 +14,32 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.update;
+package com.google.cloud.tools.managedcloudsdk.components;
 
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
+import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
+import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import javax.annotation.Nullable;
 
-public class UnixUpdater implements SdkUpdater {
+/** Update an SDK. */
+public class SdkUpdater {
 
   private final Path gcloud;
   private final CommandRunner commandRunner;
-  private final List<String> updaterParams;
+  private final BundledPythonCopier pythonCopier;
 
-  /** Use {@link SdkUpdater#newUpdater} to instantiate. */
-  UnixUpdater(Path gcloud, CommandRunner commandRunner, List<String> updaterParams) {
+  SdkUpdater(Path gcloud, CommandRunner commandRunner, @Nullable BundledPythonCopier pythonCopier) {
     this.gcloud = gcloud;
     this.commandRunner = commandRunner;
-    this.updaterParams = updaterParams;
+    this.pythonCopier = pythonCopier;
   }
 
   /**
@@ -48,11 +52,31 @@ public class UnixUpdater implements SdkUpdater {
       throws InterruptedException, CommandExitException, CommandExecutionException {
     progressListener.start("Updating Cloud SDK", ProgressListener.UNKNOWN);
 
-    List<String> command = new ArrayList<>();
-    command.add(gcloud.toString());
-    command.addAll(updaterParams);
+    Map<String, String> environment = null;
+    if (pythonCopier != null) {
+      environment = pythonCopier.copyPython();
+    }
 
-    commandRunner.run(command, null, null, consoleListener);
+    List<String> command = Arrays.asList(gcloud.toString(), "components", "update", "--quiet");
+    commandRunner.run(command, null, environment, consoleListener);
     progressListener.done();
+  }
+
+  /**
+   * Configure and create a new Updater instance.
+   *
+   * @param gcloud path to gcloud in the cloud sdk
+   * @return a new configured Cloud Sdk updater
+   */
+  public static SdkUpdater newUpdater(OsInfo.Name osName, Path gcloud) {
+    switch (osName) {
+      case WINDOWS:
+        return new SdkUpdater(
+            gcloud,
+            CommandRunner.newRunner(),
+            new WindowsBundledPythonCopier(gcloud, CommandCaller.newCaller()));
+      default:
+        return new SdkUpdater(gcloud, CommandRunner.newRunner(), null);
+    }
   }
 }

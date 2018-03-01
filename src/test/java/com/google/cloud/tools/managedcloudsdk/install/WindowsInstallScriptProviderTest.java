@@ -26,7 +26,7 @@ public class WindowsInstallScriptProviderTest {
   @Test
   public void testGetScriptCommandLine() {
     Assert.assertEquals(
-        Arrays.asList("cmd.exe", "/c", "install.bat"),
+        Arrays.asList("call", "install.bat"),
         new WindowsInstallScriptProvider().getScriptCommandLine());
   }
 }

@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
-import static com.google.cloud.tools.managedcloudsdk.OsInfo.Name.LINUX;
-import static com.google.cloud.tools.managedcloudsdk.OsInfo.Name.MAC;
 import static com.google.cloud.tools.managedcloudsdk.OsInfo.Name.WINDOWS;
 
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
@@ -26,8 +24,8 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.components.SdkComponent;
 import com.google.cloud.tools.managedcloudsdk.components.SdkComponentInstaller;
+import com.google.cloud.tools.managedcloudsdk.components.SdkUpdater;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstaller;
-import com.google.cloud.tools.managedcloudsdk.update.SdkUpdater;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -167,7 +165,7 @@ public class ManagedCloudSdk {
   }
 
   public SdkComponentInstaller newComponentInstaller() {
-    return SdkComponentInstaller.newComponentInstaller(getGcloud());
+    return SdkComponentInstaller.newComponentInstaller(osInfo.name(), getGcloud());
   }
 
   /**
