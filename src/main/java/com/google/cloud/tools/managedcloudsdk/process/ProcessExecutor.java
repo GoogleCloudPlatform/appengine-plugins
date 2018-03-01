@@ -21,9 +21,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /** Executes a shell command. */
 public class ProcessExecutor {
+
+  private static final Logger logger = Logger.getLogger(ProcessExecutor.class.getName());
 
   private ProcessBuilderFactory processBuilderFactory = new ProcessBuilderFactory();
 
@@ -57,6 +60,15 @@ public class ProcessExecutor {
       AsyncStreamHandler stdout,
       AsyncStreamHandler stderr)
       throws IOException, InterruptedException {
+
+
+    logger.fine("Running command : " + command);
+    if (workingDirectory != null) {
+      logger.fine("In working directory : " + workingDirectory.toString());
+    }
+    if (environment != null && environment.size() > 0) {
+      logger.fine("With environment : " + environment);
+    }
 
     // Builds the command to execute.
     ProcessBuilder processBuilder = processBuilderFactory.createProcessBuilder();
