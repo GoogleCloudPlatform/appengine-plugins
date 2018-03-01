@@ -19,10 +19,12 @@ package com.google.cloud.tools.managedcloudsdk.install;
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
+import com.google.common.collect.ImmutableMap;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,6 +45,7 @@ public class InstallerTest {
 
   private Path fakeWorkingDirectory;
   private List<String> fakeCommand = Arrays.asList("scriptexec", "test-install.script");
+  private Map<String, String> fakeEnv = ImmutableMap.of("PROPERTY", "value");
 
   @Before
   public void setUp() {
@@ -50,6 +53,7 @@ public class InstallerTest {
 
     fakeWorkingDirectory = tmp.getRoot().toPath();
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
+    Mockito.when(mockInstallScriptProvider.getScriptEnvironment()).thenReturn(fakeEnv);
   }
 
   @Test
@@ -64,7 +68,7 @@ public class InstallerTest {
         .install();
 
     Mockito.verify(mockCommandRunner)
-        .run(expectedCommand(false), fakeWorkingDirectory, null, mockConsoleListener);
+        .run(expectedCommand(false), fakeWorkingDirectory, fakeEnv, mockConsoleListener);
     Mockito.verifyNoMoreInteractions(mockCommandRunner);
 
     ProgressVerifier.verifyUnknownProgress(mockProgressListener, "Installing Cloud SDK");
@@ -82,7 +86,7 @@ public class InstallerTest {
         .install();
 
     Mockito.verify(mockCommandRunner)
-        .run(expectedCommand(true), fakeWorkingDirectory, null, mockConsoleListener);
+        .run(expectedCommand(true), fakeWorkingDirectory, fakeEnv, mockConsoleListener);
     Mockito.verifyNoMoreInteractions(mockCommandRunner);
   }
 

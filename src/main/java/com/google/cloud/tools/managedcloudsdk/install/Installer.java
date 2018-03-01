@@ -25,6 +25,7 @@ import com.google.common.annotations.VisibleForTesting;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /** Installer for running install scripts in a Cloud SDK download. */
 final class Installer<T extends InstallScriptProvider> {
@@ -61,8 +62,10 @@ final class Installer<T extends InstallScriptProvider> {
     command.add("--quiet"); // don't accept user input during install
     command.add("--usage-reporting=" + usageReporting); // usage reporing passthrough
 
+    Map<String, String> installerEnvironment = installScriptProvider.getScriptEnvironment();
+
     progressListener.start("Installing Cloud SDK", ProgressListener.UNKNOWN);
-    commandRunner.run(command, installedSdkRoot, null, consoleListener);
+    commandRunner.run(command, installedSdkRoot, installerEnvironment, consoleListener);
     progressListener.done();
   }
 

@@ -16,8 +16,10 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /** {@link InstallScriptProvider} for windows. */
 final class WindowsInstallScriptProvider implements InstallScriptProvider {
@@ -28,8 +30,14 @@ final class WindowsInstallScriptProvider implements InstallScriptProvider {
   @Override
   public List<String> getScriptCommandLine() {
     List<String> script = new ArrayList<>(3);
-    script.add("call");
+    script.add("cmd.exe");
+    script.add("/c");
     script.add("install.bat");
     return script;
+  }
+
+  @Override
+  public Map<String, String> getScriptEnvironment() {
+    return ImmutableMap.of("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
   }
 }

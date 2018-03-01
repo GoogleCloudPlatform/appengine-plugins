@@ -18,6 +18,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /** {@link InstallScriptProvider} for mac and linux. */
 final class UnixInstallScriptProvider implements InstallScriptProvider {
@@ -30,5 +31,10 @@ final class UnixInstallScriptProvider implements InstallScriptProvider {
     List<String> script = new ArrayList<>(1);
     script.add("./install.sh");
     return script;
+  }
+
+  @Override
+  public Map<String, String> getScriptEnvironment() {
+    return null;
   }
 }
