@@ -54,7 +54,8 @@ public class SdkComponentInstaller {
   public void installComponent(
       SdkComponent component, ProgressListener progressListener, ConsoleListener consoleListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    progressListener.start("Installing " + component.toString(), -1);
+
+    progressListener.start("Installing " + component.toString(), ProgressListener.UNKNOWN);
 
     Map<String, String> environment = null;
     if (pythonCopier != null) {
