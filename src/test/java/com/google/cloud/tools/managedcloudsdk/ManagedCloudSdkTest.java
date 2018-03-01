@@ -16,11 +16,11 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
-import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import com.google.cloud.tools.managedcloudsdk.components.SdkComponent;
+import com.google.cloud.tools.managedcloudsdk.components.WindowsBundledPythonCopierTestHelper;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstallerException;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -223,14 +223,7 @@ public class ManagedCloudSdkTest {
           UnsupportedOsException {
     Map<String, String> env = null;
     if (OsInfo.getSystemOsInfo().name().equals(OsInfo.Name.WINDOWS)) {
-      String copiedPython =
-          CommandCaller.newCaller()
-              .call(
-                  Arrays.asList(
-                      testSdk.getGcloud().toString(), "components", "copy-bundled-python"),
-                  null,
-                  null);
-      env = ImmutableMap.of("CLOUDSDK_PYTHON", copiedPython);
+      env = WindowsBundledPythonCopierTestHelper.newInstance(testSdk.getGcloud()).copyPython();
     }
     CommandRunner.newRunner()
         .run(
