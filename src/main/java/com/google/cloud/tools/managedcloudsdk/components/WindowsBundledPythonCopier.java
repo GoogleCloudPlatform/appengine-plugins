@@ -44,19 +44,15 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
       throws InterruptedException, CommandExitException, CommandExecutionException {
     List<String> copyPythonCommand =
         Arrays.asList(gcloud.toString(), "components", "copy-bundled-python");
+    // The path returned from gcloud points to the "python.exe" binary, e.g.,
+    // c:/users/ieuser/appdata/local/temp/tmpjmkt_z/python/python.exe
+    //
     // A trim() required to remove newlines from call result. Using new lines in windows
     // environment passed through via ProcessBuilder will result in cryptic : "The syntax of
     // the command is incorrect."
     String tempPythonLocation = commandCaller.call(copyPythonCommand, null, null).trim();
 
-    Runtime.getRuntime()
-        .addShutdownHook(
-            new Thread() {
-              @Override
-              public void run() {
-                deleteCopiedPython(tempPythonLocation);
-              }
-            });
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> deleteCopiedPython(tempPythonLocation)));
 
     return ImmutableMap.of("CLOUDSDK_PYTHON", tempPythonLocation);
   }
