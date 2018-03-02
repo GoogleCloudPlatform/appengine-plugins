@@ -62,7 +62,7 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
 
   @VisibleForTesting
   static void deleteCopiedPython(String tempPythonLocation) {
-    // Delete the last "python.exe" in the path.
+    // The path returned from gcloud points to the "python.exe" binary. Delete it from the path.
     String pythonHome = tempPythonLocation.replaceAll(
         "[pP][yY][tT][hH][oO][nN]\\.[eE][xX][eE]$", "");
     boolean endsWithPythonExe = !pythonHome.equals(tempPythonLocation);
