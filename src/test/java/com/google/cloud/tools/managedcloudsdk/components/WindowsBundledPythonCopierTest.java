@@ -20,17 +20,24 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.common.collect.ImmutableMap;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 public class WindowsBundledPythonCopierTest {
+
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Mock private CommandCaller mockCommandCaller;
   private Path fakeGcloud;
@@ -55,5 +62,46 @@ public class WindowsBundledPythonCopierTest {
     Map<String, String> testEnv = testCopier.copyPython();
 
     Assert.assertEquals(ImmutableMap.of("CLOUDSDK_PYTHON", "copied-python"), testEnv);
+  }
+
+  @Test
+  public void testDeleteCopiedPython() throws IOException {
+    File pythonHome = temporaryFolder.newFolder("python");
+    File executable = temporaryFolder.newFile("python/python.exe");
+    Assert.assertTrue(executable.exists());
+
+    WindowsBundledPythonCopier.deleteCopiedPython(executable.toString());
+    Assert.assertFalse(executable.exists());
+    Assert.assertFalse(pythonHome.exists());
+  }
+
+  @Test
+  public void testDeleteCopiedPython_caseInsensitivity() throws IOException {
+    File pythonHome = temporaryFolder.newFolder("python");
+    File executable = temporaryFolder.newFile("python/PyThOn.EXE");
+    Assert.assertTrue(executable.exists());
+
+    WindowsBundledPythonCopier.deleteCopiedPython(executable.toString());
+    Assert.assertFalse(executable.exists());
+    Assert.assertFalse(pythonHome.exists());
+  }
+
+  @Test
+  public void testDeleteCopiedPython_unexpectedLocation() throws IOException {
+    temporaryFolder.newFolder("unexpected");
+    File unpextected = temporaryFolder.newFile("unexpected/file.ext");
+    Assert.assertTrue(unpextected.exists());
+
+    WindowsBundledPythonCopier.deleteCopiedPython(unpextected.toString());
+    Assert.assertTrue(unpextected.exists());
+  }
+
+  @Test
+  public void testDeleteCopiedPython_nonExistingDirectory() {
+    Path executable = temporaryFolder.getRoot().toPath().resolve("python/python.exe");
+    Assert.assertFalse(Files.exists(executable));
+
+    WindowsBundledPythonCopier.deleteCopiedPython("python/python.exe");
+    // Ensure no runtime exception is thrown.
   }
 }

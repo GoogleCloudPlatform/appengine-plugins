@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.managedcloudsdk.install;
+package com.google.cloud.tools.io;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -24,7 +24,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /** Internal use only, deletes a file tree. TODO: remove and use guava when moving to java8. */
-class FileDeleteVisitor extends SimpleFileVisitor<Path> {
+public class FileDeleteVisitor extends SimpleFileVisitor<Path> {
   @Override
   public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
     Files.delete(file);
