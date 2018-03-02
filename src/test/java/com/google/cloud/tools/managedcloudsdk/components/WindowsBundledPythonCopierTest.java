@@ -117,8 +117,8 @@ public class WindowsBundledPythonCopierTest {
   @Test
   public void testIsUnderTempDirectory_variableTmp() {
     Assert.assertTrue(
-        WindowsBundledPythonCopier.isUnderTempDirectory("/tmp/prefix/some/file.ext",
-            ImmutableMap.of("TMP", "/tmp/prefix")));
+        WindowsBundledPythonCopier.isUnderTempDirectory(
+            "/tmp/prefix/some/file.ext", ImmutableMap.of("TMP", "/tmp/prefix")));
   }
 
   @Test
