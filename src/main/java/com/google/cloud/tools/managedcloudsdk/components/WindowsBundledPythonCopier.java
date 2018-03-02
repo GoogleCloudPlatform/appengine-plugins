@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
     List<String> copyPythonCommand =
         Arrays.asList(gcloud.toString(), "components", "copy-bundled-python");
     // A trim() required to remove newlines from call result. Using new lines in windows
-    // environment passed through via ProcessBuilder will result in crpytic : "The syntax of
+    // environment passed through via ProcessBuilder will result in cryptic : "The syntax of
     // the command is incorrect."
     String tempPythonLocation = commandCaller.call(copyPythonCommand, null, null).trim();
     return ImmutableMap.of("CLOUDSDK_PYTHON", tempPythonLocation);
