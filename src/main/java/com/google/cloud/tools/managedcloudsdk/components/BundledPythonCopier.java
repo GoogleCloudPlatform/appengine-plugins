@@ -23,7 +23,7 @@ import java.util.Map;
 public interface BundledPythonCopier {
   /**
    * Copy a cloud sdk bundled python into a temporary directory and return an environment map with
-   * the location of that bundled python.
+   * the location of that bundled python {@code CLOUDSDK_PYTHON:path/to/copied/python}.
    */
   Map<String, String> copyPython()
       throws InterruptedException, CommandExitException, CommandExecutionException;
