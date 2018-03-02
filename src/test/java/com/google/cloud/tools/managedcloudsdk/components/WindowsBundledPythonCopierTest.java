@@ -89,11 +89,11 @@ public class WindowsBundledPythonCopierTest {
   @Test
   public void testDeleteCopiedPython_unexpectedLocation() throws IOException {
     temporaryFolder.newFolder("unexpected");
-    File unpextected = temporaryFolder.newFile("unexpected/file.ext");
-    Assert.assertTrue(unpextected.exists());
+    File unexpected = temporaryFolder.newFile("unexpected/file.ext");
+    Assert.assertTrue(unexpected.exists());
 
-    WindowsBundledPythonCopier.deleteCopiedPython(unpextected.toString());
-    Assert.assertTrue(unpextected.exists());
+    WindowsBundledPythonCopier.deleteCopiedPython(unexpected.toString());
+    Assert.assertTrue(unexpected.exists());
   }
 
   @Test
