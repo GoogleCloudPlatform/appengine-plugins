@@ -50,12 +50,14 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
     // the command is incorrect."
     String tempPythonLocation = commandCaller.call(copyPythonCommand, null, null).trim();
 
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        deleteCopiedPython(tempPythonLocation);
-      }
-    });
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread() {
+              @Override
+              public void run() {
+                deleteCopiedPython(tempPythonLocation);
+              }
+            });
 
     return ImmutableMap.of("CLOUDSDK_PYTHON", tempPythonLocation);
   }
@@ -63,11 +65,11 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
   @VisibleForTesting
   static void deleteCopiedPython(String tempPythonLocation) {
     // The path returned from gcloud points to the "python.exe" binary. Delete it from the path.
-    String pythonHome = tempPythonLocation.replaceAll(
-        "[pP][yY][tT][hH][oO][nN]\\.[eE][xX][eE]$", "");
+    String pythonHome =
+        tempPythonLocation.replaceAll("[pP][yY][tT][hH][oO][nN]\\.[eE][xX][eE]$", "");
     boolean endsWithPythonExe = !pythonHome.equals(tempPythonLocation);
 
-    if (endsWithPythonExe) {  // just to be safe
+    if (endsWithPythonExe) { // just to be safe
       try {
         Files.walkFileTree(Paths.get(pythonHome), new FileDeleteVisitor());
       } catch (IOException e) {
