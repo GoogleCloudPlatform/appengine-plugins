@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -80,6 +81,7 @@ public class WindowsBundledPythonCopierTest {
     File pythonHome = temporaryFolder.newFolder("python");
     File executable = temporaryFolder.newFile("python/PyThOn.EXE");
     Assert.assertTrue(executable.exists());
+    Assert.assertThat(executable.toString(), Matchers.endsWith("PyThOn.EXE"));
 
     WindowsBundledPythonCopier.deleteCopiedPython(executable.toString());
     Assert.assertFalse(executable.exists());
@@ -103,5 +105,26 @@ public class WindowsBundledPythonCopierTest {
 
     WindowsBundledPythonCopier.deleteCopiedPython("python/python.exe");
     // Ensure no runtime exception is thrown.
+  }
+
+  @Test
+  public void testIsUnderTempDirectory_variableTemp() {
+    Assert.assertTrue(
+        WindowsBundledPythonCopier.isUnderTempDirectory(
+            "/temp/prefix/some/file.ext", ImmutableMap.of("TEMP", "/temp/prefix")));
+  }
+
+  @Test
+  public void testIsUnderTempDirectory_variableTmp() {
+    Assert.assertTrue(
+        WindowsBundledPythonCopier.isUnderTempDirectory("/tmp/prefix/some/file.ext",
+            ImmutableMap.of("TMP", "/tmp/prefix")));
+  }
+
+  @Test
+  public void testIsUnderTempDirectory_noTempVariables() {
+    Assert.assertFalse(
+        WindowsBundledPythonCopier.isUnderTempDirectory(
+            "/tmp/prefix/some/file.ext", ImmutableMap.of()));
   }
 }

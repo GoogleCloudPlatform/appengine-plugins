@@ -46,23 +46,35 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
         Arrays.asList(gcloud.toString(), "components", "copy-bundled-python");
     // The path returned from gcloud points to the "python.exe" binary, e.g.,
     // c:/users/ieuser/appdata/local/temp/tmpjmkt_z/python/python.exe
+    // However, it may not copy but return an existing Python executable.
     //
     // A trim() required to remove newlines from call result. Using new lines in windows
     // environment passed through via ProcessBuilder will result in cryptic : "The syntax of
     // the command is incorrect."
-    String tempPythonLocation = commandCaller.call(copyPythonCommand, null, null).trim();
+    String pythonExePath = commandCaller.call(copyPythonCommand, null, null).trim();
 
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> deleteCopiedPython(tempPythonLocation)));
+    if (isUnderTempDirectory(pythonExePath, System.getenv())) {
+      Runtime.getRuntime().addShutdownHook(new Thread(() -> deleteCopiedPython(pythonExePath)));
+    }
 
-    return ImmutableMap.of("CLOUDSDK_PYTHON", tempPythonLocation);
+    return ImmutableMap.of("CLOUDSDK_PYTHON", pythonExePath);
   }
 
   @VisibleForTesting
-  static void deleteCopiedPython(String tempPythonLocation) {
+  static boolean isUnderTempDirectory(String pythonExePath, Map<String, String> environment) {
+    Path pythonExe = Paths.get(pythonExePath);
+    String temp = environment.get("TEMP");
+    String tmp = environment.get("TMP");
+
+    return (temp != null && pythonExe.startsWith(temp))
+        || (tmp != null && pythonExe.startsWith(tmp));
+  }
+
+  @VisibleForTesting
+  static void deleteCopiedPython(String pythonExePath) {
     // The path returned from gcloud points to the "python.exe" binary. Delete it from the path.
-    String pythonHome =
-        tempPythonLocation.replaceAll("[pP][yY][tT][hH][oO][nN]\\.[eE][xX][eE]$", "");
-    boolean endsWithPythonExe = !pythonHome.equals(tempPythonLocation);
+    String pythonHome = pythonExePath.replaceAll("[pP][yY][tT][hH][oO][nN]\\.[eE][xX][eE]$", "");
+    boolean endsWithPythonExe = !pythonHome.equals(pythonExePath);
 
     if (endsWithPythonExe) { // just to be safe
       try {
