@@ -323,7 +323,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-vision",
-         "version": "1.17.0"
+         "version": "1.19.0"
        }
       }
     ]
@@ -349,7 +349,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-language",
-         "version": "1.17.0"
+         "version": "1.19.0"
        }
       }
     ]
@@ -482,7 +482,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-datastore",
-         "version": "1.17.0"
+         "version": "1.19.0"
        }
       }
     ]
@@ -514,7 +514,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-storage",
-         "version": "1.17.0"
+         "version": "1.19.0"
        }
       }
     ]
@@ -539,7 +539,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-translate",
-         "version": "1.17.0"
+         "version": "1.19.0"
        }
       }
     ]
@@ -572,7 +572,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-logging",
-         "version": "1.17.0"
+         "version": "1.19.0"
        }
       }
     ]
