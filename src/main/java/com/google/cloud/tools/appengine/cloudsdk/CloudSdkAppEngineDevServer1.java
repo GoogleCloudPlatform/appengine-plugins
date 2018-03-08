@@ -206,7 +206,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    *     module is found (i.e. pure java8 or mixed java7/java8)
    */
   @VisibleForTesting
-  boolean isJava8(List<File> services) {
+  boolean isJava8(List<File> services) throws AppEngineException {
     boolean java8Detected = false;
     boolean java7Detected = false;
     for (File serviceDirectory : services) {
@@ -227,8 +227,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     return java8Detected;
   }
 
-  private static Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(
-      List<File> services) {
+  private static Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(List<File> services)
+      throws AppEngineException {
     Map<String, String> allAppEngineEnvironment = Maps.newHashMap();
     for (File serviceDirectory : services) {
       Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");

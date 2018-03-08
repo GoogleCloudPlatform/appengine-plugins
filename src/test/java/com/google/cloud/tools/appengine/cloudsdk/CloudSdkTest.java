@@ -66,12 +66,14 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetSdkPath() {
+  public void testGetSdkPath() throws CloudSdkNotFoundException {
     assertEquals(root, builder.build().getSdkPath());
   }
 
   @Test
-  public void testValidateCloudSdk() {
+  public void testValidateCloudSdk()
+      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException,
+          InvalidJavaSdkException {
     new CloudSdk.Builder().build().validateCloudSdk();
   }
 
@@ -82,7 +84,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileNotExists() {
+  public void testGetVersion_fileNotExists() throws CloudSdkNotFoundException {
     try {
       builder.build().getVersion();
       fail();
@@ -93,7 +95,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileContentInvalid() throws IOException {
+  public void testGetVersion_fileContentInvalid() throws IOException, CloudSdkNotFoundException {
     String fileContents = "this is not a valid version string";
     writeVersionFile(fileContents);
     try {
@@ -107,33 +109,35 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileContentValid() throws IOException {
+  public void testGetVersion_fileContentValid()
+      throws IOException, CloudSdkVersionFileException, CloudSdkNotFoundException {
     String version = "136.0.0";
     writeVersionFile(version);
     assertEquals(version, builder.build().getVersion().toString());
   }
 
   @Test
-  public void testValidateAppEngineJavaComponents() {
+  public void testValidateAppEngineJavaComponents()
+      throws AppEngineJavaComponentsNotInstalledException, CloudSdkNotFoundException {
     new CloudSdk.Builder().build().validateAppEngineJavaComponents();
   }
 
   @Test
-  public void testGetWindowsPythonPath() {
+  public void testGetWindowsPythonPath() throws CloudSdkNotFoundException {
     assertThat(
         builder.build().getWindowsPythonPath().toString(),
         anyOf(is("python"), endsWith("python.exe")));
   }
 
   @Test
-  public void testGetJavaAppEngineSdkPath() {
+  public void testGetJavaAppEngineSdkPath() throws CloudSdkNotFoundException {
     assertEquals(
         root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
         builder.build().getJavaAppEngineSdkPath());
   }
 
   @Test
-  public void testGetJarPathJavaTools() {
+  public void testGetJarPathJavaTools() throws CloudSdkNotFoundException {
     assertEquals(
         root.resolve(
             "platform/google_appengine/google/appengine"
@@ -142,7 +146,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testNewCloudSdk_nullWaitingOutputListener() {
+  public void testNewCloudSdk_nullWaitingOutputListener() throws CloudSdkNotFoundException {
     CloudSdk sdk =
         builder.addStdOutLineListener(outputListener).runDevAppServerWait(10).async(false).build();
 
@@ -154,7 +158,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testNewCloudSdk_outListener() {
+  public void testNewCloudSdk_outListener() throws CloudSdkNotFoundException {
     builder.addStdOutLineListener(outputListener).runDevAppServerWait(10).async(true);
 
     CloudSdk sdk = builder.build();
@@ -166,7 +170,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testNewCloudSdk_errListener() {
+  public void testNewCloudSdk_errListener() throws CloudSdkNotFoundException {
     builder.addStdErrLineListener(outputListener).runDevAppServerWait(10).async(true);
     CloudSdk sdk = builder.build();
 
@@ -204,7 +208,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testResolversOrdering() {
+  public void testResolversOrdering() throws CloudSdkNotFoundException {
     CloudSdkResolver r1 = Mockito.mock(CloudSdkResolver.class, "r1");
     when(r1.getRank()).thenReturn(0);
     when(r1.getCloudSdkPath()).thenReturn(Paths.get("/r1"));
@@ -224,7 +228,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testResolverCascading() {
+  public void testResolverCascading() throws CloudSdkNotFoundException {
     CloudSdkResolver r1 = Mockito.mock(CloudSdkResolver.class, "r1");
     when(r1.getRank()).thenReturn(0);
     when(r1.getCloudSdkPath()).thenReturn(null);
@@ -242,7 +246,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetJavaBinary() {
+  public void testGetJavaBinary() throws CloudSdkNotFoundException {
     CloudSdk sdk = new CloudSdk.Builder().javaHome(Paths.get("java", "path")).build();
     assertEquals(
         Paths.get(
@@ -255,7 +259,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGcloudCommandEnvironment() {
+  public void testGcloudCommandEnvironment() throws CloudSdkNotFoundException {
     builder.appCommandShowStructuredLogs("always");
     builder.appCommandCredentialFile(mock(File.class));
     builder.appCommandMetricsEnvironment("intellij");

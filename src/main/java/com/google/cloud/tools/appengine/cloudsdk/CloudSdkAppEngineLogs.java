@@ -49,7 +49,7 @@ public class CloudSdkAppEngineLogs implements AppEngineLogs {
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   @Override
-  public void read(LogsConfiguration configuration) {
+  public void read(LogsConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(sdk);
 

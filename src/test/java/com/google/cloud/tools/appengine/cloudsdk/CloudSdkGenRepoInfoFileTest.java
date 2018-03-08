@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.debug.DefaultGenRepoInfoFileConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.collect.ImmutableList;
@@ -37,7 +38,7 @@ public class CloudSdkGenRepoInfoFileTest {
   }
 
   @Test
-  public void testGenerate() throws ProcessRunnerException {
+  public void testGenerate() throws AppEngineException, ProcessRunnerException {
     CloudSdk sdk = Mockito.mock(CloudSdk.class);
     CloudSdkGenRepoInfoFile model = new CloudSdkGenRepoInfoFile(sdk);
     DefaultGenRepoInfoFileConfiguration configuration = new DefaultGenRepoInfoFileConfiguration();

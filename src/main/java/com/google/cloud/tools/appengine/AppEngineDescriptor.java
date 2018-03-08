@@ -63,7 +63,7 @@ public class AppEngineDescriptor {
    * Returns project ID from the &lt;application&gt; element of the appengine-web.xml or null if it
    * is missing.
    */
-  public String getProjectId() {
+  public String getProjectId() throws AppEngineException {
     return getText(getNode(document, "appengine-web-app", "application"));
   }
 
@@ -71,7 +71,7 @@ public class AppEngineDescriptor {
    * Returns runtime from the &lt;runtime&gt; element of the appengine-web.xml or null if it is
    * missing.
    */
-  public String getRuntime() {
+  public String getRuntime() throws AppEngineException {
     return getText(getNode(document, "appengine-web-app", "runtime"));
   }
 
@@ -79,7 +79,7 @@ public class AppEngineDescriptor {
    * Returns project version from the &lt;version&gt; element of the appengine-web.xml or null if it
    * is missing.
    */
-  public String getProjectVersion() {
+  public String getProjectVersion() throws AppEngineException {
     return getText(getNode(document, "appengine-web-app", "version"));
   }
 
@@ -87,7 +87,7 @@ public class AppEngineDescriptor {
    * Returns service ID from the &lt;service&gt; element of the appengine-web.xml, or null if it is
    * missing. Will also look at module ID.
    */
-  public String getServiceId() {
+  public String getServiceId() throws AppEngineException {
     String serviceId = getText(getNode(document, "appengine-web-app", "service"));
     if (serviceId != null) {
       return serviceId;
@@ -96,7 +96,7 @@ public class AppEngineDescriptor {
   }
 
   /** Returns true if the runtime read from appengine-web.xml is Java8. */
-  public boolean isJava8() {
+  public boolean isJava8() throws AppEngineException {
     String runtime = getRuntime();
     return "java8".equals(runtime) || "java8g".equals(runtime);
   }
@@ -114,18 +114,18 @@ public class AppEngineDescriptor {
    *
    * @return a map representing the environment variable settings in the appengine-web.xml
    */
-  public Map<String, String> getEnvironment() {
+  public Map<String, String> getEnvironment() throws AppEngineException {
     Node environmentParentNode = getNode(document, "appengine-web-app", "env-variables");
     return getAttributeMap(environmentParentNode, "env-var", "name", "value");
   }
 
-  private static String getText(Node node) {
+  private static String getText(Node node) throws AppEngineException {
     if (node != null) {
       try {
         return node.getTextContent();
       } catch (DOMException ex) {
         throw new AppEngineException(
-            "Failed to parse text content from node " + node.getNodeName());
+            "Failed to parse text content from node " + node.getNodeName(), ex);
       }
     }
 
@@ -134,7 +134,8 @@ public class AppEngineDescriptor {
 
   /** Returns a map formed from the attributes of the nodes contained within the parent node. */
   private static Map<String, String> getAttributeMap(
-      Node parent, String nodeName, String keyAttributeName, String valueAttributeName) {
+      Node parent, String nodeName, String keyAttributeName, String valueAttributeName)
+      throws AppEngineException {
     if (parent != null) {
       Map<String, String> nameValueAttributeMap = Maps.newHashMap();
 
@@ -152,7 +153,7 @@ public class AppEngineDescriptor {
                 nameValueAttributeMap.put(keyNode.getTextContent(), valueNode.getTextContent());
               } catch (DOMException ex) {
                 throw new AppEngineException(
-                    "Failed to parse value from attribute node " + keyNode.getNodeName());
+                    "Failed to parse value from attribute node " + keyNode.getNodeName(), ex);
               }
             }
           }

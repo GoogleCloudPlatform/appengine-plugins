@@ -18,6 +18,7 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
 import static java.lang.ProcessBuilder.Redirect;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessStartListener;
@@ -137,7 +138,7 @@ public class DefaultProcessRunner implements ProcessRunner {
         syncRun(process, stdOutHandler, stdErrHandler);
       }
 
-    } catch (IOException | InterruptedException e) {
+    } catch (AppEngineException | IOException | InterruptedException e) {
       throw new ProcessRunnerException(e);
     }
   }
@@ -195,7 +196,7 @@ public class DefaultProcessRunner implements ProcessRunner {
   }
 
   private void syncRun(Process process, Thread stdOutThread, Thread stdErrThread)
-      throws InterruptedException {
+      throws InterruptedException, AppEngineException {
     int exitCode = process.waitFor();
     // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/269
     if (stdOutThread != null) {
@@ -221,7 +222,7 @@ public class DefaultProcessRunner implements ProcessRunner {
             public void run() {
               try {
                 syncRun(process, stdOutHandler, stdErrHandler);
-              } catch (InterruptedException e) {
+              } catch (InterruptedException | AppEngineException e) {
                 e.printStackTrace();
               }
             }

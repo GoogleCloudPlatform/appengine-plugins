@@ -20,6 +20,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.versions.DefaultVersionsListConfiguration;
 import com.google.cloud.tools.appengine.api.versions.DefaultVersionsSelectionConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
@@ -37,7 +38,7 @@ public class CloudSdkAppEngineVersionsTest {
   @Mock private CloudSdk sdk;
 
   @Test
-  public void startTest() throws ProcessRunnerException {
+  public void startTest() throws ProcessRunnerException, AppEngineException {
     CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.start(getVersionConfig());
 
@@ -49,7 +50,7 @@ public class CloudSdkAppEngineVersionsTest {
   }
 
   @Test
-  public void stopTest() throws ProcessRunnerException {
+  public void stopTest() throws ProcessRunnerException, AppEngineException {
     CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.stop(getVersionConfig());
 
@@ -61,7 +62,7 @@ public class CloudSdkAppEngineVersionsTest {
   }
 
   @Test
-  public void deleteTest() throws ProcessRunnerException {
+  public void deleteTest() throws ProcessRunnerException, AppEngineException {
     CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.delete(getVersionConfig());
 
@@ -73,7 +74,7 @@ public class CloudSdkAppEngineVersionsTest {
   }
 
   @Test
-  public void listTest_doHideNoTraffic() throws ProcessRunnerException {
+  public void listTest_doHideNoTraffic() throws ProcessRunnerException, AppEngineException {
     CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.list(getListConfig(true));
 
@@ -91,7 +92,7 @@ public class CloudSdkAppEngineVersionsTest {
   }
 
   @Test
-  public void listTest_dontHideNoTraffic() throws ProcessRunnerException {
+  public void listTest_dontHideNoTraffic() throws ProcessRunnerException, AppEngineException {
     CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
     appEngineVersion.list(getListConfig(false));
 
