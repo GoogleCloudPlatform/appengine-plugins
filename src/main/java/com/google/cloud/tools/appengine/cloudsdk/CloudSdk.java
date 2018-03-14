@@ -125,6 +125,18 @@ public class CloudSdk {
   }
 
   /**
+   * Uses the process runner to execute the gcloud auth command with the provided arguments.
+   *
+   * @param args the arguments to pass to gcloud command
+   * @throws ProcessRunnerException when there is an issue running the gcloud process
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
+   */
+  public void runAuthCommand(List<String> args) throws ProcessRunnerException {
+    runGcloudCommand(args, null, "auth");
+  }
+
+  /**
    * Uses the process runner to execute the gcloud app command with the provided arguments.
    *
    * @param args the arguments to pass to gcloud command
