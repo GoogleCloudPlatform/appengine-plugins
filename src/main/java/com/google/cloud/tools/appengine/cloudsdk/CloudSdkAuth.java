@@ -31,9 +31,10 @@ import java.util.regex.Pattern;
 
 /** Cloud SDK based implementation of {@link Auth}. */
 public class CloudSdkAuth implements Auth {
-  private final CloudSdk cloudSdk;
-  private final Pattern emailPattern =
+  private static final Pattern emailPattern =
       Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]+$", Pattern.CASE_INSENSITIVE);
+
+  private final CloudSdk cloudSdk;
 
   public CloudSdkAuth(CloudSdk cloudSdk) {
     this.cloudSdk = Preconditions.checkNotNull(cloudSdk);
@@ -48,7 +49,9 @@ public class CloudSdkAuth implements Auth {
   @Override
   public void login(String user) {
     Preconditions.checkNotNull(user);
-    Preconditions.checkArgument(emailPattern.matcher(user).find(), "Invalid email: " + user);
+    if (!emailPattern.matcher(user).find()) {
+      throw new AppEngineException("Invalid email address: " + user);
+    }
     try {
       cloudSdk.runAuthCommand(Arrays.asList("login", user));
     } catch (ProcessRunnerException e) {

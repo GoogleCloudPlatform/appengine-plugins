@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -59,9 +60,9 @@ public class CloudSdkAuthTest {
     try {
       new CloudSdkAuth(sdk).login(testUsername);
       Assert.fail("Should have failed with bad user.");
-    } catch (IllegalArgumentException e) {
+    } catch (AppEngineException e) {
       Assert.assertThat(
-          e.getMessage(), CoreMatchers.containsString("Invalid email: " + testUsername));
+          e.getMessage(), CoreMatchers.containsString("Invalid email address: " + testUsername));
       // pass
     }
 
