@@ -54,8 +54,8 @@ public class CloudSdkAuth implements Auth {
     }
     try {
       cloudSdk.runAuthCommand(Arrays.asList("login", user));
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
+    } catch (ProcessRunnerException ex) {
+      throw new AppEngineException(ex);
     }
   }
 
@@ -64,8 +64,8 @@ public class CloudSdkAuth implements Auth {
   public void login() {
     try {
       cloudSdk.runAuthCommand(Collections.singletonList("login"));
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
+    } catch (ProcessRunnerException ex) {
+      throw new AppEngineException(ex);
     }
   }
 
@@ -82,8 +82,8 @@ public class CloudSdkAuth implements Auth {
       args.add("activate-service-account");
       args.addAll(GcloudArgs.get("key-file", jsonFile));
       cloudSdk.runAuthCommand(args);
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
+    } catch (ProcessRunnerException ex) {
+      throw new AppEngineException(ex);
     }
   }
 }
