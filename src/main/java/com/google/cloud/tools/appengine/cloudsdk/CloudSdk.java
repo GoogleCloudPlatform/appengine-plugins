@@ -296,7 +296,7 @@ public class CloudSdk {
    * @param environment the environment to set on the devappserver process
    * @throws ProcessRunnerException when process runner encounters an error
    * @throws AppEngineJavaComponentsNotInstalledException Cloud SDK is installed but App Engine Java
-   *         components are not
+   *     components are not
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    * @throws AppEngineException when dev appserver cannot be found
