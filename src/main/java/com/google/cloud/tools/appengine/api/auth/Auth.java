@@ -16,12 +16,13 @@
 
 package com.google.cloud.tools.appengine.api.auth;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import java.nio.file.Path;
 
 public interface Auth {
-  void login(String user);
+  void login(String user) throws AppEngineException;
 
-  void login();
+  void login() throws AppEngineException;
 
-  void activateServiceAccount(Path jsonFile);
+  void activateServiceAccount(Path jsonFile) throws AppEngineException;
 }

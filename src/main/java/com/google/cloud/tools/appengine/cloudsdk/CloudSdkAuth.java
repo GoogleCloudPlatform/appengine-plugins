@@ -45,9 +45,10 @@ public class CloudSdkAuth implements Auth {
    * configured for the system).
    *
    * @param user a user email
+   * @throws AppEngineException when there is an issue with the auth flow
    */
   @Override
-  public void login(String user) {
+  public void login(String user) throws AppEngineException {
     Preconditions.checkNotNull(user);
     if (!emailPattern.matcher(user).find()) {
       throw new AppEngineException("Invalid email address: " + user);
@@ -61,7 +62,7 @@ public class CloudSdkAuth implements Auth {
 
   /** Launches the gcloud auth login flow. */
   @Override
-  public void login() {
+  public void login() throws AppEngineException {
     try {
       cloudSdk.runAuthCommand(Collections.singletonList("login"));
     } catch (ProcessRunnerException ex) {
@@ -73,9 +74,10 @@ public class CloudSdkAuth implements Auth {
    * Activates a service account based on a configured json key file.
    *
    * @param jsonFile a service account json key file
+   * @throws AppEngineException when there is an issue with the auth flow
    */
   @Override
-  public void activateServiceAccount(Path jsonFile) {
+  public void activateServiceAccount(Path jsonFile) throws AppEngineException {
     Preconditions.checkArgument(Files.exists(jsonFile), "File does not exist: " + jsonFile);
     try {
       List<String> args = new ArrayList<>(3);

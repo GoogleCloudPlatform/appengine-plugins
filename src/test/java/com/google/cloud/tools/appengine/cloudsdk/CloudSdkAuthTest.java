@@ -48,14 +48,14 @@ public class CloudSdkAuthTest {
   }
 
   @Test
-  public void testLogin_withUser() throws ProcessRunnerException {
+  public void testLogin_withUser() throws AppEngineException, ProcessRunnerException {
     String testUsername = "potato@potato.com";
     new CloudSdkAuth(sdk).login(testUsername);
     Mockito.verify(sdk).runAuthCommand(Mockito.eq(Arrays.asList("login", testUsername)));
   }
 
   @Test
-  public void testLogin_withBadUser() throws ProcessRunnerException {
+  public void testLogin_withBadUser() {
     String testUsername = "potato@pota@to.com";
     try {
       new CloudSdkAuth(sdk).login(testUsername);
@@ -71,17 +71,20 @@ public class CloudSdkAuthTest {
       Assert.fail("Should have failed with bad user.");
     } catch (NullPointerException npe) {
       // pass
+    } catch (AppEngineException e) {
+      e.printStackTrace();
     }
   }
 
   @Test
-  public void testLogin_noUser() throws ProcessRunnerException {
+  public void testLogin_noUser() throws ProcessRunnerException, AppEngineException {
     new CloudSdkAuth(sdk).login();
     Mockito.verify(sdk).runAuthCommand(Mockito.eq(Collections.singletonList("login")));
   }
 
   @Test
-  public void testActivateServiceAccount() throws ProcessRunnerException, IOException {
+  public void testActivateServiceAccount()
+      throws ProcessRunnerException, IOException, AppEngineException {
     Path jsonKeyFile = tmpDir.newFile("json-keys").toPath();
     new CloudSdkAuth(sdk).activateServiceAccount(jsonKeyFile);
     Mockito.verify(sdk)
@@ -91,7 +94,7 @@ public class CloudSdkAuthTest {
   }
 
   @Test
-  public void testActivateServiceAccount_badKeyFile() {
+  public void testActivateServiceAccount_badKeyFile() throws AppEngineException {
     Path jsonKeyFile = tmpDir.getRoot().toPath().resolve("non-existant-file");
     try {
       new CloudSdkAuth(sdk).activateServiceAccount(jsonKeyFile);

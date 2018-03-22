@@ -134,7 +134,9 @@ public class CloudSdk {
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
-  public void runAuthCommand(List<String> args) throws ProcessRunnerException {
+  public void runAuthCommand(List<String> args)
+      throws ProcessRunnerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+          CloudSdkVersionFileException, InvalidJavaSdkException {
     runGcloudCommand(args, null, "auth");
   }
 
