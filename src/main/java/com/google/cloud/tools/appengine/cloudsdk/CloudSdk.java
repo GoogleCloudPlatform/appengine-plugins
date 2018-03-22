@@ -295,7 +295,8 @@ public class CloudSdk {
    * @param args the arguments to pass to devappserver
    * @param environment the environment to set on the devappserver process
    * @throws ProcessRunnerException when process runner encounters an error
-   * @throws AppEngineJavaComponentsNotInstalledException
+   * @throws AppEngineJavaComponentsNotInstalledException Cloud SDK is installed but App Engine Java
+   *         components are not
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    * @throws AppEngineException when dev appserver cannot be found
@@ -341,7 +342,7 @@ public class CloudSdk {
    *
    * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java components are
    *     not installed in the Cloud SDK
-   * @throws InvalidJavaSdkException
+   * @throws InvalidJavaSdkException java not found
    */
   public void runAppCfgCommand(List<String> args)
       throws ProcessRunnerException, AppEngineJavaComponentsNotInstalledException,
