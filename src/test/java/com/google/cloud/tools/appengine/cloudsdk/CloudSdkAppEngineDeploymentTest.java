@@ -250,7 +250,7 @@ public class CloudSdkAppEngineDeploymentTest {
   }
 
   @Test
-  public void testDeployConfig_doesNotExist() {
+  public void testDeployConfig_doesNotExist() throws AppEngineException {
     DefaultDeployProjectConfigurationConfiguration configuration =
         new DefaultDeployProjectConfigurationConfiguration();
     File testConfigYaml = new File(tmpDir.getRoot(), "testconfig.yaml");

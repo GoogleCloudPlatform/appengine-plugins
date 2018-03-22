@@ -35,7 +35,7 @@ public class NonZeroExceptionExitListenerTest {
   }
 
   @Test
-  public void testOnExit_zero() {
+  public void testOnExit_zero() throws AppEngineException {
     listener.onExit(0);
     // no exception
   }

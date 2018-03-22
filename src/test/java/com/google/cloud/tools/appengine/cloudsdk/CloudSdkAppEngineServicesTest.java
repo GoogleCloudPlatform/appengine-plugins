@@ -20,6 +20,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.services.DefaultTrafficSplitConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public class CloudSdkAppEngineServicesTest {
   @Mock private CloudSdk sdk;
 
   @Test
-  public void setTrafficTest() throws ProcessRunnerException {
+  public void setTrafficTest() throws AppEngineException, ProcessRunnerException {
     CloudSdkAppEngineServices appEngineService = new CloudSdkAppEngineServices(sdk);
 
     DefaultTrafficSplitConfiguration configuration = new DefaultTrafficSplitConfiguration();

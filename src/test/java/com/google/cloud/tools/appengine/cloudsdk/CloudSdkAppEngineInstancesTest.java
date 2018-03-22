@@ -20,6 +20,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.instances.DefaultInstancesSelectionConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class CloudSdkAppEngineInstancesTest {
   @Mock private CloudSdk sdk;
 
   @Test
-  public void enableDebugTest() throws ProcessRunnerException {
+  public void enableDebugTest() throws AppEngineException, ProcessRunnerException {
     CloudSdkAppEngineInstances appEngineInstances = new CloudSdkAppEngineInstances(sdk);
 
     appEngineInstances.enableDebug(getConfig());
@@ -56,7 +57,7 @@ public class CloudSdkAppEngineInstancesTest {
   }
 
   @Test
-  public void disableDebugTest() throws ProcessRunnerException {
+  public void disableDebugTest() throws AppEngineException, ProcessRunnerException {
     CloudSdkAppEngineInstances appEngineInstances = new CloudSdkAppEngineInstances(sdk);
 
     appEngineInstances.disableDebug(getConfig());

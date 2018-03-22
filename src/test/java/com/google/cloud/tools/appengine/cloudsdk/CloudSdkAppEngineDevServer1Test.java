@@ -470,31 +470,31 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testDetermineJavaRuntime_noWarningsJava7() {
+  public void testDetermineJavaRuntime_noWarningsJava7() throws AppEngineException {
     Assert.assertFalse(devServer.isJava8(ImmutableList.of(java7Service)));
     Assert.assertEquals(0, testHandler.getLogs().size());
   }
 
   @Test
-  public void testDetermineJavaRuntime_noWarningsJava7Multiple() {
+  public void testDetermineJavaRuntime_noWarningsJava7Multiple() throws AppEngineException {
     Assert.assertFalse(devServer.isJava8(ImmutableList.of(java7Service, java7Service)));
     Assert.assertEquals(0, testHandler.getLogs().size());
   }
 
   @Test
-  public void testDetermineJavaRuntime_noWarningsJava8() {
+  public void testDetermineJavaRuntime_noWarningsJava8() throws AppEngineException {
     Assert.assertTrue(devServer.isJava8(ImmutableList.of(java8Service)));
     Assert.assertEquals(0, testHandler.getLogs().size());
   }
 
   @Test
-  public void testDetermineJavaRuntime_noWarningsJava8Multiple() {
+  public void testDetermineJavaRuntime_noWarningsJava8Multiple() throws AppEngineException {
     Assert.assertTrue(devServer.isJava8(ImmutableList.of(java8Service, java8Service)));
     Assert.assertEquals(0, testHandler.getLogs().size());
   }
 
   @Test
-  public void testDetermineJavaRuntime_mixedModeWarning() {
+  public void testDetermineJavaRuntime_mixedModeWarning() throws AppEngineException {
 
     Assert.assertTrue(devServer.isJava8(ImmutableList.of(java8Service, java7Service)));
     Assert.assertEquals(1, testHandler.getLogs().size());
@@ -506,7 +506,8 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testWorkingDirectory_fallbackIfOneProject() throws ProcessRunnerException {
+  public void testWorkingDirectory_fallbackIfOneProject()
+      throws ProcessRunnerException, AppEngineException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service));
 
@@ -521,7 +522,8 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testWorkingDirectory_noFallbackIfManyProjects() throws ProcessRunnerException {
+  public void testWorkingDirectory_noFallbackIfManyProjects()
+      throws ProcessRunnerException, AppEngineException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service, java8Service));
 

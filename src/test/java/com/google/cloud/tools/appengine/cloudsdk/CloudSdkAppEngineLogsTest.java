@@ -20,6 +20,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.logs.DefaultLogsConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class CloudSdkAppEngineLogsTest {
   @Mock private CloudSdk sdk;
 
   @Test
-  public void readTest() throws ProcessRunnerException {
+  public void readTest() throws AppEngineException, ProcessRunnerException {
     CloudSdkAppEngineLogs appEngineLogs = new CloudSdkAppEngineLogs(sdk);
     DefaultLogsConfiguration configuration = new DefaultLogsConfiguration();
     configuration.setLevel("warning");

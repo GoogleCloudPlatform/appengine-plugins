@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.common.collect.ImmutableMap;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -65,14 +66,14 @@ public class AppEngineDescriptorTest {
       ROOT_START_TAG_WITH_INVALID_NS + PROJECT_ID + VERSION + ROOT_END_TAG;
 
   @Test
-  public void testParse_noProjectId() throws IOException, SAXException {
+  public void testParse_noProjectId() throws IOException, SAXException, AppEngineException {
     AppEngineDescriptor descriptor = parse(XML_WITHOUT_PROJECT_ID);
 
     assertNull(descriptor.getProjectId());
   }
 
   @Test
-  public void testParse_noVersion() throws IOException, SAXException {
+  public void testParse_noVersion() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITHOUT_VERSION);
 
     assertEquals(TEST_ID, descriptor.getProjectId());
@@ -80,7 +81,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testParse_properXml() throws IOException, SAXException {
+  public void testParse_properXml() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITH_VERSION_AND_PROJECT_ID);
 
     assertEquals(TEST_ID, descriptor.getProjectId());
@@ -88,7 +89,8 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testParse_xmlWithCommentBeforeValue() throws IOException, SAXException {
+  public void testParse_xmlWithCommentBeforeValue()
+      throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITH_COMMENT_BEFORE_VERSION);
 
     assertEquals(TEST_ID, descriptor.getProjectId());
@@ -96,7 +98,8 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testParse_xmlWithCommentAfterValue() throws IOException, SAXException {
+  public void testParse_xmlWithCommentAfterValue()
+      throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITH_COMMENT_AFTER_VERSION);
 
     assertEquals(TEST_ID, descriptor.getProjectId());
@@ -104,7 +107,8 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testParse_xmlWithInvalidNamespace() throws IOException, SAXException {
+  public void testParse_xmlWithInvalidNamespace()
+      throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(XML_WITH_VERSION_AND_PROJECT_ID_WRONG_NS);
 
     assertNull(descriptor.getProjectId());
@@ -112,28 +116,28 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testService_noContent() throws IOException, SAXException {
+  public void testService_noContent() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + ROOT_END_TAG);
 
     assertNull(descriptor.getServiceId());
   }
 
   @Test
-  public void testService_service() throws IOException, SAXException {
+  public void testService_service() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + SERVICE + ROOT_END_TAG);
 
     assertEquals(TEST_ID, descriptor.getServiceId());
   }
 
   @Test
-  public void testService_module() throws IOException, SAXException {
+  public void testService_module() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + MODULE + ROOT_END_TAG);
 
     assertEquals(TEST_ID, descriptor.getServiceId());
   }
 
   @Test
-  public void testJava8Runtime() throws IOException, SAXException {
+  public void testJava8Runtime() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + RUNTIME + ROOT_END_TAG);
 
     assertEquals(RUNTIME_ID, descriptor.getRuntime());
@@ -141,7 +145,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testUnknownRuntime() throws IOException, SAXException {
+  public void testUnknownRuntime() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor =
         parse(
             "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
@@ -153,7 +157,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testJava81() throws IOException, SAXException {
+  public void testJava81() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor =
         parse(
             "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
@@ -165,7 +169,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testInternalRuntime() throws IOException, SAXException {
+  public void testInternalRuntime() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor =
         parse(
             "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
@@ -177,7 +181,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testJava6Runtime() throws IOException, SAXException {
+  public void testJava6Runtime() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor =
         parse(
             "<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>"
@@ -189,7 +193,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testParseAttributeMapValues() throws IOException, SAXException {
+  public void testParseAttributeMapValues() throws AppEngineException, IOException, SAXException {
     Map<String, String> environment =
         parse(ROOT_START_TAG + ENVIRONMENT + ROOT_END_TAG).getEnvironment();
     Map<String, String> expectedEnvironment =
