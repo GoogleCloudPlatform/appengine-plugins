@@ -46,12 +46,6 @@ GetSessionID() {
 	eval $__resultvar="'$nxsessionid'"
 }
 
-# Usage: UploadJAR <session ID> <file>
-# Uploads the bundled JAR file to the Nexus Staging Repository.
-UploadJAR() {
-	curl 'https://oss.sonatype.org/service/local/staging/bundle_upload' -H "Cookie: NXSESSIONID=$1" -H 'Content-Type: multipart/form-data' --compressed -F "file=@$2"
-}
-
 # Gets the session ID.
 GetSessionID NXSESSIONID
 if [ $? -eq 1 ]; then
@@ -62,6 +56,10 @@ echo 'Login successful.'
 
 # Uploads the bundled JAR file.
 echo 'Uploading artifact...'
-UploadJAR $NXSESSIONID $BUNDLED_JAR_FILE
+curl 'https://oss.sonatype.org/service/local/staging/bundle_upload' -H "Cookie: NXSESSIONID=$NXSESSIONID" -H 'Content-Type: multipart/form-data' --compressed -F "file=@$BUNDLED_JAR_FILE"
+if [ $? -eq 1 ]; then
+  echo 'Upload failed!'
+  exit 1
+fi
 
 # TODO: Release on Sonatype.
