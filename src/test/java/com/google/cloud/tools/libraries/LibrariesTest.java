@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.json.Json;
@@ -158,6 +161,19 @@ public class LibrariesTest {
               + "/"
               + coordinates.getString("version");
       assertReachable(repo);
+    }
+  }
+  
+  @Test
+  public void testOrder() throws IOException {
+    List<String> names = new ArrayList<>();
+    for (JsonObject api : apis) {
+      names.add(api.getString("name"));
+    }
+    for (int i = 1; i < names.size(); i++) {
+      String previous = names.get(i - 1).toLowerCase(Locale.US);
+      String current = names.get(i).toLowerCase(Locale.US);
+      Assert.assertTrue(current + " < " + previous, current.compareTo(previous) > 0);
     }
   }
 }
