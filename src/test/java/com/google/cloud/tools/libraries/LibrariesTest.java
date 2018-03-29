@@ -163,7 +163,7 @@ public class LibrariesTest {
       assertReachable(repo);
     }
   }
-  
+
   @Test
   public void testOrder() throws IOException {
     List<String> names = new ArrayList<>();
