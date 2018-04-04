@@ -28,6 +28,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.common.io.Files;
@@ -72,17 +73,15 @@ public class CloudSdkTest {
 
   @Test
   public void testValidateCloudSdk()
-      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException,
-          InvalidJavaSdkException {
+      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException {
     new CloudSdk.Builder().build().validateCloudSdk();
   }
 
   @Test
-  public void testValidateCloudSdk_doesNotThrowInvalidJdkException()
-      throws CloudSdkNotFoundException, CloudSdkVersionFileException, CloudSdkOutOfDateException {
+  public void testValidateCloudSdk_doesNotThrowInvalidJdkException() {
     try {
       new CloudSdk.Builder().javaHome(Paths.get("/fake/path")).build().validateCloudSdk();
-    } catch (InvalidJavaSdkException ijse) {
+    } catch (AppEngineException ijse) {
       fail("Cloud SDK validation should not validate jdk");
     }
   }
