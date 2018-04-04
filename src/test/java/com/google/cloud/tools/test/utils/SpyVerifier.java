@@ -39,14 +39,14 @@ public class SpyVerifier {
   private SpyVerifier(Object objectUnderInspection) {
     Preconditions.checkArgument(Mockito.mockingDetails(objectUnderInspection).isSpy());
     objectToInspect = objectUnderInspection;
-    classToInspectAs = Mockito.mockingDetails(objectToInspect).getMockCreationSettings()
-        .getTypeToMock();
+    classToInspectAs =
+        Mockito.mockingDetails(objectToInspect).getMockCreationSettings().getTypeToMock();
   }
 
   /**
-   * This method is to verify that all setters in a configuration were called. The motivation is
-   * to ensure that configurations are fully built and we can ensure our handling is being
-   * properly tested.
+   * This method is to verify that all setters in a configuration were called. The motivation is to
+   * ensure that configurations are fully built and we can ensure our handling is being properly
+   * tested.
    */
   public SpyVerifier verifyDeclaredSetters() {
     // extract all invocations of getters by inspecting the spy
@@ -58,8 +58,7 @@ public class SpyVerifier {
       if (knownSetters.contains(m) && isSetter(m)) {
         if (methodInvocationCount.containsKey(m)) {
           methodInvocationCount.put(m, methodInvocationCount.get(m) + 1);
-        }
-        else {
+        } else {
           methodInvocationCount.put(m, 1);
         }
         invocation.markVerified();
@@ -71,10 +70,11 @@ public class SpyVerifier {
       if (isSetter(m)) {
         Integer invocationCount = methodInvocationCount.get(m);
         if (invocationCount == null || invocationCount != 1) {
-          throw new MockitoAssertionError("Setter invocations for '"
-              + m.getName()
-              + "' expected 1, but was "
-              + invocationCount);
+          throw new MockitoAssertionError(
+              "Setter invocations for '"
+                  + m.getName()
+                  + "' expected 1, but was "
+                  + invocationCount);
         }
       }
     }
@@ -90,7 +90,8 @@ public class SpyVerifier {
   }
 
   private static boolean isPublicWithPrefix(Method method, String prefix) {
-    return !method.isSynthetic() && Modifier.isPublic(method.getModifiers())
+    return !method.isSynthetic()
+        && Modifier.isPublic(method.getModifiers())
         && method.getName().startsWith(prefix);
   }
 
@@ -100,6 +101,7 @@ public class SpyVerifier {
 
   /**
    * Verify getters were called once or if in the override map, called 'count' times
+   *
    * @param overrides Override default counts in the style ["getterName" : count]
    */
   public SpyVerifier verifyDeclaredGetters(Map<String, Integer> overrides) throws Exception {
@@ -108,7 +110,9 @@ public class SpyVerifier {
       if (isGetter(m)) {
         Integer times = overrides.get(m.getName());
         times = (times == null) ? 1 : times;
-        Mockito.verify(objectToInspect, Mockito.times(times)).getClass().getMethod(m.getName())
+        Mockito.verify(objectToInspect, Mockito.times(times))
+            .getClass()
+            .getMethod(m.getName())
             .invoke(objectToInspect);
       }
     }

@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.DefaultProcessRunner;
 
 /**
@@ -29,5 +30,5 @@ public interface ProcessExitListener {
    *
    * @param exitCode the process exit code returned at the end of execution
    */
-  void onExit(int exitCode);
+  void onExit(int exitCode) throws AppEngineException;
 }

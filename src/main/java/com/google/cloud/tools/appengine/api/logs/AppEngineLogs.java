@@ -16,13 +16,11 @@
 
 package com.google.cloud.tools.appengine.api.logs;
 
-/**
- * This set of commands can be used to manage existing App Engine logs.
- */
+import com.google.cloud.tools.appengine.api.AppEngineException;
+
+/** This set of commands can be used to manage existing App Engine logs. */
 public interface AppEngineLogs {
 
-  /**
-   * Reads log entries for the given App Engine application.
-   */
-  void read(LogsConfiguration configuration);
+  /** Reads log entries for the given App Engine application. */
+  void read(LogsConfiguration configuration) throws AppEngineException;
 }

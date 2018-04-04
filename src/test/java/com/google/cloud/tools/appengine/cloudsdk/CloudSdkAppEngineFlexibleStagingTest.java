@@ -44,19 +44,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- * Test the CloudSdkAppEngineFlexibleStaging functionality
- */
+/** Test the CloudSdkAppEngineFlexibleStaging functionality */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineFlexibleStagingTest {
 
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-  @Mock
-  public StageFlexibleConfiguration config;
-  @Mock
-  public CopyService copyService;
+  @Mock public StageFlexibleConfiguration config;
+  @Mock public CopyService copyService;
 
   private LogStoringHandler handler;
   private File stagingDirectory;
@@ -69,7 +64,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyDockerContext_runtimeJavaNoWarning() throws IOException {
+  public void testCopyDockerContext_runtimeJavaNoWarning() throws AppEngineException, IOException {
     new FlexibleStagingContext().withNonExistantDockerDirectory();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
@@ -81,16 +76,19 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyDockerContext_runtimeJavaWithWarning() throws IOException {
+  public void testCopyDockerContext_runtimeJavaWithWarning()
+      throws AppEngineException, IOException {
     new FlexibleStagingContext().withDockerDirectory();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(1, logs.size());
-    assertEquals(logs.get(0).getMessage(),
+    assertEquals(
+        logs.get(0).getMessage(),
         "WARNING: runtime 'java' detected, any docker configuration in "
-            + config.getDockerDirectory() + " will be ignored. If you wish to specify "
+            + config.getDockerDirectory()
+            + " will be ignored. If you wish to specify "
             + "a docker configuration, please use 'runtime: custom'.");
 
     verifyZeroInteractions(copyService);
@@ -104,8 +102,11 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
       fail();
     } catch (AppEngineException ex) {
-      assertEquals("Docker directory " + config.getDockerDirectory().toPath()
-          + " does not contain Dockerfile.", ex.getMessage());
+      assertEquals(
+          "Docker directory "
+              + config.getDockerDirectory().toPath()
+              + " does not contain Dockerfile.",
+          ex.getMessage());
     }
 
     List<LogRecord> logs = handler.getLogs();
@@ -115,11 +116,9 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyDockerContext_runtimeNotJavaWithDockerfile() throws IOException {
-    new FlexibleStagingContext()
-        .withStagingDirectory()
-        .withDockerDirectory()
-        .withDockerFile();
+  public void testCopyDockerContext_runtimeNotJavaWithDockerfile()
+      throws AppEngineException, IOException {
+    new FlexibleStagingContext().withStagingDirectory().withDockerDirectory().withDockerFile();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
 
@@ -137,10 +136,13 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
       fail();
     } catch (AppEngineException ex) {
-      assertEquals("Docker directory " + config.getDockerDirectory().toPath()
-          + " does not contain Dockerfile.", ex.getMessage());
+      assertEquals(
+          "Docker directory "
+              + config.getDockerDirectory().toPath()
+              + " does not contain Dockerfile.",
+          ex.getMessage());
     }
-   
+
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
 
@@ -148,11 +150,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyDockerContext_runtimeNull() throws IOException {
-    new FlexibleStagingContext()
-        .withStagingDirectory()
-        .withDockerDirectory()
-        .withDockerFile();
+  public void testCopyDockerContext_runtimeNull() throws AppEngineException, IOException {
+    new FlexibleStagingContext().withStagingDirectory().withDockerDirectory().withDockerFile();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
 
@@ -193,7 +192,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyAppEngineContext_appYamlInAppEngineDirectory() throws IOException {
+  public void testCopyAppEngineContext_appYamlInAppEngineDirectory()
+      throws AppEngineException, IOException {
     new FlexibleStagingContext()
         .withStagingDirectory()
         .withAppEngineDirectory()
@@ -203,13 +203,16 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
-    verify(copyService).copyFileAndReplace(appEngineDirectory.toPath().resolve("app.yaml"),
-        stagingDirectory.toPath().resolve("app.yaml"));
+    verify(copyService)
+        .copyFileAndReplace(
+            appEngineDirectory.toPath().resolve("app.yaml"),
+            stagingDirectory.toPath().resolve("app.yaml"));
   }
 
   @Test
   public void testFindRuntime_malformedAppYaml() throws IOException {
-    new FlexibleStagingContext().withAppEngineDirectory()
+    new FlexibleStagingContext()
+        .withAppEngineDirectory()
         .withFileInAppEngineDirectory("app.yaml", ": m a l f o r m e d !");
 
     try {
@@ -220,8 +223,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   /**
-   * Private class for creating test file system structures. It
-   * writes to the test class members.
+   * Private class for creating test file system structures. It writes to the test class members.
    */
   private class FlexibleStagingContext {
     private FlexibleStagingContext withStagingDirectory() throws IOException {
@@ -229,20 +231,20 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       when(config.getStagingDirectory()).thenReturn(stagingDirectory);
       return this;
     }
-    
+
     private FlexibleStagingContext withNonExistantDockerDirectory() {
       dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
       assertFalse(dockerDirectory.exists());
       when(config.getDockerDirectory()).thenReturn(dockerDirectory);
       return this;
     }
-    
+
     private FlexibleStagingContext withDockerDirectory() throws IOException {
       dockerDirectory = temporaryFolder.newFolder();
       when(config.getDockerDirectory()).thenReturn(dockerDirectory);
       return this;
     }
-    
+
     private FlexibleStagingContext withDockerFile() throws IOException {
       Assert.assertNotNull("needs withDockerDirectory to be called first", dockerDirectory);
       assertTrue("needs withDockerDirectory to be called first", dockerDirectory.exists());
@@ -252,20 +254,20 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       }
       return this;
     }
-    
-    private FlexibleStagingContext withNonExistentAppEngineDirectory()  {
+
+    private FlexibleStagingContext withNonExistentAppEngineDirectory() {
       appEngineDirectory = new File(temporaryFolder.getRoot(), "non-existent-directory");
       assertFalse(appEngineDirectory.exists());
       when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
       return this;
     }
-    
+
     private FlexibleStagingContext withAppEngineDirectory() throws IOException {
       appEngineDirectory = temporaryFolder.newFolder();
       when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
       return this;
     }
-    
+
     private FlexibleStagingContext withFileInAppEngineDirectory(String fileName, String contents)
         throws IOException {
       Assert.assertNotNull("needs withAppEngineDirectory to be called first", appEngineDirectory);

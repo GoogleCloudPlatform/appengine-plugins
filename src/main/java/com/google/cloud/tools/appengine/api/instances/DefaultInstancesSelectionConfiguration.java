@@ -18,11 +18,8 @@ package com.google.cloud.tools.appengine.api.instances;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 
-/**
- * Plain Java bean implementation of {@link InstancesSelectionConfiguration}.
- */
-public class DefaultInstancesSelectionConfiguration
-    extends DefaultConfiguration
+/** Plain Java bean implementation of {@link InstancesSelectionConfiguration}. */
+public class DefaultInstancesSelectionConfiguration extends DefaultConfiguration
     implements InstancesSelectionConfiguration {
 
   private String service;

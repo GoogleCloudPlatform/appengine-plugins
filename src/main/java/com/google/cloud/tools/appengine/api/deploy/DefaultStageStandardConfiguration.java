@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.api.deploy;
 
 import java.io.File;
 
-/**
- * Plain Java bean implementation of {@link StageStandardConfiguration}.
- */
+/** Plain Java bean implementation of {@link StageStandardConfiguration}. */
 public class DefaultStageStandardConfiguration implements StageStandardConfiguration {
 
   private File sourceDirectory;

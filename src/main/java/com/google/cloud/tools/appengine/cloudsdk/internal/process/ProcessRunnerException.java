@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
-/**
- * Exception during execution of a {@link ProcessRunner}.
- */
+/** Exception during execution of a {@link ProcessRunner}. */
 public class ProcessRunnerException extends Exception {
 
   public ProcessRunnerException(Exception cause) {

@@ -19,7 +19,6 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -27,9 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Command Line argument helper.
- */
+/** Command Line argument helper. */
 class Args {
 
   /**
@@ -141,8 +138,8 @@ class Args {
   /**
    * Produces a flagged key/value pair list given a flag name and a {@link Map}.
    *
-   * @return {@code [--flagName, key1=value1, --flagName, key2=value2, ...]} or {@code []}
-   *        if keyValueMapping=empty/null
+   * @return {@code [--flagName, key1=value1, --flagName, key2=value2, ...]} or {@code []} if
+   *     keyValueMapping=empty/null
    */
   static List<String> flaggedKeyValues(final String flagName, Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();

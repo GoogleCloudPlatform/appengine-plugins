@@ -18,15 +18,14 @@ package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Version of the Cloud SDK, which follows the
- * <a href="http://semver.org/spec/v2.0.0.html">Semantic Version 2.0.0 spec</a>.
+ * Version of the Cloud SDK, which follows the <a href="http://semver.org/spec/v2.0.0.html">Semantic
+ * Version 2.0.0 spec</a>.
  */
 public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
@@ -60,8 +59,10 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     minorVerion = Integer.parseInt(matcher.group("minor"));
     patchVersion = Integer.parseInt(matcher.group("patch"));
 
-    preRelease = matcher.group("prerelease") != null
-        ? new CloudSdkVersionPreRelease(matcher.group("prerelease")) : null;
+    preRelease =
+        matcher.group("prerelease") != null
+            ? new CloudSdkVersionPreRelease(matcher.group("prerelease"))
+            : null;
     buildIdentifier = matcher.group("build");
 
     this.version = version;
@@ -80,8 +81,18 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     String preRelease = "(?:" + preReleaseIdentifier + "(?:\\." + preReleaseIdentifier + ")*)";
     String build = "(?:" + alphaNum + "(?:\\." + alphaNum + ")*)";
 
-    return "^(?<major>" + digits + ")\\.(?<minor>" + digits + ")\\.(?<patch>" + digits + ")"
-        + "(?:\\-(?<prerelease>" + preRelease + "))?(?:\\+(?<build>" + build + "))?$";
+    return "^(?<major>"
+        + digits
+        + ")\\.(?<minor>"
+        + digits
+        + ")\\.(?<patch>"
+        + digits
+        + ")"
+        + "(?:\\-(?<prerelease>"
+        + preRelease
+        + "))?(?:\\+(?<build>"
+        + build
+        + "))?$";
   }
 
   @Override
@@ -92,9 +103,8 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
   /**
    * Compares this to another CloudSdkVersion, per the Semantic Versioning 2.0.0 specification.
    *
-   * <p>Note that the build identifier field is excluded for comparison. Thus,
-   * <code>new CloudSdkVersion("0.0.1+v1").compareTo(new CloudSdkVersion("0.0.1+v2")) == 0</code>
-   * </p>
+   * <p>Note that the build identifier field is excluded for comparison. Thus, <code>
+   * new CloudSdkVersion("0.0.1+v1").compareTo(new CloudSdkVersion("0.0.1+v2")) == 0</code>
    */
   @Override
   public int compareTo(CloudSdkVersion other) {
@@ -102,8 +112,8 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
     // First, compare required fields
     List<Integer> mine = ImmutableList.of(majorVersion, minorVerion, patchVersion);
-    List<Integer> others = ImmutableList.of(other.getMajorVersion(), other.getMinorVerion(),
-        other.getPatchVersion());
+    List<Integer> others =
+        ImmutableList.of(other.getMajorVersion(), other.getMinorVerion(), other.getPatchVersion());
     for (int i = 0; i < mine.size(); i++) {
       int result = mine.get(i).compareTo(others.get(i));
       if (result != 0) {
@@ -181,5 +191,4 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
   public String getBuildIdentifier() {
     return buildIdentifier;
   }
-
 }

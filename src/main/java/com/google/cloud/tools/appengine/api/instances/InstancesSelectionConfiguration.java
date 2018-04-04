@@ -18,13 +18,10 @@ package com.google.cloud.tools.appengine.api.instances;
 
 import com.google.cloud.tools.appengine.api.Configuration;
 
-/**
- * Identifies an instance for use in {@link AppEngineInstances}.
- */
+/** Identifies an instance for use in {@link AppEngineInstances}. */
 public interface InstancesSelectionConfiguration extends Configuration {
 
   String getService();
 
   String getVersion();
-
 }

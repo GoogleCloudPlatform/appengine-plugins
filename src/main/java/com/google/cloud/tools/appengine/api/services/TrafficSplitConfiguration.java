@@ -19,8 +19,8 @@ package com.google.cloud.tools.appengine.api.services;
 import java.util.Map;
 
 /**
- * Identifies the traffic split for the version(s) of a given service or services
- * in {@link AppEngineServices}.
+ * Identifies the traffic split for the version(s) of a given service or services in {@link
+ * AppEngineServices}.
  */
 public interface TrafficSplitConfiguration extends ServicesSelectionConfiguration {
 

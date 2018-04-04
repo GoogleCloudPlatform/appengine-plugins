@@ -17,16 +17,14 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
-
 import java.io.File;
 
-/**
- * Plain java bean implementation of {@link DeployProjectConfigurationConfiguration}.
- */
-public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfiguration implements
-    DeployProjectConfigurationConfiguration {
+/** Plain java bean implementation of {@link DeployProjectConfigurationConfiguration}. */
+public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfiguration
+    implements DeployProjectConfigurationConfiguration {
 
   private File appEngineDirectory;
+  private String server;
 
   @Override
   public File getAppEngineDirectory() {
@@ -35,5 +33,14 @@ public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfi
 
   public void setAppEngineDirectory(File appEngineDirectory) {
     this.appEngineDirectory = appEngineDirectory;
+  }
+
+  @Override
+  public String getServer() {
+    return server;
+  }
+
+  public void setServer(String server) {
+    this.server = server;
   }
 }

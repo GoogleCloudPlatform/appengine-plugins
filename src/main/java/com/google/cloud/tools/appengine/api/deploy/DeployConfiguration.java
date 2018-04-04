@@ -17,13 +17,10 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import com.google.cloud.tools.appengine.api.Configuration;
-
 import java.io.File;
 import java.util.List;
 
-/**
- * Configuration for {@link AppEngineDeployment#deploy(DeployConfiguration)}.
- */
+/** Configuration for {@link AppEngineDeployment#deploy(DeployConfiguration)}. */
 public interface DeployConfiguration extends Configuration {
 
   List<File> getDeployables();
@@ -39,5 +36,4 @@ public interface DeployConfiguration extends Configuration {
   Boolean getStopPreviousVersion();
 
   String getVersion();
-
 }

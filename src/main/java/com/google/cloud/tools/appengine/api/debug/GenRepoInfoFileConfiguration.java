@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.api.debug;
 
 import java.io.File;
 
-/**
- * Configuration for {@link GenRepoInfoFile#generate(GenRepoInfoFileConfiguration)}.
- */
+/** Configuration for {@link GenRepoInfoFile#generate(GenRepoInfoFileConfiguration)}. */
 public interface GenRepoInfoFileConfiguration {
 
   File getOutputDirectory();

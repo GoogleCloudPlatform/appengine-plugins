@@ -16,10 +16,9 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.google.cloud.tools.appengine.api.AppEngineException;
 
 public class NonZeroExceptionExitListenerTest {
 
@@ -36,9 +35,8 @@ public class NonZeroExceptionExitListenerTest {
   }
 
   @Test
-  public void testOnExit_zero() {
+  public void testOnExit_zero() throws AppEngineException {
     listener.onExit(0);
-    // no exception 
+    // no exception
   }
-
 }

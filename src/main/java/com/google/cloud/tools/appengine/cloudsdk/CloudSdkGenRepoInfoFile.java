@@ -22,13 +22,10 @@ import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFileConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Cloud SDK based implementation of {@link GenRepoInfoFile}.
- */
+/** Cloud SDK based implementation of {@link GenRepoInfoFile}. */
 public class CloudSdkGenRepoInfoFile implements GenRepoInfoFile {
 
   private final CloudSdk sdk;
@@ -40,18 +37,16 @@ public class CloudSdkGenRepoInfoFile implements GenRepoInfoFile {
   /**
    * Generates source context files.
    *
-   * <p>It is possible for the process to return an error code. In that case, no
-   * exception is thrown, but the code must be caught with a
-   * {@link com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener} attached to the
-   * {@link CloudSdk} object used to run the command.
+   * <p>It is possible for the process to return an error code. In that case, no exception is
+   * thrown, but the code must be caught with a {@link
+   * com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener} attached to the {@link
+   * CloudSdk} object used to run the command.
    *
    * @param configuration contains the source and output directories
-   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
    * @throws AppEngineException when there is an issue running the gcloud process
    */
   @Override
-  public void generate(GenRepoInfoFileConfiguration configuration) {
+  public void generate(GenRepoInfoFileConfiguration configuration) throws AppEngineException {
     List<String> arguments = new ArrayList<>();
 
     arguments.add("gen-repo-info-file");

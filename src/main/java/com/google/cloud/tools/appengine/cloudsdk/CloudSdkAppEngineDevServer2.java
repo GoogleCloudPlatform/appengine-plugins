@@ -31,9 +31,7 @@ import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Cloud SDK based implementation of {@link AppEngineDevServer}.
- */
+/** Cloud SDK based implementation of {@link AppEngineDevServer}. */
 public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
 
   private final CloudSdk sdk;
@@ -47,7 +45,7 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
 
   /**
    * Starts the local development server, synchronously or asynchronously.
-   * 
+   *
    * @throws InvalidPathException when Python can't be located
    * @throws CloudSdkNotFoundException when Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when Cloud SDK is out of date
@@ -72,11 +70,11 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("storage_path", config.getStoragePath()));
     arguments.addAll(DevAppServerArgs.get("log_level", config.getLogLevel()));
     arguments.addAll(DevAppServerArgs.get("max_module_instances", config.getMaxModuleInstances()));
-    arguments
-        .addAll(DevAppServerArgs.get("use_mtime_file_watcher", config.getUseMtimeFileWatcher()));
+    arguments.addAll(
+        DevAppServerArgs.get("use_mtime_file_watcher", config.getUseMtimeFileWatcher()));
     arguments.addAll(DevAppServerArgs.get("threadsafe_override", config.getThreadsafeOverride()));
-    arguments
-        .addAll(DevAppServerArgs.get("python_startup_script", config.getPythonStartupScript()));
+    arguments.addAll(
+        DevAppServerArgs.get("python_startup_script", config.getPythonStartupScript()));
     arguments.addAll(DevAppServerArgs.get("python_startup_args", config.getPythonStartupArgs()));
     arguments.addAll(DevAppServerArgs.get("jvm_flag", config.getJvmFlags()));
     arguments.addAll(DevAppServerArgs.get("custom_entrypoint", config.getCustomEntrypoint()));
@@ -84,11 +82,11 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("allow_skipped_files", config.getAllowSkippedFiles()));
     arguments.addAll(DevAppServerArgs.get("api_port", config.getApiPort()));
     arguments.addAll(DevAppServerArgs.get("automatic_restart", config.getAutomaticRestart()));
-    arguments
-        .addAll(DevAppServerArgs.get("dev_appserver_log_level", config.getDevAppserverLogLevel()));
+    arguments.addAll(
+        DevAppServerArgs.get("dev_appserver_log_level", config.getDevAppserverLogLevel()));
     arguments.addAll(DevAppServerArgs.get("skip_sdk_update_check", config.getSkipSdkUpdateCheck()));
-    arguments
-        .addAll(DevAppServerArgs.get("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
+    arguments.addAll(
+        DevAppServerArgs.get("default_gcs_bucket_name", config.getDefaultGcsBucketName()));
     arguments.addAll(DevAppServerArgs.get("clear_datastore", config.getClearDatastore()));
     arguments.addAll(DevAppServerArgs.get("datastore_path", config.getDatastorePath()));
     arguments.addAll(DevAppServerArgs.get("env_var", config.getEnvironment()));
@@ -105,19 +103,18 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
     }
   }
 
-  /**
-   * Stops the local development server.
-   */
+  /** Stops the local development server. */
   @Override
-  public void stop(StopConfiguration configuration) throws AppEngineException {
-    Preconditions.checkNotNull(configuration);
+  public void stop(StopConfiguration config) throws AppEngineException {
+    Preconditions.checkNotNull(config);
 
     try {
-      URL adminServerUrl = new URL(
-          "http",
-          configuration.getAdminHost() != null ? configuration.getAdminHost() : DEFAULT_ADMIN_HOST,
-          configuration.getAdminPort() != null ? configuration.getAdminPort() : DEFAULT_ADMIN_PORT,
-          "/quit");
+      URL adminServerUrl =
+          new URL(
+              "http",
+              config.getAdminHost() != null ? config.getAdminHost() : DEFAULT_ADMIN_HOST,
+              config.getAdminPort() != null ? config.getAdminPort() : DEFAULT_ADMIN_PORT,
+              "/quit");
       HttpURLConnection connection = (HttpURLConnection) adminServerUrl.openConnection();
 
       connection.setReadTimeout(4000);

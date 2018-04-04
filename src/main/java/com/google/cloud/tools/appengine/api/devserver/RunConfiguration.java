@@ -20,17 +20,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Configuration of running local Development Server.
- * {@link AppEngineDevServer#run(RunConfiguration)}.
- */
+/** Configuration for {@link AppEngineDevServer#run(RunConfiguration)}. */
 public interface RunConfiguration {
 
   // TODO(joaomartins): Only contains common, jvm, Python, VM and misc flags for now. Need to add
   // PHP, AppIdentity, Blobstore, etc.
   /**
-   *  List of all the service web output directories (1 or more) that need to be run with 
-   *  the local devappserver. Such directory needs to include WEB-INF/appengine-web.xml.
+   * List of all the service web output directories (1 or more) that need to be run with the local
+   * devappserver. Such directory needs to include WEB-INF/appengine-web.xml.
    */
   List<File> getServices();
 

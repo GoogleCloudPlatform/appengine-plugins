@@ -18,9 +18,7 @@ package com.google.cloud.tools.appengine.api.deploy;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
-/**
- * Main interface for deploying to App Engine.
- */
+/** Main interface for deploying to App Engine. */
 public interface AppEngineDeployment {
 
   /**
@@ -31,28 +29,18 @@ public interface AppEngineDeployment {
    */
   void deploy(DeployConfiguration config) throws AppEngineException;
 
-  /**
-   * Deploy cron configuration to App Engine.
-   */
+  /** Deploy cron configuration to App Engine. */
   void deployCron(DeployProjectConfigurationConfiguration config) throws AppEngineException;
 
-  /**
-   * Deploy dos configuration to App Engine.
-   */
+  /** Deploy dos configuration to App Engine. */
   void deployDos(DeployProjectConfigurationConfiguration config) throws AppEngineException;
 
-  /**
-   * Deploy dispatch configuration to App Engine.
-   */
+  /** Deploy dispatch configuration to App Engine. */
   void deployDispatch(DeployProjectConfigurationConfiguration config) throws AppEngineException;
 
-  /**
-   * Deploy index configuration to App Engine.
-   */
+  /** Deploy index configuration to App Engine. */
   void deployIndex(DeployProjectConfigurationConfiguration config) throws AppEngineException;
 
-  /**
-   * Deploy queue configuration to App Engine.
-   */
+  /** Deploy queue configuration to App Engine. */
   void deployQueue(DeployProjectConfigurationConfiguration config) throws AppEngineException;
 }

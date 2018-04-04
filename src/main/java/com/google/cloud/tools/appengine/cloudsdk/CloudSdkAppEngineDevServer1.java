@@ -40,9 +40,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 import org.xml.sax.SAXException;
 
-/**
- * Classic Java SDK based implementation of {@link AppEngineDevServer}.
- */
+/** Classic Java SDK based implementation of {@link AppEngineDevServer}. */
 public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
 
   private static final Logger log = Logger.getLogger(CloudSdkAppEngineDevServer1.class.getName());
@@ -80,7 +78,6 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       jvmArguments.addAll(config.getJvmFlags());
     }
 
-
     arguments.addAll(DevAppServerArgs.get("default_gcs_bucket", config.getDefaultGcsBucketName()));
 
     // Arguments ignored by dev appserver 1
@@ -110,26 +107,35 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       arguments.addAll(additionalArguments);
     }
 
-    if (isJava8(config.getServices())) {
+    boolean isJava8 = isJava8(config.getServices());
+
+    if (isJava8) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
       jvmArguments.add("-D--enable_all_permissions=true");
       arguments.add("--no_java_agent");
     } else {
       // Add in the appengine agent
-      String appengineAgentJar = sdk.getJavaAppEngineSdkPath().resolve("agent/appengine-agent.jar")
-          .toAbsolutePath().toString();
+      String appengineAgentJar =
+          sdk.getJavaAppEngineSdkPath()
+              .resolve("agent/appengine-agent.jar")
+              .toAbsolutePath()
+              .toString();
       jvmArguments.add("-javaagent:" + appengineAgentJar);
     }
     for (File service : config.getServices()) {
       arguments.add(service.toPath().toString());
     }
 
-    Map<String, String> appEngineEnvironment
-        = getAllAppEngineWebXmlEnvironmentVariables(config.getServices());
+    Map<String, String> appEngineEnvironment =
+        getAllAppEngineWebXmlEnvironmentVariables(config.getServices());
     if (!appEngineEnvironment.isEmpty()) {
-      log.info("Setting appengine-web.xml configured environment variables: "
-          + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
+      log.info(
+          "Setting appengine-web.xml configured environment variables: "
+              + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
     }
+
+    String gaeRuntime = getGaeRuntimeJava(isJava8);
+    appEngineEnvironment.putAll(getLocalAppEngineEnvironmentVariables(gaeRuntime));
 
     if (config.getEnvironment() != null) {
       appEngineEnvironment.putAll(config.getEnvironment());
@@ -146,9 +152,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
   }
 
-  /**
-   * Stops the local development server.
-   */
+  /** Stops the local development server. */
   @Override
   public void stop(StopConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
@@ -178,7 +182,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
         try {
           connection.getInputStream().close();
         } catch (IOException ignore) {
-          //ignored
+          // ignored
         }
       }
     }
@@ -187,20 +191,22 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   @VisibleForTesting
   void checkAndWarnIgnored(Object propertyToIgnore, String propertyName) {
     if (propertyToIgnore != null) {
-      log.warning(propertyName
-          + " only applies to Dev Appserver v2 and will be ignored by Dev Appserver v1");
+      log.warning(
+          propertyName
+              + " only applies to Dev Appserver v2 and will be ignored by Dev Appserver v1");
     }
   }
 
   /**
-   * This method tries to guess the runtime based on the appengine-web.xml of all
-   * services that are expected to run.
+   * This method tries to guess the runtime based on the appengine-web.xml of all services that are
+   * expected to run.
+   *
    * @param services a list of app engine standard service directories
    * @return {@code false} if only java7 modules are found or {@code true} is at least one java8
-   *         module is found (i.e. pure java8 or mixed java7/java8)
+   *     module is found (i.e. pure java8 or mixed java7/java8)
    */
   @VisibleForTesting
-  boolean isJava8(List<File> services) {
+  boolean isJava8(List<File> services) throws AppEngineException {
     boolean java8Detected = false;
     boolean java7Detected = false;
     for (File serviceDirectory : services) {
@@ -221,8 +227,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     return java8Detected;
   }
 
-  private static Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(
-      List<File> services) {
+  private static Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(List<File> services)
+      throws AppEngineException {
     Map<String, String> allAppEngineEnvironment = Maps.newHashMap();
     for (File serviceDirectory : services) {
       Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
@@ -242,14 +248,45 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     return allAppEngineEnvironment;
   }
 
-  private static void checkAndWarnDuplicateEnvironmentVariables(Map<String, String> newEnvironment,
-      Map<String, String> existingEnvironment, String service) {
+  /**
+   * Gets a {@code Map<String, String>} of the environment variables for running the {@link
+   * AppEngineDevServer}.
+   *
+   * @param gaeRuntime the runtime ID to set the environment variable GAE_RUNTIME to
+   * @return {@code Map<String, String>} that maps from the environment variable name to its value
+   */
+  @VisibleForTesting
+  static Map<String, String> getLocalAppEngineEnvironmentVariables(String gaeRuntime) {
+    Map<String, String> environment = Maps.newHashMap();
+
+    String gaeEnv = "localdev";
+    environment.put("GAE_ENV", gaeEnv);
+    environment.put("GAE_RUNTIME", gaeRuntime);
+
+    return environment;
+  }
+
+  /**
+   * Gets the App Engine runtime ID for Java runtimes.
+   *
+   * @param isJava8 if {@code true}, use Java 8; otherwise, use Java 7
+   * @return "java8" if {@code isJava8} is true; otherwise, returns "java7"
+   */
+  @VisibleForTesting
+  static String getGaeRuntimeJava(boolean isJava8) {
+    return isJava8 ? "java8" : "java7";
+  }
+
+  private static void checkAndWarnDuplicateEnvironmentVariables(
+      Map<String, String> newEnvironment, Map<String, String> existingEnvironment, String service) {
     for (String key : newEnvironment.keySet()) {
       if (existingEnvironment.containsKey(key)) {
-        log.warning(String.format("Found duplicate environment variable key '%s' across "
-            + "appengine-web.xml files in the following service: %s", key, service));
+        log.warning(
+            String.format(
+                "Found duplicate environment variable key '%s' across "
+                    + "appengine-web.xml files in the following service: %s",
+                key, service));
       }
     }
   }
-
 }

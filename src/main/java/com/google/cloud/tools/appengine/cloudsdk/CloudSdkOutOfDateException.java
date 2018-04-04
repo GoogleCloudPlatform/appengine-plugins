@@ -18,12 +18,9 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
-
 import javax.annotation.Nullable;
 
-/**
- * The Cloud SDK that was found is too old (generally before 133.0.0).
- */
+/** The Cloud SDK that was found is too old (generally before 133.0.0). */
 public class CloudSdkOutOfDateException extends AppEngineException {
 
   private static final String MESSAGE = "Cloud SDK versions before %s are not supported";
@@ -33,7 +30,7 @@ public class CloudSdkOutOfDateException extends AppEngineException {
 
   /**
    * Installed version is too old.
-   * 
+   *
    * @param installedVersion version of the Cloud SDK we found
    * @param requiredVersion minimum version of the Cloud SDK we want
    */
@@ -47,7 +44,7 @@ public class CloudSdkOutOfDateException extends AppEngineException {
 
   /**
    * Installed version predates version files in the Cloud SDK.
-   * 
+   *
    * @param requiredVersion minimum version of the Cloud SDK we want
    */
   public CloudSdkOutOfDateException(CloudSdkVersion requiredVersion) {
@@ -56,8 +53,8 @@ public class CloudSdkOutOfDateException extends AppEngineException {
   }
 
   /**
-   * Returns the minimum required version of the cloud SDK for the current operation. 
-   * 
+   * Returns the minimum required version of the cloud SDK for the current operation.
+   *
    * @return minimum acceptable version of the Cloud SDK
    */
   public CloudSdkVersion getRequiredVersion() {
@@ -65,13 +62,12 @@ public class CloudSdkOutOfDateException extends AppEngineException {
   }
 
   /**
-   * Returns the version of the local cloud SDK if known, otherwise null. 
-   * 
+   * Returns the version of the local cloud SDK if known, otherwise null.
+   *
    * @return actual version of the Cloud SDK, or null if it's really old.
    */
   @Nullable
   public CloudSdkVersion getInstalledVersion() {
     return installedVersion;
   }
-
 }

@@ -18,30 +18,21 @@ package com.google.cloud.tools.appengine.api.deploy;
 
 import java.io.File;
 
-/**
- * Configuration for {@link AppEngineFlexibleStaging#stageFlexible(StageFlexibleConfiguration)}.
- */
+/** Configuration for {@link AppEngineFlexibleStaging#stageFlexible(StageFlexibleConfiguration)}. */
 public interface StageFlexibleConfiguration {
 
-  /**
-   * Directory containing {@code app.yaml}.
-   */
+  /** Directory containing {@code app.yaml}. */
   File getAppEngineDirectory();
 
-  /**
-   * Directory containing {@code Dockerfile} and other resources used by it.
-   */
+  /** Directory containing {@code Dockerfile} and other resources used by it. */
   File getDockerDirectory();
 
-  /**
-   * Artifact to deploy such as WAR or JAR.
-   */
+  /** Artifact to deploy such as WAR or JAR. */
   File getArtifact();
 
   /**
-   * Directory where {@code app.yaml}, files in docker directory, and the artifact to deploy will
-   * be copied for deploying.
+   * Directory where {@code app.yaml}, files in docker directory, and the artifact to deploy will be
+   * copied for deploying.
    */
   File getStagingDirectory();
-
 }

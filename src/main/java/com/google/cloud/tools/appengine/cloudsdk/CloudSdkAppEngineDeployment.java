@@ -24,16 +24,13 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Cloud SDK based implementation of {@link AppEngineDeployment}.
- */
+/** Cloud SDK based implementation of {@link AppEngineDeployment}. */
 public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
   private final CloudSdk sdk;
@@ -46,11 +43,11 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
    * Deploys a project to App Engine.
    *
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old 
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    * @throws AppEngineException when there is an issue uploading project files to the cloud
-   * @throws IllegalArgumentException when a local deployable referenced 
-   *     by the configuration isn't found
-   */  
+   * @throws IllegalArgumentException when a local deployable referenced by the configuration isn't
+   *     found
+   */
   @Override
   public void deploy(DeployConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
@@ -94,7 +91,6 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
-
   }
 
   @Override
@@ -132,17 +128,19 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
    * @param configuration Deployment configuration
    */
   @VisibleForTesting
-  void deployConfig(String filename, DeployProjectConfigurationConfiguration configuration) {
+  void deployConfig(String filename, DeployProjectConfigurationConfiguration configuration)
+      throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getAppEngineDirectory());
 
     Path deployable = configuration.getAppEngineDirectory().toPath().resolve(filename);
-    Preconditions
-        .checkArgument(Files.isRegularFile(deployable), deployable.toString() + " does not exist.");
+    Preconditions.checkArgument(
+        Files.isRegularFile(deployable), deployable.toString() + " does not exist.");
 
     List<String> arguments = new ArrayList<>();
     arguments.add("deploy");
     arguments.add(deployable.toAbsolutePath().toString());
+    arguments.addAll(GcloudArgs.get("server", configuration.getServer()));
     arguments.addAll(GcloudArgs.get(configuration));
 
     try {
@@ -150,7 +148,5 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     } catch (ProcessRunnerException e) {
       throw new AppEngineException(e);
     }
-
   }
-
 }

@@ -16,14 +16,12 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
-/**
- * Unit tests for {@link StringBuilderProcessOutputLineListener}
- */
+/** Unit tests for {@link StringBuilderProcessOutputLineListener} */
 public class StringBuilderProcessOutputLineListenerTest {
 
   private StringBuilderProcessOutputLineListener listener;
@@ -44,5 +42,4 @@ public class StringBuilderProcessOutputLineListenerTest {
     listener.onOutputLine("line 2");
     assertEquals("line 1line 2", listener.toString());
   }
-
 }

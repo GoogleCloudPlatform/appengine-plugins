@@ -5,14 +5,14 @@
 
 IMPORTANT:
 This library is used by Google internal plugin development teams to share App Engine
-related code.  It's use for any other purpose is highly discouraged and unsupported. Visit our
+related code.  Its use for any other purpose is highly discouraged and unsupported. Visit our
 [App Engine documentation](https://cloud.google.com/appengine/docs/admin-api/) for more information 
 on Google supported clients for App Engine administration.
  
 # Requirements
 
-This library requires Java 1.7 or higher to run.
-This library requries Maven and Java 1.8 or higher to build.
+This library requires Java 1.8 or higher to run.
+This library requires Maven and Java 1.8 or higher to build.
 
 You must also install the Cloud SDK command line interface (CLI), if it isn't installed yet, following the [instructions](https://cloud.google.com/sdk/).
 
@@ -56,4 +56,35 @@ configuration.setVersion("v1");
 
 // deploy
 deployment.deploy(deployConfiguration);
+```
+
+## SDK Manager
+
+This library provides a mechanism for installing, adding components and updating the Cloud SDK. The operations are intended to run asynchronously, either on an executor or through mechanisms provided by an IDE.
+
+```java
+// Create a new Managed SDK instance
+ManagedCloudSdk sdk = ManagedCloudSdk.newManagedSdk("123.123.123") // SDK fixed at version.
+ManagedCloudSdk sdk = ManagedCloudSdk.newManagedSdk() // 'LATEST' sdk, can be updated.
+
+// Implement the listener interface to listen to operation output
+MessageListener listener = new MessageListener() {...};
+
+// Always check if operations are needed before running them
+if (!sdk.isInstalled()) {
+  sdk.newInstaller().install(listener);
+}
+
+// use SdkComponent to reference a Cloud Sdk component
+if (!sdk.hasComponent(SdkComponent.APP_ENGINE_JAVA)) {
+  sdk.newComponentInstaller().installComponent(SdkComponent.APP_ENGINE_JAVA, listener);
+}
+
+// updates will only occur on 'LATEST' sdks
+if (!sdk.isUpToDate) {
+  sdk.newUpdater().update(listener);
+}
+
+// You can then create an SDK from a managed SDK instance
+new CloudSdk.Builder().sdkPath(sdk.getSdkHome())...;
 ```

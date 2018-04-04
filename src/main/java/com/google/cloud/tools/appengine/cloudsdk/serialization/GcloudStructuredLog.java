@@ -21,9 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-/**
- * Holds de-serialized JSON of a single instance of structured log output from {@code gcloud}.
- */
+/** Holds de-serialized JSON of a single instance of structured log output from {@code gcloud}. */
 public class GcloudStructuredLog {
 
   public static class Error {
@@ -72,14 +70,14 @@ public class GcloudStructuredLog {
     return error;
   }
 
-  private GcloudStructuredLog() {}  // empty private constructor
+  private GcloudStructuredLog() {} // empty private constructor
 
   /**
    * Parses a JSON string representing {@code gcloud} structured log output.
    *
    * @return parsed JSON; never {@code null}
-   * @throws JsonParseException if {@code jsonString} has syntax errors or incompatible JSON
-   *     element type
+   * @throws JsonParseException if {@code jsonString} has syntax errors or incompatible JSON element
+   *     type
    */
   public static GcloudStructuredLog parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);

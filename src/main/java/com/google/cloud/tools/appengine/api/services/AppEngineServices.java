@@ -18,14 +18,9 @@ package com.google.cloud.tools.appengine.api.services;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
-/**
- * This set of commands can be used to manage existing App Engine services.
- */
+/** This set of commands can be used to manage existing App Engine services. */
 public interface AppEngineServices {
 
-  /**
-   * Set the traffic splitting for the given service.
-   */
+  /** Set the traffic splitting for the given service. */
   void setTraffic(TrafficSplitConfiguration configuration) throws AppEngineException;
-
 }

@@ -20,7 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ProjectIdValidatorTest {
-  
+
   @Test
   public void testDomain() {
     Assert.assertTrue(ProjectIdValidator.validate("google.com:mystore"));
@@ -40,15 +40,16 @@ public class ProjectIdValidatorTest {
   public void testUpperCase() {
     Assert.assertTrue(ProjectIdValidator.validate("WORD"));
   }
-  
+
   @Test
   public void testLongWord() {
-    boolean validate = ProjectIdValidator.validate(
-        "012345678901234567890123456789012345678901234567890123456789"
-        + "012345678901234567890123456789012345678901234567890");
+    boolean validate =
+        ProjectIdValidator.validate(
+            "012345678901234567890123456789012345678901234567890123456789"
+                + "012345678901234567890123456789012345678901234567890");
     Assert.assertFalse(validate);
   }
-  
+
   @Test
   public void testContainsSpace() {
     Assert.assertFalse(ProjectIdValidator.validate("com google eclipse"));
@@ -58,10 +59,9 @@ public class ProjectIdValidatorTest {
   public void testEmptyString() {
     Assert.assertFalse(ProjectIdValidator.validate(""));
   }
-  
+
   @Test
   public void testNull() {
     Assert.assertFalse(ProjectIdValidator.validate(null));
   }
-
 }

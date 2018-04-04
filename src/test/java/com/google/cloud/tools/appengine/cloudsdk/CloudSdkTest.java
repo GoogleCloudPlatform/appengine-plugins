@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -45,22 +46,19 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- * Unit tests for {@link CloudSdk}.
- */
+/** Unit tests for {@link CloudSdk}. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkTest {
-  
+
   private Path root;
   private CloudSdk.Builder builder;
 
-  @Mock
-  private ProcessOutputLineListener outputListener;
+  @Mock private ProcessOutputLineListener outputListener;
 
   @Before
   public void setup() {
-   root = Paths.get(Files.createTempDir().toString());
-   builder = new CloudSdk.Builder().sdkPath(root);
+    root = Paths.get(Files.createTempDir().toString());
+    builder = new CloudSdk.Builder().sdkPath(root);
   }
 
   private void writeVersionFile(String contents) throws IOException {
@@ -68,12 +66,14 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetSdkPath() {
+  public void testGetSdkPath() throws CloudSdkNotFoundException {
     assertEquals(root, builder.build().getSdkPath());
   }
-  
+
   @Test
-  public void testValidateCloudSdk() {
+  public void testValidateCloudSdk()
+      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException,
+          InvalidJavaSdkException {
     new CloudSdk.Builder().build().validateCloudSdk();
   }
 
@@ -87,75 +87,87 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileNotExists() {
+  public void testMinimumCloudSdkVersion() {
+    // 160.0 through 170.0 have serious bugs on Windows
+    assertTrue(CloudSdk.MINIMUM_VERSION.getMajorVersion() > 170);
+  }
+
+  @Test
+  public void testGetVersion_fileNotExists() throws CloudSdkNotFoundException {
     try {
       builder.build().getVersion();
       fail();
     } catch (CloudSdkVersionFileException e) {
-      assertEquals("Cloud SDK version file not found at " + root.resolve("VERSION"),
-          e.getMessage());
+      assertEquals(
+          "Cloud SDK version file not found at " + root.resolve("VERSION"), e.getMessage());
     }
   }
 
   @Test
-  public void testGetVersion_fileContentInvalid() throws IOException {
+  public void testGetVersion_fileContentInvalid() throws IOException, CloudSdkNotFoundException {
     String fileContents = "this is not a valid version string";
     writeVersionFile(fileContents);
     try {
       builder.build().getVersion();
       fail();
     } catch (CloudSdkVersionFileException ex) {
-      assertEquals("Pattern found in the Cloud SDK version file could not be parsed: "
-          + fileContents, ex.getMessage());
+      assertEquals(
+          "Pattern found in the Cloud SDK version file could not be parsed: " + fileContents,
+          ex.getMessage());
     }
   }
 
   @Test
-  public void testGetVersion_fileContentValid() throws IOException {
+  public void testGetVersion_fileContentValid()
+      throws IOException, CloudSdkVersionFileException, CloudSdkNotFoundException {
     String version = "136.0.0";
     writeVersionFile(version);
     assertEquals(version, builder.build().getVersion().toString());
   }
 
   @Test
-  public void testValidateAppEngineJavaComponents() {
+  public void testValidateAppEngineJavaComponents()
+      throws AppEngineJavaComponentsNotInstalledException, CloudSdkNotFoundException {
     new CloudSdk.Builder().build().validateAppEngineJavaComponents();
   }
 
   @Test
-  public void testGetWindowsPythonPath() {
-    assertThat(builder.build().getWindowsPythonPath().toString(),
+  public void testGetWindowsPythonPath() throws CloudSdkNotFoundException {
+    assertThat(
+        builder.build().getWindowsPythonPath().toString(),
         anyOf(is("python"), endsWith("python.exe")));
   }
 
   @Test
-  public void testGetJavaAppEngineSdkPath() {
-    assertEquals(root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
+  public void testGetJavaAppEngineSdkPath() throws CloudSdkNotFoundException {
+    assertEquals(
+        root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
         builder.build().getJavaAppEngineSdkPath());
   }
 
   @Test
-  public void testGetJarPathJavaTools() {
-    assertEquals(root.resolve("platform/google_appengine/google/appengine"
-        + "/tools/java/lib/appengine-tools-api.jar"),
+  public void testGetJarPathJavaTools() throws CloudSdkNotFoundException {
+    assertEquals(
+        root.resolve(
+            "platform/google_appengine/google/appengine"
+                + "/tools/java/lib/appengine-tools-api.jar"),
         builder.build().getJarPath("appengine-tools-api.jar"));
   }
 
   @Test
-  public void testNewCloudSdk_nullWaitingOutputListener() {
-    CloudSdk sdk = builder
-        .addStdOutLineListener(outputListener).runDevAppServerWait(10).async(false).build();
+  public void testNewCloudSdk_nullWaitingOutputListener() throws CloudSdkNotFoundException {
+    CloudSdk sdk =
+        builder.addStdOutLineListener(outputListener).runDevAppServerWait(10).async(false).build();
 
     assertNull(sdk.getRunDevAppServerWaitListener());
 
-    sdk = builder.addStdOutLineListener(outputListener)
-        .runDevAppServerWait(0).async(true).build();
+    sdk = builder.addStdOutLineListener(outputListener).runDevAppServerWait(0).async(true).build();
 
     assertNull(sdk.getRunDevAppServerWaitListener());
   }
 
   @Test
-  public void testNewCloudSdk_outListener() {
+  public void testNewCloudSdk_outListener() throws CloudSdkNotFoundException {
     builder.addStdOutLineListener(outputListener).runDevAppServerWait(10).async(true);
 
     CloudSdk sdk = builder.build();
@@ -167,7 +179,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testNewCloudSdk_errListener() {
+  public void testNewCloudSdk_errListener() throws CloudSdkNotFoundException {
     builder.addStdErrLineListener(outputListener).runDevAppServerWait(10).async(true);
     CloudSdk sdk = builder.build();
 
@@ -194,7 +206,7 @@ public class CloudSdkTest {
       assertNotNull(ex.getMessage());
     }
   }
-  
+
   public void testNewCloudSdk_ErrListenerAndInheritOutput() {
     try {
       builder.addStdErrLineListener(outputListener).inheritProcessOutput(true);
@@ -205,7 +217,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testResolversOrdering() {
+  public void testResolversOrdering() throws CloudSdkNotFoundException {
     CloudSdkResolver r1 = Mockito.mock(CloudSdkResolver.class, "r1");
     when(r1.getRank()).thenReturn(0);
     when(r1.getCloudSdkPath()).thenReturn(Paths.get("/r1"));
@@ -225,7 +237,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testResolverCascading() {
+  public void testResolverCascading() throws CloudSdkNotFoundException {
     CloudSdkResolver r1 = Mockito.mock(CloudSdkResolver.class, "r1");
     when(r1.getRank()).thenReturn(0);
     when(r1.getCloudSdkPath()).thenReturn(null);
@@ -243,15 +255,20 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetJavaBinary() {
+  public void testGetJavaBinary() throws CloudSdkNotFoundException {
     CloudSdk sdk = new CloudSdk.Builder().javaHome(Paths.get("java", "path")).build();
-    assertEquals(Paths.get("java", "path", "bin",
-        System.getProperty("os.name").contains("Windows") ? "java.exe" : "java").toAbsolutePath(),
+    assertEquals(
+        Paths.get(
+                "java",
+                "path",
+                "bin",
+                System.getProperty("os.name").contains("Windows") ? "java.exe" : "java")
+            .toAbsolutePath(),
         sdk.getJavaExecutablePath());
   }
 
   @Test
-  public void testGcloudCommandEnvironment() {
+  public void testGcloudCommandEnvironment() throws CloudSdkNotFoundException {
     builder.appCommandShowStructuredLogs("always");
     builder.appCommandCredentialFile(mock(File.class));
     builder.appCommandMetricsEnvironment("intellij");
