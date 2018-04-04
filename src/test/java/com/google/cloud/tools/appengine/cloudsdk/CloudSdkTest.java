@@ -78,7 +78,8 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testValidateCloudSdk_doesNotThrowInvalidJdkException() {
+  public void testValidateCloudSdk_doesNotThrowInvalidJdkException()
+      throws CloudSdkNotFoundException, CloudSdkVersionFileException, CloudSdkOutOfDateException {
     try {
       new CloudSdk.Builder().javaHome(Paths.get("/fake/path")).build().validateCloudSdk();
     } catch (InvalidJavaSdkException ijse) {
