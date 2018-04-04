@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +38,7 @@ public class WaitingProcessOutputLineListener
    *
    * @param message the message to look for in the output of the process to consider it to be
    *     successfully started. If the message is not seen within the specified timeout, a {@link
-   *     ProcessRunnerException} will be thrown. The message is assumed to be a regular expression.
+   *     ProcessHandlerException} will be thrown. The message is assumed to be a regular expression.
    * @param timeoutSeconds the maximum number of seconds to wait for the message to be seen until
    *     giving up. If set to 0, will skip waiting.
    */
@@ -56,21 +57,21 @@ public class WaitingProcessOutputLineListener
   /**
    * Blocks the executing thread until the specified message is seen through {@link
    * #onOutputLine(String)}. If the message is not seen within the specified timeout, {@link
-   * ProcessRunnerException} will be thrown.
+   * ProcessHandlerException} will be thrown.
    */
-  public void await() throws ProcessRunnerException {
+  public void await() throws ProcessHandlerException {
     try {
       if (message != null
           && timeoutSeconds != 0
           && !waitLatch.await(timeoutSeconds, TimeUnit.SECONDS)) {
-        throw new ProcessRunnerException(
+        throw new ProcessHandlerException(
             "Timed out waiting for the success message: '" + message + "'");
       }
       if (exited) {
-        throw new ProcessRunnerException("Process exited before success message");
+        throw new ProcessHandlerException("Process exited before success message");
       }
     } catch (InterruptedException e) {
-      throw new ProcessRunnerException(e);
+      throw new ProcessHandlerException(e);
     } finally {
       waitLatch.countDown();
     }

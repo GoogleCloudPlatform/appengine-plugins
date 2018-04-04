@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,8 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
-import java.io.File;
-import java.util.Map;
-
-/** Interface for running arbitrary commands. */
-public interface ProcessRunner {
-
-  void run(String[] command) throws ProcessRunnerException;
-
-  void setEnvironment(Map<String, String> environment);
-
-  void setWorkingDirectory(File workingDirectory);
+public class ProcessBuilderFactory {
+  public ProcessBuilder newProcessBuilder() {
+    return new ProcessBuilder();
+  }
 }

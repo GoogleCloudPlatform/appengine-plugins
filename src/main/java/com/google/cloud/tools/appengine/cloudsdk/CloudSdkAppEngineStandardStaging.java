@@ -20,7 +20,7 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.AppCfgArgs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import java.io.File;
@@ -37,10 +37,10 @@ import java.util.List;
  */
 public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStaging {
 
-  private CloudSdk cloudSdk;
+  private AppCfgRunner runner;
 
-  public CloudSdkAppEngineStandardStaging(CloudSdk cloudSdk) {
-    this.cloudSdk = cloudSdk;
+  public CloudSdkAppEngineStandardStaging(AppCfgRunner runner) {
+    this.runner = runner;
   }
 
   @Override
@@ -48,7 +48,6 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getSourceDirectory());
     Preconditions.checkNotNull(config.getStagingDirectory());
-    Preconditions.checkNotNull(cloudSdk);
 
     List<String> arguments = new ArrayList<>();
 
@@ -80,7 +79,7 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
             StandardCopyOption.REPLACE_EXISTING);
       }
 
-      cloudSdk.runAppCfgCommand(arguments);
+      runner.run(arguments);
 
       // TODO : Move this fix up the chain (appcfg)
       if (config.getRuntime() != null && config.getRuntime().equals("java")) {
@@ -89,7 +88,7 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
             "\nruntime_config:\n  jdk: openjdk8\n", appYaml, Charsets.UTF_8);
       }
 
-    } catch (IOException | ProcessRunnerException e) {
+    } catch (IOException | ProcessHandlerException e) {
       throw new AppEngineException(e);
     }
   }
