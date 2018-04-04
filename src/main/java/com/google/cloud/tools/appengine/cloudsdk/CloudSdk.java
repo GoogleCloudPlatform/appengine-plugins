@@ -590,7 +590,6 @@ public class CloudSdk {
     private List<ProcessStartListener> startListeners = new ArrayList<>();
     private List<CloudSdkResolver> resolvers;
     private int runDevAppServerWaitSeconds;
-    private boolean inheritProcessOutput;
     private Path javaHomePath = Paths.get(System.getProperty("java.home"));
 
     /**
@@ -653,12 +652,6 @@ public class CloudSdk {
      * parent process.
      */
     public Builder addStdOutLineListener(ProcessOutputLineListener stdOutLineListener) {
-      // Verify there aren't listeners if subprocess inherits output.
-      // If output is inherited, then listeners won't receive anything.
-      if (inheritProcessOutput) {
-        throw new IllegalStateException(
-            "You cannot specify subprocess output inheritance and output listeners.");
-      }
       this.stdOutLineListeners.add(stdOutLineListener);
       return this;
     }
@@ -668,12 +661,6 @@ public class CloudSdk {
      * process.
      */
     public Builder addStdErrLineListener(ProcessOutputLineListener stdErrLineListener) {
-      // Verify there aren't listeners if subprocess inherits output.
-      // If output is inherited, then listeners won't receive anything.
-      if (inheritProcessOutput) {
-        throw new IllegalStateException(
-            "You cannot specify subprocess output inheritance and output listeners.");
-      }
       this.stdErrLineListeners.add(stdErrLineListener);
       return this;
     }
@@ -704,25 +691,6 @@ public class CloudSdk {
     }
 
     /**
-     * Causes the generated gcloud or devappserver subprocess to inherit the calling process's
-     * stdout and stderr. If this is set to {@code true}, no stdout and stderr listeners can be
-     * specified.
-     *
-     * @param inheritProcessOutput if true, stdout and stderr are redirected to the parent process
-     */
-    public Builder inheritProcessOutput(boolean inheritProcessOutput) {
-      // Verify there aren't listeners if subprocess inherits output.
-      // If output is inherited, then listeners won't receive anything.
-      if (inheritProcessOutput
-          && (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0)) {
-        throw new IllegalStateException(
-            "You cannot specify subprocess output inheritance and output listeners.");
-      }
-      this.inheritProcessOutput = inheritProcessOutput;
-      return this;
-    }
-
-    /**
      * Sets the desired Java SDK path, used in devappserver runs and App Engine standard staging.
      */
     public Builder javaHome(Path javaHomePath) {
@@ -744,26 +712,22 @@ public class CloudSdk {
       // Construct process runner.
       ProcessRunner processRunner;
       WaitingProcessOutputLineListener runDevAppServerWaitListener = null;
-      if (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0) {
-        // Configure listeners for async dev app server start with waiting.
-        if (async && runDevAppServerWaitSeconds > 0) {
-          runDevAppServerWaitListener =
-              new WaitingProcessOutputLineListener(
-                  ".*(Dev App Server is now running|INFO:oejs\\.Server:main: Started).*",
-                  runDevAppServerWaitSeconds);
 
-          stdOutLineListeners.add(runDevAppServerWaitListener);
-          stdErrLineListeners.add(runDevAppServerWaitListener);
-          exitListeners.add(0, runDevAppServerWaitListener);
-        }
+      // Configure listeners for async dev app server start with waiting.
+      if (async && runDevAppServerWaitSeconds > 0) {
+        runDevAppServerWaitListener =
+            new WaitingProcessOutputLineListener(
+                ".*(Dev App Server is now running|INFO:oejs\\.Server:main: Started).*",
+                runDevAppServerWaitSeconds);
 
-        processRunner =
-            new DefaultProcessRunner(
-                async, exitListeners, startListeners, stdOutLineListeners, stdErrLineListeners);
-      } else {
-        processRunner =
-            new DefaultProcessRunner(async, exitListeners, startListeners, inheritProcessOutput);
+        stdOutLineListeners.add(runDevAppServerWaitListener);
+        stdErrLineListeners.add(runDevAppServerWaitListener);
+        exitListeners.add(0, runDevAppServerWaitListener);
       }
+
+      processRunner =
+          new DefaultProcessRunner(
+              async, exitListeners, startListeners, stdOutLineListeners, stdErrLineListeners);
 
       return new CloudSdk(
           sdkPath,
