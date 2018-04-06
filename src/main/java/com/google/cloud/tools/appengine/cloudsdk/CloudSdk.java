@@ -713,16 +713,18 @@ public class CloudSdk {
       ProcessRunner processRunner;
       WaitingProcessOutputLineListener runDevAppServerWaitListener = null;
 
-      // Configure listeners for async dev app server start with waiting.
-      if (async && runDevAppServerWaitSeconds > 0) {
-        runDevAppServerWaitListener =
-            new WaitingProcessOutputLineListener(
-                ".*(Dev App Server is now running|INFO:oejs\\.Server:main: Started).*",
-                runDevAppServerWaitSeconds);
+      if (stdOutLineListeners.size() > 0 || stdErrLineListeners.size() > 0) {
+        // Configure listeners for async dev app server start with waiting an add them
+        if (async && runDevAppServerWaitSeconds > 0) {
+          runDevAppServerWaitListener =
+              new WaitingProcessOutputLineListener(
+                  ".*(Dev App Server is now running|INFO:oejs\\.Server:main: Started).*",
+                  runDevAppServerWaitSeconds);
 
-        stdOutLineListeners.add(runDevAppServerWaitListener);
-        stdErrLineListeners.add(runDevAppServerWaitListener);
-        exitListeners.add(0, runDevAppServerWaitListener);
+          stdOutLineListeners.add(runDevAppServerWaitListener);
+          stdErrLineListeners.add(runDevAppServerWaitListener);
+          exitListeners.add(0, runDevAppServerWaitListener);
+        }
       }
 
       processRunner =
