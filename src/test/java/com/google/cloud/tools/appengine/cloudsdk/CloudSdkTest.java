@@ -180,33 +180,6 @@ public class CloudSdkTest {
     assertEquals(1, builder.getExitListeners().size());
   }
 
-  public void testNewCloudSdk_inheritOutputAndOutListener() {
-    try {
-      builder.inheritProcessOutput(true).addStdOutLineListener(outputListener);
-      fail();
-    } catch (IllegalStateException ex) {
-      assertNotNull(ex.getMessage());
-    }
-  }
-
-  public void testNewCloudSdk_inheritOutputAndErrListener() {
-    try {
-      builder.inheritProcessOutput(true).addStdErrLineListener(outputListener);
-      fail();
-    } catch (IllegalStateException ex) {
-      assertNotNull(ex.getMessage());
-    }
-  }
-
-  public void testNewCloudSdk_ErrListenerAndInheritOutput() {
-    try {
-      builder.addStdErrLineListener(outputListener).inheritProcessOutput(true);
-      fail();
-    } catch (IllegalStateException ex) {
-      assertNotNull(ex.getMessage());
-    }
-  }
-
   @Test
   public void testResolversOrdering() throws CloudSdkNotFoundException {
     CloudSdkResolver r1 = Mockito.mock(CloudSdkResolver.class, "r1");

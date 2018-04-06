@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
-import static java.lang.ProcessBuilder.Redirect;
-
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
@@ -40,29 +38,10 @@ public class DefaultProcessRunner implements ProcessRunner {
   private final List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
   private final List<ProcessExitListener> exitListeners;
   private final List<ProcessStartListener> startListeners;
-  private final boolean inheritProcessOutput;
 
   private Map<String, String> environment;
 
   private File workingDirectory;
-
-  /**
-   * Base constructor.
-   *
-   * @param async whether to run commands asynchronously
-   * @param exitListeners client consumers of process onExit event
-   * @param startListeners client consumers of process onStart event
-   */
-  public DefaultProcessRunner(
-      boolean async,
-      List<ProcessExitListener> exitListeners,
-      List<ProcessStartListener> startListeners,
-      boolean inheritProcessOutput) {
-    this.async = async;
-    this.exitListeners = exitListeners;
-    this.startListeners = startListeners;
-    this.inheritProcessOutput = inheritProcessOutput;
-  }
 
   /**
    * Constructor that attaches output listeners to a process. It assumes the generated subprocess
@@ -80,7 +59,9 @@ public class DefaultProcessRunner implements ProcessRunner {
       List<ProcessStartListener> startListeners,
       List<ProcessOutputLineListener> stdOutLineListeners,
       List<ProcessOutputLineListener> stdErrLineListeners) {
-    this(async, exitListeners, startListeners, false /* inheritProcessOutput */);
+    this.async = async;
+    this.exitListeners = exitListeners;
+    this.startListeners = startListeners;
     this.stdOutLineListeners.addAll(stdOutLineListeners);
     this.stdErrLineListeners.addAll(stdErrLineListeners);
   }
@@ -99,14 +80,6 @@ public class DefaultProcessRunner implements ProcessRunner {
       // Configure process builder.
       final ProcessBuilder processBuilder = new ProcessBuilder();
 
-      // If there are no listeners, we might still want to redirect stdout and stderr to the parent
-      // process, or not.
-      if (stdOutLineListeners.isEmpty() && inheritProcessOutput) {
-        processBuilder.redirectOutput(Redirect.INHERIT);
-      }
-      if (stdErrLineListeners.isEmpty() && inheritProcessOutput) {
-        processBuilder.redirectError(Redirect.INHERIT);
-      }
       if (environment != null) {
         processBuilder.environment().putAll(environment);
       }
@@ -119,11 +92,11 @@ public class DefaultProcessRunner implements ProcessRunner {
 
       Thread stdOutHandler = null;
       Thread stdErrHandler = null;
-      // Only handle stdout or stderr if there are listeners.
-      if (!stdOutLineListeners.isEmpty()) {
+      // Handle stdout or stderr on separate threads if the user has configured handlers
+      if (stdOutLineListeners.size() > 0) {
         stdOutHandler = handleStdOut(process);
       }
-      if (!stdErrLineListeners.isEmpty()) {
+      if (stdErrLineListeners.size() > 0) {
         stdErrHandler = handleErrOut(process);
       }
 
