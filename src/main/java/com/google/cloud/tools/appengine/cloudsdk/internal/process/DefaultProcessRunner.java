@@ -92,10 +92,13 @@ public class DefaultProcessRunner implements ProcessRunner {
 
       Thread stdOutHandler = null;
       Thread stdErrHandler = null;
-      // Handle stdout or stderr on separate threads even if there are no listeners,
-      // just gobble up the output.
-      stdOutHandler = handleStdOut(process);
-      stdErrHandler = handleErrOut(process);
+      // Handle stdout or stderr on separate threads if the user has configured handlers
+      if (stdOutLineListeners.size() > 0) {
+        stdOutHandler = handleStdOut(process);
+      }
+      if (stdErrLineListeners.size() > 0) {
+        stdErrHandler = handleErrOut(process);
+      }
 
       for (ProcessStartListener startListener : startListeners) {
         startListener.onStart(process);
