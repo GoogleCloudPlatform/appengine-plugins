@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
-/**
- * Line output listener for {@link LegacyProcessHandler}. Warning: all implementations must be
- * thread safe. The process writes lines, and any consumers listen from the lines in a separate
- * thread.
- */
-public interface ProcessOutputLineListener {
+/** Exception during execution of a {@link ProcessHandler}. */
+public class ProcessHandlerException extends Exception {
 
-  /** Called once per output line. */
-  void onOutputLine(String line);
+  public ProcessHandlerException(Exception cause) {
+    super(cause);
+  }
+
+  public ProcessHandlerException(String message) {
+    super(message);
+  }
 }

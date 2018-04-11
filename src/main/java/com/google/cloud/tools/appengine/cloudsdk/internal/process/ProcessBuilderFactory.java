@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,8 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
-/** Exception during execution of a {@link ProcessRunner}. */
-public class ProcessRunnerException extends Exception {
-
-  public ProcessRunnerException(Exception cause) {
-    super(cause);
-  }
-
-  public ProcessRunnerException(String message) {
-    super(message);
+public class ProcessBuilderFactory {
+  public ProcessBuilder newProcessBuilder() {
+    return new ProcessBuilder();
   }
 }

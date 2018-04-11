@@ -16,10 +16,8 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.DefaultProcessRunner;
-
 /**
- * Process listener that can be used with {@link DefaultProcessRunner} to retrieve the Process when
+ * Process listener that can be used with {@link LegacyProcessHandler} to retrieve the Process when
  * it's created and started.
  */
 public interface ProcessStartListener {

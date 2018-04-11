@@ -22,7 +22,7 @@ import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -46,12 +46,14 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   private static final Logger log = Logger.getLogger(CloudSdkAppEngineDevServer1.class.getName());
 
   private final CloudSdk sdk;
+  private final DevAppServerRunner runner;
 
   private static final String DEFAULT_HOST = "localhost";
   private static final int DEFAULT_PORT = 8080;
 
-  public CloudSdkAppEngineDevServer1(CloudSdk sdk) {
+  public CloudSdkAppEngineDevServer1(CloudSdk sdk, DevAppServerRunner runner) {
     this.sdk = Preconditions.checkNotNull(sdk);
+    this.runner = Preconditions.checkNotNull(runner);
   }
 
   /**
@@ -146,9 +148,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       if (config.getServices().size() == 1) {
         workingDirectory = config.getServices().get(0);
       }
-      sdk.runDevAppServer1Command(jvmArguments, arguments, appEngineEnvironment, workingDirectory);
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
+      runner.runV1(jvmArguments, arguments, appEngineEnvironment, workingDirectory);
+    } catch (ProcessHandlerException | IOException ex) {
+      throw new AppEngineException(ex);
     }
   }
 

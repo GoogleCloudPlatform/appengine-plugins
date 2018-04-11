@@ -21,25 +21,26 @@ import com.google.cloud.tools.appengine.api.versions.AppEngineVersions;
 import com.google.cloud.tools.appengine.api.versions.VersionsListConfiguration;
 import com.google.cloud.tools.appengine.api.versions.VersionsSelectionConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Preconditions;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /** Cloud SDK based implementation of {@link AppEngineVersions}. */
 public class CloudSdkAppEngineVersions implements AppEngineVersions {
 
-  private final CloudSdk sdk;
+  private final GcloudRunner runner;
 
-  public CloudSdkAppEngineVersions(CloudSdk sdk) {
-    this.sdk = sdk;
+  public CloudSdkAppEngineVersions(GcloudRunner runner) {
+    this.runner = runner;
   }
 
   private void execute(List<String> arguments) throws AppEngineException {
     try {
-      sdk.runAppCommand(arguments);
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
+      runner.run(arguments, null);
+    } catch (ProcessHandlerException | IOException ex) {
+      throw new AppEngineException(ex);
     }
   }
 
@@ -54,9 +55,9 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
     Preconditions.checkArgument(configuration.getVersions().size() > 0);
-    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
+    arguments.add("app");
     arguments.add("versions");
     arguments.add("start");
     arguments.addAll(commonVersionSelectionArgs(configuration));
@@ -75,9 +76,9 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
     Preconditions.checkArgument(configuration.getVersions().size() > 0);
-    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
+    arguments.add("app");
     arguments.add("versions");
     arguments.add("stop");
     arguments.addAll(commonVersionSelectionArgs(configuration));
@@ -98,6 +99,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     Preconditions.checkArgument(configuration.getVersions().size() > 0);
 
     List<String> arguments = new ArrayList<>();
+    arguments.add("app");
     arguments.add("versions");
     arguments.add("delete");
     arguments.addAll(commonVersionSelectionArgs(configuration));
@@ -114,9 +116,9 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
   @Override
   public void list(VersionsListConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
-    Preconditions.checkNotNull(sdk);
 
     List<String> arguments = new ArrayList<>();
+    arguments.add("app");
     arguments.add("versions");
     arguments.add("list");
     arguments.addAll(GcloudArgs.get("service", configuration.getService()));
