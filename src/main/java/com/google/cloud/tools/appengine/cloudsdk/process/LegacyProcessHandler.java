@@ -19,6 +19,7 @@ package com.google.cloud.tools.appengine.cloudsdk.process;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.WaitingProcessOutputLineListener;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -160,12 +161,14 @@ public class LegacyProcessHandler implements ProcessHandler {
           };
       exitThread.setDaemon(true);
       exitThread.start();
-      try {
-        waitingProcessOutputLineListener.await();
-      } catch (ProcessRunnerException e) {
-        // TODO: remove this when we remove process runner exception and process runner (in
-        // TODO: followup PR)
-        throw new ProcessHandlerException(e);
+      if (waitingProcessOutputLineListener != null) {
+        try {
+          waitingProcessOutputLineListener.await();
+        } catch (ProcessRunnerException e) {
+          // TODO: remove this when we remove process runner exception and process runner (in
+          // TODO: followup PR)
+          throw new ProcessHandlerException(e);
+        }
       }
     }
   }
@@ -188,11 +191,13 @@ public class LegacyProcessHandler implements ProcessHandler {
   }
 
   public static class Builder {
-    private List<ProcessOutputLineListener> stdOutLineListeners = new ArrayList<>();
-    private List<ProcessOutputLineListener> stdErrLineListeners = new ArrayList<>();
-    private List<ProcessExitListener> exitListeners = new ArrayList<>();
-    private List<ProcessStartListener> startListeners = new ArrayList<>();
+    private final List<ProcessOutputLineListener> stdOutLineListeners;
+    private final List<ProcessOutputLineListener> stdErrLineListeners;
+    private final List<ProcessExitListener> exitListeners;
+    private final List<ProcessStartListener> startListeners;
     private final DevAppServerAsyncOutputWatcherFactory devAppServerAsyncOutputWatcherFactory;
+
+    private boolean async;
 
     private Builder() {
       this(
@@ -203,6 +208,7 @@ public class LegacyProcessHandler implements ProcessHandler {
           new DevAppServerAsyncOutputWatcherFactory());
     }
 
+    @VisibleForTesting
     Builder(
         List<ProcessOutputLineListener> stdOut,
         List<ProcessOutputLineListener> stdErr,
@@ -240,9 +246,14 @@ public class LegacyProcessHandler implements ProcessHandler {
       return this;
     }
 
+    public Builder async(boolean async) {
+      this.async = async;
+      return this;
+    }
+
     public LegacyProcessHandler build() {
       return new LegacyProcessHandler(
-          false, stdOutLineListeners, stdErrLineListeners, startListeners, exitListeners, null);
+          async, stdOutLineListeners, stdErrLineListeners, startListeners, exitListeners, null);
     }
 
     /**
