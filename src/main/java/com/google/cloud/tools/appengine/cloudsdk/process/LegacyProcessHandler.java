@@ -17,7 +17,6 @@
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.WaitingProcessOutputLineListener;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
@@ -162,13 +161,7 @@ public class LegacyProcessHandler implements ProcessHandler {
       exitThread.setDaemon(true);
       exitThread.start();
       if (waitingProcessOutputLineListener != null) {
-        try {
-          waitingProcessOutputLineListener.await();
-        } catch (ProcessRunnerException e) {
-          // TODO: remove this when we remove process runner exception and process runner (in
-          // TODO: followup PR)
-          throw new ProcessHandlerException(e);
-        }
+        waitingProcessOutputLineListener.await();
       }
     }
   }
