@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
 import com.google.cloud.tools.appengine.api.devserver.DefaultStopConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.LogStoringHandler;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
@@ -59,6 +59,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
   private LogStoringHandler testHandler;
   @Mock private CloudSdk sdk;
+  @Mock private DevAppServerRunner devAppServerRunner;
 
   private CloudSdkAppEngineDevServer1 devServer;
 
@@ -84,7 +85,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Before
   public void setUp() throws IOException {
-    devServer = Mockito.spy(new CloudSdkAppEngineDevServer1(sdk));
+    devServer = Mockito.spy(new CloudSdkAppEngineDevServer1(sdk, devAppServerRunner));
     fakeJavaSdkHome = temporaryFolder.newFolder("java-sdk").toPath();
     fakeStoragePath = new File("storage/path");
     fakeDatastorePath = temporaryFolder.newFile("datastore.db");
@@ -110,8 +111,14 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testNullSdk() {
     try {
-      new CloudSdkAppEngineDevServer1(null);
+      new CloudSdkAppEngineDevServer1(null, devAppServerRunner);
       Assert.fail("Allowed null SDK");
+    } catch (NullPointerException expected) {
+    }
+
+    try {
+      new CloudSdkAppEngineDevServer1(sdk, null);
+      Assert.fail("Allowed null runner");
     } catch (NullPointerException expected) {
     }
   }
@@ -174,8 +181,8 @@ public class CloudSdkAppEngineDevServer1Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1))
-        .runDevAppServer1Command(
+    verify(devAppServerRunner, times(1))
+        .runV1(
             expectedJvmArgs,
             expectedFlags,
             expectedJava8Environment,
@@ -215,7 +222,8 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_booleanFlags()
+      throws AppEngineException, ProcessHandlerException, IOException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
 
     configuration.setServices(ImmutableList.of(java8Service));
@@ -229,8 +237,8 @@ public class CloudSdkAppEngineDevServer1Test {
     List<String> expectedJvmArgs =
         ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
     devServer.run(configuration);
-    verify(sdk, times(1))
-        .runDevAppServer1Command(
+    verify(devAppServerRunner, times(1))
+        .runV1(
             expectedJvmArgs,
             expectedFlags,
             expectedJava8Environment,
@@ -238,7 +246,8 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testPrepareCommand_noFlags() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_noFlags()
+      throws AppEngineException, ProcessHandlerException, IOException {
 
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service));
@@ -255,8 +264,8 @@ public class CloudSdkAppEngineDevServer1Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1))
-        .runDevAppServer1Command(
+    verify(devAppServerRunner, times(1))
+        .runV1(
             expectedJvmArgs,
             expectedFlags,
             expectedJava8Environment,
@@ -264,7 +273,8 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testPrepareCommand_noFlagsJava7() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_noFlagsJava7()
+      throws AppEngineException, ProcessHandlerException, IOException {
 
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java7Service));
@@ -279,8 +289,8 @@ public class CloudSdkAppEngineDevServer1Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1))
-        .runDevAppServer1Command(
+    verify(devAppServerRunner, times(1))
+        .runV1(
             expectedJvmArgs,
             expectedFlags,
             expectedJava7Environment,
@@ -289,7 +299,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Test
   public void testPrepareCommand_noFlagsMultiModule()
-      throws AppEngineException, ProcessRunnerException {
+      throws AppEngineException, ProcessHandlerException, IOException {
 
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java7Service, java8Service));
@@ -307,14 +317,14 @@ public class CloudSdkAppEngineDevServer1Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1))
-        .runDevAppServer1Command(
+    verify(devAppServerRunner, times(1))
+        .runV1(
             expectedJvmArgs, expectedFlags, expectedJava8Environment, null /* workingDirectory */);
   }
 
   @Test
   public void testPrepareCommand_appEngineWebXmlEnvironmentVariables()
-      throws AppEngineException, ProcessRunnerException {
+      throws AppEngineException, ProcessHandlerException, IOException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service1EnvVars));
 
@@ -338,8 +348,8 @@ public class CloudSdkAppEngineDevServer1Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1))
-        .runDevAppServer1Command(
+    verify(devAppServerRunner, times(1))
+        .runV1(
             expectedJvmArgs,
             expectedFlags,
             expectedEnvironment,
@@ -348,7 +358,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Test
   public void testPrepareCommand_multipleServicesDuplicateAppEngineWebXmlEnvironmentVariables()
-      throws AppEngineException, ProcessRunnerException {
+      throws AppEngineException, ProcessHandlerException, IOException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service1EnvVars, java8Service2EnvVars));
 
@@ -373,14 +383,13 @@ public class CloudSdkAppEngineDevServer1Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1))
-        .runDevAppServer1Command(
-            expectedJvmArgs, expectedFlags, expectedEnvironment, null /* workingDirectory */);
+    verify(devAppServerRunner, times(1))
+        .runV1(expectedJvmArgs, expectedFlags, expectedEnvironment, null /* workingDirectory */);
   }
 
   @Test
   public void testPrepareCommand_clientSuppliedEnvironmentVariables()
-      throws AppEngineException, ProcessRunnerException {
+      throws AppEngineException, ProcessHandlerException, IOException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java7Service));
 
@@ -403,8 +412,8 @@ public class CloudSdkAppEngineDevServer1Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1))
-        .runDevAppServer1Command(
+    verify(devAppServerRunner, times(1))
+        .runV1(
             expectedJvmArgs,
             expectedFlags,
             expectedEnvironment,
@@ -413,7 +422,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Test
   public void testPrepareCommand_clientSuppliedAndAppEngineWebXmlEnvironmentVariables()
-      throws AppEngineException, ProcessRunnerException {
+      throws AppEngineException, ProcessHandlerException, IOException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service1EnvVars));
 
@@ -441,8 +450,8 @@ public class CloudSdkAppEngineDevServer1Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1))
-        .runDevAppServer1Command(
+    verify(devAppServerRunner, times(1))
+        .runV1(
             expectedJvmArgs,
             expectedFlags,
             expectedEnvironment,
@@ -507,34 +516,24 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Test
   public void testWorkingDirectory_fallbackIfOneProject()
-      throws ProcessRunnerException, AppEngineException {
+      throws ProcessHandlerException, AppEngineException, IOException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service));
 
     devServer.run(configuration);
 
-    verify(sdk)
-        .runDevAppServer1Command(
-            any(List.class),
-            any(List.class),
-            any(Map.class),
-            eq(java8Service) /* workingDirectory */);
+    verify(devAppServerRunner).runV1(any(), any(), any(), eq(java8Service) /* workingDirectory */);
   }
 
   @Test
   public void testWorkingDirectory_noFallbackIfManyProjects()
-      throws ProcessRunnerException, AppEngineException {
+      throws ProcessHandlerException, AppEngineException, IOException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(java8Service, java8Service));
 
     devServer.run(configuration);
 
-    verify(sdk)
-        .runDevAppServer1Command(
-            any(List.class),
-            any(List.class),
-            any(Map.class),
-            eq((File) null) /* workingDirectory */);
+    verify(devAppServerRunner).runV1(any(), any(), any(), eq(null) /* workingDirectory */);
   }
 
   @Test

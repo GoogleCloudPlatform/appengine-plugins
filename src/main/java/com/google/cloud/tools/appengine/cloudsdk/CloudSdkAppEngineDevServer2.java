@@ -21,7 +21,7 @@ import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
@@ -34,13 +34,13 @@ import java.util.List;
 /** Cloud SDK based implementation of {@link AppEngineDevServer}. */
 public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
 
-  private final CloudSdk sdk;
-
   private static final String DEFAULT_ADMIN_HOST = "localhost";
   private static final int DEFAULT_ADMIN_PORT = 8000;
 
-  public CloudSdkAppEngineDevServer2(CloudSdk sdk) {
-    this.sdk = Preconditions.checkNotNull(sdk);
+  private final DevAppServerRunner runner;
+
+  public CloudSdkAppEngineDevServer2(DevAppServerRunner runner) {
+    this.runner = Preconditions.checkNotNull(runner);
   }
 
   /**
@@ -97,9 +97,9 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
     }
 
     try {
-      sdk.runDevAppServerCommand(arguments);
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
+      runner.runV2(arguments);
+    } catch (ProcessHandlerException | IOException ex) {
+      throw new AppEngineException(ex);
     }
   }
 

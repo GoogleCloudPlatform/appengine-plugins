@@ -22,11 +22,12 @@ import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -44,7 +45,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineDevServer2Test {
 
-  @Mock private CloudSdk sdk;
+  @Mock private DevAppServerRunner devAppServerRunner;
   private Path fakeStoragePath = Paths.get("storage/path");
   private Path fakeDatastorePath = Paths.get("datastore/path");
 
@@ -52,15 +53,16 @@ public class CloudSdkAppEngineDevServer2Test {
 
   @Before
   public void setUp() {
-    devServer = new CloudSdkAppEngineDevServer2(sdk);
+    devServer = new CloudSdkAppEngineDevServer2(devAppServerRunner);
   }
 
   @Test
   public void tesNullSdk() {
     try {
       new CloudSdkAppEngineDevServer2(null);
-      Assert.fail("Allowed null SDK");
+      Assert.fail("Allowed null runner");
     } catch (NullPointerException expected) {
+      // pass
     }
   }
 
@@ -129,13 +131,14 @@ public class CloudSdkAppEngineDevServer2Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+    verify(devAppServerRunner, times(1)).runV2(eq(expected));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredGetters(ImmutableMap.of("getServices", 3));
   }
 
   @Test
-  public void testPrepareCommand_booleanFlags() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_booleanFlags()
+      throws AppEngineException, ProcessHandlerException, IOException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
 
     configuration.setServices(ImmutableList.of(new File("exploded-war/")));
@@ -155,11 +158,12 @@ public class CloudSdkAppEngineDevServer2Test {
             "--clear_datastore=false");
 
     devServer.run(configuration);
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+    verify(devAppServerRunner, times(1)).runV2(eq(expected));
   }
 
   @Test
-  public void testPrepareCommand_noFlags() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_noFlags()
+      throws AppEngineException, ProcessHandlerException, IOException {
 
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(new File("exploded-war/")));
@@ -168,11 +172,12 @@ public class CloudSdkAppEngineDevServer2Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expected));
+    verify(devAppServerRunner, times(1)).runV2(eq(expected));
   }
 
   @Test
-  public void testPrepareCommand_clientEnvVars() throws AppEngineException, ProcessRunnerException {
+  public void testPrepareCommand_clientEnvVars()
+      throws AppEngineException, ProcessHandlerException, IOException {
     DefaultRunConfiguration configuration = new DefaultRunConfiguration();
     configuration.setServices(ImmutableList.of(new File("exploded-war/")));
 
@@ -184,6 +189,6 @@ public class CloudSdkAppEngineDevServer2Test {
 
     devServer.run(configuration);
 
-    verify(sdk, times(1)).runDevAppServerCommand(eq(expectedArgs));
+    verify(devAppServerRunner, times(1)).runV2(eq(expectedArgs));
   }
 }

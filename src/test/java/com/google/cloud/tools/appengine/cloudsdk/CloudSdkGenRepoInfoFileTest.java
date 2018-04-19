@@ -18,9 +18,10 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.debug.DefaultGenRepoInfoFileConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,9 +39,9 @@ public class CloudSdkGenRepoInfoFileTest {
   }
 
   @Test
-  public void testGenerate() throws AppEngineException, ProcessRunnerException {
-    CloudSdk sdk = Mockito.mock(CloudSdk.class);
-    CloudSdkGenRepoInfoFile model = new CloudSdkGenRepoInfoFile(sdk);
+  public void testGenerate() throws AppEngineException, ProcessHandlerException, IOException {
+    GcloudRunner gcloudRunner = Mockito.mock(GcloudRunner.class);
+    CloudSdkGenRepoInfoFile model = new CloudSdkGenRepoInfoFile(gcloudRunner);
     DefaultGenRepoInfoFileConfiguration configuration = new DefaultGenRepoInfoFileConfiguration();
     configuration.setOutputDirectory(new File("output"));
     configuration.setSourceDirectory(new File("source"));
@@ -48,7 +49,15 @@ public class CloudSdkGenRepoInfoFileTest {
 
     List<String> arguments =
         ImmutableList.of(
-            "gen-repo-info-file", "--output-directory", "output", "--source-directory", "source");
-    Mockito.verify(sdk).runSourceCommand(arguments);
+            "gcloud",
+            "beta",
+            "debug",
+            "source",
+            "gen-repo-info-file",
+            "--output-directory",
+            "output",
+            "--source-directory",
+            "source");
+    Mockito.verify(gcloudRunner).run(arguments, null);
   }
 }
