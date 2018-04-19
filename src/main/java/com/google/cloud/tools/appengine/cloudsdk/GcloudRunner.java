@@ -80,14 +80,14 @@ class GcloudRunner {
 
     logger.info("submitting command: " + Joiner.on(" ").join(command));
 
-    ProcessBuilder pb = processBuilderFactory.newProcessBuilder();
-    pb.command(command);
+    ProcessBuilder processBuilder = processBuilderFactory.newProcessBuilder();
+    processBuilder.command(command);
     if (workingDirectory != null) {
-      pb.directory(workingDirectory);
+      processBuilder.directory(workingDirectory);
     }
-    pb.environment().putAll(getGcloudCommandEnvironment());
-    Process p = pb.start();
-    processHandler.handleProcess(p);
+    processBuilder.environment().putAll(getGcloudCommandEnvironment());
+    Process process = processBuilder.start();
+    processHandler.handleProcess(process);
   }
 
   @VisibleForTesting

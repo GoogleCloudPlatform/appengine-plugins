@@ -78,12 +78,12 @@ class DevAppServerRunner {
     // set quiet mode and consequently auto-install of app-engine-java component
     environment.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
 
-    ProcessBuilder pb = processBuilderFactory.newProcessBuilder();
-    pb.command(command);
-    pb.environment().putAll(environment);
-    Process p = pb.start();
+    ProcessBuilder processbuilder = processBuilderFactory.newProcessBuilder();
+    processbuilder.command(command);
+    processbuilder.environment().putAll(environment);
+    Process process = processbuilder.start();
 
-    processHandler.handleProcess(p);
+    processHandler.handleProcess(process);
   }
 
   /**
@@ -123,13 +123,13 @@ class DevAppServerRunner {
     Map<String, String> devServerEnvironment = Maps.newHashMap(environment);
     devServerEnvironment.put("JAVA_HOME", sdk.getJavaHomePath().toAbsolutePath().toString());
 
-    ProcessBuilder pb = processBuilderFactory.newProcessBuilder();
-    pb.command(command);
-    pb.directory(workingDirectory);
-    pb.environment().putAll(devServerEnvironment);
-    Process p = pb.start();
+    ProcessBuilder processBuilder = processBuilderFactory.newProcessBuilder();
+    processBuilder.command(command);
+    processBuilder.directory(workingDirectory);
+    processBuilder.environment().putAll(devServerEnvironment);
+    Process process = processBuilder.start();
 
-    processHandler.handleProcess(p);
+    processHandler.handleProcess(process);
   }
 
   static class Factory {

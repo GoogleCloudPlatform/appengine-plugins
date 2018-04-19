@@ -67,10 +67,10 @@ class AppCfgRunner {
 
     logger.info("submitting command: " + Joiner.on(" ").join(command));
 
-    ProcessBuilder pb = processBuilderFactory.newProcessBuilder();
-    pb.command(command);
-    Process p = pb.start();
-    processHandler.handleProcess(p);
+    ProcessBuilder processBuilder = processBuilderFactory.newProcessBuilder();
+    processBuilder.command(command);
+    Process process = processBuilder.start();
+    processHandler.handleProcess(process);
   }
 
   static class Factory {
