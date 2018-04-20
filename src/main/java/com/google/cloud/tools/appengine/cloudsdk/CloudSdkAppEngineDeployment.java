@@ -128,7 +128,8 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
    * @param configuration Deployment configuration
    */
   @VisibleForTesting
-  void deployConfig(String filename, DeployProjectConfigurationConfiguration configuration) {
+  void deployConfig(String filename, DeployProjectConfigurationConfiguration configuration)
+      throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getAppEngineDirectory());
 

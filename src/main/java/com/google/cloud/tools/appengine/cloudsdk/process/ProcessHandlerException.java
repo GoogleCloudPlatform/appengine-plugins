@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.api.instances;
+package com.google.cloud.tools.appengine.cloudsdk.process;
 
-import com.google.cloud.tools.appengine.api.Configuration;
+/** Exception during execution of a {@link ProcessHandler}. */
+public class ProcessHandlerException extends Exception {
 
-/** Identifies an instance for use in {@link AppEngineInstances}. */
-public interface InstancesSelectionConfiguration extends Configuration {
+  public ProcessHandlerException(Exception cause) {
+    super(cause);
+  }
 
-  String getService();
-
-  String getVersion();
+  public ProcessHandlerException(String message) {
+    super(message);
+  }
 }

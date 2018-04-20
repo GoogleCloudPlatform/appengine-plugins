@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.api.logs;
+package com.google.cloud.tools.appengine.api.auth;
 
-import com.google.cloud.tools.appengine.api.Configuration;
+import com.google.cloud.tools.appengine.api.AppEngineException;
+import java.nio.file.Path;
 
-/** Identifies an application for use in {@link AppEngineLogs}. */
-public interface LogsConfiguration extends Configuration {
+public interface Auth {
+  void login(String user) throws AppEngineException;
 
-  String getLevel();
+  void login() throws AppEngineException;
 
-  String getVersion();
-
-  String getService();
-
-  Integer getLimit();
+  void activateServiceAccount(Path jsonFile) throws AppEngineException;
 }

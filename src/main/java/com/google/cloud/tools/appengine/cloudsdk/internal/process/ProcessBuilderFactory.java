@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.api.genconfig;
+package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
-import java.io.File;
-
-/**
- * Parameters for generating configuration files using {@link
- * GenConfigUtility#genConfig(GenConfigParams)}.
- */
-public interface GenConfigParams {
-
-  File getSourceDirectory();
-
-  String getConfig();
-
-  Boolean getCustom();
-
-  String getRuntime();
+public class ProcessBuilderFactory {
+  public ProcessBuilder newProcessBuilder() {
+    return new ProcessBuilder();
+  }
 }

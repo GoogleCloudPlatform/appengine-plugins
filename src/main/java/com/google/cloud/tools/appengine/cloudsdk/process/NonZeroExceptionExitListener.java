@@ -23,7 +23,7 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 public class NonZeroExceptionExitListener implements ProcessExitListener {
 
   @Override
-  public void onExit(int exitCode) {
+  public void onExit(int exitCode) throws AppEngineException {
     if (exitCode != 0) {
       throw new AppEngineException("Non zero exit: " + exitCode);
     }

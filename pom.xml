@@ -7,7 +7,7 @@
 
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-plugins-core</artifactId>
-  <version>0.5.1-SNAPSHOT</version>
+  <version>0.5.3-SNAPSHOT</version>
 
   <name>App Engine Plugins Core Library</name>
   <description>
@@ -209,7 +209,6 @@
         </configuration>
         <executions>
           <execution>
-            <id>default-cli</id>
             <phase>validate</phase>
             <goals>
               <goal>check</goal>
@@ -225,24 +224,22 @@
           <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
-            <version>8.2</version>
+            <version>8.8</version>
           </dependency>
         </dependencies>
         <configuration>
           <consoleOutput>false</consoleOutput>
           <failOnViolation>true</failOnViolation>
           <violationSeverity>warning</violationSeverity>
+          <configLocation>google_checks.xml</configLocation>
+          <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
         </configuration>
         <executions>
           <execution>
-            <id>google-checks</id>
+            <phase>verify</phase>
             <goals>
               <goal>check</goal>
             </goals>
-            <configuration>
-              <configLocation>google_checks.xml</configLocation>
-              <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -261,6 +258,10 @@
             <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
             <Import-Package>!javax.annotation,*</Import-Package>
             <Eclipse-BuddyPolicy>registered</Eclipse-BuddyPolicy>
+            <!--  best URL we have until 
+                  https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/338
+                  is fixed -->
+            <Bundle-DocURL>https://github.com/GoogleCloudPlatform/appengine-plugins-core</Bundle-DocURL>
           </instructions>
         </configuration>
         <executions>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.api.services;
+package com.google.cloud.tools.appengine.cloudsdk.process;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-
-/** This set of commands can be used to manage existing App Engine services. */
-public interface AppEngineServices {
-
-  /** Set the traffic splitting for the given service. */
-  void setTraffic(TrafficSplitConfiguration configuration) throws AppEngineException;
+public interface ProcessHandler {
+  void handleProcess(Process process) throws ProcessHandlerException;
 }

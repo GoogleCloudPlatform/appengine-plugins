@@ -64,7 +64,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyDockerContext_runtimeJavaNoWarning() throws IOException {
+  public void testCopyDockerContext_runtimeJavaNoWarning() throws AppEngineException, IOException {
     new FlexibleStagingContext().withNonExistantDockerDirectory();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
@@ -76,7 +76,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyDockerContext_runtimeJavaWithWarning() throws IOException {
+  public void testCopyDockerContext_runtimeJavaWithWarning()
+      throws AppEngineException, IOException {
     new FlexibleStagingContext().withDockerDirectory();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
@@ -115,7 +116,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyDockerContext_runtimeNotJavaWithDockerfile() throws IOException {
+  public void testCopyDockerContext_runtimeNotJavaWithDockerfile()
+      throws AppEngineException, IOException {
     new FlexibleStagingContext().withStagingDirectory().withDockerDirectory().withDockerFile();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
@@ -148,7 +150,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyDockerContext_runtimeNull() throws IOException {
+  public void testCopyDockerContext_runtimeNull() throws AppEngineException, IOException {
     new FlexibleStagingContext().withStagingDirectory().withDockerDirectory().withDockerFile();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
@@ -190,7 +192,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyAppEngineContext_appYamlInAppEngineDirectory() throws IOException {
+  public void testCopyAppEngineContext_appYamlInAppEngineDirectory()
+      throws AppEngineException, IOException {
     new FlexibleStagingContext()
         .withStagingDirectory()
         .withAppEngineDirectory()

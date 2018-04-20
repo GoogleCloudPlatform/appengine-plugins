@@ -120,8 +120,24 @@ public class CloudSdk {
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
-  public void runAppCommand(List<String> args) throws ProcessRunnerException {
+  public void runAppCommand(List<String> args)
+      throws ProcessRunnerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+          CloudSdkVersionFileException, InvalidJavaSdkException {
     runGcloudCommand(args, null, "app");
+  }
+
+  /**
+   * Uses the process runner to execute the gcloud auth command with the provided arguments.
+   *
+   * @param args the arguments to pass to gcloud command
+   * @throws ProcessRunnerException when there is an issue running the gcloud process
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
+   */
+  public void runAuthCommand(List<String> args)
+      throws ProcessRunnerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+          CloudSdkVersionFileException, InvalidJavaSdkException {
+    runGcloudCommand(args, null, "auth");
   }
 
   /**
@@ -134,7 +150,8 @@ public class CloudSdk {
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   public void runAppCommandInWorkingDirectory(List<String> args, File workingDirectory)
-      throws ProcessRunnerException {
+      throws ProcessRunnerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+          CloudSdkVersionFileException, InvalidJavaSdkException {
     runGcloudCommand(args, workingDirectory, "app");
   }
 
@@ -147,16 +164,21 @@ public class CloudSdk {
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
-  public void runSourceCommand(List<String> args) throws ProcessRunnerException {
+  public void runSourceCommand(List<String> args)
+      throws ProcessRunnerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+          CloudSdkVersionFileException, InvalidJavaSdkException {
     runDebugCommand(args, "source");
   }
 
-  private void runDebugCommand(List<String> args, String group) throws ProcessRunnerException {
+  private void runDebugCommand(List<String> args, String group)
+      throws ProcessRunnerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+          CloudSdkVersionFileException, InvalidJavaSdkException {
     runGcloudCommand(args, null, "beta", "debug", group);
   }
 
   private void runGcloudCommand(List<String> args, File workingDirectory, String... topLevelCommand)
-      throws ProcessRunnerException {
+      throws ProcessRunnerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+          CloudSdkVersionFileException, InvalidJavaSdkException {
     validateCloudSdk();
 
     List<String> command = new ArrayList<>();
@@ -210,7 +232,8 @@ public class CloudSdk {
   // used for the execution of short-running gcloud commands, especially when we need to do some
   // additional processing of the gcloud command's output before returning. In all other cases, this
   // class's main configured ProcessRunner should be used.
-  private String runSynchronousGcloudCommand(List<String> args) throws ProcessRunnerException {
+  private String runSynchronousGcloudCommand(List<String> args)
+      throws ProcessRunnerException, CloudSdkNotFoundException {
     validateCloudSdkLocation();
 
     StringBuilderProcessOutputLineListener stdOutListener =
@@ -250,7 +273,9 @@ public class CloudSdk {
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    * @throws AppEngineException when dev_appserver.py cannot be found
    */
-  void runDevAppServerCommand(List<String> args) throws ProcessRunnerException {
+  void runDevAppServerCommand(List<String> args)
+      throws ProcessRunnerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+          CloudSdkVersionFileException, InvalidJavaSdkException {
     validateCloudSdk();
 
     List<String> command = new ArrayList<>();
@@ -284,6 +309,8 @@ public class CloudSdk {
    * @param args the arguments to pass to devappserver
    * @param environment the environment to set on the devappserver process
    * @throws ProcessRunnerException when process runner encounters an error
+   * @throws AppEngineJavaComponentsNotInstalledException Cloud SDK is installed but App Engine Java
+   *     components are not
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    * @throws AppEngineException when dev appserver cannot be found
@@ -293,7 +320,8 @@ public class CloudSdk {
       List<String> args,
       Map<String, String> environment,
       File workingDirectory)
-      throws ProcessRunnerException {
+      throws ProcessRunnerException, AppEngineJavaComponentsNotInstalledException,
+          InvalidJavaSdkException {
     validateAppEngineJavaComponents();
     validateJdk();
 
@@ -328,8 +356,11 @@ public class CloudSdk {
    *
    * @throws AppEngineJavaComponentsNotInstalledException when the App Engine Java components are
    *     not installed in the Cloud SDK
+   * @throws InvalidJavaSdkException java not found
    */
-  public void runAppCfgCommand(List<String> args) throws ProcessRunnerException {
+  public void runAppCfgCommand(List<String> args)
+      throws ProcessRunnerException, AppEngineJavaComponentsNotInstalledException,
+          InvalidJavaSdkException {
     validateAppEngineJavaComponents();
     validateJdk();
 
@@ -351,10 +382,8 @@ public class CloudSdk {
   /**
    * Returns the version of the Cloud SDK installation. Version is determined by reading the VERSION
    * file located in the Cloud SDK directory.
-   *
-   * @throws CloudSdkVersionFileException if the VERSION file could not be read
    */
-  public CloudSdkVersion getVersion() {
+  public CloudSdkVersion getVersion() throws CloudSdkVersionFileException {
     Path versionFile = getSdkPath().resolve(VERSION_FILE_NAME);
 
     if (!Files.isRegularFile(versionFile)) {
@@ -389,7 +418,8 @@ public class CloudSdk {
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
   public List<CloudSdkComponent> getComponents()
-      throws ProcessRunnerException, JsonSyntaxException {
+      throws ProcessRunnerException, JsonSyntaxException, CloudSdkNotFoundException,
+          CloudSdkOutOfDateException, CloudSdkVersionFileException, InvalidJavaSdkException {
     validateCloudSdk();
 
     // gcloud components list --show-versions --format=json
@@ -472,7 +502,8 @@ public class CloudSdk {
    * @throws CloudSdkVersionFileException VERSION file could not be read
    */
   public void validateCloudSdk()
-      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException {
+      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException,
+          InvalidJavaSdkException {
     validateCloudSdkLocation();
     validateCloudSdkVersion();
     validateJdk();
@@ -491,7 +522,7 @@ public class CloudSdk {
     }
   }
 
-  private void validateCloudSdkLocation() {
+  private void validateCloudSdkLocation() throws CloudSdkNotFoundException {
     if (sdkPath == null) {
       throw new CloudSdkNotFoundException("Validation Error: Cloud SDK path is null");
     }
@@ -511,7 +542,7 @@ public class CloudSdk {
     }
   }
 
-  private void validateJdk() {
+  private void validateJdk() throws InvalidJavaSdkException {
     if (!Files.exists(getJavaExecutablePath())) {
       throw new InvalidJavaSdkException(
           "Invalid Java SDK. " + getJavaExecutablePath().toString() + " does not exist.");
@@ -703,7 +734,7 @@ public class CloudSdk {
      * Create a new instance of {@link CloudSdk}. If {@code sdkPath} is not set, this method looks
      * for the SDK in known install locations.
      */
-    public CloudSdk build() {
+    public CloudSdk build() throws CloudSdkNotFoundException {
 
       // Default SDK path
       if (sdkPath == null) {
@@ -753,7 +784,7 @@ public class CloudSdk {
      * @throws CloudSdkNotFoundException if not found
      */
     @Nonnull
-    private Path discoverSdkPath() {
+    private Path discoverSdkPath() throws CloudSdkNotFoundException {
       for (CloudSdkResolver resolver : getResolvers()) {
         try {
           Path discoveredSdkPath = resolver.getCloudSdkPath();
