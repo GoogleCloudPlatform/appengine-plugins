@@ -16,14 +16,14 @@
 
 package com.google.cloud.tools.managedcloudsdk.components;
 
-import com.google.cloud.tools.io.FileDeleteVisitor;
 import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -79,7 +79,7 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
 
     if (endsWithPythonExe) { // just to be safe
       try {
-        Files.walkFileTree(Paths.get(pythonHome), new FileDeleteVisitor());
+        MoreFiles.deleteRecursively(Paths.get(pythonHome), RecursiveDeleteOption.ALLOW_INSECURE);
       } catch (IOException e) {
         // not critical to remove a temp directory
       }
