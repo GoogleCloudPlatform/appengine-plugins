@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Google LLC. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.common.annotations.VisibleForTesting;
 
+/** Create Dev App Servers. */
 public class DevAppServer {
   private final CloudSdk sdk;
   private final DevAppServerRunner.Factory devAppServerRunnerFactory;

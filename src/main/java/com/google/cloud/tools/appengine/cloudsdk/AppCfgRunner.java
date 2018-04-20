@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Google LLC. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ class AppCfgRunner {
     sdk.validateAppEngineJavaComponents();
     sdk.validateJdk();
 
-    // AppEngineSdk requires this system property to be set.
+    // App Engine Java Sdk requires this system property to be set.
     // TODO: perhaps we should send this in directly to the command instead of changing the global
     // state here (see DevAppServerRunner)
     System.setProperty("appengine.sdk.root", sdk.getJavaAppEngineSdkPath().toString());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Google LLC. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class Gcloud {
 
   /**
    * Sets the format for printing command output resources. The default is a command-specific
-   * human-friendly output format. The supported formats are: csv, default, flattened, json, list,
+   * human-friendly output format. The supported formats are: csv, default, flattened, JSON, list,
    * multi, none, table, text, value, yaml. For more details run $ gcloud topic formats.
    */
   public Gcloud setOutputFormat(String outputFormat) {
@@ -64,7 +64,7 @@ public class Gcloud {
   }
 
   /**
-   * Sets structured json logs for the stderr output. Supported values include 'never' (default),
+   * Sets structured JSON logs for the stderr output. Supported values include 'never' (default),
    * 'always', 'terminal', etc.
    */
   public Gcloud setShowStructuredLogs(String showStructuredLogs) {

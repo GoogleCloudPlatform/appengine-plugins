@@ -20,6 +20,7 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.common.annotations.VisibleForTesting;
 
+/** Operations that use appcfg. */
 public class AppCfg {
   private final CloudSdk sdk;
   private final AppCfgRunner.Factory appCfgRunnerFactory;

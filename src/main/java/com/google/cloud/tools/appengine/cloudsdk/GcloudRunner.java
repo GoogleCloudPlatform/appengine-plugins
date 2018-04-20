@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Google LLC. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@ class GcloudRunner {
     this.processHandler = processHandler;
   }
 
-  void run(List<String> comm, File workingDirectory)
+  void run(List<String> arguments, File workingDirectory)
       throws ProcessHandlerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
           CloudSdkVersionFileException, InvalidJavaSdkException, IOException {
 
@@ -71,7 +71,7 @@ class GcloudRunner {
     List<String> command = new ArrayList<>();
     command.add(sdk.getGCloudPath().toString());
 
-    command.addAll(comm);
+    command.addAll(arguments);
     command.addAll(GcloudArgs.get("format", outputFormat));
 
     if (credentialFile != null) {
