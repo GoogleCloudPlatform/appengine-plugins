@@ -25,10 +25,6 @@ public class AppCfg {
   private final CloudSdk sdk;
   private final AppCfgRunner.Factory appCfgRunnerFactory;
 
-  public static AppCfg newAppCfg(CloudSdk sdk) {
-    return new AppCfg(sdk, new AppCfgRunner.Factory());
-  }
-
   @VisibleForTesting
   AppCfg(CloudSdk sdk, AppCfgRunner.Factory appCfgRunnerFactory) {
     this.appCfgRunnerFactory = appCfgRunnerFactory;
@@ -42,5 +38,25 @@ public class AppCfg {
   @VisibleForTesting
   AppCfgRunner getRunner(ProcessHandler processHandler) {
     return appCfgRunnerFactory.newRunner(sdk, processHandler);
+  }
+
+  public static Builder builder(CloudSdk sdk) {
+    return new Builder(sdk, new AppCfgRunner.Factory());
+  }
+
+  public static class Builder {
+    private final CloudSdk sdk;
+    private final AppCfgRunner.Factory runnerFactory;
+
+    @VisibleForTesting
+    Builder(CloudSdk sdk, AppCfgRunner.Factory runnerFactory) {
+      this.sdk = sdk;
+      this.runnerFactory = runnerFactory;
+    }
+
+    /** Build an immutable AppCfg instance. */
+    public AppCfg build() {
+      return new AppCfg(sdk, runnerFactory);
+    }
   }
 }

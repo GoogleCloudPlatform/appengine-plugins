@@ -38,13 +38,14 @@ public class GcloudTest {
     String metricsEnvironmentVersion = "ver123";
     String outputFormat = "format123";
     String showStructuredLogs = "logs123";
-
-    new Gcloud(sdk, gcloudRunnerFactory)
+    new Gcloud.Builder(sdk, gcloudRunnerFactory)
         .setCredentialFile(credentialFile)
         .setMetricsEnvironment(metricsEnvironment, metricsEnvironmentVersion)
         .setOutputFormat(outputFormat)
         .setShowStructuredLogs(showStructuredLogs)
+        .build()
         .getRunner(processHandler);
+
     Mockito.verify(gcloudRunnerFactory)
         .newRunner(
             sdk,

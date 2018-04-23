@@ -24,52 +24,27 @@ import java.io.File;
 public class Gcloud {
   private final CloudSdk sdk;
   private final GcloudRunner.Factory gcloudRunnerFactory;
-  private String metricsEnvironment;
-  private String metricsEnvironmentVersion;
-  private File credentialFile;
-  private String outputFormat;
-  private String showStructuredLogs;
+  private final String metricsEnvironment;
+  private final String metricsEnvironmentVersion;
+  private final File credentialFile;
+  private final String outputFormat;
+  private final String showStructuredLogs;
 
-  public static Gcloud newGcloud(CloudSdk sdk) {
-    return new Gcloud(sdk, new GcloudRunner.Factory());
-  }
-
-  @VisibleForTesting
-  Gcloud(CloudSdk sdk, GcloudRunner.Factory gcloudRunnerFactory) {
+  private Gcloud(
+      CloudSdk sdk,
+      GcloudRunner.Factory gcloudRunnerFactory,
+      String metricsEnvironment,
+      String metricsEnvironmentVersion,
+      File credentialFile,
+      String outputFormat,
+      String showStructuredLogs) {
     this.gcloudRunnerFactory = gcloudRunnerFactory;
     this.sdk = sdk;
-  }
-
-  /** Set metrics environment and version. */
-  public Gcloud setMetricsEnvironment(String metricsEnvironment, String metricsEnvironmentVersion) {
     this.metricsEnvironment = metricsEnvironment;
     this.metricsEnvironmentVersion = metricsEnvironmentVersion;
-    return this;
-  }
-
-  /**
-   * Sets the format for printing command output resources. The default is a command-specific
-   * human-friendly output format. The supported formats are: csv, default, flattened, JSON, list,
-   * multi, none, table, text, value, yaml. For more details run $ gcloud topic formats.
-   */
-  public Gcloud setOutputFormat(String outputFormat) {
-    this.outputFormat = outputFormat;
-    return this;
-  }
-
-  /** Set the credential file override. */
-  public Gcloud setCredentialFile(File credentialFile) {
     this.credentialFile = credentialFile;
-    return this;
-  }
-
-  /**
-   * Sets structured JSON logs for the stderr output. Supported values include 'never' (default),
-   * 'always', 'terminal', etc.
-   */
-  public Gcloud setShowStructuredLogs(String showStructuredLogs) {
+    this.outputFormat = outputFormat;
     this.showStructuredLogs = showStructuredLogs;
-    return this;
   }
 
   public CloudSdkAppEngineDeployment newDeployment(ProcessHandler processHandler) {
@@ -98,5 +73,76 @@ public class Gcloud {
         outputFormat,
         showStructuredLogs,
         processHandler);
+  }
+
+  public static Builder builder(CloudSdk sdk) {
+    return new Builder(sdk);
+  }
+
+  public static class Builder {
+
+    private final CloudSdk sdk;
+    private final GcloudRunner.Factory gcloudRunnerFactory;
+
+    private String metricsEnvironment;
+    private String metricsEnvironmentVersion;
+    private File credentialFile;
+    private String outputFormat;
+    private String showStructuredLogs;
+
+    private Builder(CloudSdk sdk) {
+      this(sdk, new GcloudRunner.Factory());
+    }
+
+    @VisibleForTesting
+    Builder(CloudSdk sdk, GcloudRunner.Factory gcloudRunnerFactory) {
+      this.sdk = sdk;
+      this.gcloudRunnerFactory = gcloudRunnerFactory;
+    }
+
+    /** Set metrics environment and version. */
+    public Builder setMetricsEnvironment(
+        String metricsEnvironment, String metricsEnvironmentVersion) {
+      this.metricsEnvironment = metricsEnvironment;
+      this.metricsEnvironmentVersion = metricsEnvironmentVersion;
+      return this;
+    }
+
+    /**
+     * Sets the format for printing command output resources. The default is a command-specific
+     * human-friendly output format. The supported formats are: csv, default, flattened, JSON, list,
+     * multi, none, table, text, value, yaml. For more details run $ gcloud topic formats.
+     */
+    public Builder setOutputFormat(String outputFormat) {
+      this.outputFormat = outputFormat;
+      return this;
+    }
+
+    /** Set the credential file override. */
+    public Builder setCredentialFile(File credentialFile) {
+      this.credentialFile = credentialFile;
+      return this;
+    }
+
+    /**
+     * Sets structured JSON logs for the stderr output. Supported values include 'never' (default),
+     * 'always', 'terminal', etc.
+     */
+    public Builder setShowStructuredLogs(String showStructuredLogs) {
+      this.showStructuredLogs = showStructuredLogs;
+      return this;
+    }
+
+    /** Build an immutable Gcloud instance. */
+    public Gcloud build() {
+      return new Gcloud(
+          sdk,
+          gcloudRunnerFactory,
+          metricsEnvironment,
+          metricsEnvironmentVersion,
+          credentialFile,
+          outputFormat,
+          showStructuredLogs);
+    }
   }
 }

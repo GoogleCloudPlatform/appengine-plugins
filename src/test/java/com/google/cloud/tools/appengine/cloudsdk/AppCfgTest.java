@@ -32,7 +32,7 @@ public class AppCfgTest {
 
   @Test
   public void testGetRunner_parametersPassedToFactory() {
-    new AppCfg(sdk, appCfgRunnerFactory).getRunner(processHandler);
+    new AppCfg.Builder(sdk, appCfgRunnerFactory).build().getRunner(processHandler);
     Mockito.verify(appCfgRunnerFactory).newRunner(sdk, processHandler);
   }
 }

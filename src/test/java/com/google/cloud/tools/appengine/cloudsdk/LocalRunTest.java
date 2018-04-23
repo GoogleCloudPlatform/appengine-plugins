@@ -24,7 +24,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DevAppServerTest {
+public class LocalRunTest {
 
   @Mock private DevAppServerRunner.Factory devAppServerRunnerFactory;
   @Mock private CloudSdk sdk;
@@ -32,7 +32,7 @@ public class DevAppServerTest {
 
   @Test
   public void testGetRunner_parametersPassedToFactory() {
-    new DevAppServer(sdk, devAppServerRunnerFactory).getRunner(processHandler);
+    new LocalRun.Builder(sdk, devAppServerRunnerFactory).build().getRunner(processHandler);
     Mockito.verify(devAppServerRunnerFactory).newRunner(sdk, processHandler);
   }
 }

@@ -39,7 +39,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DevAppServerRunnerTest {
+public class LocalRunRunnerTest {
 
   private final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
 

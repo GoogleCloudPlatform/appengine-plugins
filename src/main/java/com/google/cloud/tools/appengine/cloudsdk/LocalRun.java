@@ -21,16 +21,11 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.common.annotations.VisibleForTesting;
 
 /** Create Dev App Servers. */
-public class DevAppServer {
+public class LocalRun {
   private final CloudSdk sdk;
   private final DevAppServerRunner.Factory devAppServerRunnerFactory;
 
-  public static DevAppServer newDevAppServer(CloudSdk sdk) {
-    return new DevAppServer(sdk, new DevAppServerRunner.Factory());
-  }
-
-  @VisibleForTesting
-  DevAppServer(CloudSdk sdk, DevAppServerRunner.Factory devAppServerRunnerFactory) {
+  private LocalRun(CloudSdk sdk, DevAppServerRunner.Factory devAppServerRunnerFactory) {
     this.devAppServerRunnerFactory = devAppServerRunnerFactory;
     this.sdk = sdk;
   }
@@ -46,5 +41,25 @@ public class DevAppServer {
   @VisibleForTesting
   DevAppServerRunner getRunner(ProcessHandler processHandler) {
     return devAppServerRunnerFactory.newRunner(sdk, processHandler);
+  }
+
+  public static Builder builder(CloudSdk sdk) {
+    return new Builder(sdk, new DevAppServerRunner.Factory());
+  }
+
+  public static class Builder {
+    private final CloudSdk sdk;
+    private final DevAppServerRunner.Factory runnerFactory;
+
+    @VisibleForTesting
+    Builder(CloudSdk sdk, DevAppServerRunner.Factory runnerFactory) {
+      this.sdk = sdk;
+      this.runnerFactory = runnerFactory;
+    }
+
+    /** Build an immutable LocalRun instance. */
+    public LocalRun build() {
+      return new LocalRun(sdk, runnerFactory);
+    }
   }
 }
