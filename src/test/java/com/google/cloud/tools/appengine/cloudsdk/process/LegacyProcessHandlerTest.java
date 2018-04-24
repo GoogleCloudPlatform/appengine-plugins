@@ -50,7 +50,7 @@ public class LegacyProcessHandlerTest {
   }
 
   @Test
-  public void testBuilder_asnyc() {
+  public void testBuilder_async() {
     new LegacyProcessHandler.Builder(
             stdOutListeners, stdErrListeners, startListeners, exitListeners, watcherFactory)
         .addStdOutLineListener(stdOut)
