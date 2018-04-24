@@ -51,8 +51,7 @@ public class LegacyProcessHandlerTest {
 
   @Test
   public void testBuilder_asnyc() {
-    LegacyProcessHandler legacyProcessHandler =
-        new LegacyProcessHandler.Builder(
+    new LegacyProcessHandler.Builder(
                 stdOutListeners, stdErrListeners, startListeners, exitListeners, watcherFactory)
             .addStdOutLineListener(stdOut)
             .addStdErrLineListener(stdErr)
@@ -68,8 +67,7 @@ public class LegacyProcessHandlerTest {
 
   @Test
   public void testBuilder_sync() {
-    LegacyProcessHandler legacyProcessHandler =
-        new LegacyProcessHandler.Builder(
+    new LegacyProcessHandler.Builder(
                 stdOutListeners, stdErrListeners, startListeners, exitListeners, watcherFactory)
             .addStdOutLineListener(stdOut)
             .addStdErrLineListener(stdErr)
