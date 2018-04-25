@@ -309,7 +309,7 @@
 
     <pluginManagement>
       <plugins>
-        <!-- for development support in Eclispe IDE -->
+        <!-- for development support in Eclipse IDE -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
           <artifactId>lifecycle-mapping</artifactId>
@@ -317,7 +317,7 @@
           <configuration>
             <lifecycleMappingMetadata>
               <pluginExecutions>
-                <!-- m2eclipe does not support errorprone -->
+                <!-- m2eclipse does not support errorprone -->
                 <pluginExecution>
                   <pluginExecutionFilter>
                     <groupId>org.apache.maven.plugins</groupId>
