@@ -165,7 +165,7 @@ public class LibrariesTest {
   }
 
   @Test
-  public void testOrder() throws IOException {
+  public void testOrder() {
     List<String> names = new ArrayList<>();
     for (JsonObject api : apis) {
       names.add(api.getString("name"));

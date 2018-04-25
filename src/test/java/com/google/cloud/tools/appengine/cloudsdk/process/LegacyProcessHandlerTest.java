@@ -50,15 +50,14 @@ public class LegacyProcessHandlerTest {
   }
 
   @Test
-  public void testBuilder_asnyc() {
-    LegacyProcessHandler legacyProcessHandler =
-        new LegacyProcessHandler.Builder(
-                stdOutListeners, stdErrListeners, startListeners, exitListeners, watcherFactory)
-            .addStdOutLineListener(stdOut)
-            .addStdErrLineListener(stdErr)
-            .setExitListener(exit)
-            .setStartListener(start)
-            .buildDevAppServerAsync(10);
+  public void testBuilder_async() {
+    new LegacyProcessHandler.Builder(
+            stdOutListeners, stdErrListeners, startListeners, exitListeners, watcherFactory)
+        .addStdOutLineListener(stdOut)
+        .addStdErrLineListener(stdErr)
+        .setExitListener(exit)
+        .setStartListener(start)
+        .buildDevAppServerAsync(10);
 
     assertEquals(ImmutableList.of(stdOut, watcher), stdOutListeners);
     assertEquals(ImmutableList.of(stdErr, watcher), stdErrListeners);
@@ -68,14 +67,13 @@ public class LegacyProcessHandlerTest {
 
   @Test
   public void testBuilder_sync() {
-    LegacyProcessHandler legacyProcessHandler =
-        new LegacyProcessHandler.Builder(
-                stdOutListeners, stdErrListeners, startListeners, exitListeners, watcherFactory)
-            .addStdOutLineListener(stdOut)
-            .addStdErrLineListener(stdErr)
-            .setExitListener(exit)
-            .setStartListener(start)
-            .build();
+    new LegacyProcessHandler.Builder(
+            stdOutListeners, stdErrListeners, startListeners, exitListeners, watcherFactory)
+        .addStdOutLineListener(stdOut)
+        .addStdErrLineListener(stdErr)
+        .setExitListener(exit)
+        .setStartListener(start)
+        .build();
 
     assertEquals(ImmutableList.of(stdOut), stdOutListeners);
     assertEquals(ImmutableList.of(stdErr), stdErrListeners);
