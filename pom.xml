@@ -291,11 +291,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>3.0.0-M1</version>
-        <configuration>
-          <rules>
-            <dependencyConvergence/>
-          </rules>
-        </configuration>
         <executions>
           <execution>
             <id>enforce</id>
@@ -303,6 +298,11 @@
             <goals>
               <goal>enforce</goal>
             </goals>
+            <configuration>
+              <rules>
+                <dependencyConvergence/>
+              </rules>
+            </configuration>
           </execution>
         </executions>
       </plugin>
