@@ -23,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.versions.DefaultVersionsListConfiguration;
 import com.google.cloud.tools.appengine.api.versions.DefaultVersionsSelectionConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessRunnerException;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;

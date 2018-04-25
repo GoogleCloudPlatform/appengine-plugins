@@ -18,7 +18,7 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.debug.DefaultGenRepoInfoFileConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessRunnerException;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.util.List;

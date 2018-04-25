@@ -17,7 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessRunnerException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;

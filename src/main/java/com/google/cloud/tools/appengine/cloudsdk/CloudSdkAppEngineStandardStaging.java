@@ -20,7 +20,7 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.AppCfgArgs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessRunnerException;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import java.io.File;
