@@ -506,11 +506,9 @@ public class CloudSdk {
    * @throws CloudSdkVersionFileException VERSION file could not be read
    */
   public void validateCloudSdk()
-      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException,
-          InvalidJavaSdkException {
+      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException {
     validateCloudSdkLocation();
     validateCloudSdkVersion();
-    validateJdk();
   }
 
   private void validateCloudSdkVersion()
