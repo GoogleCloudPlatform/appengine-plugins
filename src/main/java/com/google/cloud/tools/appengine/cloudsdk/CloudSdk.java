@@ -105,8 +105,7 @@ public class CloudSdk {
     // Populate jar locations.
     // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
     // SDK does.
-    jarLocations.put(
-        "servlet-api.jar", getJarPath().resolve("shared/servlet-api.jar"));
+    jarLocations.put("servlet-api.jar", getJarPath().resolve("shared/servlet-api.jar"));
     jarLocations.put("jsp-api.jar", getJarPath().resolve("shared/jsp-api.jar"));
     jarLocations.put(
         JAVA_TOOLS_JAR, sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
@@ -438,9 +437,7 @@ public class CloudSdk {
     logger.info("submitting command: " + WHITESPACE_JOINER.join(command));
   }
 
-  /**
-   * @return the directory containing the Cloud SDK installation backing this instance
-   */
+  /** @return the directory containing the Cloud SDK installation backing this instance */
   public Path getPath() {
     return cloudSdkPath;
   }
@@ -457,9 +454,7 @@ public class CloudSdk {
     return getPath().resolve(DEV_APPSERVER_PY);
   }
 
-  /**
-   * @return the directory containing JAR files bundled with the Cloud SDK
-   */
+  /** @return the directory containing JAR files bundled with the Cloud SDK */
   public Path getJarPath() {
     return getPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
