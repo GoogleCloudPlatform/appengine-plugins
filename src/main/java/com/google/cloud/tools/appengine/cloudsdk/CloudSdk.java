@@ -72,7 +72,7 @@ public class CloudSdk {
   private static final String VERSION_FILE_NAME = "VERSION";
 
   private final Map<String, Path> jarLocations = new HashMap<>();
-  private final Path sdkPath;
+  private final Path cloudSdkPath;
   private final Path javaHomePath;
   private final ProcessRunner processRunner;
   private final String appCommandMetricsEnvironment;
@@ -92,7 +92,7 @@ public class CloudSdk {
       @Nullable String appCommandShowStructuredLogs,
       ProcessRunner processRunner,
       WaitingProcessOutputLineListener runDevAppServerWaitListener) {
-    this.sdkPath = sdkPath;
+    this.cloudSdkPath = sdkPath;
     this.javaHomePath = javaHomePath;
     this.appCommandMetricsEnvironment = appCommandMetricsEnvironment;
     this.appCommandMetricsEnvironmentVersion = appCommandMetricsEnvironmentVersion;
@@ -106,8 +106,8 @@ public class CloudSdk {
     // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
     // SDK does.
     jarLocations.put(
-        "servlet-api.jar", getJavaAppEngineSdkPath().resolve("shared/servlet-api.jar"));
-    jarLocations.put("jsp-api.jar", getJavaAppEngineSdkPath().resolve("shared/jsp-api.jar"));
+        "servlet-api.jar", getJarPath().resolve("shared/servlet-api.jar"));
+    jarLocations.put("jsp-api.jar", getJarPath().resolve("shared/jsp-api.jar"));
     jarLocations.put(
         JAVA_TOOLS_JAR, sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
   }
@@ -330,7 +330,7 @@ public class CloudSdk {
     command.add(getJavaExecutablePath().toString());
 
     command.addAll(jvmArgs);
-    command.add("-Dappengine.sdk.root=" + getJavaAppEngineSdkPath().getParent().toString());
+    command.add("-Dappengine.sdk.root=" + getJarPath().getParent().toString());
     command.add("-cp");
     command.add(jarLocations.get(JAVA_TOOLS_JAR).toString());
     command.add("com.google.appengine.tools.development.DevAppServerMain");
@@ -365,7 +365,7 @@ public class CloudSdk {
     validateJdk();
 
     // AppEngineSdk requires this system property to be set.
-    System.setProperty("appengine.sdk.root", getJavaAppEngineSdkPath().toString());
+    System.setProperty("appengine.sdk.root", getJarPath().toString());
 
     List<String> command = new ArrayList<>();
     command.add(getJavaExecutablePath().toString());
@@ -384,7 +384,7 @@ public class CloudSdk {
    * file located in the Cloud SDK directory.
    */
   public CloudSdkVersion getVersion() throws CloudSdkVersionFileException {
-    Path versionFile = getSdkPath().resolve(VERSION_FILE_NAME);
+    Path versionFile = getPath().resolve(VERSION_FILE_NAME);
 
     if (!Files.isRegularFile(versionFile)) {
       throw new CloudSdkVersionFileNotFoundException(
@@ -438,8 +438,11 @@ public class CloudSdk {
     logger.info("submitting command: " + WHITESPACE_JOINER.join(command));
   }
 
-  public Path getSdkPath() {
-    return sdkPath;
+  /**
+   * @return the directory containing the Cloud SDK installation backing this instance
+   */
+  public Path getPath() {
+    return cloudSdkPath;
   }
 
   private Path getGCloudPath() {
@@ -447,15 +450,18 @@ public class CloudSdk {
     if (IS_WINDOWS) {
       gcloud += ".cmd";
     }
-    return getSdkPath().resolve(gcloud);
+    return getPath().resolve(gcloud);
   }
 
   private Path getDevAppServerPath() {
-    return getSdkPath().resolve(DEV_APPSERVER_PY);
+    return getPath().resolve(DEV_APPSERVER_PY);
   }
 
-  public Path getJavaAppEngineSdkPath() {
-    return getSdkPath().resolve(JAVA_APPENGINE_SDK_PATH);
+  /**
+   * @return the directory containing JAR files bundled with the Cloud SDK
+   */
+  public Path getJarPath() {
+    return getPath().resolve(JAVA_APPENGINE_SDK_PATH);
   }
 
   @VisibleForTesting
@@ -476,7 +482,7 @@ public class CloudSdk {
       }
     }
 
-    Path pythonPath = getSdkPath().resolve(WINDOWS_BUNDLED_PYTHON);
+    Path pythonPath = getPath().resolve(WINDOWS_BUNDLED_PYTHON);
     if (Files.exists(pythonPath)) {
       return pythonPath;
     } else {
@@ -523,12 +529,12 @@ public class CloudSdk {
   }
 
   private void validateCloudSdkLocation() throws CloudSdkNotFoundException {
-    if (sdkPath == null) {
+    if (cloudSdkPath == null) {
       throw new CloudSdkNotFoundException("Validation Error: Cloud SDK path is null");
     }
-    if (!Files.isDirectory(sdkPath)) {
+    if (!Files.isDirectory(cloudSdkPath)) {
       throw new CloudSdkNotFoundException(
-          "Validation Error: SDK location '" + sdkPath + "' is not a directory.");
+          "Validation Error: SDK location '" + cloudSdkPath + "' is not a directory.");
     }
     if (!Files.isRegularFile(getGCloudPath())) {
       throw new CloudSdkNotFoundException(
@@ -558,7 +564,7 @@ public class CloudSdk {
    */
   public void validateAppEngineJavaComponents()
       throws AppEngineJavaComponentsNotInstalledException {
-    if (!Files.isDirectory(getJavaAppEngineSdkPath())) {
+    if (!Files.isDirectory(getJarPath())) {
       throw new AppEngineJavaComponentsNotInstalledException(
           "Validation Error: Java App Engine components not installed."
               + " Fix by running 'gcloud components install app-engine-java' on command-line.");
