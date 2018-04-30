@@ -65,10 +65,10 @@ class DevAppServerRunner {
     List<String> command = new ArrayList<>();
 
     if (IS_WINDOWS) {
-      command.add(sdk.getWindowsPythonPath().toString());
+      command.add(sdk.getWindowsPythonPath().toAbsolutePath().toString());
     }
 
-    command.add(sdk.getDevAppServerPath().toString());
+    command.add(sdk.getDevAppServerPath().toAbsolutePath().toString());
     command.addAll(args);
 
     logger.info("submitting command: " + Joiner.on(" ").join(command));
@@ -108,12 +108,14 @@ class DevAppServerRunner {
 
     List<String> command = new ArrayList<>();
 
-    command.add(sdk.getJavaExecutablePath().toString());
+    command.add(sdk.getJavaExecutablePath().toAbsolutePath().toString());
 
     command.addAll(jvmArgs);
-    command.add("-Dappengine.sdk.root=" + sdk.getJavaAppEngineSdkPath().getParent().toString());
+    command.add(
+        "-Dappengine.sdk.root="
+            + sdk.getJavaAppEngineSdkPath().getParent().toAbsolutePath().toString());
     command.add("-cp");
-    command.add(sdk.getAppEngineToolsJar().toString());
+    command.add(sdk.getAppEngineToolsJar().toAbsolutePath().toString());
     command.add("com.google.appengine.tools.development.DevAppServerMain");
 
     command.addAll(args);

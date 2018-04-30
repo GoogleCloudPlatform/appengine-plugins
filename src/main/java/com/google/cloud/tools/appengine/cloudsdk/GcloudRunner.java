@@ -64,12 +64,12 @@ class GcloudRunner {
 
   void run(List<String> arguments, File workingDirectory)
       throws ProcessHandlerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
-          CloudSdkVersionFileException, InvalidJavaSdkException, IOException {
+          CloudSdkVersionFileException, IOException {
 
     sdk.validateCloudSdk();
 
     List<String> command = new ArrayList<>();
-    command.add(sdk.getGCloudPath().toString());
+    command.add(sdk.getGCloudPath().toAbsolutePath().toString());
 
     command.addAll(arguments);
     command.addAll(GcloudArgs.get("format", outputFormat));
@@ -82,9 +82,7 @@ class GcloudRunner {
 
     ProcessBuilder processBuilder = processBuilderFactory.newProcessBuilder();
     processBuilder.command(command);
-    if (workingDirectory != null) {
-      processBuilder.directory(workingDirectory);
-    }
+    processBuilder.directory(workingDirectory);
     processBuilder.environment().putAll(getGcloudCommandEnvironment());
     Process process = processBuilder.start();
     processHandler.handleProcess(process);
