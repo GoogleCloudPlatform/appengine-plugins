@@ -16,13 +16,14 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.io.FileDeleteVisitor;
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.Version;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
+import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,8 +71,9 @@ public class SdkInstaller {
       logger.info(
           "Removing stale install: " + fileResourceProvider.getArchiveExtractionDestination());
 
-      Files.walkFileTree(
-          fileResourceProvider.getArchiveExtractionDestination(), new FileDeleteVisitor());
+      MoreFiles.deleteRecursively(
+          fileResourceProvider.getArchiveExtractionDestination(),
+          RecursiveDeleteOption.ALLOW_INSECURE);
     }
 
     progressListener.start("Installing Cloud SDK", installerFactory != null ? 300 : 200);

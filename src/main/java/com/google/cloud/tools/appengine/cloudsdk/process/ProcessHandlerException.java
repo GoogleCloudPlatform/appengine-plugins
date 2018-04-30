@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.api.genconfig;
+package com.google.cloud.tools.appengine.cloudsdk.process;
 
-import java.io.File;
+/** Exception during execution of a {@link ProcessHandler}. */
+public class ProcessHandlerException extends Exception {
 
-/**
- * Parameters for generating configuration files using {@link
- * GenConfigUtility#genConfig(GenConfigParams)}.
- */
-public interface GenConfigParams {
+  public ProcessHandlerException(Exception cause) {
+    super(cause);
+  }
 
-  File getSourceDirectory();
-
-  String getConfig();
-
-  Boolean getCustom();
-
-  String getRuntime();
+  public ProcessHandlerException(String message) {
+    super(message);
+  }
 }

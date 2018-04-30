@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.api.logs;
+package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
-
-/** This set of commands can be used to manage existing App Engine logs. */
-public interface AppEngineLogs {
-
-  /** Reads log entries for the given App Engine application. */
-  void read(LogsConfiguration configuration) throws AppEngineException;
+public class ProcessBuilderFactory {
+  public ProcessBuilder newProcessBuilder() {
+    return new ProcessBuilder();
+  }
 }

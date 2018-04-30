@@ -16,11 +16,11 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import com.google.cloud.tools.io.FileDeleteVisitor;
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
@@ -75,8 +75,7 @@ final class Extractor<T extends ExtractorProvider> {
     return extractorProvider;
   }
 
-  // TODO: After move to Java8, use guava 21.0 recursive delete.
   private void cleanUp(final Path target) throws IOException {
-    Files.walkFileTree(target, new FileDeleteVisitor());
+    MoreFiles.deleteRecursively(target, RecursiveDeleteOption.ALLOW_INSECURE);
   }
 }

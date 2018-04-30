@@ -160,7 +160,7 @@ public class ManagedCloudSdkTest {
   }
 
   @Test
-  public void testGetOsSpecificManagedSdk_linuxStandard() throws IOException {
+  public void testGetOsSpecificManagedSdk_linuxStandard() {
     Path userHome = tempDir.getRoot().toPath();
     Properties fakeProperties = getFakeProperties(userHome.toString());
     Path expectedPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
