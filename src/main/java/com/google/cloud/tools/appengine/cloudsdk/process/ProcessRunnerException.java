@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk.internal.process;
+package com.google.cloud.tools.appengine.cloudsdk.process;
+
+import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunner;
 
 /** Exception during execution of a {@link ProcessRunner}. */
 public class ProcessRunnerException extends Exception {

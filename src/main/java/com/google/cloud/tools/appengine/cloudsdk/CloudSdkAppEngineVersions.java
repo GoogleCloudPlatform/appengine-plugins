@@ -21,7 +21,7 @@ import com.google.cloud.tools.appengine.api.versions.AppEngineVersions;
 import com.google.cloud.tools.appengine.api.versions.VersionsListConfiguration;
 import com.google.cloud.tools.appengine.api.versions.VersionsSelectionConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessRunnerException;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;

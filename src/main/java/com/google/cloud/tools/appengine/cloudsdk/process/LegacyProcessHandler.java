@@ -17,7 +17,6 @@
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.WaitingProcessOutputLineListener;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;

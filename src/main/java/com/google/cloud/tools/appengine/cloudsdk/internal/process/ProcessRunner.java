@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessRunnerException;
 import java.io.File;
 import java.util.Map;
 
