@@ -55,7 +55,7 @@ public class AppCfgRunnerTest {
     appengineJavaSdkPath = testFolder.getRoot().toPath().resolve("appengine-sdk-root");
     when(sdk.getJavaExecutablePath()).thenReturn(javaExecutablePath);
     when(sdk.getAppEngineToolsJar()).thenReturn(appengineToolsJar);
-    when(sdk.getJavaAppEngineSdkPath()).thenReturn(appengineJavaSdkPath);
+    when(sdk.getAppEngineSdkForJavaPath()).thenReturn(appengineJavaSdkPath);
 
     when(processBuilderFactory.newProcessBuilder()).thenReturn(processBuilder);
     when(processBuilder.start()).thenReturn(process);

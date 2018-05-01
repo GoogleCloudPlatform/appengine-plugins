@@ -56,7 +56,7 @@ class AppCfgRunner {
     // App Engine Java Sdk requires this system property to be set.
     // TODO: perhaps we should send this in directly to the command instead of changing the global
     // state here (see DevAppServerRunner)
-    System.setProperty("appengine.sdk.root", sdk.getJavaAppEngineSdkPath().toString());
+    System.setProperty("appengine.sdk.root", sdk.getAppEngineSdkForJavaPath().toString());
 
     List<String> command = new ArrayList<>();
     command.add(sdk.getJavaExecutablePath().toString());

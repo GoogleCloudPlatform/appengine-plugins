@@ -451,7 +451,7 @@ public class CloudSdk {
     return getPath().resolve(gcloud);
   }
 
-  private Path getDevAppServerPath() {
+  Path getDevAppServerPath() {
     return getPath().resolve(DEV_APPSERVER_PY);
   }
 
