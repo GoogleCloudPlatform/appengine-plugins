@@ -440,8 +440,8 @@ public class CloudSdk {
 
   /**
    * Checkstyle.
-   * 
-   * @return the directory containing the Cloud SDK installation backing this instance 
+   *
+   * @return the directory containing the Cloud SDK installation backing this instance
    */
   public Path getPath() {
     return cloudSdkPath;
@@ -459,10 +459,10 @@ public class CloudSdk {
     return getPath().resolve(DEV_APPSERVER_PY);
   }
 
-  /** 
+  /**
    * Checkstyle.
-   * 
-   * @return the directory containing JAR files bundled with the Cloud SDK 
+   *
+   * @return the directory containing JAR files bundled with the Cloud SDK
    */
   public Path getAppEngineSdkForJavaPath() {
     return getPath().resolve(APPENGINE_SDK_FOR_JAVA_PATH);
