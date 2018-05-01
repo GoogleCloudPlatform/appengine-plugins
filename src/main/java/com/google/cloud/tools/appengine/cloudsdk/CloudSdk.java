@@ -439,7 +439,7 @@ public class CloudSdk {
   }
 
   /**
-   * Checkstyle.
+   * Returns the directory containing the Cloud SDK installation backing this instance.
    *
    * @return the directory containing the Cloud SDK installation backing this instance
    */
@@ -460,7 +460,7 @@ public class CloudSdk {
   }
 
   /**
-   * Checkstyle.
+   * Returns the directory containing JAR files bundled with the Cloud SDK.
    *
    * @return the directory containing JAR files bundled with the Cloud SDK
    */
