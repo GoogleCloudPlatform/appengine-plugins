@@ -113,7 +113,7 @@ class DevAppServerRunner {
     command.addAll(jvmArgs);
     command.add(
         "-Dappengine.sdk.root="
-            + sdk.getJavaAppEngineSdkPath().getParent().toAbsolutePath().toString());
+            + sdk.getAppEngineSdkForJavaPath().getParent().toAbsolutePath().toString());
     command.add("-cp");
     command.add(sdk.getAppEngineToolsJar().toAbsolutePath().toString());
     command.add("com.google.appengine.tools.development.DevAppServerMain");

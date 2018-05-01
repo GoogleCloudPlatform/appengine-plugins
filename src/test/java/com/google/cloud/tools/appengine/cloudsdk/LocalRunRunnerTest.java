@@ -53,7 +53,7 @@ public class LocalRunRunnerTest {
   @Mock private Map<String, String> processEnv;
   private Path javaExecutablePath;
   private Path appengineToolsJar;
-  private Path appengineJavaSdkPath;
+  private Path appengineSdkForJavaPath;
   private File workingDirectory;
   private Path javaHomePath;
   private Path windowsPythonPath;
@@ -64,13 +64,13 @@ public class LocalRunRunnerTest {
     javaExecutablePath = testFolder.getRoot().toPath().resolve("java.fake");
     javaHomePath = testFolder.getRoot().toPath().resolve("java-sdk-root");
     appengineToolsJar = testFolder.getRoot().toPath().resolve("appengine.tools");
-    appengineJavaSdkPath = testFolder.getRoot().toPath().resolve("appengine-sdk-root");
+    appengineSdkForJavaPath = testFolder.getRoot().toPath().resolve("appengine-sdk-root");
     devAppServer2Path = testFolder.getRoot().toPath().resolve("fake-devappserver2.py");
 
     workingDirectory = testFolder.getRoot();
     when(sdk.getJavaExecutablePath()).thenReturn(javaExecutablePath);
     when(sdk.getAppEngineToolsJar()).thenReturn(appengineToolsJar);
-    when(sdk.getJavaAppEngineSdkPath()).thenReturn(appengineJavaSdkPath);
+    when(sdk.getAppEngineSdkForJavaPath()).thenReturn(appengineSdkForJavaPath);
     when(sdk.getJavaHomePath()).thenReturn(javaHomePath);
     when(sdk.getDevAppServerPath()).thenReturn(devAppServer2Path);
 
@@ -105,7 +105,7 @@ public class LocalRunRunnerTest {
             ImmutableList.of(
                 javaExecutablePath.toString(),
                 "-XsomeArg",
-                "-Dappengine.sdk.root=" + appengineJavaSdkPath.getParent().toString(),
+                "-Dappengine.sdk.root=" + appengineSdkForJavaPath.getParent().toString(),
                 "-cp",
                 appengineToolsJar.toString(),
                 "com.google.appengine.tools.development.DevAppServerMain",
