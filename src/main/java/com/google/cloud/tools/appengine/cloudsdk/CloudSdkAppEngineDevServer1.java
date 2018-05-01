@@ -116,7 +116,10 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     } else {
       // Add in the appengine agent
       String appengineAgentJar =
-          sdk.getJarPath().resolve("agent/appengine-agent.jar").toAbsolutePath().toString();
+          sdk.getAppEngineSdkForJavaPath()
+              .resolve("agent/appengine-agent.jar")
+              .toAbsolutePath()
+              .toString();
       jvmArguments.add("-javaagent:" + appengineAgentJar);
     }
     for (File service : config.getServices()) {

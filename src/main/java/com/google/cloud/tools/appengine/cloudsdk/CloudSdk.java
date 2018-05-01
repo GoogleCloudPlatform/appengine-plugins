@@ -65,7 +65,7 @@ public class CloudSdk {
   private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
   private static final String GCLOUD = "bin/gcloud";
   private static final String DEV_APPSERVER_PY = "bin/dev_appserver.py";
-  private static final String JAVA_APPENGINE_SDK_PATH =
+  private static final String APPENGINE_SDK_FOR_JAVA_PATH =
       "platform/google_appengine/google/appengine/tools/java/lib";
   private static final String JAVA_TOOLS_JAR = "appengine-tools-api.jar";
   private static final String WINDOWS_BUNDLED_PYTHON = "platform/bundledpython/python.exe";
@@ -105,10 +105,11 @@ public class CloudSdk {
     // Populate jar locations.
     // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
     // SDK does.
-    jarLocations.put("servlet-api.jar", getJarPath().resolve("shared/servlet-api.jar"));
-    jarLocations.put("jsp-api.jar", getJarPath().resolve("shared/jsp-api.jar"));
     jarLocations.put(
-        JAVA_TOOLS_JAR, sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
+        "servlet-api.jar", getAppEngineSdkForJavaPath().resolve("shared/servlet-api.jar"));
+    jarLocations.put("jsp-api.jar", getAppEngineSdkForJavaPath().resolve("shared/jsp-api.jar"));
+    jarLocations.put(
+        JAVA_TOOLS_JAR, sdkPath.resolve(APPENGINE_SDK_FOR_JAVA_PATH).resolve(JAVA_TOOLS_JAR));
   }
 
   /**
@@ -329,7 +330,7 @@ public class CloudSdk {
     command.add(getJavaExecutablePath().toString());
 
     command.addAll(jvmArgs);
-    command.add("-Dappengine.sdk.root=" + getJarPath().getParent().toString());
+    command.add("-Dappengine.sdk.root=" + getAppEngineSdkForJavaPath().getParent().toString());
     command.add("-cp");
     command.add(jarLocations.get(JAVA_TOOLS_JAR).toString());
     command.add("com.google.appengine.tools.development.DevAppServerMain");
@@ -364,7 +365,7 @@ public class CloudSdk {
     validateJdk();
 
     // AppEngineSdk requires this system property to be set.
-    System.setProperty("appengine.sdk.root", getJarPath().toString());
+    System.setProperty("appengine.sdk.root", getAppEngineSdkForJavaPath().toString());
 
     List<String> command = new ArrayList<>();
     command.add(getJavaExecutablePath().toString());
@@ -455,8 +456,8 @@ public class CloudSdk {
   }
 
   /** @return the directory containing JAR files bundled with the Cloud SDK */
-  public Path getJarPath() {
-    return getPath().resolve(JAVA_APPENGINE_SDK_PATH);
+  public Path getAppEngineSdkForJavaPath() {
+    return getPath().resolve(APPENGINE_SDK_FOR_JAVA_PATH);
   }
 
   @VisibleForTesting
@@ -557,7 +558,7 @@ public class CloudSdk {
    */
   public void validateAppEngineJavaComponents()
       throws AppEngineJavaComponentsNotInstalledException {
-    if (!Files.isDirectory(getJarPath())) {
+    if (!Files.isDirectory(getAppEngineSdkForJavaPath())) {
       throw new AppEngineJavaComponentsNotInstalledException(
           "Validation Error: Java App Engine components not installed."
               + " Fix by running 'gcloud components install app-engine-java' on command-line.");

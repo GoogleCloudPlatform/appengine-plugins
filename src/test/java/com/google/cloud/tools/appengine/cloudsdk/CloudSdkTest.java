@@ -142,7 +142,7 @@ public class CloudSdkTest {
   public void testGetJavaAppEngineSdkPath() throws CloudSdkNotFoundException {
     assertEquals(
         root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
-        builder.build().getJarPath());
+        builder.build().getAppEngineSdkForJavaPath());
   }
 
   @Test
