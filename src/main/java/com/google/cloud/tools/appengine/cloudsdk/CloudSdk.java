@@ -438,7 +438,11 @@ public class CloudSdk {
     logger.info("submitting command: " + WHITESPACE_JOINER.join(command));
   }
 
-  /** @return the directory containing the Cloud SDK installation backing this instance */
+  /**
+   * Checkstyle.
+   * 
+   * @return the directory containing the Cloud SDK installation backing this instance 
+   */
   public Path getPath() {
     return cloudSdkPath;
   }
@@ -455,7 +459,11 @@ public class CloudSdk {
     return getPath().resolve(DEV_APPSERVER_PY);
   }
 
-  /** @return the directory containing JAR files bundled with the Cloud SDK */
+  /** 
+   * Checkstyle.
+   * 
+   * @return the directory containing JAR files bundled with the Cloud SDK 
+   */
   public Path getAppEngineSdkForJavaPath() {
     return getPath().resolve(APPENGINE_SDK_FOR_JAVA_PATH);
   }
