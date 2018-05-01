@@ -16,16 +16,19 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.versions.DefaultVersionsListConfiguration;
 import com.google.cloud.tools.appengine.api.versions.DefaultVersionsSelectionConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -35,51 +38,82 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineVersionsTest {
 
-  @Mock private CloudSdk sdk;
+  @Mock private GcloudRunner gcloudRunner;
+  CloudSdkAppEngineVersions appEngineVersion;
+
+  @Before
+  public void setUp() {
+    appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
+  }
 
   @Test
-  public void startTest() throws ProcessRunnerException, AppEngineException {
-    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
+  public void startTest() throws ProcessHandlerException, AppEngineException, IOException {
     appEngineVersion.start(getVersionConfig());
 
     List<String> args =
         Arrays.asList(
-            "versions", "start", "v1", "v2", "--service", "myService", "--project", "myProject");
+            "app",
+            "versions",
+            "start",
+            "v1",
+            "v2",
+            "--service",
+            "myService",
+            "--project",
+            "myProject");
 
-    verify(sdk, times(1)).runAppCommand(eq(args));
+    verify(gcloudRunner, times(1)).run(eq(args), isNull());
   }
 
   @Test
-  public void stopTest() throws ProcessRunnerException, AppEngineException {
-    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
+  public void stopTest() throws ProcessHandlerException, AppEngineException, IOException {
+    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
     appEngineVersion.stop(getVersionConfig());
 
     List<String> args =
         Arrays.asList(
-            "versions", "stop", "v1", "v2", "--service", "myService", "--project", "myProject");
+            "app",
+            "versions",
+            "stop",
+            "v1",
+            "v2",
+            "--service",
+            "myService",
+            "--project",
+            "myProject");
 
-    verify(sdk, times(1)).runAppCommand(eq(args));
+    verify(gcloudRunner, times(1)).run(eq(args), isNull());
   }
 
   @Test
-  public void deleteTest() throws ProcessRunnerException, AppEngineException {
-    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
+  public void deleteTest() throws ProcessHandlerException, AppEngineException, IOException {
+    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
     appEngineVersion.delete(getVersionConfig());
 
     List<String> args =
         Arrays.asList(
-            "versions", "delete", "v1", "v2", "--service", "myService", "--project", "myProject");
+            "app",
+            "versions",
+            "delete",
+            "v1",
+            "v2",
+            "--service",
+            "myService",
+            "--project",
+            "myProject");
 
-    verify(sdk, times(1)).runAppCommand(eq(args));
+    verify(gcloudRunner, times(1)).run(eq(args), isNull());
   }
 
   @Test
-  public void listTest_doHideNoTraffic() throws ProcessRunnerException, AppEngineException {
-    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
+  public void listTest_doHideNoTraffic()
+      throws ProcessHandlerException, AppEngineException, IOException {
+    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
     appEngineVersion.list(getListConfig(true));
 
     List<String> args =
         Arrays.asList(
+            "app",
             "versions",
             "list",
             "--service",
@@ -88,16 +122,18 @@ public class CloudSdkAppEngineVersionsTest {
             "--project",
             "myProject");
 
-    verify(sdk, times(1)).runAppCommand(eq(args));
+    verify(gcloudRunner, times(1)).run(eq(args), isNull());
   }
 
   @Test
-  public void listTest_dontHideNoTraffic() throws ProcessRunnerException, AppEngineException {
-    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(sdk);
+  public void listTest_dontHideNoTraffic()
+      throws ProcessHandlerException, AppEngineException, IOException {
+    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
     appEngineVersion.list(getListConfig(false));
 
     List<String> args =
         Arrays.asList(
+            "app",
             "versions",
             "list",
             "--service",
@@ -106,7 +142,7 @@ public class CloudSdkAppEngineVersionsTest {
             "--project",
             "myProject");
 
-    verify(sdk, times(1)).runAppCommand(eq(args));
+    verify(gcloudRunner, times(1)).run(eq(args), isNull());
   }
 
   private static DefaultVersionsSelectionConfiguration getVersionConfig() {

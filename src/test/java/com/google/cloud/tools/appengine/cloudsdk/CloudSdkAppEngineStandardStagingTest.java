@@ -16,13 +16,13 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultStageStandardConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -44,7 +44,7 @@ public class CloudSdkAppEngineStandardStagingTest {
 
   @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
-  @Mock private CloudSdk sdk;
+  @Mock private AppCfgRunner appCfgRunner;
 
   private File source;
   private File destination;
@@ -58,7 +58,7 @@ public class CloudSdkAppEngineStandardStagingTest {
     destination = tmpDir.newFolder("destination");
     dockerfile = tmpDir.newFile("dockerfile");
 
-    staging = new CloudSdkAppEngineStandardStaging(sdk);
+    staging = new CloudSdkAppEngineStandardStaging(appCfgRunner);
   }
 
   @Test
@@ -99,7 +99,7 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runAppCfgCommand(eq(expected));
+    verify(appCfgRunner, times(1)).run(eq(expected));
     SpyVerifier.newVerifier(configuration)
         .verifyDeclaredGetters(
             ImmutableMap.<String, Integer>of(
@@ -110,7 +110,8 @@ public class CloudSdkAppEngineStandardStagingTest {
   }
 
   @Test
-  public void testCheckFlags_booleanFlags() throws AppEngineException, ProcessRunnerException {
+  public void testCheckFlags_booleanFlags()
+      throws AppEngineException, ProcessHandlerException, IOException {
 
     DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
     configuration.setSourceDirectory(source);
@@ -128,11 +129,12 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runAppCfgCommand(eq(expected));
+    verify(appCfgRunner, times(1)).run(eq(expected));
   }
 
   @Test
-  public void testCheckFlags_noFlags() throws AppEngineException, ProcessRunnerException {
+  public void testCheckFlags_noFlags()
+      throws AppEngineException, ProcessHandlerException, IOException {
 
     DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
     configuration.setSourceDirectory(source);
@@ -143,6 +145,6 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging.stageStandard(configuration);
 
-    verify(sdk, times(1)).runAppCfgCommand(eq(expected));
+    verify(appCfgRunner, times(1)).run(eq(expected));
   }
 }

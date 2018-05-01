@@ -21,10 +21,11 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -33,10 +34,10 @@ import java.util.List;
 /** Cloud SDK based implementation of {@link AppEngineDeployment}. */
 public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
 
-  private final CloudSdk sdk;
+  private final GcloudRunner runner;
 
-  public CloudSdkAppEngineDeployment(CloudSdk sdk) {
-    this.sdk = Preconditions.checkNotNull(sdk);
+  CloudSdkAppEngineDeployment(GcloudRunner runner) {
+    this.runner = Preconditions.checkNotNull(runner);
   }
 
   /**
@@ -56,6 +57,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     File workingDirectory = null;
 
     List<String> arguments = new ArrayList<>();
+    arguments.add("app");
     arguments.add("deploy");
 
     // Unfortunately, 'gcloud app deploy' does not let you pass a staging directory as a deployable.
@@ -83,13 +85,9 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.addAll(GcloudArgs.get(config));
 
     try {
-      if (workingDirectory != null) {
-        sdk.runAppCommandInWorkingDirectory(arguments, workingDirectory);
-      } else {
-        sdk.runAppCommand(arguments);
-      }
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
+      runner.run(arguments, workingDirectory);
+    } catch (ProcessHandlerException | IOException ex) {
+      throw new AppEngineException(ex);
     }
   }
 
@@ -138,15 +136,16 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
         Files.isRegularFile(deployable), deployable.toString() + " does not exist.");
 
     List<String> arguments = new ArrayList<>();
+    arguments.add("app");
     arguments.add("deploy");
     arguments.add(deployable.toAbsolutePath().toString());
     arguments.addAll(GcloudArgs.get("server", configuration.getServer()));
     arguments.addAll(GcloudArgs.get(configuration));
 
     try {
-      sdk.runAppCommand(arguments);
-    } catch (ProcessRunnerException e) {
-      throw new AppEngineException(e);
+      runner.run(arguments, null);
+    } catch (ProcessHandlerException | IOException ex) {
+      throw new AppEngineException(ex);
     }
   }
 }

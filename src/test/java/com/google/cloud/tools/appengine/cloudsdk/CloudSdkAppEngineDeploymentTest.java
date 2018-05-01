@@ -19,7 +19,8 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -27,7 +28,7 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -61,21 +62,23 @@ public class CloudSdkAppEngineDeploymentTest {
 
   @Mock private CloudSdkAppEngineDeployment mockDeployment;
   @Mock private DeployProjectConfigurationConfiguration mockProjectConfigurationConfiguration;
+  @Mock private GcloudRunner gcloudRunner;
 
   @Before
   public void setUp() throws IOException {
     appYaml1 = tmpDir.newFile("app1.yaml");
     appYaml2 = tmpDir.newFile("app2.yaml");
     stagingDirectory = tmpDir.newFolder("appengine-staging");
-    deployment = new CloudSdkAppEngineDeployment(sdk);
+    deployment = new CloudSdkAppEngineDeployment(gcloudRunner);
   }
 
   @Test
   public void testNullSdk() {
     try {
       new CloudSdkAppEngineDeployment(null);
-      Assert.fail("allowed null SDK");
+      Assert.fail("allowed null runner");
     } catch (NullPointerException expected) {
+      // pass
     }
   }
 
@@ -98,6 +101,7 @@ public class CloudSdkAppEngineDeploymentTest {
 
     List<String> expectedCommand =
         ImmutableList.of(
+            "app",
             "deploy",
             appYaml1.toString(),
             "--bucket",
@@ -113,14 +117,15 @@ public class CloudSdkAppEngineDeploymentTest {
             "--project",
             "project");
 
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    verify(gcloudRunner, times(1)).run(eq(expectedCommand), isNull());
 
     SpyVerifier.newVerifier(configuration)
         .verifyDeclaredGetters(ImmutableMap.of("getDeployables", 5));
   }
 
   @Test
-  public void testDeploy_booleanFlags() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_booleanFlags()
+      throws AppEngineException, ProcessHandlerException, IOException {
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1));
     configuration.setPromote(false);
@@ -130,40 +135,40 @@ public class CloudSdkAppEngineDeploymentTest {
 
     List<String> expectedCommand =
         ImmutableList.of(
-            "deploy", appYaml1.toString(), "--no-promote", "--no-stop-previous-version");
+            "app", "deploy", appYaml1.toString(), "--no-promote", "--no-stop-previous-version");
 
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    verify(gcloudRunner, times(1)).run(eq(expectedCommand), isNull());
   }
 
   @Test
-  public void testDeploy_noFlags() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_noFlags() throws AppEngineException, ProcessHandlerException, IOException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1));
 
-    List<String> expectedCommand = ImmutableList.of("deploy", appYaml1.toString());
+    List<String> expectedCommand = ImmutableList.of("app", "deploy", appYaml1.toString());
 
     deployment.deploy(configuration);
 
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    verify(gcloudRunner, times(1)).run(eq(expectedCommand), isNull());
   }
 
   @Test
-  public void testDeploy_dir() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_dir() throws AppEngineException, ProcessHandlerException, IOException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(stagingDirectory));
 
-    List<String> expectedCommand = ImmutableList.of("deploy");
+    List<String> expectedCommand = ImmutableList.of("app", "deploy");
 
     deployment.deploy(configuration);
 
-    verify(sdk, times(1))
-        .runAppCommandInWorkingDirectory(eq(expectedCommand), eq(stagingDirectory));
+    verify(gcloudRunner, times(1)).run(eq(expectedCommand), eq(stagingDirectory));
   }
 
   @Test
-  public void testDeploy_multipleDeployables() throws AppEngineException, ProcessRunnerException {
+  public void testDeploy_multipleDeployables()
+      throws AppEngineException, ProcessHandlerException, IOException {
 
     DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
     configuration.setDeployables(Arrays.asList(appYaml1, appYaml2));
@@ -171,9 +176,9 @@ public class CloudSdkAppEngineDeploymentTest {
     deployment.deploy(configuration);
 
     List<String> expectedCommand =
-        ImmutableList.of("deploy", appYaml1.toString(), appYaml2.toString());
+        ImmutableList.of("app", "deploy", appYaml1.toString(), appYaml2.toString());
 
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    verify(gcloudRunner, times(1)).run(eq(expectedCommand), isNull());
   }
 
   @Test
@@ -239,6 +244,7 @@ public class CloudSdkAppEngineDeploymentTest {
 
     List<String> expectedCommand =
         ImmutableList.of(
+            "app",
             "deploy",
             testConfigYaml.toString(),
             "--server",
@@ -246,7 +252,7 @@ public class CloudSdkAppEngineDeploymentTest {
             "--project",
             "project");
 
-    verify(sdk, times(1)).runAppCommand(eq(expectedCommand));
+    verify(gcloudRunner, times(1)).run(eq(expectedCommand), isNull());
   }
 
   @Test

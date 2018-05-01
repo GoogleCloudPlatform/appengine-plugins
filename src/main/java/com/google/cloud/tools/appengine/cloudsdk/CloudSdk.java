@@ -443,7 +443,7 @@ public class CloudSdk {
     return cloudSdkPath;
   }
 
-  private Path getGCloudPath() {
+  Path getGCloudPath() {
     String gcloud = GCLOUD;
     if (IS_WINDOWS) {
       gcloud += ".cmd";
@@ -463,6 +463,10 @@ public class CloudSdk {
   @VisibleForTesting
   Path getJavaExecutablePath() {
     return javaHomePath.toAbsolutePath().resolve(IS_WINDOWS ? "bin/java.exe" : "bin/java");
+  }
+
+  public Path getJavaHomePath() {
+    return javaHomePath;
   }
 
   // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/189
@@ -542,7 +546,7 @@ public class CloudSdk {
     }
   }
 
-  private void validateJdk() throws InvalidJavaSdkException {
+  void validateJdk() throws InvalidJavaSdkException {
     if (!Files.exists(getJavaExecutablePath())) {
       throw new InvalidJavaSdkException(
           "Invalid Java SDK. " + getJavaExecutablePath().toString() + " does not exist.");
@@ -569,6 +573,10 @@ public class CloudSdk {
               + jarLocations.get(JAVA_TOOLS_JAR)
               + "' is not a file.");
     }
+  }
+
+  public Path getAppEngineToolsJar() {
+    return jarLocations.get(JAVA_TOOLS_JAR);
   }
 
   @VisibleForTesting

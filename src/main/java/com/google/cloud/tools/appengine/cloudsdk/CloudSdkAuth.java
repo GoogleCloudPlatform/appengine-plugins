@@ -19,13 +19,13 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.auth.Auth;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessRunnerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -34,10 +34,10 @@ public class CloudSdkAuth implements Auth {
   private static final Pattern emailPattern =
       Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]+$", Pattern.CASE_INSENSITIVE);
 
-  private final CloudSdk cloudSdk;
+  private final GcloudRunner runner;
 
-  public CloudSdkAuth(CloudSdk cloudSdk) {
-    this.cloudSdk = Preconditions.checkNotNull(cloudSdk);
+  public CloudSdkAuth(GcloudRunner runner) {
+    this.runner = Preconditions.checkNotNull(runner);
   }
 
   /**
@@ -54,8 +54,8 @@ public class CloudSdkAuth implements Auth {
       throw new AppEngineException("Invalid email address: " + user);
     }
     try {
-      cloudSdk.runAuthCommand(Arrays.asList("login", user));
-    } catch (ProcessRunnerException ex) {
+      runner.run(ImmutableList.of("auth", "login", user), null);
+    } catch (ProcessHandlerException | IOException ex) {
       throw new AppEngineException(ex);
     }
   }
@@ -64,8 +64,8 @@ public class CloudSdkAuth implements Auth {
   @Override
   public void login() throws AppEngineException {
     try {
-      cloudSdk.runAuthCommand(Collections.singletonList("login"));
-    } catch (ProcessRunnerException ex) {
+      runner.run(ImmutableList.of("auth", "login"), null);
+    } catch (ProcessHandlerException | IOException ex) {
       throw new AppEngineException(ex);
     }
   }
@@ -81,10 +81,11 @@ public class CloudSdkAuth implements Auth {
     Preconditions.checkArgument(Files.exists(jsonFile), "File does not exist: " + jsonFile);
     try {
       List<String> args = new ArrayList<>(3);
+      args.add("auth");
       args.add("activate-service-account");
       args.addAll(GcloudArgs.get("key-file", jsonFile));
-      cloudSdk.runAuthCommand(args);
-    } catch (ProcessRunnerException ex) {
+      runner.run(args, null);
+    } catch (ProcessHandlerException | IOException ex) {
       throw new AppEngineException(ex);
     }
   }
