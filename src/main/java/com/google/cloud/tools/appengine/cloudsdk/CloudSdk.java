@@ -17,10 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
-import com.google.cloud.tools.appengine.cloudsdk.internal.process.ExitCodeRecorderProcessExitListener;
-import com.google.cloud.tools.appengine.cloudsdk.process.LegacyProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
-import com.google.cloud.tools.appengine.cloudsdk.process.StringBuilderProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.annotations.VisibleForTesting;
@@ -80,37 +77,6 @@ public class CloudSdk {
         JAVA_TOOLS_JAR, sdkPath.resolve(JAVA_APPENGINE_SDK_PATH).resolve(JAVA_TOOLS_JAR));
   }
 
-  // Runs a gcloud command synchronously, with a new ProcessRunner. This method is intended to be
-  // used for the execution of short-running gcloud commands, especially when we need to do some
-  // additional processing of the gcloud command's output before returning. In all other cases, this
-  // class's main configured ProcessRunner should be used.
-  private String runGcloudCommand(List<String> args)
-      throws ProcessHandlerException, CloudSdkNotFoundException, IOException {
-    validateCloudSdkLocation();
-
-    StringBuilderProcessOutputLineListener stdOutListener =
-        new StringBuilderProcessOutputLineListener();
-    ExitCodeRecorderProcessExitListener exitListener = new ExitCodeRecorderProcessExitListener();
-
-    // build and run the command
-    List<String> command =
-        new ImmutableList.Builder<String>().add(getGCloudPath().toString()).addAll(args).build();
-
-    Process p = new ProcessBuilder(command).start();
-    LegacyProcessHandler.builder()
-        .addStdOutLineListener(stdOutListener)
-        .setExitListener(exitListener)
-        .build()
-        .handleProcess(p);
-
-    if (exitListener.getMostRecentExitCode() != null
-        && !exitListener.getMostRecentExitCode().equals(0)) {
-      throw new ProcessHandlerException("Process exited unsuccessfully");
-    }
-
-    return stdOutListener.toString();
-  }
-
   /**
    * Returns the version of the Cloud SDK installation. Version is determined by reading the VERSION
    * file located in the Cloud SDK directory.
@@ -163,7 +129,7 @@ public class CloudSdk {
             .addAll(GcloudArgs.get("format", "json"))
             .build();
 
-    String componentsJson = runGcloudCommand(command);
+    String componentsJson = Gcloud.builder(this).build().runCommand(command);
     return CloudSdkComponent.fromJsonList(componentsJson);
   }
 
@@ -254,7 +220,7 @@ public class CloudSdk {
     }
   }
 
-  private void validateCloudSdkLocation() throws CloudSdkNotFoundException {
+  void validateCloudSdkLocation() throws CloudSdkNotFoundException {
     if (sdkPath == null) {
       throw new CloudSdkNotFoundException("Validation Error: Cloud SDK path is null");
     }

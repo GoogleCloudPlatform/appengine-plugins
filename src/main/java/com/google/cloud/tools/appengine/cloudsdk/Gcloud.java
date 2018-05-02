@@ -16,9 +16,16 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.appengine.cloudsdk.internal.process.ExitCodeRecorderProcessExitListener;
+import com.google.cloud.tools.appengine.cloudsdk.process.LegacyProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
+import com.google.cloud.tools.appengine.cloudsdk.process.StringBuilderProcessOutputLineListener;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /** Operations that use gcloud. */
 public class Gcloud {
@@ -61,6 +68,42 @@ public class Gcloud {
 
   public CloudSdkGenRepoInfoFile newGenRepoInfo(ProcessHandler processHandler) {
     return new CloudSdkGenRepoInfoFile(getRunner(processHandler));
+  }
+
+  /**
+   * Run short lived gcloud commands.
+   *
+   * @param args the arguments to gcloud command (not including 'gcloud')
+   * @return standard out collected as a single string
+   */
+  public String runCommand(List<String> args)
+      throws CloudSdkNotFoundException, IOException, ProcessHandlerException {
+    sdk.validateCloudSdkLocation();
+
+    StringBuilderProcessOutputLineListener stdOutListener =
+        new StringBuilderProcessOutputLineListener();
+    ExitCodeRecorderProcessExitListener exitListener = new ExitCodeRecorderProcessExitListener();
+
+    // build and run the command
+    List<String> command =
+        new ImmutableList.Builder<String>()
+            .add(sdk.getGCloudPath().toAbsolutePath().toString())
+            .addAll(args)
+            .build();
+
+    Process process = new ProcessBuilder(command).start();
+    LegacyProcessHandler.builder()
+        .addStdOutLineListener(stdOutListener)
+        .setExitListener(exitListener)
+        .build()
+        .handleProcess(process);
+
+    if (exitListener.getMostRecentExitCode() != null
+        && !exitListener.getMostRecentExitCode().equals(0)) {
+      throw new ProcessHandlerException("Process exited unsuccessfully");
+    }
+
+    return stdOutListener.toString();
   }
 
   @VisibleForTesting
