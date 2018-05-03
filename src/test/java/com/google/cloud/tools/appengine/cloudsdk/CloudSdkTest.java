@@ -58,7 +58,7 @@ public class CloudSdkTest {
 
   @Test
   public void testGetSdkPath() throws CloudSdkNotFoundException {
-    assertEquals(root, builder.build().getSdkPath());
+    assertEquals(root, builder.build().getPath());
   }
 
   @Test
@@ -132,7 +132,7 @@ public class CloudSdkTest {
   public void testGetJavaAppEngineSdkPath() throws CloudSdkNotFoundException {
     assertEquals(
         root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
-        builder.build().getJavaAppEngineSdkPath());
+        builder.build().getAppEngineSdkForJavaPath());
   }
 
   @Test
@@ -161,7 +161,7 @@ public class CloudSdkTest {
     assertEquals(r3, resolvers.get(2));
 
     CloudSdk sdk = builder.build();
-    assertEquals(r1.getCloudSdkPath(), sdk.getSdkPath());
+    assertEquals(r1.getCloudSdkPath(), sdk.getPath());
   }
 
   @Test
@@ -179,7 +179,7 @@ public class CloudSdkTest {
     assertEquals(r2, resolvers.get(1));
 
     CloudSdk sdk = builder.build();
-    assertEquals("r1 should not resolve", r2.getCloudSdkPath(), sdk.getSdkPath());
+    assertEquals("r1 should not resolve", r2.getCloudSdkPath(), sdk.getPath());
   }
 
   @Test

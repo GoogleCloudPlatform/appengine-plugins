@@ -52,7 +52,7 @@ class DevAppServerRunner {
    * @throws ProcessHandlerException when process runner encounters an error
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
-   * @throws CloudSdkVersionFileException when the Cloud Sdk does not have a version file
+   * @throws CloudSdkVersionFileException when the Cloud SDK does not have a version file
    * @throws InvalidJavaSdkException when the specified JDK does not exist
    * @throws ProcessHandlerException when the process runner encounters and error
    * @throws IOException when the process encounters an IOException
@@ -113,7 +113,7 @@ class DevAppServerRunner {
     command.addAll(jvmArgs);
     command.add(
         "-Dappengine.sdk.root="
-            + sdk.getJavaAppEngineSdkPath().getParent().toAbsolutePath().toString());
+            + sdk.getAppEngineSdkForJavaPath().getParent().toAbsolutePath().toString());
     command.add("-cp");
     command.add(sdk.getAppEngineToolsJar().toAbsolutePath().toString());
     command.add("com.google.appengine.tools.development.DevAppServerMain");

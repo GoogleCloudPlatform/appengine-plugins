@@ -90,7 +90,7 @@ public class CloudSdkAppEngineDevServer1Test {
     fakeStoragePath = new File("storage/path");
     fakeDatastorePath = temporaryFolder.newFile("datastore.db");
 
-    Mockito.when(sdk.getJavaAppEngineSdkPath()).thenReturn(fakeJavaSdkHome);
+    Mockito.when(sdk.getAppEngineSdkForJavaPath()).thenReturn(fakeJavaSdkHome);
 
     testHandler = LogStoringHandler.getForLogger(CloudSdkAppEngineDevServer1.class.getName());
   }
