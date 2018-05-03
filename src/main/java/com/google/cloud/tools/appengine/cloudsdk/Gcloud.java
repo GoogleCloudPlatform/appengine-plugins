@@ -16,13 +16,16 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ExitCodeRecorderProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.LegacyProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.appengine.cloudsdk.process.StringBuilderProcessOutputLineListener;
+import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonSyntaxException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -71,12 +74,39 @@ public class Gcloud {
   }
 
   /**
+   * Returns the list of Cloud SDK Components and their settings, reported by the current gcloud
+   * installation. Unlike other methods in this class that call gcloud, this method always uses a
+   * synchronous ProcessRunner and will block until the gcloud process returns.
+   *
+   * @throws ProcessHandlerException when process runner encounters an error
+   * @throws JsonSyntaxException when the cloud SDK output cannot be parsed
+   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
+   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
+   */
+  public List<CloudSdkComponent> getComponents()
+      throws ProcessHandlerException, JsonSyntaxException, CloudSdkNotFoundException,
+          CloudSdkOutOfDateException, CloudSdkVersionFileException, IOException {
+    sdk.validateCloudSdk();
+
+    // gcloud components list --show-versions --format=json
+    List<String> command =
+        new ImmutableList.Builder<String>()
+            .add("components", "list")
+            .addAll(GcloudArgs.get("show-versions", true))
+            .addAll(GcloudArgs.get("format", "json"))
+            .build();
+
+    String componentsJson = runCommand(command);
+    return CloudSdkComponent.fromJsonList(componentsJson);
+  }
+
+  /**
    * Run short lived gcloud commands.
    *
    * @param args the arguments to gcloud command (not including 'gcloud')
    * @return standard out collected as a single string
    */
-  public String runCommand(List<String> args)
+  private String runCommand(List<String> args)
       throws CloudSdkNotFoundException, IOException, ProcessHandlerException {
     sdk.validateCloudSdkLocation();
 
