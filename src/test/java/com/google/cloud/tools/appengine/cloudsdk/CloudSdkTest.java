@@ -20,8 +20,6 @@ import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -29,22 +27,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdk.Builder;
-import com.google.cloud.tools.appengine.cloudsdk.process.ProcessOutputLineListener;
 import com.google.common.io.Files;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 /** Unit tests for {@link CloudSdk}. */
@@ -53,8 +45,6 @@ public class CloudSdkTest {
 
   private Path root;
   private CloudSdk.Builder builder;
-
-  @Mock private ProcessOutputLineListener outputListener;
 
   @Before
   public void setup() {
@@ -155,78 +145,16 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testNewCloudSdk_nullWaitingOutputListener() throws CloudSdkNotFoundException {
-    CloudSdk sdk =
-        builder.addStdOutLineListener(outputListener).runDevAppServerWait(10).async(false).build();
-
-    assertNull(sdk.getRunDevAppServerWaitListener());
-
-    sdk = builder.addStdOutLineListener(outputListener).runDevAppServerWait(0).async(true).build();
-
-    assertNull(sdk.getRunDevAppServerWaitListener());
-  }
-
-  @Test
-  public void testNewCloudSdk_outListener() throws CloudSdkNotFoundException {
-    builder.addStdOutLineListener(outputListener).runDevAppServerWait(10).async(true);
-
-    CloudSdk sdk = builder.build();
-
-    assertNotNull(sdk.getRunDevAppServerWaitListener());
-    assertEquals(2, builder.getStdOutLineListeners().size());
-    assertEquals(1, builder.getStdErrLineListeners().size());
-    assertEquals(1, builder.getExitListeners().size());
-  }
-
-  @Test
-  public void testNewCloudSdk_errListener() throws CloudSdkNotFoundException {
-    builder.addStdErrLineListener(outputListener).runDevAppServerWait(10).async(true);
-    CloudSdk sdk = builder.build();
-
-    assertNotNull(sdk.getRunDevAppServerWaitListener());
-    assertEquals(1, builder.getStdOutLineListeners().size());
-    assertEquals(2, builder.getStdErrLineListeners().size());
-    assertEquals(1, builder.getExitListeners().size());
-  }
-
-  public void testNewCloudSdk_inheritOutputAndOutListener() {
-    try {
-      builder.inheritProcessOutput(true).addStdOutLineListener(outputListener);
-      fail();
-    } catch (IllegalStateException ex) {
-      assertNotNull(ex.getMessage());
-    }
-  }
-
-  public void testNewCloudSdk_inheritOutputAndErrListener() {
-    try {
-      builder.inheritProcessOutput(true).addStdErrLineListener(outputListener);
-      fail();
-    } catch (IllegalStateException ex) {
-      assertNotNull(ex.getMessage());
-    }
-  }
-
-  public void testNewCloudSdk_ErrListenerAndInheritOutput() {
-    try {
-      builder.addStdErrLineListener(outputListener).inheritProcessOutput(true);
-      fail();
-    } catch (IllegalStateException ex) {
-      assertNotNull(ex.getMessage());
-    }
-  }
-
-  @Test
   public void testResolversOrdering() throws CloudSdkNotFoundException {
-    CloudSdkResolver r1 = Mockito.mock(CloudSdkResolver.class, "r1");
+    CloudSdkResolver r1 = mock(CloudSdkResolver.class, "r1");
     when(r1.getRank()).thenReturn(0);
     when(r1.getCloudSdkPath()).thenReturn(Paths.get("/r1"));
-    CloudSdkResolver r2 = Mockito.mock(CloudSdkResolver.class, "r2");
+    CloudSdkResolver r2 = mock(CloudSdkResolver.class, "r2");
     when(r2.getRank()).thenReturn(10);
-    CloudSdkResolver r3 = Mockito.mock(CloudSdkResolver.class, "r3");
+    CloudSdkResolver r3 = mock(CloudSdkResolver.class, "r3");
     when(r3.getRank()).thenReturn(100);
 
-    Builder builder = new CloudSdk.Builder().resolvers(Arrays.asList(r3, r2, r1));
+    CloudSdk.Builder builder = new CloudSdk.Builder().resolvers(Arrays.asList(r3, r2, r1));
     List<CloudSdkResolver> resolvers = builder.getResolvers();
     assertEquals(r1, resolvers.get(0));
     assertEquals(r2, resolvers.get(1));
@@ -238,14 +166,14 @@ public class CloudSdkTest {
 
   @Test
   public void testResolverCascading() throws CloudSdkNotFoundException {
-    CloudSdkResolver r1 = Mockito.mock(CloudSdkResolver.class, "r1");
+    CloudSdkResolver r1 = mock(CloudSdkResolver.class, "r1");
     when(r1.getRank()).thenReturn(0);
     when(r1.getCloudSdkPath()).thenReturn(null);
-    CloudSdkResolver r2 = Mockito.mock(CloudSdkResolver.class, "r2");
+    CloudSdkResolver r2 = mock(CloudSdkResolver.class, "r2");
     when(r2.getRank()).thenReturn(10);
     when(r2.getCloudSdkPath()).thenReturn(Paths.get("/r2"));
 
-    Builder builder = new CloudSdk.Builder().resolvers(Arrays.asList(r1, r2));
+    CloudSdk.Builder builder = new CloudSdk.Builder().resolvers(Arrays.asList(r1, r2));
     List<CloudSdkResolver> resolvers = builder.getResolvers();
     assertEquals(r1, resolvers.get(0));
     assertEquals(r2, resolvers.get(1));
@@ -265,21 +193,5 @@ public class CloudSdkTest {
                 System.getProperty("os.name").contains("Windows") ? "java.exe" : "java")
             .toAbsolutePath(),
         sdk.getJavaExecutablePath());
-  }
-
-  @Test
-  public void testGcloudCommandEnvironment() throws CloudSdkNotFoundException {
-    builder.appCommandShowStructuredLogs("always");
-    builder.appCommandCredentialFile(mock(File.class));
-    builder.appCommandMetricsEnvironment("intellij");
-    builder.appCommandMetricsEnvironmentVersion("99");
-    CloudSdk sdk = builder.build();
-
-    Map<String, String> env = sdk.getGcloudCommandEnvironment();
-    assertEquals("0", env.get("CLOUDSDK_APP_USE_GSUTIL"));
-    assertEquals("always", env.get("CLOUDSDK_CORE_SHOW_STRUCTURED_LOGS"));
-    assertEquals("intellij", env.get("CLOUDSDK_METRICS_ENVIRONMENT"));
-    assertEquals("99", env.get("CLOUDSDK_METRICS_ENVIRONMENT_VERSION"));
-    assertEquals("1", env.get("CLOUDSDK_CORE_DISABLE_PROMPTS"));
   }
 }
