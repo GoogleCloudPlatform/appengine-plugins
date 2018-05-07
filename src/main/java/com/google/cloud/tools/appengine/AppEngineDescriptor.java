@@ -52,7 +52,7 @@ public class AppEngineDescriptor {
    */
   public static AppEngineDescriptor parse(InputStream in) throws IOException, SAXException {
     if (in == null) {
-      throw new IOException("Null input");
+      throw new NullPointerException("Null input");
     }
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();

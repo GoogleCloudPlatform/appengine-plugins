@@ -128,7 +128,7 @@ public class AppEngineDescriptorTest {
     try {
       AppEngineDescriptor.parse(null);
       Assert.fail("allowed null input");
-    } catch (IOException ex) {
+    } catch (NullPointerException ex) {
       Assert.assertNotNull(ex.getMessage());
     }
   }
