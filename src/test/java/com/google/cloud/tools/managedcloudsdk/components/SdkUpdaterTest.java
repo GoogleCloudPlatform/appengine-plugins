@@ -61,6 +61,7 @@ public class SdkUpdaterTest {
     Mockito.verify(mockCommandRunner).run(expectedCommand(), null, null, mockConsoleListener);
   }
 
+  @Test
   public void testUpdate_withBundledPythonCopier()
       throws InterruptedException, CommandExitException, CommandExecutionException {
     SdkUpdater testUpdater = new SdkUpdater(fakeGcloud, mockCommandRunner, mockBundledPythonCopier);
