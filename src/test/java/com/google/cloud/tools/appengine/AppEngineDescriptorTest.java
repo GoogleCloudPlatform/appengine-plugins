@@ -27,7 +27,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -123,7 +122,7 @@ public class AppEngineDescriptorTest {
 
     assertNull(descriptor.getServiceId());
   }
-  
+
   @Test
   public void testParse_null() throws AppEngineException, IOException, SAXException {
     try {
@@ -133,7 +132,7 @@ public class AppEngineDescriptorTest {
       Assert.assertNotNull(ex.getMessage());
     }
   }
-  
+
   @Test
   public void testRuntime_noContent() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + ROOT_END_TAG);

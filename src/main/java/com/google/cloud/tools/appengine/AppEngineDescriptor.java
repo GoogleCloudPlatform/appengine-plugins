@@ -21,7 +21,6 @@ import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-
 import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -54,7 +53,7 @@ public class AppEngineDescriptor {
   public static AppEngineDescriptor parse(InputStream in) throws IOException, SAXException {
     if (in == null) {
       throw new IOException("Null input");
-    }  
+    }
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilderFactory.setNamespaceAware(true);
