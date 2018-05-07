@@ -121,6 +121,13 @@ public class AppEngineDescriptorTest {
 
     assertNull(descriptor.getServiceId());
   }
+  
+  @Test
+  public void testRuntime_noContent() throws AppEngineException, IOException, SAXException {
+    AppEngineDescriptor descriptor = parse(ROOT_START_TAG + ROOT_END_TAG);
+
+    assertNull(descriptor.getRuntime());
+  }
 
   @Test
   public void testService_service() throws AppEngineException, IOException, SAXException {

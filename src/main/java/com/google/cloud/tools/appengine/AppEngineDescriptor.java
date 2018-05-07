@@ -21,6 +21,8 @@ import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.DOMException;
@@ -63,6 +65,7 @@ public class AppEngineDescriptor {
    * Returns project ID from the &lt;application&gt; element of the appengine-web.xml or null if it
    * is missing.
    */
+  @Nullable
   public String getProjectId() throws AppEngineException {
     return getText(getNode(document, "appengine-web-app", "application"));
   }
@@ -71,6 +74,7 @@ public class AppEngineDescriptor {
    * Returns runtime from the &lt;runtime&gt; element of the appengine-web.xml or null if it is
    * missing.
    */
+  @Nullable
   public String getRuntime() throws AppEngineException {
     return getText(getNode(document, "appengine-web-app", "runtime"));
   }
@@ -79,6 +83,7 @@ public class AppEngineDescriptor {
    * Returns project version from the &lt;version&gt; element of the appengine-web.xml or null if it
    * is missing.
    */
+  @Nullable
   public String getProjectVersion() throws AppEngineException {
     return getText(getNode(document, "appengine-web-app", "version"));
   }
@@ -87,6 +92,7 @@ public class AppEngineDescriptor {
    * Returns service ID from the &lt;service&gt; element of the appengine-web.xml, or null if it is
    * missing. Will also look at module ID.
    */
+  @Nullable
   public String getServiceId() throws AppEngineException {
     String serviceId = getText(getNode(document, "appengine-web-app", "service"));
     if (serviceId != null) {
@@ -114,12 +120,15 @@ public class AppEngineDescriptor {
    *
    * @return a map representing the environment variable settings in the appengine-web.xml
    */
+  // todo this should probably return an empty map instead per Effective Java
+  @Nullable
   public Map<String, String> getEnvironment() throws AppEngineException {
     Node environmentParentNode = getNode(document, "appengine-web-app", "env-variables");
     return getAttributeMap(environmentParentNode, "env-var", "name", "value");
   }
 
-  private static String getText(Node node) throws AppEngineException {
+  @Nullable
+  private static String getText(@Nullable Node node) throws AppEngineException {
     if (node != null) {
       try {
         return node.getTextContent();
@@ -133,6 +142,7 @@ public class AppEngineDescriptor {
   }
 
   /** Returns a map formed from the attributes of the nodes contained within the parent node. */
+  @Nullable
   private static Map<String, String> getAttributeMap(
       Node parent, String nodeName, String keyAttributeName, String valueAttributeName)
       throws AppEngineException {
@@ -167,6 +177,7 @@ public class AppEngineDescriptor {
   }
 
   /** Returns the first node found matching the given name contained within the parent node. */
+  @Nullable
   private static Node getNode(Document doc, String parentNodeName, String targetNodeName) {
     NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentNodeName);
     if (parentElements.getLength() > 0) {
