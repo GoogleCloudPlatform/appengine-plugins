@@ -149,6 +149,18 @@
           only supports >=6 -->
           <source>1.8</source>
           <target>1.8</target>
+          <showWarnings>true</showWarnings>
+          <annotationProcessorPaths>
+            <path>
+               <groupId>com.uber.nullaway</groupId>
+               <artifactId>nullaway</artifactId>
+               <version>0.4.4</version>
+            </path>
+          </annotationProcessorPaths>
+          <compilerArgs>
+            <arg>-Xep:NullAway:ERROR</arg>
+            <arg>-XepOpt:NullAway:AnnotatedPackages=com.uber</arg>
+          </compilerArgs>
         </configuration>
         <dependencies>
           <dependency>
