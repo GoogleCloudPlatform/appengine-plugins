@@ -158,8 +158,8 @@
             </path>
           </annotationProcessorPaths>
           <compilerArgs>
-            <arg>-Xep:NullAway:ERROR</arg>
-            <arg>-XepOpt:NullAway:AnnotatedPackages=com.uber</arg>
+            <arg>-Xep:NullAway:ERROR</arg>    
+            <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools</arg>
           </compilerArgs>
         </configuration>
         <dependencies>
