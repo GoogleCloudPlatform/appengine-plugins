@@ -10,8 +10,8 @@ install:
   # https://github.com/travis-ci/travis-ci/issues/8408
   - unset _JAVA_OPTIONS
   # download Cloud SDK
-  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-171.0.0-linux-x86_64.tar.gz
-  - tar -xzf google-cloud-sdk-171.0.0-linux-x86_64.tar.gz -C /home/travis
+  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-200.0.0-linux-x86_64.tar.gz
+  - tar -xzf google-cloud-sdk-200.0.0-linux-x86_64.tar.gz -C /home/travis
   # update all Cloud SDK components
   - /home/travis/google-cloud-sdk/bin/gcloud components update --quiet
   # add App Engine component to Cloud SDK
