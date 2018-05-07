@@ -27,6 +27,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -120,6 +122,16 @@ public class AppEngineDescriptorTest {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + ROOT_END_TAG);
 
     assertNull(descriptor.getServiceId());
+  }
+  
+  @Test
+  public void testParse_null() throws AppEngineException, IOException, SAXException {
+    try {
+      AppEngineDescriptor.parse(null);
+      Assert.fail("allowed null input");
+    } catch (IOException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
   }
   
   @Test

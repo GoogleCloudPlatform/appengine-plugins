@@ -52,6 +52,9 @@ public class AppEngineDescriptor {
    * @throws SAXException malformed XML
    */
   public static AppEngineDescriptor parse(InputStream in) throws IOException, SAXException {
+    if (in == null) {
+      throw new IOException("Null input");
+    }  
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilderFactory.setNamespaceAware(true);
