@@ -55,7 +55,8 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
     String pythonExePath = commandCaller.call(copyPythonCommand, null, null).trim();
 
     if (isUnderTempDirectory(pythonExePath, System.getenv())) {
-      Runtime.getRuntime().addShutdownHook(new Thread(() -> deleteCopiedPython(pythonExePath)));
+      Runnable target = () -> deleteCopiedPython(pythonExePath);
+      Runtime.getRuntime().addShutdownHook(new Thread(target));
     }
 
     return ImmutableMap.of("CLOUDSDK_PYTHON", pythonExePath);
