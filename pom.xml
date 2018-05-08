@@ -161,8 +161,8 @@
             <arg>-Xep:NullAway:ERROR</arg>    
             <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools.appengine,com.google.cloud.tools.libraries,com.google.cloud.tools.managedcloudsdk,com.google.cloud.tools.io,com.google.cloud.tools.project</arg>
             <arg>-XepOpt:NullAway:UnannotatedSubPackages=com.google.cloud.tools.appengine.api.[a-zA-Z.]*,com.google.cloud.tools.appengine.cloudsdk.[a-zA-Z.]*</arg>
-<arg>-XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock</arg>
-<arg>-XepOpt:NullAway:UnannotatedClasses=com.google.cloud.tools.[a-zA-Z.]*Test</arg>
+<arg>-XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock,org.junit.runners.Parameterized</arg>
+<arg>-XepOpt:NullAway:ExcludedClasses=com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1Test,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2Test,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest</arg>
           </compilerArgs>
         </configuration>
         <dependencies>

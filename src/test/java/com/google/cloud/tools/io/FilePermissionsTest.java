@@ -53,6 +53,7 @@ public class FilePermissionsTest {
       FilePermissions.verifyDirectoryCreatable(Paths.get("/dev/null/foo/bar"));
       Assert.fail("Can create directory in /dev/null");
     } catch (IOException ex) {
+      Assert.assertNotNull(ex.getMessage());
       Assert.assertTrue(ex.getMessage(), ex.getMessage().contains("/dev/null"));
     }
   }
@@ -64,6 +65,7 @@ public class FilePermissionsTest {
       FilePermissions.verifyDirectoryCreatable(file);
       Assert.fail("Can create directory over file");
     } catch (NotDirectoryException ex) {
+      Assert.assertNotNull(ex.getMessage());
       Assert.assertTrue(ex.getMessage().contains(file.getFileName().toString()));
     }
   }
@@ -75,6 +77,7 @@ public class FilePermissionsTest {
       FilePermissions.verifyDirectoryCreatable(Paths.get(file.toString(), "bar", "baz"));
       Assert.fail("Can create directory over file");
     } catch (NotDirectoryException ex) {
+      Assert.assertNotNull(ex.getMessage());
       Assert.assertTrue(ex.getMessage().contains(file.getFileName().toString()));
     }
   }
@@ -88,6 +91,7 @@ public class FilePermissionsTest {
       FilePermissions.verifyDirectoryCreatable(Paths.get(dir.toString(), "bar"));
       Assert.fail("Can create directory in non-writable parent");
     } catch (AccessDeniedException ex) {
+      Assert.assertNotNull(ex.getMessage());
       Assert.assertTrue(ex.getMessage().contains(dir.getFileName().toString()));
     }
   }
@@ -99,6 +103,7 @@ public class FilePermissionsTest {
       FilePermissions.verifyDirectoryCreatable(Paths.get("/bar"));
       Assert.fail("Can create directory in root");
     } catch (AccessDeniedException ex) {
+      Assert.assertNotNull(ex.getMessage());
       Assert.assertEquals("/ is not writable", ex.getMessage());
     }
   }

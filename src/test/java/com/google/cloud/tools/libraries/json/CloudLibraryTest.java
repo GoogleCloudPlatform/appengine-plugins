@@ -19,7 +19,6 @@ package com.google.cloud.tools.libraries.json;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.Iterables;
@@ -102,7 +101,8 @@ public final class CloudLibraryTest {
     CloudLibrary library = parse(json);
 
     List<String> transports = library.getTransports();
-    assertTrue("expected 2 transports", transports != null && transports.size() == 2);
+    assertNotNull("expected 2 transports", transports);
+    assertEquals("expected 2 transports", 2, transports.size());
     assertEquals(transport1, transports.get(0));
     assertEquals(transport2, transports.get(1));
   }
@@ -117,7 +117,8 @@ public final class CloudLibraryTest {
     CloudLibrary library = parse(json);
 
     List<CloudLibraryClient> clients = library.getClients();
-    assertTrue("expected 2 clients", clients != null && clients.size() == 2);
+    assertNotNull("expected 2 clients", clients);
+    assertEquals("expected 2 clients", 2, clients.size());
     assertEquals(client1, clients.get(0).getName());
     assertEquals(client2, clients.get(1).getName());
   }

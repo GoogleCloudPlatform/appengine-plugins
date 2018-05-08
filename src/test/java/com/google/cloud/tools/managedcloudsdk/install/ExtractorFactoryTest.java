@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.cloud.tools.managedcloudsdk.NullProgressListener;
 import java.io.IOException;
 import java.nio.file.Path;
 import org.junit.Assert;
@@ -27,17 +28,21 @@ public class ExtractorFactoryTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
+  private NullProgressListener listener = new NullProgressListener();
+
   @Test
   public void testNewExtractor_isZip() throws IOException, UnknownArchiveTypeException {
     Path archive = tmp.newFile("test-zip.zip").toPath();
-    Extractor<?> testExtractor = new ExtractorFactory().newExtractor(archive, null, null);
+    Path dest = tmp.newFile("dest").toPath();
+    Extractor<?> testExtractor = new ExtractorFactory().newExtractor(archive, dest, listener);
     Assert.assertTrue(testExtractor.getExtractorProvider() instanceof ZipExtractorProvider);
   }
 
   @Test
   public void testNewExtractor_isTarGz() throws IOException, UnknownArchiveTypeException {
     Path archive = tmp.newFile("test-tar-gz.tar.gz").toPath();
-    Extractor<?> testExtractor = new ExtractorFactory().newExtractor(archive, null, null);
+    Path dest = tmp.newFile("dest").toPath();
+    Extractor<?> testExtractor = new ExtractorFactory().newExtractor(archive, dest, listener);
     Assert.assertTrue(testExtractor.getExtractorProvider() instanceof TarGzExtractorProvider);
   }
 
@@ -45,9 +50,10 @@ public class ExtractorFactoryTest {
   public void testNewExtractor_unknownArchiveType() throws IOException {
     // make sure out check starts from end of filename
     Path archive = tmp.newFile("test-bad.tar.gz.zip.bad").toPath();
+    Path dest = tmp.newFile("dest").toPath();
 
     try {
-      new ExtractorFactory().newExtractor(archive, null, null);
+      new ExtractorFactory().newExtractor(archive, dest, listener);
       Assert.fail("UnknownArchiveTypeException expected but not thrown");
     } catch (UnknownArchiveTypeException ex) {
       Assert.assertEquals("Unknown archive: " + archive, ex.getMessage());
