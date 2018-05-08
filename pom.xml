@@ -160,7 +160,7 @@
           <compilerArgs>
             <arg>-Xep:NullAway:ERROR</arg>    
             <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools.appengine</arg>
-            <arg>-XepOpt:NullAway:UnnnotatedSubPackages=com.google.cloud.tools.appengine.api.[a-zA-Z.]*,com.google.cloud.tools.appengine.cloudsdk.[a-zA-Z.]*</arg>
+            <arg>-XepOpt:NullAway:UnannotatedSubPackages=com.google.cloud.tools.appengine.api.[a-zA-Z.]*,com.google.cloud.tools.appengine.cloudsdk.[a-zA-Z.]*</arg>
 
           </compilerArgs>
         </configuration>
