@@ -159,7 +159,7 @@
           </annotationProcessorPaths>
           <compilerArgs>
             <arg>-Xep:NullAway:ERROR</arg>    
-            <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools.appengine</arg>
+            <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools.appengine,com.google.cloud.tools.libraries,com.google.cloud.tools.io,com.google.cloud.tools.project</arg>
             <arg>-XepOpt:NullAway:UnannotatedSubPackages=com.google.cloud.tools.appengine.api.[a-zA-Z.]*,com.google.cloud.tools.appengine.cloudsdk.[a-zA-Z.]*</arg>
 
           </compilerArgs>

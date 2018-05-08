@@ -22,17 +22,17 @@ import javax.annotation.Nullable;
 /** Holds metadata about a single Cloud Library. */
 public final class CloudLibrary {
 
-  private String name;
-  private String id;
-  private String serviceName;
-  private List<String> serviceRoles;
-  private String documentation;
-  private String description;
-  private String icon;
-  private List<String> transports;
-  private List<CloudLibraryClient> clients;
+  @Nullable private String name;
+  @Nullable private String id;
+  @Nullable private String serviceName;
+  @Nullable private List<String> serviceRoles;
+  @Nullable private String documentation;
+  @Nullable private String description;
+  @Nullable private String icon;
+  @Nullable private List<String> transports;
+  @Nullable private List<CloudLibraryClient> clients;
 
-  /** Prevents instantiation. */
+  /** Prevents direct instantiation. GSON instantiates these objects using dark magic. */
   private CloudLibrary() {}
 
   /** Returns the name of this library. */

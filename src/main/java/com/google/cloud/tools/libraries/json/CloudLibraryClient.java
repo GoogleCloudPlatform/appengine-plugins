@@ -21,15 +21,15 @@ import javax.annotation.Nullable;
 /** Holds details about a single Cloud library client. */
 public final class CloudLibraryClient {
 
-  private String name;
-  private String language;
-  private String site;
-  private String apireference;
-  private String infotip;
-  private String launchStage;
-  private String source;
-  private String languageLevel;
-  private CloudLibraryClientMavenCoordinates mavenCoordinates;
+  @Nullable private String name;
+  @Nullable private String language;
+  @Nullable private String site;
+  @Nullable private String apireference;
+  @Nullable private String infotip;
+  @Nullable private String launchStage;
+  @Nullable private String source;
+  @Nullable private String languageLevel;
+  @Nullable private CloudLibraryClientMavenCoordinates mavenCoordinates;
 
   /** Prevents instantiation. */
   private CloudLibraryClient() {}
