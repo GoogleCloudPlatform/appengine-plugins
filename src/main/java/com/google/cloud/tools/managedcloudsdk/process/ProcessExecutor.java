@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 /** Executes a shell command. */
 public class ProcessExecutor {
@@ -55,8 +56,8 @@ public class ProcessExecutor {
    */
   public int run(
       List<String> command,
-      Path workingDirectory,
-      Map<String, String> environment,
+      @Nullable Path workingDirectory,
+      @Nullable Map<String, String> environment,
       AsyncStreamHandler stdout,
       AsyncStreamHandler stderr)
       throws IOException, InterruptedException {

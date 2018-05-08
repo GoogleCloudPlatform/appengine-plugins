@@ -31,7 +31,7 @@ public final class CloudLibraryClient {
   @Nullable private String languageLevel;
   @Nullable private CloudLibraryClientMavenCoordinates mavenCoordinates;
 
-  /** Prevents instantiation. */
+  /** Prevents direct instantiation. GSON instantiates these objects using dark magic. */
   private CloudLibraryClient() {}
 
   /** Returns the name of this client. */
