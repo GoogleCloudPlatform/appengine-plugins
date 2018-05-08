@@ -126,7 +126,10 @@ public class AppEngineDescriptor {
   @Nullable
   public Map<String, String> getEnvironment() throws AppEngineException {
     Node environmentParentNode = getNode(document, "appengine-web-app", "env-variables");
-    return getAttributeMap(environmentParentNode, "env-var", "name", "value");
+    if (environmentParentNode != null) {
+      return getAttributeMap(environmentParentNode, "env-var", "name", "value");
+    }
+    return null;
   }
 
   @Nullable
@@ -144,38 +147,33 @@ public class AppEngineDescriptor {
   }
 
   /** Returns a map formed from the attributes of the nodes contained within the parent node. */
-  @Nullable
   private static Map<String, String> getAttributeMap(
       Node parent, String nodeName, String keyAttributeName, String valueAttributeName)
       throws AppEngineException {
-    if (parent != null) {
-      Map<String, String> nameValueAttributeMap = Maps.newHashMap();
 
-      if (parent.hasChildNodes()) {
-        for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
-          Node child = parent.getChildNodes().item(i);
-          NamedNodeMap attributeMap = child.getAttributes();
+    Map<String, String> nameValueAttributeMap = Maps.newHashMap();
+    if (parent.hasChildNodes()) {
+      for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
+        Node child = parent.getChildNodes().item(i);
+        NamedNodeMap attributeMap = child.getAttributes();
 
-          if (nodeName.equals(child.getNodeName()) && attributeMap != null) {
-            Node keyNode = attributeMap.getNamedItem(keyAttributeName);
+        if (nodeName.equals(child.getNodeName()) && attributeMap != null) {
+          Node keyNode = attributeMap.getNamedItem(keyAttributeName);
 
-            if (keyNode != null) {
-              Node valueNode = attributeMap.getNamedItem(valueAttributeName);
-              try {
-                nameValueAttributeMap.put(keyNode.getTextContent(), valueNode.getTextContent());
-              } catch (DOMException ex) {
-                throw new AppEngineException(
-                    "Failed to parse value from attribute node " + keyNode.getNodeName(), ex);
-              }
+          if (keyNode != null) {
+            Node valueNode = attributeMap.getNamedItem(valueAttributeName);
+            try {
+              nameValueAttributeMap.put(keyNode.getTextContent(), valueNode.getTextContent());
+            } catch (DOMException ex) {
+              throw new AppEngineException(
+                  "Failed to parse value from attribute node " + keyNode.getNodeName(), ex);
             }
           }
         }
       }
-
-      return nameValueAttributeMap;
     }
 
-    return null;
+    return nameValueAttributeMap;
   }
 
   /** Returns the first node found matching the given name contained within the parent node. */
