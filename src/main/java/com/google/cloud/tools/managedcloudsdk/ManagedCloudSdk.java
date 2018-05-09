@@ -199,7 +199,7 @@ public class ManagedCloudSdk {
   static Path getOsSpecificManagedSdkHome(
       OsInfo.Name osName, Properties systemProperties, Map<String, String> environment) {
     Path userHome = Paths.get(systemProperties.getProperty("user.home"));
-    Path cloudSdkPartialPath = Paths.get("google-cloud-tools-java", "managed-cloud-sdk");
+    Path cloudSdkPartialPath = Paths.get("google", "ct4j-cloud-sdk");
     Path xdgPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
 
     switch (osName) {
