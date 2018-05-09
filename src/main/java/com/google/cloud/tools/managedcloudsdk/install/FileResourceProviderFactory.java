@@ -43,7 +43,7 @@ class FileResourceProviderFactory {
    */
   public FileResourceProviderFactory(Version version, OsInfo osInfo, Path managedSdkDirectory) {
     this.version = version;
-    this.os = osInfo;
+    os = osInfo;
     this.managedSdkDirectory = managedSdkDirectory;
   }
 

@@ -46,11 +46,11 @@ public class InstallerFactoryTest {
   public OsInfo os;
 
   @Parameterized.Parameter(1)
-  public Class<? extends InstallScriptProvider> expectedInstallScriptProviderClass;
+  public Class<InstallScriptProvider> expectedInstallScriptProviderClass;
 
   @Test
   public void testNewInstaller_latestVersion() {
-    Installer<?> installer = new InstallerFactory(os, false).newInstaller(null, null, null);
+    Installer installer = new InstallerFactory(os, false).newInstaller(null, null, null);
     Assert.assertEquals(
         expectedInstallScriptProviderClass, installer.getInstallScriptProvider().getClass());
   }

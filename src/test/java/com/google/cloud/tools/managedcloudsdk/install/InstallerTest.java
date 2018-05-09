@@ -29,11 +29,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /** Tests for {@link Installer} */
+@RunWith(MockitoJUnitRunner.class)
 public class InstallerTest {
 
   @Mock private InstallScriptProvider mockInstallScriptProvider;
@@ -49,8 +51,6 @@ public class InstallerTest {
 
   @Before
   public void setUp() {
-    MockitoAnnotations.initMocks(this);
-
     fakeWorkingDirectory = tmp.getRoot().toPath();
     Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
     Mockito.when(mockInstallScriptProvider.getScriptEnvironment()).thenReturn(fakeEnv);
@@ -58,7 +58,7 @@ public class InstallerTest {
 
   @Test
   public void testCall() throws Exception {
-    new Installer<>(
+    new Installer(
             fakeWorkingDirectory,
             mockInstallScriptProvider,
             false,
@@ -76,7 +76,7 @@ public class InstallerTest {
 
   @Test
   public void testCall_withUsageReporting() throws Exception {
-    new Installer<>(
+    new Installer(
             tmp.getRoot().toPath(),
             mockInstallScriptProvider,
             true,

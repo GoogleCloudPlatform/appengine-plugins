@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * Extractor for extracting files from a single archive. Use {@link ExtractorProvider} to provide
  * extractor implementation.
  */
-final class Extractor<T extends ExtractorProvider> {
+final class Extractor {
 
   private final Logger logger = Logger.getLogger(Extractor.class.getName());
 
@@ -39,7 +39,10 @@ final class Extractor<T extends ExtractorProvider> {
 
   /** Use {@link ExtractorFactory} to instantiate. */
   Extractor(
-      Path archive, Path destination, T extractorProvider, ProgressListener progressListener) {
+      Path archive,
+      Path destination,
+      ExtractorProvider extractorProvider,
+      ProgressListener progressListener) {
     this.archive = archive;
     this.destination = destination;
     this.extractorProvider = extractorProvider;

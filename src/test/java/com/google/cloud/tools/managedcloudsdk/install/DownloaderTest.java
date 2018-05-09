@@ -28,23 +28,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DownloaderTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
   @Mock private ProgressListener mockProgressListener;
-
-  @Before
-  public void setupMocks() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   private Path createTestRemoteResource(long sizeInBytes) throws IOException {
 
@@ -158,10 +154,10 @@ public class DownloaderTest {
 
   @Test
   public void testDownload_interruptTriggersCleanup() throws IOException, InterruptedException {
-    final Path destination = tmp.getRoot().toPath().resolve("destination-file");
+    Path destination = tmp.getRoot().toPath().resolve("destination-file");
     long testFileSize = Downloader.BUFFER_SIZE * 10 + 1;
     Path testSourceFile = createTestRemoteResource(testFileSize);
-    final URL fakeRemoteResource = testSourceFile.toUri().toURL();
+    URL fakeRemoteResource = testSourceFile.toUri().toURL();
 
     // Start a new thread for this test to avoid mucking with Thread state when
     // junit reuses threads.

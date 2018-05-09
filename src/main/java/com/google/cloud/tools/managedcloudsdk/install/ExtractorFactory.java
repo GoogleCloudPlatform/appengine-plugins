@@ -34,15 +34,14 @@ final class ExtractorFactory {
    *     ZipExtractorProvider} for ".zip"
    * @throws UnknownArchiveTypeException if not ".tar.gz" or ".zip"
    */
-  public Extractor<? extends ExtractorProvider> newExtractor(
-      Path archive, Path destination, ProgressListener progressListener)
+  public Extractor newExtractor(Path archive, Path destination, ProgressListener progressListener)
       throws UnknownArchiveTypeException {
 
     if (archive.toString().toLowerCase().endsWith(".tar.gz")) {
-      return new Extractor<>(archive, destination, new TarGzExtractorProvider(), progressListener);
+      return new Extractor(archive, destination, new TarGzExtractorProvider(), progressListener);
     }
     if (archive.toString().toLowerCase().endsWith(".zip")) {
-      return new Extractor<>(archive, destination, new ZipExtractorProvider(), progressListener);
+      return new Extractor(archive, destination, new ZipExtractorProvider(), progressListener);
     }
     throw new UnknownArchiveTypeException(archive);
   }

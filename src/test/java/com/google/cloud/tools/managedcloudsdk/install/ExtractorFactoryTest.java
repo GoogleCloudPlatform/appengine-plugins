@@ -34,7 +34,7 @@ public class ExtractorFactoryTest {
   public void testNewExtractor_isZip() throws IOException, UnknownArchiveTypeException {
     Path archive = tmp.newFile("test-zip.zip").toPath();
     Path dest = tmp.newFile("dest").toPath();
-    Extractor<?> testExtractor = new ExtractorFactory().newExtractor(archive, dest, listener);
+    Extractor testExtractor = new ExtractorFactory().newExtractor(archive, dest, listener);
     Assert.assertTrue(testExtractor.getExtractorProvider() instanceof ZipExtractorProvider);
   }
 
@@ -42,7 +42,7 @@ public class ExtractorFactoryTest {
   public void testNewExtractor_isTarGz() throws IOException, UnknownArchiveTypeException {
     Path archive = tmp.newFile("test-tar-gz.tar.gz").toPath();
     Path dest = tmp.newFile("dest").toPath();
-    Extractor<?> testExtractor = new ExtractorFactory().newExtractor(archive, dest, listener);
+    Extractor testExtractor = new ExtractorFactory().newExtractor(archive, dest, listener);
     Assert.assertTrue(testExtractor.getExtractorProvider() instanceof TarGzExtractorProvider);
   }
 

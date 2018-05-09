@@ -47,10 +47,10 @@ final class InstallerFactory {
    * @param progressListener listener on installer script output
    * @return a {@link Installer} instance.
    */
-  Installer<? extends InstallScriptProvider> newInstaller(
+  Installer newInstaller(
       Path installedSdkRoot, ProgressListener progressListener, ConsoleListener consoleListener) {
 
-    return new Installer<>(
+    return new Installer(
         installedSdkRoot,
         getInstallScriptProvider(),
         usageReporting,

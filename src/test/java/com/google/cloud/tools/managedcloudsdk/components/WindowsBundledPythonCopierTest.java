@@ -29,13 +29,16 @@ import java.util.Arrays;
 import java.util.Map;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class WindowsBundledPythonCopierTest {
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -43,9 +46,8 @@ public class WindowsBundledPythonCopierTest {
   @Mock private CommandCaller mockCommandCaller;
   private Path fakeGcloud;
 
-  public WindowsBundledPythonCopierTest()
-      throws InterruptedException, CommandExitException, CommandExecutionException {
-    MockitoAnnotations.initMocks(this);
+  @Before
+  public void setUp() throws InterruptedException, CommandExitException, CommandExecutionException {
     fakeGcloud = Paths.get("my/path/to/fake-gcloud");
     Mockito.when(
             mockCommandCaller.call(

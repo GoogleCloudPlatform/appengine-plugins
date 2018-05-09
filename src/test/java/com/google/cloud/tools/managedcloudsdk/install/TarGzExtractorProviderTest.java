@@ -22,22 +22,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TarGzExtractorProviderTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
   @Mock private ProgressListener mockProgressListener;
-
-  @Before
-  public void initMocks() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   @Test
   public void testCall() throws Exception {

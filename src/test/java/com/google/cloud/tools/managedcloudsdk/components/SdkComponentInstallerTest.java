@@ -28,11 +28,13 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /** Tests for {@link SdkComponentInstaller} */
+@RunWith(MockitoJUnitRunner.class)
 public class SdkComponentInstallerTest {
 
   @Mock private ConsoleListener mockConsoleListener;
@@ -47,7 +49,6 @@ public class SdkComponentInstallerTest {
   @Before
   public void setUpMocks()
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    MockitoAnnotations.initMocks(this);
     fakeGcloud = Paths.get("my/path/to/fake-gcloud");
     Mockito.when(mockBundledPythonCopier.copyPython()).thenReturn(mockPythonEnv);
   }

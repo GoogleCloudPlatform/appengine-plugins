@@ -27,11 +27,13 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /** Tests for ProcessExecutor */
+@RunWith(MockitoJUnitRunner.class)
 public class ProcessExecutorTest {
 
   @Mock private ProcessExecutor.ProcessBuilderFactory mockProcessBuilderFactory;
@@ -44,8 +46,6 @@ public class ProcessExecutorTest {
 
   @Before
   public void setup() throws IOException, InterruptedException {
-    MockitoAnnotations.initMocks(this);
-
     Mockito.when(mockProcessBuilderFactory.createProcessBuilder()).thenReturn(mockProcessBuilder);
     Mockito.when(mockProcessBuilder.start()).thenReturn(mockProcess);
     Mockito.when(mockProcess.waitFor()).thenReturn(0);

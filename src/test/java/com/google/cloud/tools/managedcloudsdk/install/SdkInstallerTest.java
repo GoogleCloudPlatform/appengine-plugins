@@ -29,13 +29,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 /** Tests for {@link SdkInstaller} */
+@RunWith(MockitoJUnitRunner.class)
 public class SdkInstallerTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
@@ -47,18 +49,15 @@ public class SdkInstallerTest {
   @Mock private DownloaderFactory successfulDownloaderFactory;
   @Mock private Downloader successfulDownloader;
   @Mock private ExtractorFactory successfulLatestExtractorFactory;
-  @Mock private Extractor<ExtractorProvider> successfulLatestExtractor;
+  @Mock private Extractor successfulLatestExtractor;
   @Mock private ExtractorFactory successfulVersionedExtractorFactory;
-  @Mock private Extractor<ExtractorProvider> successfulVersionedExtractor;
+  @Mock private Extractor successfulVersionedExtractor;
   @Mock private InstallerFactory successfulInstallerFactory;
-  @Mock private Installer<InstallScriptProvider> successfulInstaller;
+  @Mock private Installer successfulInstaller;
 
   @Mock private DownloaderFactory failureDownloaderFactory;
-  @Mock private Downloader failureDownloader;
   @Mock private ExtractorFactory failureExtractorFactory;
-  @Mock private Extractor<ExtractorProvider> failureExtractor;
   @Mock private InstallerFactory failureInstallerFactory;
-  @Mock private Installer<InstallScriptProvider> failureInstaller;
 
   private FileResourceProvider fakeFileResourceProvider;
   private URL fakeArchiveSource;
@@ -72,8 +71,6 @@ public class SdkInstallerTest {
   public void setUpMocksAndFakes()
       throws IOException, InterruptedException, UnknownArchiveTypeException, CommandExitException,
           CommandExecutionException {
-    MockitoAnnotations.initMocks(this);
-
     Path managedSdkRoot = testDir.newFolder("managed-sdk-test-home").toPath();
     fakeArchiveSource = new URL("file:///some/fake/url");
     fakeArchiveDestination = managedSdkRoot.resolve("test-downloads");
@@ -96,58 +93,50 @@ public class SdkInstallerTest {
     Mockito.when(progressListener.newChild(Mockito.any(Long.class))).thenReturn(progressListener);
 
     // SUCCESS MOCKS
-    Mockito.when(
-            successfulDownloaderFactory.newDownloader(
-                fakeArchiveSource, fakeArchiveDestination, progressListener))
-        .thenReturn(successfulDownloader);
+    Mockito.doReturn(successfulDownloader)
+        .when(successfulDownloaderFactory)
+        .newDownloader(fakeArchiveSource, fakeArchiveDestination, progressListener);
     Mockito.doAnswer(createPathAnswer(fakeArchiveDestination, false))
         .when(successfulDownloader)
         .download();
 
     // A "LATEST" extractor will result in a cloud sdk home with no gcloud file until install
-    Mockito.<Extractor<? extends ExtractorProvider>>when(
-            successfulLatestExtractorFactory.newExtractor(
-                fakeArchiveDestination, fakeArchiveExtractionDestination, progressListener))
-        .thenReturn(successfulLatestExtractor);
+    Mockito.doReturn(successfulLatestExtractor)
+        .when(successfulLatestExtractorFactory)
+        .newExtractor(fakeArchiveDestination, fakeArchiveExtractionDestination, progressListener);
     Mockito.doAnswer(
             createPathAnswer(fakeArchiveExtractionDestination.resolve("google-cloud-sdk"), true))
         .when(successfulLatestExtractor)
         .extract();
 
     // A "versioned" extractor will result in a gcloud file
-    Mockito.<Extractor<? extends ExtractorProvider>>when(
-            successfulVersionedExtractorFactory.newExtractor(
-                fakeArchiveDestination, fakeArchiveExtractionDestination, progressListener))
-        .thenReturn(successfulVersionedExtractor);
+    Mockito.doReturn(successfulVersionedExtractor)
+        .when(successfulVersionedExtractorFactory)
+        .newExtractor(fakeArchiveDestination, fakeArchiveExtractionDestination, progressListener);
     Mockito.doAnswer(createPathAnswer(fakeGcloud, false))
         .when(successfulVersionedExtractor)
         .extract();
 
-    Mockito.<Installer<? extends InstallScriptProvider>>when(
-            successfulInstallerFactory.newInstaller(fakeSdkHome, progressListener, consoleListener))
-        .thenReturn(successfulInstaller);
+    Mockito.doReturn(successfulInstaller)
+        .when(successfulInstallerFactory)
+        .newInstaller(fakeSdkHome, progressListener, consoleListener);
     Mockito.doAnswer(createPathAnswer(fakeGcloud, false)).when(successfulInstaller).install();
 
-    // FAIL MOCKS
-    Mockito.when(
-            failureDownloaderFactory.newDownloader(
-                fakeArchiveSource, fakeArchiveDestination, progressListener))
-        .thenReturn(failureDownloader);
-    Mockito.doNothing().when(failureDownloader).download();
+    // FAIL (NO-OP) MOCKS
+    Mockito.doReturn(Mockito.mock(Downloader.class))
+        .when(failureDownloaderFactory)
+        .newDownloader(fakeArchiveSource, fakeArchiveDestination, progressListener);
 
-    Mockito.<Extractor<? extends ExtractorProvider>>when(
-            failureExtractorFactory.newExtractor(
-                fakeArchiveDestination, fakeArchiveExtractionDestination, progressListener))
-        .thenReturn(failureExtractor);
-    Mockito.doNothing().when(failureExtractor).extract();
+    Mockito.doReturn(Mockito.mock(Extractor.class))
+        .when(failureExtractorFactory)
+        .newExtractor(fakeArchiveDestination, fakeArchiveExtractionDestination, progressListener);
 
-    Mockito.<Installer<? extends InstallScriptProvider>>when(
-            failureInstallerFactory.newInstaller(fakeSdkHome, progressListener, consoleListener))
-        .thenReturn(failureInstaller);
-    Mockito.doNothing().when(failureInstaller).install();
+    Mockito.doReturn(Mockito.mock(Installer.class))
+        .when(failureInstallerFactory)
+        .newInstaller(fakeSdkHome, progressListener, consoleListener);
   }
 
-  private Answer<Void> createPathAnswer(final Path pathToCreate, final boolean isDirectory) {
+  private Answer<Void> createPathAnswer(Path pathToCreate, boolean isDirectory) {
     return new Answer<Void>() {
       @Override
       public Void answer(InvocationOnMock invocation) throws Throwable {

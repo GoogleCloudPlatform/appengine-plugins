@@ -17,21 +17,17 @@
 package com.google.cloud.tools.managedcloudsdk;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ChildProgressListenerTest {
 
-  @Mock ProgressListener mockParent;
-
-  @Before
-  public void initMocks() {
-    MockitoAnnotations.initMocks(this);
-  }
+  @Mock private ProgressListener mockParent;
 
   @Test
   public void testChildProgressListener_normalUse() {

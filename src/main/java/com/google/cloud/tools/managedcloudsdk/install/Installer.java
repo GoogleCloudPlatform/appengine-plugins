@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 /** Installer for running install scripts in a Cloud SDK download. */
-final class Installer<T extends InstallScriptProvider> {
+final class Installer {
 
   private final Path installedSdkRoot;
   private final InstallScriptProvider installScriptProvider;

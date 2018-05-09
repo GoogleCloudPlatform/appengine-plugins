@@ -22,13 +22,14 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.concurrent.Callable;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class AsyncByteConsumerTest {
 
   private static final String TEST_STRING = "test line1\ntest line2\n";
@@ -38,11 +39,6 @@ public class AsyncByteConsumerTest {
   @Mock private ByteHandler mockByteHandler;
   @Mock private InputStream mockInputStream;
   @Mock private SettableFuture<String> mockFuture;
-
-  @Before
-  public void setupMocks() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   @Test
   public void testHandleStream() {

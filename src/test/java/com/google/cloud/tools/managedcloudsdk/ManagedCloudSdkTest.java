@@ -130,7 +130,7 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.isUpToDate());
   }
 
-  private static final Path cloudSdkPartialPath =
+  private static final Path CLOUD_SDK_PARTIAL_PATH =
       Paths.get("google-cloud-tools-java").resolve("managed-cloud-sdk");
 
   @Test
@@ -144,7 +144,7 @@ public class ManagedCloudSdkTest {
             fakeProperties,
             ImmutableMap.of("LOCALAPPDATA", localAppData.toString()));
 
-    Assert.assertEquals(localAppData.resolve(cloudSdkPartialPath), windowsPath);
+    Assert.assertEquals(localAppData.resolve(CLOUD_SDK_PARTIAL_PATH), windowsPath);
   }
 
   @Test
@@ -156,14 +156,14 @@ public class ManagedCloudSdkTest {
     Path macPath =
         ManagedCloudSdk.getOsSpecificManagedSdkHome(
             OsInfo.Name.MAC, fakeProperties, Collections.<String, String>emptyMap());
-    Assert.assertEquals(expectedPath.resolve(cloudSdkPartialPath), macPath);
+    Assert.assertEquals(expectedPath.resolve(CLOUD_SDK_PARTIAL_PATH), macPath);
   }
 
   @Test
   public void testGetOsSpecificManagedSdk_linuxStandard() {
     Path userHome = tempDir.getRoot().toPath();
     Properties fakeProperties = getFakeProperties(userHome.toString());
-    Path expectedPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
+    Path expectedPath = userHome.resolve(".cache").resolve(CLOUD_SDK_PARTIAL_PATH);
 
     Path linuxPath =
         ManagedCloudSdk.getOsSpecificManagedSdkHome(
@@ -175,7 +175,7 @@ public class ManagedCloudSdkTest {
   public void testGetOsSpecificManagedSdk_windowsFallbackLocalAppDataEnvNotSet() {
     Path userHome = tempDir.getRoot().toPath();
     Properties fakeProperties = getFakeProperties(userHome.toString());
-    Path expectedPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
+    Path expectedPath = userHome.resolve(".cache").resolve(CLOUD_SDK_PARTIAL_PATH);
 
     Path windowsPath =
         ManagedCloudSdk.getOsSpecificManagedSdkHome(
@@ -189,7 +189,7 @@ public class ManagedCloudSdkTest {
     Path userHome = tempDir.getRoot().toPath();
     Path localAppData = userHome.resolve("AppData").resolve("Local"); // not created
     Properties fakeProperties = getFakeProperties(userHome.toString());
-    Path expectedPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
+    Path expectedPath = userHome.resolve(".cache").resolve(CLOUD_SDK_PARTIAL_PATH);
 
     Path windowsPath =
         ManagedCloudSdk.getOsSpecificManagedSdkHome(
@@ -204,7 +204,7 @@ public class ManagedCloudSdkTest {
   public void testGetOsSpecificManagedSdk_macFallback() {
     Path userHome = tempDir.getRoot().toPath();
     Properties fakeProperties = getFakeProperties(userHome.toString());
-    Path expectedPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
+    Path expectedPath = userHome.resolve(".cache").resolve(CLOUD_SDK_PARTIAL_PATH);
 
     Path macPath =
         ManagedCloudSdk.getOsSpecificManagedSdkHome(
@@ -218,7 +218,7 @@ public class ManagedCloudSdkTest {
     return properties;
   }
 
-  public void downgradeCloudSdk(ManagedCloudSdk testSdk)
+  private void downgradeCloudSdk(ManagedCloudSdk testSdk)
       throws InterruptedException, CommandExitException, CommandExecutionException,
           UnsupportedOsException {
     Map<String, String> env = null;

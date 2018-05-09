@@ -31,11 +31,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /** Tests for {@link CommandRunner} */
+@RunWith(MockitoJUnitRunner.class)
 public class CommandRunnerTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
@@ -54,8 +56,6 @@ public class CommandRunnerTest {
 
   @Before
   public void setUp() throws IOException, InterruptedException {
-    MockitoAnnotations.initMocks(this);
-
     fakeCommand = Arrays.asList("gcloud", "test", "--option");
     fakeWorkingDirectory = testDir.getRoot().toPath();
     fakeEnvironment = ImmutableMap.of("testKey", "testValue");

@@ -60,7 +60,7 @@ final class ZipExtractorProvider implements ExtractorProvider {
       Enumeration<ZipArchiveEntry> zipEntries = zipFile.getEntries();
       while (zipEntries.hasMoreElements()) {
         ZipArchiveEntry entry = zipEntries.nextElement();
-        final Path entryTarget = destination.resolve(entry.getName());
+        Path entryTarget = destination.resolve(entry.getName());
 
         progressListener.update(1);
         logger.fine(entryTarget.toString());
