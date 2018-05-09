@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,9 +52,7 @@ public class AppEngineDescriptor {
    * @throws SAXException malformed XML
    */
   public static AppEngineDescriptor parse(InputStream in) throws IOException, SAXException {
-    if (in == null) {
-      throw new NullPointerException("Null input");
-    }
+    Preconditions.checkNotNull(in, "Null input");
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilderFactory.setNamespaceAware(true);
