@@ -27,7 +27,7 @@ public class CommandExitException extends Exception {
    * Create a new exception.
    *
    * @param exitCode the process exit code
-   * @param errorLog additional loggable error information, can be {@code null}
+   * @param errorLog additional loggable error information
    */
   public CommandExitException(int exitCode, String errorLog) {
     super("Process failed with exit code: " + exitCode);
