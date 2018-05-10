@@ -19,7 +19,7 @@ package com.google.cloud.tools.appengine.cloudsdk.process;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.WaitingProcessOutputLineListener;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Charsets;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -88,7 +88,7 @@ public class LegacyProcessHandler implements ProcessHandler {
   }
 
   private Thread handleStdOut(Process process) {
-    final Scanner stdOut = new Scanner(process.getInputStream(), Charsets.UTF_8.name());
+    final Scanner stdOut = new Scanner(process.getInputStream(), StandardCharsets.UTF_8.name());
     Thread stdOutThread =
         new Thread("standard-out") {
           @Override
@@ -108,7 +108,7 @@ public class LegacyProcessHandler implements ProcessHandler {
   }
 
   private Thread handleErrOut(Process process) {
-    final Scanner stdErr = new Scanner(process.getErrorStream(), Charsets.UTF_8.name());
+    final Scanner stdErr = new Scanner(process.getErrorStream(), StandardCharsets.UTF_8.name());
     Thread stdErrThread =
         new Thread("standard-err") {
           @Override

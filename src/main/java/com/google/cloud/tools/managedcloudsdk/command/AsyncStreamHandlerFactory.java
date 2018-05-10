@@ -18,7 +18,6 @@ package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
-import com.google.common.base.Charsets;
 
 /** Factory to create default implementations of {@link AsyncStreamHandler}. */
 class AsyncStreamHandlerFactory {
@@ -41,7 +40,7 @@ class AsyncStreamHandlerFactory {
 
     @Override
     public void bytes(byte[] bytes, int length) {
-      consoleListener.console(new String(bytes, 0, length, Charsets.UTF_8));
+      consoleListener.console(new String(bytes, 0, length, StandardCharsets.UTF_8));
     }
 
     @Override

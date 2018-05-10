@@ -21,10 +21,10 @@ import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
 import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.AppCfgArgs;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
-import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -85,7 +85,7 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
       if (config.getRuntime() != null && config.getRuntime().equals("java")) {
         File appYaml = new File(config.getStagingDirectory(), "app.yaml");
         com.google.common.io.Files.append(
-            "\nruntime_config:\n  jdk: openjdk8\n", appYaml, Charsets.UTF_8);
+            "\nruntime_config:\n  jdk: openjdk8\n", appYaml, StandardCharsets.UTF_8);
       }
 
     } catch (IOException | ProcessHandlerException e) {
