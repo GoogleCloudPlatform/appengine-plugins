@@ -17,6 +17,8 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Splitter;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -85,7 +87,7 @@ public class PathResolver implements CloudSdkResolver {
     List<String> possiblePaths = new ArrayList<>();
 
     if (pathEnv != null) {
-      for (String path : pathEnv.split(File.pathSeparator)) {
+      for (String path : Splitter.on(File.pathSeparator).split(pathEnv)) {
         // Windows sometimes quotes paths so we need to strip these.
         // However quotes are legal in Unix paths.
         if (IS_WINDOWS) {

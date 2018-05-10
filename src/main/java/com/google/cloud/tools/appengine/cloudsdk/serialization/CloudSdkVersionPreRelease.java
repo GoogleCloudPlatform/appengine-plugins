@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRelease>
     this.segments = new ArrayList<>();
     this.preRelease = preRelease;
 
-    String[] segmentParts = preRelease.split("\\.");
+    Iterable<String> segmentParts = Splitter.on('.').split(preRelease);
     for (String segment : segmentParts) {
       segments.add(new PreReleaseSegment(segment));
     }
