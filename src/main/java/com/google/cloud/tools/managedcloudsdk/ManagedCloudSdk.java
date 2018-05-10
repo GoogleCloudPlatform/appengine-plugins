@@ -28,7 +28,6 @@ import com.google.cloud.tools.managedcloudsdk.components.SdkUpdater;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstaller;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
