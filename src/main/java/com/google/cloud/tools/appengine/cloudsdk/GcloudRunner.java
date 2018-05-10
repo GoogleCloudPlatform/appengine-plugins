@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 class GcloudRunner {
 
@@ -62,7 +63,7 @@ class GcloudRunner {
     this.processHandler = processHandler;
   }
 
-  void run(List<String> arguments, File workingDirectory)
+  void run(List<String> arguments, @Nullable File workingDirectory)
       throws ProcessHandlerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
           CloudSdkVersionFileException, IOException {
 
