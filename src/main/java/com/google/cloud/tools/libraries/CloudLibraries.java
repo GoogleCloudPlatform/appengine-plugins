@@ -18,7 +18,6 @@ package com.google.cloud.tools.libraries;
 
 import com.google.cloud.tools.libraries.json.CloudLibrary;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -26,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /** Returns helpful metadata for supported Google Cloud libraries. */
@@ -57,7 +57,7 @@ public final class CloudLibraries {
         throw new AssertionError("Resource not found: " + librariesJsonPath);
       }
 
-      InputStreamReader reader = new InputStreamReader(inputStream, Charsets.UTF_8);
+      InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
       JsonReader jsonReader = new JsonReader(reader);
       Type listType = new TypeToken<List<CloudLibrary>>() {}.getType();
       return new Gson().fromJson(jsonReader, listType);

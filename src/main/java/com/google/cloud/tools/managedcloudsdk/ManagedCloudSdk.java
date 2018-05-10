@@ -27,8 +27,8 @@ import com.google.cloud.tools.managedcloudsdk.components.SdkComponentInstaller;
 import com.google.cloud.tools.managedcloudsdk.components.SdkUpdater;
 import com.google.cloud.tools.managedcloudsdk.install.SdkInstaller;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Charsets;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -81,7 +81,8 @@ public class ManagedCloudSdk {
     if (version != Version.LATEST) {
       try {
         String versionFileContents =
-            new String(Files.readAllBytes(getSdkHome().resolve("VERSION")), Charsets.UTF_8).trim();
+            new String(Files.readAllBytes(getSdkHome().resolve("VERSION")), StandardCharsets.UTF_8)
+                .trim();
         if (!versionFileContents.equals(version.getVersion())) {
           throw new ManagedSdkVersionMismatchException(
               "Installed sdk version: "
