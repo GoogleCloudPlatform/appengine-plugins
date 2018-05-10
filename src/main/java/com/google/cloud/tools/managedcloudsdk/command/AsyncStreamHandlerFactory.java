@@ -16,10 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import java.nio.charset.StandardCharsets;
-
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
+import java.nio.charset.StandardCharsets;
 
 /** Factory to create default implementations of {@link AsyncStreamHandler}. */
 class AsyncStreamHandlerFactory {
