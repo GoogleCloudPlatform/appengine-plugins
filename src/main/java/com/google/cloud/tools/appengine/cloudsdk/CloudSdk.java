@@ -121,7 +121,11 @@ public class CloudSdk {
    * @return the directory containing JAR files bundled with the Cloud SDK
    */
   public Path getAppEngineSdkForJavaPath() {
-    return getPath().resolve(APPENGINE_SDK_FOR_JAVA_PATH);
+    Path resolved = getPath().resolve(APPENGINE_SDK_FOR_JAVA_PATH);
+    if (resolved == null) {
+      throw new RuntimeException("Misconfigured App Engine SDK for Java");
+    }
+    return resolved;
   }
 
   @VisibleForTesting
@@ -240,10 +244,12 @@ public class CloudSdk {
     }
   }
 
-  // todo this really shouldn't return null
-  @Nullable
   public Path getAppEngineToolsJar() {
-    return jarLocations.get(JAVA_TOOLS_JAR);
+    Path path = jarLocations.get(JAVA_TOOLS_JAR);
+    if (path == null) {
+      throw new RuntimeException("Misconfigured Cloud SDK");
+    }
+    return path;
   }
 
   public static class Builder {
