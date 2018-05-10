@@ -41,7 +41,7 @@ class AsyncByteConsumer implements AsyncStreamSaver {
   /** Create a new instance. */
   AsyncByteConsumer(ByteHandler byteHandler) {
     this(
-        byteHandler,
+        Preconditions.checkNotNull(byteHandler),
         MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()),
         SettableFuture.<String>create());
   }
@@ -51,7 +51,7 @@ class AsyncByteConsumer implements AsyncStreamSaver {
       ByteHandler byteHandler,
       ListeningExecutorService executorService,
       SettableFuture<String> result) {
-    this.byteHandler = Preconditions.checkNotNull(byteHandler);
+    this.byteHandler = byteHandler;
     this.executorService = executorService;
     this.result = result;
   }

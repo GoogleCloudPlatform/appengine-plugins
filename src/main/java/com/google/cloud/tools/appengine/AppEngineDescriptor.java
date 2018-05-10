@@ -18,9 +18,9 @@ package com.google.cloud.tools.appengine;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -117,18 +117,16 @@ public class AppEngineDescriptor {
    * </env-variables>
    * }</pre>
    *
-   * <p>This will construct a map of the form {[key, val], ...}.
+   * <p>This will construct a map of the form {[key, value], ...}.
    *
    * @return a map representing the environment variable settings in the appengine-web.xml
    */
-  // todo this should probably return an empty map instead per Effective Java
-  @Nullable
   public Map<String, String> getEnvironment() throws AppEngineException {
     Node environmentParentNode = getNode(document, "appengine-web-app", "env-variables");
     if (environmentParentNode != null) {
       return getAttributeMap(environmentParentNode, "env-var", "name", "value");
     }
-    return null;
+    return new HashMap<>();
   }
 
   @Nullable
@@ -150,7 +148,7 @@ public class AppEngineDescriptor {
       Node parent, String nodeName, String keyAttributeName, String valueAttributeName)
       throws AppEngineException {
 
-    Map<String, String> nameValueAttributeMap = Maps.newHashMap();
+    Map<String, String> nameValueAttributeMap = new HashMap<>();
     if (parent.hasChildNodes()) {
       for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
         Node child = parent.getChildNodes().item(i);

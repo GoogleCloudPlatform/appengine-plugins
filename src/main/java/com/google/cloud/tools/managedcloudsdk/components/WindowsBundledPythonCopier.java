@@ -61,7 +61,7 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
     return ImmutableMap.of("CLOUDSDK_PYTHON", pythonExePath);
   }
 
-  // WARNING: do not turn this into a lambda. JavaNCSS can't handle that.
+  // WARNING: do not turn this into a lambda. Cobertura and JavaNCSS can't handle that.
   private static class PythonDeleter implements Runnable {
 
     private final String pythonExePath;

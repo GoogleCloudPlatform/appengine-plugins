@@ -263,10 +263,8 @@ public class CloudSdk {
      *
      * @param sdkPath the root path for the Cloud SDK
      */
-    public Builder sdkPath(@Nullable Path sdkPath) {
-      if (sdkPath != null) {
-        this.sdkPath = sdkPath;
-      }
+    public Builder sdkPath(Path sdkPath) {
+      this.sdkPath = sdkPath;
       return this;
     }
 

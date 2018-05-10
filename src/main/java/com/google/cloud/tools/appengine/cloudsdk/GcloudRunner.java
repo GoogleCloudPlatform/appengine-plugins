@@ -63,6 +63,11 @@ class GcloudRunner {
     this.processHandler = processHandler;
   }
 
+  /**
+   * Launch an external process that runs gcloud.
+   *
+   * @param workingDirectory if null then the working directory of current Java process
+   */
   void run(List<String> arguments, @Nullable File workingDirectory)
       throws ProcessHandlerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
           CloudSdkVersionFileException, IOException {
