@@ -23,6 +23,8 @@ import com.google.common.base.Charsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Process handler that mimics the previous behavior of ProcessRunner. */
 public class LegacyProcessHandler implements ProcessHandler {
@@ -141,6 +143,8 @@ public class LegacyProcessHandler implements ProcessHandler {
     }
   }
 
+  private static final Logger logger = Logger.getLogger(LegacyProcessHandler.class.getName());
+
   private void asyncRun(
       final Process process, final Thread stdOutHandler, final Thread stdErrHandler)
       throws ProcessHandlerException {
@@ -153,8 +157,9 @@ public class LegacyProcessHandler implements ProcessHandler {
             public void run() {
               try {
                 syncRun(process, stdOutHandler, stdErrHandler);
-              } catch (InterruptedException | AppEngineException e) {
-                e.printStackTrace();
+              } catch (InterruptedException | AppEngineException ex) {
+                logger.log(
+                    Level.INFO, "wait-for-process-exit-and-output-handlers exited early", ex);
               }
             }
           };
