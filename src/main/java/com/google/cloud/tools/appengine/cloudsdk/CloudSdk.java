@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -43,7 +42,6 @@ public class CloudSdk {
   public static final CloudSdkVersion MINIMUM_VERSION = new CloudSdkVersion("171.0.0");
 
   private static final Logger logger = Logger.getLogger(CloudSdk.class.getName());
-  private static final Joiner WHITESPACE_JOINER = Joiner.on(" ");
 
   private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
   private static final String GCLOUD = "bin/gcloud";
@@ -58,7 +56,7 @@ public class CloudSdk {
   private final Path sdkPath;
   private final Path javaHomePath;
 
-  private CloudSdk(Path sdkPath, @Nullable Path javaHomePath) {
+  private CloudSdk(Path sdkPath, Path javaHomePath) {
     this.sdkPath = sdkPath;
     this.javaHomePath = javaHomePath;
 
@@ -162,6 +160,7 @@ public class CloudSdk {
    * @param jarName the jar file name. For example, "servlet-api.jar"
    * @return the path in the file system
    */
+  @Nullable
   public Path getJarPath(String jarName) {
     return jarLocations.get(jarName);
   }
@@ -241,13 +240,15 @@ public class CloudSdk {
     }
   }
 
+  // todo this really shouldn't return null
+  @Nullable
   public Path getAppEngineToolsJar() {
     return jarLocations.get(JAVA_TOOLS_JAR);
   }
 
   public static class Builder {
-    private Path sdkPath;
-    private List<CloudSdkResolver> resolvers;
+    @Nullable private Path sdkPath;
+    @Nullable private List<CloudSdkResolver> resolvers;
     private Path javaHomePath = Paths.get(System.getProperty("java.home"));
 
     /**
@@ -255,7 +256,7 @@ public class CloudSdk {
      *
      * @param sdkPath the root path for the Cloud SDK
      */
-    public Builder sdkPath(Path sdkPath) {
+    public Builder sdkPath(@Nullable Path sdkPath) {
       if (sdkPath != null) {
         this.sdkPath = sdkPath;
       }
