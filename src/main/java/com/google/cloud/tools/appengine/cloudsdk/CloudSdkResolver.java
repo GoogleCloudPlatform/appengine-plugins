@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import java.nio.file.Path;
+import javax.annotation.Nullable;
 
 /** Resolve paths to find the CloudSdk. */
 public interface CloudSdkResolver {
@@ -26,6 +27,7 @@ public interface CloudSdkResolver {
    *
    * @return path to Google Cloud SDK or null
    */
+  @Nullable
   Path getCloudSdkPath();
 
   /** Provides a rank for ordering a set of {@link CloudSdkResolver}s. */
