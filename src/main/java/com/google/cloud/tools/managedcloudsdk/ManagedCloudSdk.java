@@ -199,11 +199,15 @@ public class ManagedCloudSdk {
   static Path getOsSpecificManagedSdkHome(
       OsInfo.Name osName, Properties systemProperties, Map<String, String> environment) {
     Path userHome = Paths.get(systemProperties.getProperty("user.home"));
-    Path cloudSdkPartialPath = Paths.get("google", "ct4j-cloud-sdk");
+    Path cloudSdkPartialPath = Paths.get("google-cloud-tools-java", "managed-cloud-sdk");
     Path xdgPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
 
     switch (osName) {
       case WINDOWS:
+        // Shorter path to mitigate the length limit issue on Windows
+        cloudSdkPartialPath = Paths.get("google", "ct4j-cloud-sdk");
+        xdgPath = userHome.resolve(".cache").resolve(cloudSdkPartialPath);
+
         String localAppDataEnv = environment.get("LOCALAPPDATA");
         if (localAppDataEnv == null || localAppDataEnv.trim().isEmpty()) {
           logger.warning("LOCALAPPDATA environment is invalid or missing");

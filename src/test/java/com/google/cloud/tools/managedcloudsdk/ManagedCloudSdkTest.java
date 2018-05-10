@@ -140,7 +140,9 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.isUpToDate());
   }
 
-  private static final Path CLOUD_SDK_PARTIAL_PATH = Paths.get("google/ct4j-cloud-sdk");
+  private static final Path CLOUD_SDK_PARTIAL_PATH =
+      Paths.get("google-cloud-tools-java/managed-cloud-sdk");
+  private static final Path CLOUD_SDK_PARTIAL_PATH_WINDOWS = Paths.get("google/ct4j-cloud-sdk");
 
   @Test
   public void testGetOsSpecificManagedSdk_windowsStandard() throws IOException {
@@ -151,7 +153,7 @@ public class ManagedCloudSdkTest {
             fakeProperties,
             ImmutableMap.of("LOCALAPPDATA", localAppData.toString()));
 
-    Assert.assertEquals(localAppData.resolve(CLOUD_SDK_PARTIAL_PATH), windowsPath);
+    Assert.assertEquals(localAppData.resolve(CLOUD_SDK_PARTIAL_PATH_WINDOWS), windowsPath);
   }
 
   @Test
@@ -174,7 +176,7 @@ public class ManagedCloudSdkTest {
 
   @Test
   public void testGetOsSpecificManagedSdk_windowsFallbackLocalAppDataEnvNotSet() {
-    Path expectedPath = userHome.resolve(".cache").resolve(CLOUD_SDK_PARTIAL_PATH);
+    Path expectedPath = userHome.resolve(".cache").resolve(CLOUD_SDK_PARTIAL_PATH_WINDOWS);
 
     Path windowsPath =
         ManagedCloudSdk.getOsSpecificManagedSdkHome(OsInfo.Name.WINDOWS, fakeProperties, EMPTY_MAP);
@@ -185,7 +187,7 @@ public class ManagedCloudSdkTest {
   @Test
   public void testGetOsSpecificManagedSdk_windowsFallbackLocalAppDataDoesntExist() {
     Path localAppData = userHome.resolve("AppData").resolve("Local"); // not created
-    Path expectedPath = userHome.resolve(".cache").resolve(CLOUD_SDK_PARTIAL_PATH);
+    Path expectedPath = userHome.resolve(".cache").resolve(CLOUD_SDK_PARTIAL_PATH_WINDOWS);
 
     Path windowsPath =
         ManagedCloudSdk.getOsSpecificManagedSdkHome(
