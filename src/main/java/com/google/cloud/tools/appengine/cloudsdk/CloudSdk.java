@@ -244,6 +244,9 @@ public class CloudSdk {
     }
   }
 
+  /**
+   * Locates appengine-tools-api.jar.
+   */
   public Path getAppEngineToolsJar() {
     Path path = jarLocations.get(JAVA_TOOLS_JAR);
     if (path == null) {
