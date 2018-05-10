@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 class DevAppServerRunner {
   private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
@@ -100,7 +101,7 @@ class DevAppServerRunner {
       List<String> jvmArgs,
       List<String> args,
       Map<String, String> environment,
-      File workingDirectory)
+      @Nullable File workingDirectory)
       throws ProcessHandlerException, AppEngineJavaComponentsNotInstalledException,
           InvalidJavaSdkException, IOException {
     sdk.validateAppEngineJavaComponents();
