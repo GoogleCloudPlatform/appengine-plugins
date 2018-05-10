@@ -22,28 +22,34 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
+import javax.annotation.Nullable;
 
-/** Representation of a CloudSdkComponent. Used for json serialzation/deserialization. */
+/** Representation of a CloudSdkComponent. Used for JSON serialization/deserialization. */
 public class CloudSdkComponent {
 
-  private String id;
-  private String name;
+  @Nullable private String id;
+  @Nullable private String name;
 
   @SerializedName("current_version_string")
+  @Nullable
   private String currentVersion;
 
   @SerializedName("latest_version_string")
+  @Nullable
   private String latestVersion;
 
   @SerializedName("size")
+  @Nullable
   private Integer sizeInBytes;
 
-  private State state;
+  @Nullable private State state;
 
   @SerializedName("is_configuration")
+  @Nullable
   private Boolean isConfiguration;
 
   @SerializedName("is_hidden")
+  @Nullable
   private Boolean isHidden;
 
   private static final Gson gson = new Gson();
@@ -61,6 +67,7 @@ public class CloudSdkComponent {
     return gson.fromJson(jsonList, type);
   }
 
+  @Nullable
   public String getId() {
     return id;
   }
@@ -69,6 +76,7 @@ public class CloudSdkComponent {
     this.id = id;
   }
 
+  @Nullable
   public String getName() {
     return name;
   }
@@ -77,6 +85,7 @@ public class CloudSdkComponent {
     this.name = name;
   }
 
+  @Nullable
   public String getCurrentVersion() {
     return currentVersion;
   }
@@ -85,6 +94,7 @@ public class CloudSdkComponent {
     this.currentVersion = currentVersion;
   }
 
+  @Nullable
   public String getLatestVersion() {
     return latestVersion;
   }
@@ -93,6 +103,7 @@ public class CloudSdkComponent {
     this.latestVersion = latestVersion;
   }
 
+  @Nullable
   public Integer getSizeInBytes() {
     return sizeInBytes;
   }
@@ -101,6 +112,7 @@ public class CloudSdkComponent {
     this.sizeInBytes = sizeInBytes;
   }
 
+  @Nullable
   public Boolean getIsConfiguration() {
     return isConfiguration;
   }
@@ -109,6 +121,7 @@ public class CloudSdkComponent {
     this.isConfiguration = isConfiguration;
   }
 
+  @Nullable
   public Boolean getIsHidden() {
     return isHidden;
   }
@@ -117,6 +130,7 @@ public class CloudSdkComponent {
     this.isHidden = isHidden;
   }
 
+  @Nullable
   public State getState() {
     return state;
   }
@@ -126,12 +140,13 @@ public class CloudSdkComponent {
   }
 
   public static class State {
-    private String name;
+    @Nullable private String name;
 
     public boolean isInstalled() {
       return "Installed".equals(name) || "Update Available".equals(name);
     }
 
+    @Nullable
     public String getName() {
       return name;
     }
