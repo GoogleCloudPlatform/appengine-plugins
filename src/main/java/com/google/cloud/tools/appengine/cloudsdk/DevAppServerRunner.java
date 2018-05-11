@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 class DevAppServerRunner {
   private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
@@ -89,8 +90,10 @@ class DevAppServerRunner {
   /**
    * Uses the process runner to execute the classic Java SDK devappsever command.
    *
+   * @param jvmArgs the arguments to pass to the Java Virtual machine that launches the devappserver
    * @param args the arguments to pass to devappserver
    * @param environment the environment to set on the devappserver process
+   * @param workingDirectory if null then the working directory of current Java process.
    * @throws ProcessHandlerException when process runner encounters an error
    * @throws AppEngineJavaComponentsNotInstalledException Cloud SDK is installed but App Engine Java
    *     components are not
@@ -100,7 +103,7 @@ class DevAppServerRunner {
       List<String> jvmArgs,
       List<String> args,
       Map<String, String> environment,
-      File workingDirectory)
+      @Nullable File workingDirectory)
       throws ProcessHandlerException, AppEngineJavaComponentsNotInstalledException,
           InvalidJavaSdkException, IOException {
     sdk.validateAppEngineJavaComponents();

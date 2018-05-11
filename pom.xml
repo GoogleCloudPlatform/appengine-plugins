@@ -150,6 +150,20 @@
           <source>1.8</source>
           <target>1.8</target>
           <showWarnings>true</showWarnings>
+          <annotationProcessorPaths>
+            <path>
+               <groupId>com.uber.nullaway</groupId>
+               <artifactId>nullaway</artifactId>
+               <version>0.4.4</version>
+            </path>
+          </annotationProcessorPaths>
+          <compilerArgs>
+            <arg>-Xep:NullAway:ERROR</arg>    
+            <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools.appengine,com.google.cloud.tools.libraries,com.google.cloud.tools.managedcloudsdk,com.google.cloud.tools.io,com.google.cloud.tools.project</arg>
+            <arg>-XepOpt:NullAway:UnannotatedSubPackages=com.google.cloud.tools.appengine.api.[a-zA-Z.]*,com.google.cloud.tools.appengine.cloudsdk.[a-zA-Z.]*</arg>
+<arg>-XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock,org.junit.runners.Parameterized</arg>
+<arg>-XepOpt:NullAway:ExcludedClasses=com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1Test,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2Test,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest</arg>
+          </compilerArgs>
         </configuration>
         <dependencies>
           <dependency>

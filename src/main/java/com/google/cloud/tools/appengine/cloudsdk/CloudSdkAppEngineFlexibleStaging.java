@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.parser.ParserException;
 import org.yaml.snakeyaml.scanner.ScannerException;
@@ -74,6 +75,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   }
 
   @VisibleForTesting
+  @Nullable
   static String findRuntime(StageFlexibleConfiguration config)
       throws IOException, AppEngineException {
     try {
@@ -87,7 +89,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
 
   @VisibleForTesting
   static void copyDockerContext(
-      StageFlexibleConfiguration config, CopyService copyService, String runtime)
+      StageFlexibleConfiguration config, CopyService copyService, @Nullable String runtime)
       throws IOException, AppEngineException {
     if (config.getDockerDirectory() != null && config.getDockerDirectory().exists()) {
       if ("java".equals(runtime)) {

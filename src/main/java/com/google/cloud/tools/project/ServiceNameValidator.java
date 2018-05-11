@@ -17,6 +17,7 @@
 package com.google.cloud.tools.project;
 
 import com.google.common.annotations.Beta;
+import javax.annotation.Nullable;
 
 /**
  * Each service and each version must have a name. A name can contain numbers, letters, and hyphens.
@@ -29,9 +30,9 @@ public class ServiceNameValidator {
    * Validates an App Engine service name.
    *
    * @param name App Engine service (a.k.a. module) name
-   * @return true if and only if the name meets the constraints for servcie names; false otherwise
+   * @return true if and only if the name meets the constraints for service names; false otherwise
    */
-  public static boolean validate(String name) {
+  public static boolean validate(@Nullable String name) {
     if (name == null) {
       return false;
     } else if (name.isEmpty()) {

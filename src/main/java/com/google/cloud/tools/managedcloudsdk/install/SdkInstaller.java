@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 /** Install an SDK by downloading, extracting and if necessary installing. */
 public class SdkInstaller {
@@ -37,14 +38,14 @@ public class SdkInstaller {
   private final FileResourceProviderFactory fileResourceProviderFactory;
   private final ExtractorFactory extractorFactory;
   private final DownloaderFactory downloaderFactory;
-  private final InstallerFactory installerFactory;
+  @Nullable private final InstallerFactory installerFactory;
 
   /** Use {@link #newInstaller} to instantiate. */
   SdkInstaller(
       FileResourceProviderFactory fileResourceProviderFactory,
       DownloaderFactory downloaderFactory,
       ExtractorFactory extractorFactory,
-      InstallerFactory installerFactory) {
+      @Nullable InstallerFactory installerFactory) {
     this.fileResourceProviderFactory = fileResourceProviderFactory;
     this.downloaderFactory = downloaderFactory;
     this.extractorFactory = extractorFactory;
@@ -79,12 +80,12 @@ public class SdkInstaller {
     progressListener.start("Installing Cloud SDK", installerFactory != null ? 300 : 200);
 
     // download and verify
-    Downloader x =
+    Downloader downloader =
         downloaderFactory.newDownloader(
             fileResourceProvider.getArchiveSource(),
             fileResourceProvider.getArchiveDestination(),
             progressListener.newChild(100));
-    x.download();
+    downloader.download();
     if (!Files.isRegularFile(fileResourceProvider.getArchiveDestination())) {
       throw new SdkInstallerException(
           "Download succeeded but valid archive not found at "
@@ -134,12 +135,12 @@ public class SdkInstaller {
   /**
    * Configure and create a new Installer instance.
    *
-   * @param managedSdkDirectory Home directory of google cloud java managed cloud sdks
-   * @param version Version of the cloud sdk we want to install
-   * @param osInfo Target operating system for installation
-   * @param userAgentString User agent string for https requests
-   * @param usageReporting Enable client side usage reporting on gcloud
-   * @return a new configured Cloud sdk Installer
+   * @param managedSdkDirectory home directory of google cloud java managed cloud SDKs
+   * @param version version of the Cloud SDK we want to install
+   * @param osInfo target operating system for installation
+   * @param userAgentString user agent string for https requests
+   * @param usageReporting enable client side usage reporting on gcloud
+   * @return a new configured Cloud SDK Installer
    */
   public static SdkInstaller newInstaller(
       Path managedSdkDirectory,

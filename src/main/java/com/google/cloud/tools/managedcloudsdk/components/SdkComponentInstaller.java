@@ -23,6 +23,8 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -34,13 +36,14 @@ public class SdkComponentInstaller {
 
   private final Path gcloud;
   private final CommandRunner commandRunner;
-  private final BundledPythonCopier pythonCopier;
+  @Nullable private final BundledPythonCopier pythonCopier;
 
   /** Use {@link #newComponentInstaller} to instantiate. */
+  @VisibleForTesting
   SdkComponentInstaller(
       Path gcloud, CommandRunner commandRunner, @Nullable BundledPythonCopier pythonCopier) {
-    this.gcloud = gcloud;
-    this.commandRunner = commandRunner;
+    this.gcloud = Preconditions.checkNotNull(gcloud);
+    this.commandRunner = Preconditions.checkNotNull(commandRunner);
     this.pythonCopier = pythonCopier;
   }
 
@@ -71,8 +74,8 @@ public class SdkComponentInstaller {
   /**
    * Configure and create a new Component Installer instance.
    *
-   * @param gcloud full path to gcloud in the cloud sdk
-   * @return a new configured Cloud Sdk component installer
+   * @param gcloud full path to gcloud in the Cloud SDK
+   * @return a new configured Cloud SDK component installer
    */
   public static SdkComponentInstaller newComponentInstaller(OsInfo.Name osName, Path gcloud) {
     switch (osName) {
