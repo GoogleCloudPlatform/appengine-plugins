@@ -17,16 +17,18 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import java.io.File;
+import javax.annotation.Nullable;
 
 /** Plain Java bean implementation of {@link StageFlexibleConfiguration}. */
 public class DefaultStageFlexibleConfiguration implements StageFlexibleConfiguration {
 
-  private File appEngineDirectory;
-  private File dockerDirectory;
-  private File artifact;
-  private File stagingDirectory;
+  @Nullable private File appEngineDirectory;
+  @Nullable private File dockerDirectory;
+  @Nullable private File artifact;
+  @Nullable private File stagingDirectory;
 
   @Override
+  @Nullable
   public File getAppEngineDirectory() {
     return appEngineDirectory;
   }
@@ -36,6 +38,7 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   }
 
   @Override
+  @Nullable
   public File getDockerDirectory() {
     return dockerDirectory;
   }
@@ -45,6 +48,7 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   }
 
   @Override
+  @Nullable
   public File getArtifact() {
     return artifact;
   }
@@ -54,6 +58,7 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   }
 
   @Override
+  @Nullable
   public File getStagingDirectory() {
     return stagingDirectory;
   }

@@ -16,8 +16,11 @@
 
 package com.google.cloud.tools.appengine.api;
 
+import javax.annotation.Nullable;
+
 /** Common configuration elements. */
 public interface Configuration {
 
+  @Nullable
   String getProject();
 }

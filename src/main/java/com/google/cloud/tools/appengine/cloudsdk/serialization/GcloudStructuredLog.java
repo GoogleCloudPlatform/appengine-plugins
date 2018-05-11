@@ -20,6 +20,7 @@ import com.google.cloud.tools.appengine.cloudsdk.JsonParseException;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import javax.annotation.Nullable;
 
 /** Holds de-serialized JSON of a single instance of structured log output from {@code gcloud}. */
 public class GcloudStructuredLog {
@@ -45,15 +46,16 @@ public class GcloudStructuredLog {
 
   // Don't change the field names because Gson uses them for automatic de-serialization.
   private String version;
-  private String verbosity;
+  @Nullable private String verbosity;
   private String timestamp;
   private String message;
-  private Error error;
+  @Nullable private Error error;
 
   public String getVersion() {
     return version;
   }
 
+  @Nullable
   public String getVerbosity() {
     return verbosity;
   }
@@ -66,6 +68,7 @@ public class GcloudStructuredLog {
     return message;
   }
 
+  @Nullable
   public Error getError() {
     return error;
   }

@@ -17,31 +17,44 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import java.io.File;
+import javax.annotation.Nullable;
 
 /** Configuration for {@link AppEngineStandardStaging#stageStandard(StageStandardConfiguration)}. */
 public interface StageStandardConfiguration {
 
+  @Nullable
   File getSourceDirectory();
 
+  @Nullable
   File getStagingDirectory();
 
+  @Nullable
   File getDockerfile();
 
+  @Nullable
   Boolean getEnableQuickstart();
 
+  @Nullable
   Boolean getDisableUpdateCheck();
 
+  @Nullable
   Boolean getEnableJarSplitting();
 
+  @Nullable
   String getJarSplittingExcludes();
 
+  @Nullable
   String getCompileEncoding();
 
+  @Nullable
   Boolean getDeleteJsps();
 
+  @Nullable
   Boolean getEnableJarClasses();
 
+  @Nullable
   Boolean getDisableJarJsps();
 
+  @Nullable
   String getRuntime();
 }

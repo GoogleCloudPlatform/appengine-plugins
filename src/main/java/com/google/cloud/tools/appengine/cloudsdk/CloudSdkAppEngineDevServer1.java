@@ -192,7 +192,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   }
 
   @VisibleForTesting
-  void checkAndWarnIgnored(Object propertyToIgnore, String propertyName) {
+  void checkAndWarnIgnored(@Nullable Object propertyToIgnore, String propertyName) {
     if (propertyToIgnore != null) {
       log.warning(
           propertyName
