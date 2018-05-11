@@ -21,20 +21,19 @@ import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import java.util.List;
-import javax.annotation.Nullable;
 
 /** Holds de-serialized JSON result output of {@code gcloud app deploy}. */
 public class AppEngineDeployResult {
 
   private static class Version {
     // Don't change the field names because Gson uses them for automatic de-serialization.
-    @Nullable private String id;
-    @Nullable private String service;
-    @Nullable private String project;
+    private String id;
+    private String service;
+    private String project;
   }
 
   // Don't change the field names because Gson uses them for automatic de-serialization.
-  @Nullable private List<Version> versions;
+  private List<Version> versions;
 
   private AppEngineDeployResult() {} // empty private constructor
 
@@ -44,11 +43,7 @@ public class AppEngineDeployResult {
    * @param index designates an app among multiple deployed apps
    * @throws IndexOutOfBoundsException if the index is out of range
    */
-  @Nullable
   public String getVersion(int index) {
-    if (versions == null) {
-      return null;
-    }
     return versions.get(index).id;
   }
 
@@ -58,11 +53,7 @@ public class AppEngineDeployResult {
    * @param index designates an app among multiple deployed apps
    * @throws IndexOutOfBoundsException if the index is out of range
    */
-  @Nullable
   public String getService(int index) {
-    if (versions == null) {
-      return null;
-    }
     return versions.get(index).service;
   }
 
@@ -72,11 +63,7 @@ public class AppEngineDeployResult {
    * @param index designates an app among multiple deployed apps
    * @throws IndexOutOfBoundsException if the index is out of range
    */
-  @Nullable
   public String getProject(int index) {
-    if (versions == null) {
-      return null;
-    }
     return versions.get(index).project;
   }
 
@@ -87,13 +74,25 @@ public class AppEngineDeployResult {
    * @throws JsonParseException if {@code jsonString} has syntax errors or incompatible JSON element
    *     type
    */
-  // todo instead of allowing null fields, we could throw an exception here if any fields are null
   public static AppEngineDeployResult parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);
     try {
-      return new Gson().fromJson(jsonString, AppEngineDeployResult.class);
-    } catch (JsonSyntaxException e) {
-      throw new JsonParseException(e);
+      AppEngineDeployResult fromJson = new Gson().fromJson(jsonString, AppEngineDeployResult.class);
+      if (fromJson.versions == null) {
+        throw new JsonParseException("Missing version");
+      }
+      for (Version version : fromJson.versions) {
+        if (version.id == null) {
+          throw new JsonParseException("Missing version ID");
+        } else if (version.project == null) {
+          throw new JsonParseException("Missing version project");
+        } else if (version.service == null) {
+          throw new JsonParseException("Missing version service");
+        }
+      }
+      return fromJson;
+    } catch (JsonSyntaxException ex) {
+      throw new JsonParseException(ex);
     }
   }
 }
