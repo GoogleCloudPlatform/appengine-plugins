@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import org.xml.sax.SAXException;
 
 /** Classic Java SDK based implementation of {@link AppEngineDevServer}. */
@@ -280,7 +281,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   }
 
   private static void checkAndWarnDuplicateEnvironmentVariables(
-      Map<String, String> newEnvironment, Map<String, String> existingEnvironment, String service) {
+      Map<String, String> newEnvironment,
+      Map<String, String> existingEnvironment,
+      @Nullable String service) {
     for (String key : newEnvironment.keySet()) {
       if (existingEnvironment.containsKey(key)) {
         log.warning(

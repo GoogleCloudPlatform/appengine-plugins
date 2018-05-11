@@ -17,6 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -40,7 +41,7 @@ class AsyncByteConsumer implements AsyncStreamSaver {
   /** Create a new instance. */
   AsyncByteConsumer(ByteHandler byteHandler) {
     this(
-        byteHandler,
+        Preconditions.checkNotNull(byteHandler),
         MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()),
         SettableFuture.<String>create());
   }

@@ -19,6 +19,7 @@ package com.google.cloud.tools.managedcloudsdk;
 import static com.google.cloud.tools.managedcloudsdk.OsInfo.Name.WINDOWS;
 
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
+import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent.State;
 import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
@@ -129,7 +130,7 @@ public class ManagedCloudSdk {
     }
   }
 
-  /** Query gcloud to see if sdk is up to date. Gcloud makes a call to the server to check this. */
+  /** Query gcloud to see if SDK is up to date. Gcloud makes a call to the server to check this. */
   public boolean isUpToDate() throws ManagedSdkVerificationException {
     if (!Files.isRegularFile(getGcloud())) {
       return false;
@@ -150,8 +151,11 @@ public class ManagedCloudSdk {
     try {
       String result = CommandCaller.newCaller().call(updateAvailableCommand, null, null);
       for (CloudSdkComponent component : CloudSdkComponent.fromJsonList(result)) {
-        if (component.getState().getName().equals("Update Available")) {
-          return false;
+        State state = component.getState();
+        if (state != null) {
+          if ("Update Available".equals(state.getName())) {
+            return false;
+          }
         }
       }
       return true;

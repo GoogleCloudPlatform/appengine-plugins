@@ -17,10 +17,12 @@
 package com.google.cloud.tools.appengine;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.common.collect.Maps;
+import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.DOMException;
@@ -50,6 +52,7 @@ public class AppEngineDescriptor {
    * @throws SAXException malformed XML
    */
   public static AppEngineDescriptor parse(InputStream in) throws IOException, SAXException {
+    Preconditions.checkNotNull(in, "Null input");
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilderFactory.setNamespaceAware(true);
@@ -63,6 +66,7 @@ public class AppEngineDescriptor {
    * Returns project ID from the &lt;application&gt; element of the appengine-web.xml or null if it
    * is missing.
    */
+  @Nullable
   public String getProjectId() throws AppEngineException {
     return getText(getNode(document, "appengine-web-app", "application"));
   }
@@ -71,6 +75,7 @@ public class AppEngineDescriptor {
    * Returns runtime from the &lt;runtime&gt; element of the appengine-web.xml or null if it is
    * missing.
    */
+  @Nullable
   public String getRuntime() throws AppEngineException {
     return getText(getNode(document, "appengine-web-app", "runtime"));
   }
@@ -79,6 +84,7 @@ public class AppEngineDescriptor {
    * Returns project version from the &lt;version&gt; element of the appengine-web.xml or null if it
    * is missing.
    */
+  @Nullable
   public String getProjectVersion() throws AppEngineException {
     return getText(getNode(document, "appengine-web-app", "version"));
   }
@@ -87,6 +93,7 @@ public class AppEngineDescriptor {
    * Returns service ID from the &lt;service&gt; element of the appengine-web.xml, or null if it is
    * missing. Will also look at module ID.
    */
+  @Nullable
   public String getServiceId() throws AppEngineException {
     String serviceId = getText(getNode(document, "appengine-web-app", "service"));
     if (serviceId != null) {
@@ -110,16 +117,20 @@ public class AppEngineDescriptor {
    * </env-variables>
    * }</pre>
    *
-   * <p>This will construct a map of the form {[key, val], ...}.
+   * <p>This will construct a map of the form {[key, value], ...}.
    *
    * @return a map representing the environment variable settings in the appengine-web.xml
    */
   public Map<String, String> getEnvironment() throws AppEngineException {
     Node environmentParentNode = getNode(document, "appengine-web-app", "env-variables");
-    return getAttributeMap(environmentParentNode, "env-var", "name", "value");
+    if (environmentParentNode != null) {
+      return getAttributeMap(environmentParentNode, "env-var", "name", "value");
+    }
+    return new HashMap<>();
   }
 
-  private static String getText(Node node) throws AppEngineException {
+  @Nullable
+  private static String getText(@Nullable Node node) throws AppEngineException {
     if (node != null) {
       try {
         return node.getTextContent();
@@ -136,37 +147,34 @@ public class AppEngineDescriptor {
   private static Map<String, String> getAttributeMap(
       Node parent, String nodeName, String keyAttributeName, String valueAttributeName)
       throws AppEngineException {
-    if (parent != null) {
-      Map<String, String> nameValueAttributeMap = Maps.newHashMap();
 
-      if (parent.hasChildNodes()) {
-        for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
-          Node child = parent.getChildNodes().item(i);
-          NamedNodeMap attributeMap = child.getAttributes();
+    Map<String, String> nameValueAttributeMap = new HashMap<>();
+    if (parent.hasChildNodes()) {
+      for (int i = 0; i < parent.getChildNodes().getLength(); i++) {
+        Node child = parent.getChildNodes().item(i);
+        NamedNodeMap attributeMap = child.getAttributes();
 
-          if (nodeName.equals(child.getNodeName()) && attributeMap != null) {
-            Node keyNode = attributeMap.getNamedItem(keyAttributeName);
+        if (nodeName.equals(child.getNodeName()) && attributeMap != null) {
+          Node keyNode = attributeMap.getNamedItem(keyAttributeName);
 
-            if (keyNode != null) {
-              Node valueNode = attributeMap.getNamedItem(valueAttributeName);
-              try {
-                nameValueAttributeMap.put(keyNode.getTextContent(), valueNode.getTextContent());
-              } catch (DOMException ex) {
-                throw new AppEngineException(
-                    "Failed to parse value from attribute node " + keyNode.getNodeName(), ex);
-              }
+          if (keyNode != null) {
+            Node valueNode = attributeMap.getNamedItem(valueAttributeName);
+            try {
+              nameValueAttributeMap.put(keyNode.getTextContent(), valueNode.getTextContent());
+            } catch (DOMException ex) {
+              throw new AppEngineException(
+                  "Failed to parse value from attribute node " + keyNode.getNodeName(), ex);
             }
           }
         }
       }
-
-      return nameValueAttributeMap;
     }
 
-    return null;
+    return nameValueAttributeMap;
   }
 
   /** Returns the first node found matching the given name contained within the parent node. */
+  @Nullable
   private static Node getNode(Document doc, String parentNodeName, String targetNodeName) {
     NodeList parentElements = doc.getElementsByTagNameNS(APP_ENGINE_NAMESPACE, parentNodeName);
     if (parentElements.getLength() > 0) {

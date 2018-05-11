@@ -17,17 +17,19 @@
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessExitListener;
+import javax.annotation.Nullable;
 
 /** A {@link ProcessExitListener} that records the most recent process exit code it encountered. */
 public class ExitCodeRecorderProcessExitListener implements ProcessExitListener {
 
-  private Integer mostRecentExitCode;
+  @Nullable private Integer mostRecentExitCode;
 
   @Override
   public void onExit(int exitCode) {
     this.mostRecentExitCode = exitCode;
   }
 
+  @Nullable
   public Integer getMostRecentExitCode() {
     return mostRecentExitCode;
   }

@@ -18,6 +18,7 @@ package com.google.cloud.tools.project;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 
 /**
  * Check if a string is a legal <a
@@ -62,7 +63,7 @@ public class ProjectIdValidator {
    * @param id the alleged project ID
    * @return true if it's correct, false otherwise
    */
-  public static boolean validate(String id) {
+  public static boolean validate(@Nullable String id) {
     if (id == null) {
       return false;
     }

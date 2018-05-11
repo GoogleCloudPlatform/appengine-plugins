@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 /** Process handler that mimics the previous behavior of ProcessRunner. */
 public class LegacyProcessHandler implements ProcessHandler {
@@ -32,7 +33,7 @@ public class LegacyProcessHandler implements ProcessHandler {
   private final List<ProcessOutputLineListener> stdErrLineListeners;
   private final List<ProcessExitListener> exitListeners;
   private final List<ProcessStartListener> startListeners;
-  private final WaitingProcessOutputLineListener waitingProcessOutputLineListener;
+  @Nullable private final WaitingProcessOutputLineListener waitingProcessOutputLineListener;
   private final boolean async;
 
   // TODO: historically it looks like this code hasn't been testable, we need to pass an
@@ -48,7 +49,7 @@ public class LegacyProcessHandler implements ProcessHandler {
       List<ProcessOutputLineListener> stdErrLineListeners,
       List<ProcessStartListener> processStartListeners,
       List<ProcessExitListener> processExitListeners,
-      WaitingProcessOutputLineListener waitingProcessOutputLineListener) {
+      @Nullable WaitingProcessOutputLineListener waitingProcessOutputLineListener) {
     this.async = async;
     this.stdOutLineListeners = stdOutLineListeners;
     this.stdErrLineListeners = stdErrLineListeners;
@@ -127,7 +128,8 @@ public class LegacyProcessHandler implements ProcessHandler {
     return stdErrThread;
   }
 
-  private void syncRun(Process process, Thread stdOutThread, Thread stdErrThread)
+  private void syncRun(
+      Process process, @Nullable Thread stdOutThread, @Nullable Thread stdErrThread)
       throws InterruptedException, AppEngineException {
     int exitCode = process.waitFor();
     // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/269
@@ -146,7 +148,9 @@ public class LegacyProcessHandler implements ProcessHandler {
   private static final Logger logger = Logger.getLogger(LegacyProcessHandler.class.getName());
 
   private void asyncRun(
-      final Process process, final Thread stdOutHandler, final Thread stdErrHandler)
+      final Process process,
+      @Nullable final Thread stdOutHandler,
+      @Nullable final Thread stdErrHandler)
       throws ProcessHandlerException {
     if (!exitListeners.isEmpty()
         || !stdOutLineListeners.isEmpty()

@@ -60,7 +60,7 @@ public class DownloaderTest {
     URL fakeRemoteResource = testSourceFile.toUri().toURL();
 
     Downloader downloader =
-        new Downloader(fakeRemoteResource, destination, null, mockProgressListener);
+        new Downloader(fakeRemoteResource, destination, "user agent", mockProgressListener);
 
     downloader.download();
     Assert.assertTrue(Files.exists(destination));
@@ -75,7 +75,7 @@ public class DownloaderTest {
     URL fakeRemoteResource = testSourceFile.toUri().toURL();
 
     Downloader downloader =
-        new Downloader(fakeRemoteResource, destination, null, mockProgressListener);
+        new Downloader(fakeRemoteResource, destination, "Dummy User Agent", mockProgressListener);
 
     downloader.download();
     Assert.assertTrue(Files.exists(destination));
@@ -89,7 +89,7 @@ public class DownloaderTest {
     URL fakeRemoteResource = testSourceFile.toUri().toURL();
 
     Downloader downloader =
-        new Downloader(fakeRemoteResource, destination, null, mockProgressListener);
+        new Downloader(fakeRemoteResource, destination, "Dummy User Agent", mockProgressListener);
 
     downloader.download();
     Assert.assertTrue(Files.exists(destination));
@@ -140,7 +140,9 @@ public class DownloaderTest {
     Path destination = tmp.getRoot().toPath().resolve("destination-file");
     Files.createFile(destination);
 
-    Downloader downloader = new Downloader(null, destination, null, mockProgressListener);
+    URL testUrl = new URL("http://www.example.com");
+    Downloader downloader =
+        new Downloader(testUrl, destination, "user agent", mockProgressListener);
 
     try {
       downloader.download();
@@ -165,7 +167,8 @@ public class DownloaderTest {
               @Override
               public void run() {
                 Downloader downloader =
-                    new Downloader(fakeRemoteResource, destination, null, mockProgressListener);
+                    new Downloader(
+                        fakeRemoteResource, destination, "user agent", mockProgressListener);
                 Thread.currentThread().interrupt();
                 try {
                   downloader.download();

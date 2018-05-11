@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 
 /**
  * Version of the Cloud SDK, which follows the <a href="http://semver.org/spec/v2.0.0.html">Semantic
@@ -32,12 +33,14 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
   private static final Pattern SEMVER_PATTERN = Pattern.compile(getSemVerRegex());
 
   private final String version;
-
   private final int majorVersion;
   private final int minorVerion;
   private final int patchVersion;
+
+  @Nullable
   private final CloudSdkVersionPreRelease preRelease; // optional pre-release component of version
-  private final String buildIdentifier; // optional build ID component of version string
+
+  @Nullable private final String buildIdentifier; // optional build ID component of version string
 
   /**
    * Constructs a new CloudSdkVersion.
@@ -45,7 +48,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
    * @param version the semantic version string
    * @throws IllegalArgumentException if the argument is not a valid semantic version string
    */
-  public CloudSdkVersion(String version) throws IllegalArgumentException {
+  public CloudSdkVersion(String version) {
     Preconditions.checkNotNull(version);
     Preconditions.checkArgument(!version.isEmpty(), "empty version");
 
@@ -179,6 +182,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     return patchVersion;
   }
 
+  @Nullable
   protected CloudSdkVersionPreRelease getPreRelease() {
     return preRelease;
   }
@@ -188,6 +192,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
    * signifies a specific build release. Note that the build identifier is never considered for
    * comparison or equality testing.
    */
+  @Nullable
   public String getBuildIdentifier() {
     return buildIdentifier;
   }

@@ -41,7 +41,7 @@ public class CloudSdkAuth implements Auth {
   }
 
   /**
-   * Logs into the cloud sdk with a specific user (does not retrigger auth flow if user is already
+   * Logs into the Cloud SDK with a specific user (does not retrigger auth flow if user is already
    * configured for the system).
    *
    * @param user a user email
