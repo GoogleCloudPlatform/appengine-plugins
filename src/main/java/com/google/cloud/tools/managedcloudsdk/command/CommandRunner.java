@@ -56,7 +56,7 @@ public class CommandRunner {
               streamHandlerFactory.newHandler(consoleListener),
               streamHandlerFactory.newHandler(consoleListener));
       if (exitCode != 0) {
-        throw new CommandExitException(exitCode, null);
+        throw new CommandExitException(exitCode);
       }
     } catch (IOException ex) {
       throw new CommandExecutionException(ex);

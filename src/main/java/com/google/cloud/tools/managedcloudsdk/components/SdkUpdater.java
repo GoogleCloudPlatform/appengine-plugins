@@ -34,7 +34,7 @@ public class SdkUpdater {
 
   private final Path gcloud;
   private final CommandRunner commandRunner;
-  private final BundledPythonCopier pythonCopier;
+  @Nullable private final BundledPythonCopier pythonCopier;
 
   SdkUpdater(Path gcloud, CommandRunner commandRunner, @Nullable BundledPythonCopier pythonCopier) {
     this.gcloud = gcloud;
@@ -65,8 +65,8 @@ public class SdkUpdater {
   /**
    * Configure and create a new Updater instance.
    *
-   * @param gcloud path to gcloud in the cloud sdk
-   * @return a new configured Cloud Sdk updater
+   * @param gcloud path to gcloud in the Cloud SDK
+   * @return a new configured Cloud SDK updater
    */
   public static SdkUpdater newUpdater(OsInfo.Name osName, Path gcloud) {
     switch (osName) {

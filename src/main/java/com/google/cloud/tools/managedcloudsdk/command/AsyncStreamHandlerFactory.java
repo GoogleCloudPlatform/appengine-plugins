@@ -46,7 +46,7 @@ class AsyncStreamHandlerFactory {
 
     @Override
     public String getResult() {
-      return null;
+      return "";
     }
   }
 }

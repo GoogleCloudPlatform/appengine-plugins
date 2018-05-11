@@ -18,6 +18,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /** Operating System specific install script command line provider. */
 interface InstallScriptProvider {
@@ -29,5 +30,6 @@ interface InstallScriptProvider {
    */
   List<String> getScriptCommandLine();
 
+  @Nullable
   Map<String, String> getScriptEnvironment();
 }

@@ -21,11 +21,11 @@ import javax.annotation.Nullable;
 /** Holds details about a single Cloud library client's Maven artifact. */
 public final class CloudLibraryClientMavenCoordinates {
 
-  private String groupId;
-  private String artifactId;
-  private String version;
+  @Nullable private String groupId;
+  @Nullable private String artifactId;
+  @Nullable private String version;
 
-  /** Prevents instantiation. */
+  /** Prevents direct instantiation. GSON instantiates these objects using dark magic. */
   private CloudLibraryClientMavenCoordinates() {}
 
   /** Returns the group ID of this client's Maven artifact. */
@@ -34,7 +34,7 @@ public final class CloudLibraryClientMavenCoordinates {
     return groupId;
   }
 
-  /** Returns the ID of this client's Maven artifact. */
+  /** Returns the artifact ID of this client's Maven artifact. */
   @Nullable
   public String getArtifactId() {
     return artifactId;

@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
 /** Tools for reading app.yaml */
@@ -32,7 +33,7 @@ public class AppYaml {
   private static final String RUNTIME_KEY = "runtime";
 
   /**
-   * Parse an app.yaml to AppYaml object.
+   * Parse an app.yaml file to an AppYaml object.
    *
    * @param appYaml the app.yaml file
    * @throws IOException if reading app.yaml fails due to I/O errors
@@ -56,6 +57,7 @@ public class AppYaml {
    * Returns "runtime" value if it is a String type. {@code null} if it is not a String or the
    * "runtime" key is not present.
    */
+  @Nullable
   public String getRuntime() {
     Object result = yamlMap.get(RUNTIME_KEY);
     if (result instanceof String) {

@@ -14,12 +14,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/dialogflow/v2beta1/package-summary.html",
       "infotip": "The com.google.cloud.dialogflow.v2beta1 packages",
       "launchStage": "alpha",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-os-login",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-os-login",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dialogflow",
-         "version": "0.42.0-alpha"
+         "version": "0.47.0-alpha"
        }
       }
     ]
@@ -48,12 +48,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/bigquery/package-summary.html",
       "infotip": "The com.google.cloud.bigquery packages",
       "launchStage": "GA",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-bigquery",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-bigquery",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-bigquery",
-         "version": "1.24.0"
+         "version": "1.29.0"
        }
       }
     ]
@@ -74,12 +74,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/dlp/v2beta1/package-summary.html",
       "infotip": "The com.google.cloud.dlp.v2beta1 packages",
       "launchStage": "beta",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-dlp",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-dlp",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dlp",
-         "version": "0.42.0-beta"
+         "version": "0.47.0-beta"
        }
       }
     ]
@@ -107,12 +107,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/datastore/package-summary.html",
       "infotip": "The com.google.cloud.datastore packages",
       "launchStage": "GA",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-datastore",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-datastore",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-datastore",
-         "version": "1.24.0"
+         "version": "1.29.0"
        }
       }
     ]
@@ -138,12 +138,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/dns/package-summary.html",
       "infotip": "The com.google.cloud.dns packages",
       "launchStage": "alpha",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-dns",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-dns",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dns",
-         "version": "0.42.0-alpha"
+         "version": "0.47.0-alpha"
         }
       }
     ]
@@ -162,12 +162,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/firestore/package-summary.html",
       "infotip": "The com.google.cloud.firestore packages",
       "launchStage": "beta",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-firestore",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-firestore",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-firestore",
-         "version": "0.42.0-beta"
+         "version": "0.47.0-beta"
        }
       }
     ]
@@ -188,12 +188,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/language/v1/package-summary.html",
       "infotip": "The com.google.cloud.language.v1 packages",
       "launchStage": "GA",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-language",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-language",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-language",
-         "version": "1.24.0"
+         "version": "1.29.0"
        }
       }
     ]
@@ -213,12 +213,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/oslogin/v1/package-summary.html",
       "infotip": "The com.google.cloud.oslogin.v1 packages",
       "launchStage": "alpha",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-os-login",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-os-login",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-os-login",
-         "version": "0.42.0-alpha"
+         "version": "0.47.0-alpha"
        }
       }
     ]
@@ -246,12 +246,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/pubsub/v1/package-summary.html",
       "infotip": "The com.google.cloud.pubsub.v1 packages",
       "launchStage": "beta",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-pubsub",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-pubsub",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-pubsub",
-         "version": "0.42.0-beta"
+         "version": "0.47.0-beta"
        }
       }
     ]
@@ -277,12 +277,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/?com/google/cloud/resourcemanager/package-summary.html",
       "infotip": "The com.google.cloud.speech.resourcemanager packages",
       "launchStage": "alpha",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-resourcemanager",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-resourcemanager",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-resourcemanager",
-         "version": "0.42.0-alpha"
+         "version": "0.47.0-alpha"
        }
       }
     ]
@@ -310,12 +310,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/spanner/package-summary.html",
       "infotip": "The com.google.cloud.spanner packages",
       "launchStage": "beta",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-spanner",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-spanner",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-spanner",
-         "version": "0.42.0-beta"
+         "version": "0.47.0-beta"
        }
       }
     ]
@@ -335,12 +335,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/speech/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.speech.v1 packages",
       "launchStage": "alpha",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-speech",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-speech",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-speech",
-         "version": "0.42.0-alpha"
+         "version": "0.47.0-alpha"
        }
       }
     ]
@@ -367,12 +367,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/storage/package-summary.html",
       "infotip": "The com.google.cloud.storage packages for client side access to GCS",
       "launchStage": "GA",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-storage",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-storage",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-storage",
-         "version": "1.24.0"
+         "version": "1.29.0"
        }
       }
     ]
@@ -392,12 +392,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/translate/package-summary.html",
       "infotip": "The com.google.cloud.translate packages for client side access to the Google Cloud Translation API",
       "launchStage": "GA",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-translate",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-translate",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-translate",
-         "version": "1.24.0"
+         "version": "1.29.0"
        }
       }
     ]
@@ -416,12 +416,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/videointelligence/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.videointelligence packages",
       "launchStage": "beta",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-video-intelligence",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-video-intelligence",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-video-intelligence",
-         "version": "0.42.0-beta"
+         "version": "0.47.0-beta"
        }
       }
     ]
@@ -441,12 +441,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/vision/v1/package-summary.html",
       "infotip": "The com.google.cloud.vision.v1 packages",
       "launchStage": "GA",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-vision",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-vision",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-vision",
-         "version": "1.24.0"
+         "version": "1.29.0"
        }
       }
     ]
@@ -472,12 +472,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/errorreporting/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.errorreporting.v1beta1 packages",
       "launchStage": "beta",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-errorreporting",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-errorreporting",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-errorreporting",
-         "version": "0.42.0-beta"
+         "version": "0.47.0-beta"
        }
       }
     ]
@@ -505,12 +505,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/logging/package-summary.html",
       "infotip": "The com.google.cloud.logging packages for controlling Stackdriver logging",
       "launchStage": "GA",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-logging",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-logging",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-logging",
-         "version": "1.24.0"
+         "version": "1.29.0"
        }
       }
     ]
@@ -538,12 +538,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/com/google/cloud/monitoring/v3/package-summary.html",
       "infotip": "The com.google.cloud.monitoring.v3 packages",
       "launchStage": "beta",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-monitoring",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-monitoring",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-monitoring",
-         "version": "0.42.0-beta"
+         "version": "0.47.0-beta"
        }
       }
     ]
@@ -568,12 +568,12 @@
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/trace/v1/package-summary.html",
       "infotip": "The com.google.cloud.trace.v1 packages",
       "launchStage": "beta",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-trace",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-trace",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-trace",
-         "version": "0.42.0-beta"
+         "version": "0.47.0-beta"
        }
       }
     ]

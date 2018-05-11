@@ -19,8 +19,9 @@ package com.google.cloud.tools.managedcloudsdk.install;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
-/** {@link InstallScriptProvider} for mac and linux. */
+/** {@link InstallScriptProvider} for Mac and Linux. */
 final class UnixInstallScriptProvider implements InstallScriptProvider {
 
   /** Instantiated by {@link InstallerFactory}. */
@@ -33,7 +34,9 @@ final class UnixInstallScriptProvider implements InstallScriptProvider {
     return script;
   }
 
+  // todo should probably return an empty map
   @Override
+  @Nullable
   public Map<String, String> getScriptEnvironment() {
     return null;
   }
