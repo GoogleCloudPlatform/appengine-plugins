@@ -14,6 +14,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -107,7 +108,7 @@ public class AppEngineDeployResultTest {
       AppEngineDeployResult.parse("{}");
       fail();
     } catch (JsonParseException ex) {
-      assertNotNull(ex.getMessage());
+      assertEquals("Missing version", ex.getMessage());
     }
   }
 
@@ -123,7 +124,7 @@ public class AppEngineDeployResultTest {
           "{'versions': [ {'service': 'a-service', 'project': 'a-project'} ]}");
       fail();
     } catch (JsonParseException ex) {
-      assertNotNull(ex.getMessage());
+      assertEquals("Missing version ID", ex.getMessage());
     }
   }
 
@@ -133,7 +134,7 @@ public class AppEngineDeployResultTest {
       AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'project': 'a-project'} ]}");
       fail();
     } catch (JsonParseException ex) {
-      assertNotNull(ex.getMessage());
+      assertEquals("Missing version service", ex.getMessage());
     }
   }
 
@@ -143,7 +144,7 @@ public class AppEngineDeployResultTest {
       AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'service': 'a-service'} ]}");
       fail();
     } catch (JsonParseException ex) {
-      assertNotNull(ex.getMessage());
+      assertEquals("Missing version project", ex.getMessage());
     }
   }
 }
