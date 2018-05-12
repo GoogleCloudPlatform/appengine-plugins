@@ -17,11 +17,14 @@
 package com.google.cloud.tools.appengine.api.versions;
 
 import com.google.cloud.tools.appengine.api.Configuration;
+import javax.annotation.Nullable;
 
 /** Configuration for {@link AppEngineVersions#list(VersionsListConfiguration)}. */
 public interface VersionsListConfiguration extends Configuration {
 
+  @Nullable
   String getService();
 
+  @Nullable
   Boolean getHideNoTraffic();
 }

@@ -21,38 +21,40 @@ import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /** Plain Java bean implementation of {@link RunConfiguration}. */
 public class DefaultRunConfiguration implements RunConfiguration {
 
-  private List<File> services;
-  private String host;
-  private Integer port;
-  private String adminHost;
-  private Integer adminPort;
-  private String authDomain;
-  private File storagePath;
-  private String logLevel;
-  private Integer maxModuleInstances;
-  private Boolean useMtimeFileWatcher;
-  private String threadsafeOverride;
-  private String pythonStartupScript;
-  private String pythonStartupArgs;
-  private List<String> jvmFlags;
-  private String customEntrypoint;
-  private String runtime;
-  private Boolean allowSkippedFiles;
-  private Integer apiPort;
-  private Boolean automaticRestart;
-  private String devAppserverLogLevel;
-  private Boolean skipSdkUpdateCheck;
-  private String defaultGcsBucketName;
-  private Boolean clearDatastore;
-  private File datastorePath;
-  private Map<String, String> environment;
-  private List<String> additionalArguments;
+  @Nullable private List<File> services;
+  @Nullable private String host;
+  @Nullable private Integer port;
+  @Nullable private String adminHost;
+  @Nullable private Integer adminPort;
+  @Nullable private String authDomain;
+  @Nullable private File storagePath;
+  @Nullable private String logLevel;
+  @Nullable private Integer maxModuleInstances;
+  @Nullable private Boolean useMtimeFileWatcher;
+  @Nullable private String threadsafeOverride;
+  @Nullable private String pythonStartupScript;
+  @Nullable private String pythonStartupArgs;
+  @Nullable private List<String> jvmFlags;
+  @Nullable private String customEntrypoint;
+  @Nullable private String runtime;
+  @Nullable private Boolean allowSkippedFiles;
+  @Nullable private Integer apiPort;
+  @Nullable private Boolean automaticRestart;
+  @Nullable private String devAppserverLogLevel;
+  @Nullable private Boolean skipSdkUpdateCheck;
+  @Nullable private String defaultGcsBucketName;
+  @Nullable private Boolean clearDatastore;
+  @Nullable private File datastorePath;
+  @Nullable private Map<String, String> environment;
+  @Nullable private List<String> additionalArguments;
 
   @Override
+  @Nullable
   public List<File> getServices() {
     return services;
   }
@@ -62,6 +64,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getHost() {
     return host;
   }
@@ -71,6 +74,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Integer getPort() {
     return port;
   }
@@ -80,6 +84,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getAdminHost() {
     return adminHost;
   }
@@ -89,6 +94,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Integer getAdminPort() {
     return adminPort;
   }
@@ -98,6 +104,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getAuthDomain() {
     return authDomain;
   }
@@ -107,6 +114,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public File getStoragePath() {
     return storagePath;
   }
@@ -116,6 +124,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getLogLevel() {
     return logLevel;
   }
@@ -125,6 +134,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Integer getMaxModuleInstances() {
     return maxModuleInstances;
   }
@@ -134,6 +144,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Boolean getUseMtimeFileWatcher() {
     return useMtimeFileWatcher;
   }
@@ -143,6 +154,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getThreadsafeOverride() {
     return threadsafeOverride;
   }
@@ -152,6 +164,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getPythonStartupScript() {
     return pythonStartupScript;
   }
@@ -161,6 +174,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getPythonStartupArgs() {
     return pythonStartupArgs;
   }
@@ -170,6 +184,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public List<String> getJvmFlags() {
     return jvmFlags;
   }
@@ -179,6 +194,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getCustomEntrypoint() {
     return customEntrypoint;
   }
@@ -188,6 +204,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getRuntime() {
     return runtime;
   }
@@ -197,6 +214,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Boolean getAllowSkippedFiles() {
     return allowSkippedFiles;
   }
@@ -206,6 +224,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Integer getApiPort() {
     return apiPort;
   }
@@ -215,6 +234,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Boolean getAutomaticRestart() {
     return automaticRestart;
   }
@@ -224,6 +244,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getDevAppserverLogLevel() {
     return devAppserverLogLevel;
   }
@@ -233,6 +254,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Boolean getSkipSdkUpdateCheck() {
     return skipSdkUpdateCheck;
   }
@@ -242,6 +264,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public String getDefaultGcsBucketName() {
     return defaultGcsBucketName;
   }
@@ -251,6 +274,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Boolean getClearDatastore() {
     return clearDatastore;
   }
@@ -260,6 +284,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public File getDatastorePath() {
     return datastorePath;
   }
@@ -269,6 +294,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public Map<String, String> getEnvironment() {
     return environment;
   }
@@ -278,6 +304,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   }
 
   @Override
+  @Nullable
   public List<String> getAdditionalArguments() {
     return additionalArguments;
   }

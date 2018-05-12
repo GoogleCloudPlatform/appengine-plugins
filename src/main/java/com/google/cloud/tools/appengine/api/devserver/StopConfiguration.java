@@ -16,10 +16,14 @@
 
 package com.google.cloud.tools.appengine.api.devserver;
 
+import javax.annotation.Nullable;
+
 /** Configuration for {@link AppEngineDevServer#stop(StopConfiguration)}. */
 public interface StopConfiguration {
 
+  @Nullable
   String getAdminHost();
 
+  @Nullable
   Integer getAdminPort();
 }

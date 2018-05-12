@@ -18,15 +18,17 @@ package com.google.cloud.tools.appengine.api.versions;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 import java.util.Collection;
+import javax.annotation.Nullable;
 
 /** Plain Java bean implementation of {@link VersionsSelectionConfiguration}. */
 public class DefaultVersionsSelectionConfiguration extends DefaultConfiguration
     implements VersionsSelectionConfiguration {
 
-  private Collection<String> versions;
-  private String service;
+  @Nullable private Collection<String> versions;
+  @Nullable private String service;
 
   @Override
+  @Nullable
   public Collection<String> getVersions() {
     return versions;
   }
@@ -36,6 +38,7 @@ public class DefaultVersionsSelectionConfiguration extends DefaultConfiguration
   }
 
   @Override
+  @Nullable
   public String getService() {
     return service;
   }

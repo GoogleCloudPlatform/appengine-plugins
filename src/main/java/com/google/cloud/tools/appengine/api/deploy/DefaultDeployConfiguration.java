@@ -19,20 +19,22 @@ package com.google.cloud.tools.appengine.api.deploy;
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 import java.io.File;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /** Plain Java bean implementation of {@link DeployConfiguration}. */
 public class DefaultDeployConfiguration extends DefaultConfiguration
     implements DeployConfiguration {
 
-  private List<File> deployables;
-  private String bucket;
-  private String imageUrl;
-  private Boolean promote;
-  private String server;
-  private Boolean stopPreviousVersion;
-  private String version;
+  @Nullable private List<File> deployables;
+  @Nullable private String bucket;
+  @Nullable private String imageUrl;
+  @Nullable private Boolean promote;
+  @Nullable private String server;
+  @Nullable private Boolean stopPreviousVersion;
+  @Nullable private String version;
 
   @Override
+  @Nullable
   public List<File> getDeployables() {
     return deployables;
   }
@@ -42,6 +44,7 @@ public class DefaultDeployConfiguration extends DefaultConfiguration
   }
 
   @Override
+  @Nullable
   public String getBucket() {
     return bucket;
   }
@@ -51,6 +54,7 @@ public class DefaultDeployConfiguration extends DefaultConfiguration
   }
 
   @Override
+  @Nullable
   public String getImageUrl() {
     return imageUrl;
   }
@@ -60,6 +64,7 @@ public class DefaultDeployConfiguration extends DefaultConfiguration
   }
 
   @Override
+  @Nullable
   public Boolean getPromote() {
     return promote;
   }
@@ -69,6 +74,7 @@ public class DefaultDeployConfiguration extends DefaultConfiguration
   }
 
   @Override
+  @Nullable
   public String getServer() {
     return server;
   }
@@ -78,6 +84,7 @@ public class DefaultDeployConfiguration extends DefaultConfiguration
   }
 
   @Override
+  @Nullable
   public Boolean getStopPreviousVersion() {
     return stopPreviousVersion;
   }
@@ -87,6 +94,7 @@ public class DefaultDeployConfiguration extends DefaultConfiguration
   }
 
   @Override
+  @Nullable
   public String getVersion() {
     return version;
   }

@@ -17,24 +17,26 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import java.io.File;
+import javax.annotation.Nullable;
 
 /** Plain Java bean implementation of {@link StageStandardConfiguration}. */
 public class DefaultStageStandardConfiguration implements StageStandardConfiguration {
 
-  private File sourceDirectory;
-  private File stagingDirectory;
-  private File dockerfile;
-  private Boolean enableQuickstart;
-  private Boolean disableUpdateCheck;
-  private Boolean enableJarSplitting;
-  private String jarSplittingExcludes;
-  private String compileEncoding;
-  private Boolean deleteJsps;
-  private Boolean enableJarClasses;
-  private Boolean disableJarJsps;
-  private String runtime;
+  @Nullable private File sourceDirectory;
+  @Nullable private File stagingDirectory;
+  @Nullable private File dockerfile;
+  @Nullable private Boolean enableQuickstart;
+  @Nullable private Boolean disableUpdateCheck;
+  @Nullable private Boolean enableJarSplitting;
+  @Nullable private String jarSplittingExcludes;
+  @Nullable private String compileEncoding;
+  @Nullable private Boolean deleteJsps;
+  @Nullable private Boolean enableJarClasses;
+  @Nullable private Boolean disableJarJsps;
+  @Nullable private String runtime;
 
   @Override
+  @Nullable
   public File getSourceDirectory() {
     return sourceDirectory;
   }
@@ -44,6 +46,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public File getStagingDirectory() {
     return stagingDirectory;
   }
@@ -53,6 +56,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public File getDockerfile() {
     return dockerfile;
   }
@@ -62,6 +66,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public Boolean getEnableQuickstart() {
     return enableQuickstart;
   }
@@ -71,6 +76,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public Boolean getDisableUpdateCheck() {
     return disableUpdateCheck;
   }
@@ -80,6 +86,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public Boolean getEnableJarSplitting() {
     return enableJarSplitting;
   }
@@ -89,6 +96,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public String getJarSplittingExcludes() {
     return jarSplittingExcludes;
   }
@@ -98,6 +106,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public String getCompileEncoding() {
     return compileEncoding;
   }
@@ -107,6 +116,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public Boolean getDeleteJsps() {
     return deleteJsps;
   }
@@ -116,6 +126,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public Boolean getEnableJarClasses() {
     return enableJarClasses;
   }
@@ -125,6 +136,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public Boolean getDisableJarJsps() {
     return disableJarJsps;
   }
@@ -134,6 +146,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   }
 
   @Override
+  @Nullable
   public String getRuntime() {
     return runtime;
   }

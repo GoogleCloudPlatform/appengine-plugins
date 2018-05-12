@@ -17,15 +17,17 @@
 package com.google.cloud.tools.appengine.api.versions;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
+import javax.annotation.Nullable;
 
 /** Plain Java bean implementation of {@link VersionsListConfiguration}. */
 public class DefaultVersionsListConfiguration extends DefaultConfiguration
     implements VersionsListConfiguration {
 
-  private String service;
-  private Boolean hideNoTraffic;
+  @Nullable private String service;
+  @Nullable private Boolean hideNoTraffic;
 
   @Override
+  @Nullable
   public String getService() {
     return service;
   }
@@ -35,6 +37,7 @@ public class DefaultVersionsListConfiguration extends DefaultConfiguration
   }
 
   @Override
+  @Nullable
   public Boolean getHideNoTraffic() {
     return hideNoTraffic;
   }

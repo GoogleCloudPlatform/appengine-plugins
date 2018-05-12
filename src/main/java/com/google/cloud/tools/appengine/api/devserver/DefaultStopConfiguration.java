@@ -16,13 +16,16 @@
 
 package com.google.cloud.tools.appengine.api.devserver;
 
+import javax.annotation.Nullable;
+
 /** Plain Java bean implementation of {@link StopConfiguration}. */
 public class DefaultStopConfiguration implements StopConfiguration {
 
-  private String adminHost;
-  private Integer adminPort;
+  @Nullable private String adminHost;
+  @Nullable private Integer adminPort;
 
   @Override
+  @Nullable
   public String getAdminHost() {
     return adminHost;
   }
@@ -32,6 +35,7 @@ public class DefaultStopConfiguration implements StopConfiguration {
   }
 
   @Override
+  @Nullable
   public Integer getAdminPort() {
     return adminPort;
   }
