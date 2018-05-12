@@ -30,10 +30,10 @@ public class GcloudStructuredLog {
     private String type;
     private String stacktrace;
     private String details;
-    
+
     // empty private constructor; GSON instantiates
     private GcloudError() {}
-    
+
     public String getType() {
       return type;
     }
