@@ -71,6 +71,26 @@ public class GcloudStructuredLogTest {
   }
 
   @Test
+  public void testParse_emptyString() {
+    try {
+      AppEngineDeployResult.parse("");
+      fail();
+    } catch (JsonParseException e) {
+      assertEquals("Empty JSON: \"\"", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testParse_effectivelyEmpty() {
+    try {
+      AppEngineDeployResult.parse("# comment?");
+      fail();
+    } catch (JsonParseException e) {
+      assertEquals("Empty JSON: \"# comment?\"", e.getMessage());
+    }
+  }
+
+  @Test
   public void testParse_inputMalformed() {
     try {
       GcloudStructuredLog.parse("non-JSON");
