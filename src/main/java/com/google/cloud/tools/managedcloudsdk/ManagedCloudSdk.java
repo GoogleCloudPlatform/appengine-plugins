@@ -210,17 +210,21 @@ public class ManagedCloudSdk {
 
     switch (osName) {
       case WINDOWS:
+        // Shorter path to mitigate the length limit issue on Windows
+        Path shortCloudSdkPartialPath = Paths.get("google", "ct4j-cloud-sdk");
+        Path windowsXdgPath = userHome.resolve(".cache").resolve(shortCloudSdkPartialPath);
+
         String localAppDataEnv = environment.get("LOCALAPPDATA");
         if (localAppDataEnv == null || localAppDataEnv.trim().isEmpty()) {
           logger.warning("LOCALAPPDATA environment is invalid or missing");
-          return xdgPath;
+          return windowsXdgPath;
         }
         Path localAppData = Paths.get(localAppDataEnv);
         if (!Files.exists(localAppData)) {
           logger.warning(localAppData.toString() + " does not exist");
-          return xdgPath;
+          return windowsXdgPath;
         }
-        return localAppData.resolve(cloudSdkPartialPath);
+        return localAppData.resolve(shortCloudSdkPartialPath);
 
       case MAC:
         Path applicationSupport = userHome.resolve("Library").resolve("Application Support");
