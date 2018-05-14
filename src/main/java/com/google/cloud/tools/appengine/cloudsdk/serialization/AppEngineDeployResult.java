@@ -71,8 +71,8 @@ public class AppEngineDeployResult {
    * Parses a JSON string representing successful {@code gcloud app deploy} result.
    *
    * @return parsed JSON; never {@code null}
-   * @throws JsonParseException if {@code jsonString} has syntax errors, missing information,
-   *     or incompatible JSON element type
+   * @throws JsonParseException if {@code jsonString} has syntax errors, missing information, or
+   *     incompatible JSON element type
    */
   public static AppEngineDeployResult parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);

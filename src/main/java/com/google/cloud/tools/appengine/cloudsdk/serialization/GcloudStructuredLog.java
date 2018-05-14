@@ -25,11 +25,14 @@ import javax.annotation.Nullable;
 /** Holds de-serialized JSON of a single instance of structured log output from {@code gcloud}. */
 public class GcloudStructuredLog {
 
-  public static class Error {
+  public static class GcloudError {
     // Don't change the field names because Gson uses them for automatic de-serialization.
     private String type;
     private String stacktrace;
     private String details;
+
+    // empty private constructor; GSON instantiates
+    private GcloudError() {}
 
     public String getType() {
       return type;
@@ -49,7 +52,7 @@ public class GcloudStructuredLog {
   @Nullable private String verbosity;
   private String timestamp;
   private String message;
-  @Nullable private Error error;
+  @Nullable private GcloudError error;
 
   public String getVersion() {
     return version;
@@ -69,11 +72,12 @@ public class GcloudStructuredLog {
   }
 
   @Nullable
-  public Error getError() {
+  public GcloudError getError() {
     return error;
   }
 
-  private GcloudStructuredLog() {} // empty private constructor
+  // empty private constructor; GSON instantiates
+  private GcloudStructuredLog() {}
 
   /**
    * Parses a JSON string representing {@code gcloud} structured log output.
