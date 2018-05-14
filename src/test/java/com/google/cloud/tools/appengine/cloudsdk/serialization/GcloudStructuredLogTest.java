@@ -17,11 +17,12 @@
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import com.google.cloud.tools.appengine.cloudsdk.JsonParseException;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 public class GcloudStructuredLogTest {
@@ -96,7 +97,7 @@ public class GcloudStructuredLogTest {
       GcloudStructuredLog.parse("non-JSON");
       fail();
     } catch (JsonParseException e) {
-      assertNotNull(e.getMessage());
+      assertThat(e.getMessage(), CoreMatchers.containsString("JsonSyntaxException"));
     }
   }
 
