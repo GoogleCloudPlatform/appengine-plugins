@@ -21,8 +21,8 @@ import javax.annotation.Nullable;
 
 /** Plain Java bean implementation of {@link GenRepoInfoFileConfiguration}. */
 public class DefaultGenRepoInfoFileConfiguration implements GenRepoInfoFileConfiguration {
-  private File outputDirectory;
-  private File sourceDirectory;
+  @Nullable private File outputDirectory;
+  @Nullable private File sourceDirectory;
 
   @Override
   @Nullable

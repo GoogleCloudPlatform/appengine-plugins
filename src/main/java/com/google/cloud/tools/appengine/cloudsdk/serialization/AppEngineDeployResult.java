@@ -71,15 +71,28 @@ public class AppEngineDeployResult {
    * Parses a JSON string representing successful {@code gcloud app deploy} result.
    *
    * @return parsed JSON; never {@code null}
-   * @throws JsonParseException if {@code jsonString} has syntax errors or incompatible JSON element
-   *     type
+   * @throws JsonParseException if {@code jsonString} has syntax errors, missing information,
+   *     or incompatible JSON element type
    */
   public static AppEngineDeployResult parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);
     try {
-      return new Gson().fromJson(jsonString, AppEngineDeployResult.class);
-    } catch (JsonSyntaxException e) {
-      throw new JsonParseException(e);
+      AppEngineDeployResult fromJson = new Gson().fromJson(jsonString, AppEngineDeployResult.class);
+      if (fromJson.versions == null) {
+        throw new JsonParseException("Missing version");
+      }
+      for (Version version : fromJson.versions) {
+        if (version.id == null) {
+          throw new JsonParseException("Missing version ID");
+        } else if (version.project == null) {
+          throw new JsonParseException("Missing version project");
+        } else if (version.service == null) {
+          throw new JsonParseException("Missing version service");
+        }
+      }
+      return fromJson;
+    } catch (JsonSyntaxException ex) {
+      throw new JsonParseException(ex);
     }
   }
 }

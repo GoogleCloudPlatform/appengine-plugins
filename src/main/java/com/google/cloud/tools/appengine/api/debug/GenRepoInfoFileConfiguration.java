@@ -17,11 +17,14 @@
 package com.google.cloud.tools.appengine.api.debug;
 
 import java.io.File;
+import javax.annotation.Nullable;
 
 /** Configuration for {@link GenRepoInfoFile#generate(GenRepoInfoFileConfiguration)}. */
 public interface GenRepoInfoFileConfiguration {
 
+  @Nullable
   File getOutputDirectory();
 
+  @Nullable
   File getSourceDirectory();
 }

@@ -1,21 +1,20 @@
 /*
  * Copyright 2017 Google Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -104,8 +103,13 @@ public class AppEngineDeployResultTest {
   }
 
   @Test
-  public void testParse_noErrorWhenVersionsMissing() throws JsonParseException {
-    AppEngineDeployResult.parse("{}");
+  public void testParse_errorWhenVersionsMissing() {
+    try {
+      AppEngineDeployResult.parse("{}");
+      fail();
+    } catch (JsonParseException ex) {
+      assertEquals("Missing version", ex.getMessage());
+    }
   }
 
   @Test
@@ -114,18 +118,33 @@ public class AppEngineDeployResultTest {
   }
 
   @Test
-  public void testParse_noErrorWhenVersionIdMissing() throws JsonParseException {
-    AppEngineDeployResult.parse(
-        "{'versions': [ {'service': 'a-service', 'project': 'a-project'} ]}");
+  public void testParse_errorWhenVersionIdMissing() throws JsonParseException {
+    try {
+      AppEngineDeployResult.parse(
+          "{'versions': [ {'service': 'a-service', 'project': 'a-project'} ]}");
+      fail();
+    } catch (JsonParseException ex) {
+      assertEquals("Missing version ID", ex.getMessage());
+    }
   }
 
   @Test
-  public void testParse_noErrorWhenVersionServiceMissing() throws JsonParseException {
-    AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'project': 'a-project'} ]}");
+  public void testParse_errorWhenVersionServiceMissing() throws JsonParseException {
+    try {
+      AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'project': 'a-project'} ]}");
+      fail();
+    } catch (JsonParseException ex) {
+      assertEquals("Missing version service", ex.getMessage());
+    }
   }
 
   @Test
-  public void testParse_noErrorWhenVersionProjectMissing() throws JsonParseException {
-    AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'service': 'a-service'} ]}");
+  public void testParse_errorWhenVersionProjectMissing() throws JsonParseException {
+    try {
+      AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'service': 'a-service'} ]}");
+      fail();
+    } catch (JsonParseException ex) {
+      assertEquals("Missing version project", ex.getMessage());
+    }
   }
 }

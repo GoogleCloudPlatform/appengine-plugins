@@ -20,7 +20,7 @@ package com.google.cloud.tools.managedcloudsdk;
 public final class Version {
   public static final Version LATEST = new Version();
 
-  private String version;
+  private final String version;
 
   private Version() {
     version = "LATEST";

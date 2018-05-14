@@ -19,21 +19,29 @@ package com.google.cloud.tools.appengine.api.deploy;
 import com.google.cloud.tools.appengine.api.Configuration;
 import java.io.File;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /** Configuration for {@link AppEngineDeployment#deploy(DeployConfiguration)}. */
 public interface DeployConfiguration extends Configuration {
 
+  @Nullable
   List<File> getDeployables();
 
+  @Nullable
   String getBucket();
 
+  @Nullable
   String getImageUrl();
 
+  @Nullable
   Boolean getPromote();
 
+  @Nullable
   String getServer();
 
+  @Nullable
   Boolean getStopPreviousVersion();
 
+  @Nullable
   String getVersion();
 }

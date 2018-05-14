@@ -18,15 +18,17 @@ package com.google.cloud.tools.appengine.api.deploy;
 
 import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 import java.io.File;
+import javax.annotation.Nullable;
 
 /** Plain java bean implementation of {@link DeployProjectConfigurationConfiguration}. */
 public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfiguration
     implements DeployProjectConfigurationConfiguration {
 
-  private File appEngineDirectory;
-  private String server;
+  @Nullable private File appEngineDirectory;
+  @Nullable private String server;
 
   @Override
+  @Nullable
   public File getAppEngineDirectory() {
     return appEngineDirectory;
   }
@@ -36,6 +38,7 @@ public class DefaultDeployProjectConfigurationConfiguration extends DefaultConfi
   }
 
   @Override
+  @Nullable
   public String getServer() {
     return server;
   }

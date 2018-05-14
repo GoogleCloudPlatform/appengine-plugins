@@ -20,6 +20,7 @@ package com.google.cloud.tools.appengine.cloudsdk.process;
 public class StringBuilderProcessOutputLineListener implements ProcessOutputLineListener {
 
   // This used to be a StringBuilder but that wasn't thread safe.
+  @SuppressWarnings("JdkObsolete")
   private final StringBuffer buffer = new StringBuffer();
 
   public StringBuilderProcessOutputLineListener() {}

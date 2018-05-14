@@ -16,12 +16,15 @@
 
 package com.google.cloud.tools.appengine.api;
 
+import javax.annotation.Nullable;
+
 /** Base implementation for common configuration elements. */
 public abstract class DefaultConfiguration implements Configuration {
 
-  private String project;
+  @Nullable private String project;
 
   @Override
+  @Nullable
   public String getProject() {
     return project;
   }

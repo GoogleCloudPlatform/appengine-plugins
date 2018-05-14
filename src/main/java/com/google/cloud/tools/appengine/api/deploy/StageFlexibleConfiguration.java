@@ -17,22 +17,27 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import java.io.File;
+import javax.annotation.Nullable;
 
 /** Configuration for {@link AppEngineFlexibleStaging#stageFlexible(StageFlexibleConfiguration)}. */
 public interface StageFlexibleConfiguration {
 
   /** Directory containing {@code app.yaml}. */
+  @Nullable
   File getAppEngineDirectory();
 
   /** Directory containing {@code Dockerfile} and other resources used by it. */
+  @Nullable
   File getDockerDirectory();
 
   /** Artifact to deploy such as WAR or JAR. */
+  @Nullable
   File getArtifact();
 
   /**
    * Directory where {@code app.yaml}, files in docker directory, and the artifact to deploy will be
    * copied for deploying.
    */
+  @Nullable
   File getStagingDirectory();
 }

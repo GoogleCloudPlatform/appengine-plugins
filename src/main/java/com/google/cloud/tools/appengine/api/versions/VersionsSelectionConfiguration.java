@@ -18,11 +18,14 @@ package com.google.cloud.tools.appengine.api.versions;
 
 import com.google.cloud.tools.appengine.api.Configuration;
 import java.util.Collection;
+import javax.annotation.Nullable;
 
 /** Identifies a version or a set of versions for use in {@link AppEngineVersions}. */
 public interface VersionsSelectionConfiguration extends Configuration {
 
+  @Nullable
   Collection<String> getVersions();
 
+  @Nullable
   String getService();
 }

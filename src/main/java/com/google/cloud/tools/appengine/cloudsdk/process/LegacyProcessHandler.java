@@ -19,10 +19,12 @@ package com.google.cloud.tools.appengine.cloudsdk.process;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.WaitingProcessOutputLineListener;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Charsets;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
 /** Process handler that mimics the previous behavior of ProcessRunner. */
@@ -87,7 +89,7 @@ public class LegacyProcessHandler implements ProcessHandler {
   }
 
   private Thread handleStdOut(Process process) {
-    final Scanner stdOut = new Scanner(process.getInputStream(), Charsets.UTF_8.name());
+    final Scanner stdOut = new Scanner(process.getInputStream(), StandardCharsets.UTF_8.name());
     Thread stdOutThread =
         new Thread("standard-out") {
           @Override
@@ -107,7 +109,7 @@ public class LegacyProcessHandler implements ProcessHandler {
   }
 
   private Thread handleErrOut(Process process) {
-    final Scanner stdErr = new Scanner(process.getErrorStream(), Charsets.UTF_8.name());
+    final Scanner stdErr = new Scanner(process.getErrorStream(), StandardCharsets.UTF_8.name());
     Thread stdErrThread =
         new Thread("standard-err") {
           @Override
@@ -143,6 +145,8 @@ public class LegacyProcessHandler implements ProcessHandler {
     }
   }
 
+  private static final Logger logger = Logger.getLogger(LegacyProcessHandler.class.getName());
+
   private void asyncRun(
       final Process process,
       @Nullable final Thread stdOutHandler,
@@ -157,8 +161,9 @@ public class LegacyProcessHandler implements ProcessHandler {
             public void run() {
               try {
                 syncRun(process, stdOutHandler, stdErrHandler);
-              } catch (InterruptedException | AppEngineException e) {
-                e.printStackTrace();
+              } catch (InterruptedException | AppEngineException ex) {
+                logger.log(
+                    Level.INFO, "wait-for-process-exit-and-output-handlers exited early", ex);
               }
             }
           };
