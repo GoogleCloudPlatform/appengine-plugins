@@ -58,6 +58,32 @@
       }
     ]
   },
+  {
+    "name": "Google BigQuery Data Transfer API",
+    "id": "googlebiqquerydatatransferapi",
+    "serviceName": "bigquerydatatransfer.googleapis.com",
+    "documentation": "https://cloud.google.com/bigquery/docs/transfer-service-overview",
+    "description": "The BigQuery Data Transfer Service automates data movement from Software as a Service (SaaS) applications such as Google AdWords and DoubleClick on a scheduled, managed basis.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/bigquery.svg",
+    "clients": [
+      {
+      "name": "Google Cloud Java Client for BigQuery Data Transfer",
+      "language": "java",
+      "site": "https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/bigquerydatatransfer/v1/package-summary.html",
+      "infotip": "The com.google.cloud.bigquery.datatransfer packages",
+      "launchStage": "beta",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-bigquerydatatransfer",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-bigquerydatatransfer",
+         "version": "0.47.0-beta"
+       }
+      }
+    ]
+  },
  {
     "name": "Google Cloud Data Loss Prevention",
     "id": "datalossprevention",
@@ -252,6 +278,36 @@
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-pubsub",
          "version": "0.47.0-beta"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Google Cloud Redis",
+    "id": "googlecloudredis",
+    "serviceName": "redis.googleapis.com",
+    "serviceRoles": [
+      "roles/redis.admin",
+      "roles/redis.editor",
+      "roles/redis.viewer"
+    ],
+    "documentation": "https://cloud.google.com/memorystore/docs/redis/",
+    "description": "Google Cloud Redis API transfers data from partner SaaS applications to Google BigQuery on a scheduled, managed basis.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Google Cloud Redis API",
+      "language": "java",
+      "site": "https://cloud.google.com/memorystore/",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/latest/apidocs/index.html?com/google/cloud/redis/v1/package-summary.html",
+      "infotip": "The com.google.cloud.redis packages",
+      "launchStage": "alpha",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-redis",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-redis",
+         "version": "0.47.0-alpha"
        }
       }
     ]
