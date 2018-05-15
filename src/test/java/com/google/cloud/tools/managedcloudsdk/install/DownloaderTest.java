@@ -175,8 +175,8 @@ public class DownloaderTest {
                   Assert.fail("InterruptedException expected but not thrown.");
                 } catch (InterruptedException ex) {
                   Assert.assertEquals("Download was interrupted", ex.getMessage());
-                } catch (IOException e) {
-                  Assert.fail("Test failed due to IOException");
+                } catch (IOException ex) {
+                  throw new AssertionError("Test failed due to IOException", ex);
                 }
               }
             });

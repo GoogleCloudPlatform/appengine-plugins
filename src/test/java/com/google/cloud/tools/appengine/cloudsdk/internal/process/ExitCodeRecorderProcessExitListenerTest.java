@@ -44,6 +44,6 @@ public class ExitCodeRecorderProcessExitListenerTest {
   public void testGetMostRecentExitCode_notNull() {
     int code = 0;
     listener.onExit(code);
-    assertEquals(new Integer(code), listener.getMostRecentExitCode());
+    assertEquals(0, listener.getMostRecentExitCode().intValue());
   }
 }

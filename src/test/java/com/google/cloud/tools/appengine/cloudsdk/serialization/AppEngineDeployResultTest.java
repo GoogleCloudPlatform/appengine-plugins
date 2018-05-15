@@ -15,10 +15,11 @@
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import com.google.cloud.tools.appengine.cloudsdk.JsonParseException;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -83,12 +84,32 @@ public class AppEngineDeployResultTest {
   }
 
   @Test
+  public void testParse_emptyInput() {
+    try {
+      AppEngineDeployResult.parse("");
+      fail();
+    } catch (JsonParseException e) {
+      assertEquals("Empty input: \"\"", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testParse_effectivelyEmptyInput() {
+    try {
+      AppEngineDeployResult.parse("# comment?");
+      fail();
+    } catch (JsonParseException e) {
+      assertEquals("Empty input: \"# comment?\"", e.getMessage());
+    }
+  }
+
+  @Test
   public void testParse_malformedInput() {
     try {
       AppEngineDeployResult.parse("non-JSON");
       fail();
     } catch (JsonParseException e) {
-      assertNotNull(e.getMessage());
+      assertThat(e.getMessage(), CoreMatchers.containsString("JsonSyntaxException"));
     }
   }
 
@@ -98,7 +119,7 @@ public class AppEngineDeployResultTest {
       AppEngineDeployResult.parse("{ 'versions' : 'non-array' }");
       fail();
     } catch (JsonParseException e) {
-      assertNotNull(e.getMessage());
+      assertThat(e.getMessage(), CoreMatchers.containsString("JsonSyntaxException"));
     }
   }
 
