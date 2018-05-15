@@ -23,10 +23,15 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,7 +50,7 @@ public class DownloaderTest {
   private Path createTestRemoteResource(long sizeInBytes) throws IOException {
 
     Path testFile = tmp.newFile().toPath();
-    try (BufferedWriter writer = Files.newBufferedWriter(testFile, Charset.defaultCharset())) {
+    try (BufferedWriter writer = Files.newBufferedWriter(testFile, StandardCharsets.UTF_8)) {
       for (long i = 0; i < sizeInBytes; i++) {
         writer.write('a');
       }
@@ -153,7 +158,8 @@ public class DownloaderTest {
   }
 
   @Test
-  public void testDownload_interruptTriggersCleanup() throws IOException, InterruptedException {
+  public void testDownload_interruptTriggersCleanup()
+      throws IOException, InterruptedException, ExecutionException {
     Path destination = tmp.getRoot().toPath().resolve("destination-file");
     long testFileSize = Downloader.BUFFER_SIZE * 10 + 1;
     Path testSourceFile = createTestRemoteResource(testFileSize);
@@ -161,27 +167,26 @@ public class DownloaderTest {
 
     // Start a new thread for this test to avoid mucking with Thread state when
     // junit reuses threads.
-    Thread testThreadToInterrupt =
-        new Thread(
-            new Runnable() {
-              @Override
-              public void run() {
-                Downloader downloader =
-                    new Downloader(
-                        fakeRemoteResource, destination, "user agent", mockProgressListener);
-                Thread.currentThread().interrupt();
-                try {
-                  downloader.download();
-                  Assert.fail("InterruptedException expected but not thrown.");
-                } catch (InterruptedException ex) {
-                  Assert.assertEquals("Download was interrupted", ex.getMessage());
-                } catch (IOException e) {
-                  Assert.fail("Test failed due to IOException");
-                }
-              }
-            });
-    testThreadToInterrupt.start();
-    testThreadToInterrupt.join();
+    Future<Void> submit =
+        Executors.newSingleThreadExecutor()
+            .submit(
+                new Callable<Void>() {
+                  @Override
+                  public Void call() throws Exception {
+                    Downloader downloader =
+                        new Downloader(
+                            fakeRemoteResource, destination, "user agent", mockProgressListener);
+                    Thread.currentThread().interrupt();
+                    try {
+                      downloader.download();
+                      Assert.fail("InterruptedException expected but not thrown.");
+                    } catch (InterruptedException ex) {
+                      Assert.assertEquals("Download was interrupted", ex.getMessage());
+                    }
+                    return null;
+                  }
+                });
+    submit.get();
 
     Assert.assertFalse(Files.exists(destination));
     Mockito.verify(mockProgressListener, Mockito.never()).update(100);
