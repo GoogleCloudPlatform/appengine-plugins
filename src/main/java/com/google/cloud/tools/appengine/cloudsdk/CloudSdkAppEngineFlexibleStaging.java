@@ -25,6 +25,7 @@ import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -80,7 +81,11 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       throws IOException, AppEngineException {
     try {
       // verification for app.yaml that contains runtime:java
-      Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
+      File appEngineDirectory = config.getAppEngineDirectory();
+      if (appEngineDirectory == null) {
+        throw new AppEngineException("Malformed app.yaml: missing App Engine directory");
+      }
+      Path appYaml = appEngineDirectory.toPath().resolve(APP_YAML);
       return new AppYaml(appYaml).getRuntime();
     } catch (ScannerException | ParserException ex) {
       throw new AppEngineException("Malformed 'app.yaml'.", ex);
