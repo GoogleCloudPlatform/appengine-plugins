@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.MissingResourceException;
 import org.junit.Test;
 
 /** Unit tests for {@link CloudLibraries}. */
@@ -36,9 +37,9 @@ public final class CloudLibrariesTest {
     CloudLibraries cloudLibraries = new CloudLibraries("does-not.exist");
     try {
       cloudLibraries.getLibraries();
-      fail("Expected AssertionError to be thrown.");
-    } catch (AssertionError e) {
-      assertEquals("Resource not found: does-not.exist", e.getMessage());
+      fail("Expected MissingResourceException to be thrown.");
+    } catch (MissingResourceException ex) {
+      assertEquals("Resource not found when loading libraries", ex.getMessage());
     }
   }
 }

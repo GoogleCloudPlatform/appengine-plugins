@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.MissingResourceException;
 
 /** Returns helpful metadata for supported Google Cloud libraries. */
 public final class CloudLibraries {
@@ -54,7 +55,8 @@ public final class CloudLibraries {
   List<CloudLibrary> getLibraries() throws IOException {
     try (InputStream inputStream = CloudLibraries.class.getResourceAsStream(librariesJsonPath)) {
       if (inputStream == null) {
-        throw new AssertionError("Resource not found: " + librariesJsonPath);
+        throw new MissingResourceException(
+            "Resource not found when loading libraries", LIBRARIES_JSON, librariesJsonPath);
       }
 
       InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
