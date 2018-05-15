@@ -19,7 +19,6 @@ package com.google.cloud.tools.managedcloudsdk.command;
 import com.google.cloud.tools.managedcloudsdk.command.AsyncStreamSaverFactory.CollectingByteHandler;
 
 import java.nio.charset.StandardCharsets;
-
 import org.junit.Assert;
 import org.junit.Test;
 

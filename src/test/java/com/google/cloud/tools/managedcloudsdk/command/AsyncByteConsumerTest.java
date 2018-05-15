@@ -34,7 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class AsyncByteConsumerTest {
 
   private static final String TEST_STRING = "test line1\ntest line2\n";
-  private InputStream fakeInputStream =
+  private final InputStream fakeInputStream =
       new ByteArrayInputStream(TEST_STRING.getBytes(StandardCharsets.UTF_8));
 
   @Mock private ListeningExecutorService mockExecutorService;

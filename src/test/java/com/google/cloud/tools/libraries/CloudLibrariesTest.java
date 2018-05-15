@@ -22,7 +22,6 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.MissingResourceException;
-
 import org.junit.Test;
 
 /** Unit tests for {@link CloudLibraries}. */
