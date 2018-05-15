@@ -89,7 +89,11 @@ public class GcloudStructuredLog {
   public static GcloudStructuredLog parse(String jsonString) throws JsonParseException {
     Preconditions.checkNotNull(jsonString);
     try {
-      return new Gson().fromJson(jsonString, GcloudStructuredLog.class);
+      GcloudStructuredLog log = new Gson().fromJson(jsonString, GcloudStructuredLog.class);
+      if (log == null) {
+        throw new JsonParseException("Empty input: \"" + jsonString + "\"");
+      }
+      return log;
     } catch (JsonSyntaxException e) {
       throw new JsonParseException(e);
     }
