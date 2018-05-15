@@ -17,6 +17,9 @@
 package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.cloud.tools.managedcloudsdk.command.AsyncStreamSaverFactory.CollectingByteHandler;
+
+import java.nio.charset.StandardCharsets;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,16 +29,16 @@ public class CollectingByteHandlerTest {
   @Test
   public void testByteHandler_smokeTest() {
     CollectingByteHandler testHandler = new CollectingByteHandler();
-    testHandler.bytes("line1\n".getBytes(), 6);
-    testHandler.bytes("line2\n".getBytes(), 6);
+    testHandler.bytes("line1\n".getBytes(StandardCharsets.UTF_8), 6);
+    testHandler.bytes("line2\n".getBytes(StandardCharsets.UTF_8), 6);
     Assert.assertEquals("line1\nline2\n", testHandler.getResult());
   }
 
   @Test
   public void testByteHandler_junkIgnored() {
     CollectingByteHandler testHandler = new CollectingByteHandler();
-    testHandler.bytes("line1\n123".getBytes(), 6);
-    testHandler.bytes("line2\n456".getBytes(), 6);
+    testHandler.bytes("line1\n123".getBytes(StandardCharsets.UTF_8), 6);
+    testHandler.bytes("line2\n456".getBytes(StandardCharsets.UTF_8), 6);
     Assert.assertEquals("line1\nline2\n", testHandler.getResult());
   }
 }

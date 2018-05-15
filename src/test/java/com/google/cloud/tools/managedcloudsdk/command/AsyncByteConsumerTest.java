@@ -20,6 +20,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.SettableFuture;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +34,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class AsyncByteConsumerTest {
 
   private static final String TEST_STRING = "test line1\ntest line2\n";
-  private InputStream fakeInputStream = new ByteArrayInputStream(TEST_STRING.getBytes());
+  private InputStream fakeInputStream =
+      new ByteArrayInputStream(TEST_STRING.getBytes(StandardCharsets.UTF_8));
 
   @Mock private ListeningExecutorService mockExecutorService;
   @Mock private ByteHandler mockByteHandler;

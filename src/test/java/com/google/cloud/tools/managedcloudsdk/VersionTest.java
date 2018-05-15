@@ -37,6 +37,7 @@ public class VersionTest {
   public void testNewVersion_invalid() {
     try {
       new Version("1");
+      Assert.fail("did not detect invalid version");
     } catch (BadCloudSdkVersionException ex) {
       Assert.assertEquals(
           "Version must match [number].[number].[number] for example 100.0.0", ex.getMessage());
