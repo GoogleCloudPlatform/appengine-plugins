@@ -26,7 +26,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.common.io.Files;
 import java.io.IOException;
 import java.nio.charset.Charset;

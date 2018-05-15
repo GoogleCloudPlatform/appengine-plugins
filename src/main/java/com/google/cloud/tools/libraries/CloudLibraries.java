@@ -55,8 +55,8 @@ public final class CloudLibraries {
   List<CloudLibrary> getLibraries() throws IOException {
     try (InputStream inputStream = CloudLibraries.class.getResourceAsStream(librariesJsonPath)) {
       if (inputStream == null) {
-        throw new MissingResourceException("Resource not found when loading libraries",
-            LIBRARIES_JSON, librariesJsonPath);
+        throw new MissingResourceException(
+            "Resource not found when loading libraries", LIBRARIES_JSON, librariesJsonPath);
       }
 
       InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);

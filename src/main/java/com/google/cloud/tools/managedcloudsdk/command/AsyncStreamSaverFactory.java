@@ -16,9 +16,8 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-import java.nio.charset.StandardCharsets;
-
 import com.google.common.annotations.VisibleForTesting;
+import java.nio.charset.StandardCharsets;
 
 /** Factory to create default implementations of {@link AsyncStreamSaver}. */
 class AsyncStreamSaverFactory {
