@@ -18,7 +18,6 @@ package com.google.cloud.tools.io;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
-
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
@@ -42,7 +41,7 @@ public class FilePermissions {
    */
   public static void verifyDirectoryCreatable(Path path)
       throws AccessDeniedException, NotDirectoryException {
- 
+
     Preconditions.checkNotNull(path, "Null directory path");
     for (Path segment = path; segment != null; segment = segment.getParent()) {
       if (Files.exists(segment)) {
