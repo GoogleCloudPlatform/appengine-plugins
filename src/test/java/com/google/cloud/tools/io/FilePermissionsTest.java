@@ -35,6 +35,16 @@ public class FilePermissionsTest {
   public void setUp() throws IOException {
     parent = Files.createTempDirectory("foo");
   }
+  
+  @Test
+  public void testNullDirectory() throws AccessDeniedException, NotDirectoryException {
+   try {
+      FilePermissions.verifyDirectoryCreatable(null);
+      Assert.fail();
+    } catch (NullPointerException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
+  }
 
   @Test
   public void testDirectoryCanBeCreated() throws IOException {
