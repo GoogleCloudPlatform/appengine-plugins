@@ -286,6 +286,11 @@
     "name": "Google Cloud Redis",
     "id": "googlecloudredis",
     "serviceName": "redis.googleapis.com",
+    "serviceRoles": [
+      "roles/redis.admin",
+      "roles/redis.editor",
+      "roles/redis.viewer"
+    ],
     "documentation": "https://cloud.google.com/memorystore/docs/redis/",
     "description": "Google Cloud Redis API transfers data from partner SaaS applications to Google BigQuery on a scheduled, managed basis.",
     "transports": ["grpc"],
