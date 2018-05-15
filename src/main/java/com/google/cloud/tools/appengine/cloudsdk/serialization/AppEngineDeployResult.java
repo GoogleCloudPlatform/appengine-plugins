@@ -78,6 +78,9 @@ public class AppEngineDeployResult {
     Preconditions.checkNotNull(jsonString);
     try {
       AppEngineDeployResult fromJson = new Gson().fromJson(jsonString, AppEngineDeployResult.class);
+      if (fromJson == null) {
+        throw new JsonParseException("Empty input: \"" + jsonString + "\"");
+      }
       if (fromJson.versions == null) {
         throw new JsonParseException("Missing version");
       }
