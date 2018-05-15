@@ -167,7 +167,7 @@ public class DownloaderTest {
 
     // Start a new thread for this test to avoid mucking with Thread state when
     // junit reuses threads.
-    Future<Void> submit =
+    Future<Void> testThreadToInterrupt =
         Executors.newSingleThreadExecutor()
             .submit(
                 new Callable<Void>() {
@@ -186,7 +186,7 @@ public class DownloaderTest {
                     return null;
                   }
                 });
-    submit.get();
+    testThreadToInterrupt.get();
 
     Assert.assertFalse(Files.exists(destination));
     Mockito.verify(mockProgressListener, Mockito.never()).update(100);
