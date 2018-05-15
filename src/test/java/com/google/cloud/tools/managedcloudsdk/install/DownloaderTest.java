@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -30,6 +29,7 @@ import java.nio.file.Path;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.junit.Assert;
@@ -167,28 +167,32 @@ public class DownloaderTest {
 
     // Start a new thread for this test to avoid mucking with Thread state when
     // junit reuses threads.
-    Future<Void> testThreadToInterrupt =
-        Executors.newSingleThreadExecutor()
-            .submit(
-                new Callable<Void>() {
-                  @Override
-                  public Void call() throws Exception {
-                    Downloader downloader =
-                        new Downloader(
-                            fakeRemoteResource, destination, "user agent", mockProgressListener);
-                    Thread.currentThread().interrupt();
-                    try {
-                      downloader.download();
-                      Assert.fail("InterruptedException expected but not thrown.");
-                    } catch (InterruptedException ex) {
-                      Assert.assertEquals("Download was interrupted", ex.getMessage());
-                    }
-                    return null;
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    try {
+      Future<Void> testThreadToInterrupt =
+          executorService.submit(
+              new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                  Downloader downloader =
+                      new Downloader(
+                          fakeRemoteResource, destination, "user agent", mockProgressListener);
+                  Thread.currentThread().interrupt();
+                  try {
+                    downloader.download();
+                    Assert.fail("InterruptedException expected but not thrown.");
+                  } catch (InterruptedException ex) {
+                    Assert.assertEquals("Download was interrupted", ex.getMessage());
                   }
-                });
-    testThreadToInterrupt.get();
+                  return null;
+                }
+              });
+      testThreadToInterrupt.get();
 
-    Assert.assertFalse(Files.exists(destination));
-    Mockito.verify(mockProgressListener, Mockito.never()).update(100);
+      Assert.assertFalse(Files.exists(destination));
+      Mockito.verify(mockProgressListener, Mockito.never()).update(100);
+    } finally {
+      executorService.shutdown();
+    }
   }
 }

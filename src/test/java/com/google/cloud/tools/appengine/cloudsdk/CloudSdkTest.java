@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.common.io.Files;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
