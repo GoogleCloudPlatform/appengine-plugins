@@ -72,22 +72,22 @@ public class GcloudStructuredLogTest {
   }
 
   @Test
-  public void testParse_emptyString() {
+  public void testParse_emptyInput() {
     try {
-      AppEngineDeployResult.parse("");
+      GcloudStructuredLog.parse("");
       fail();
     } catch (JsonParseException e) {
-      assertEquals("Empty JSON: \"\"", e.getMessage());
+      assertEquals("Empty input: \"\"", e.getMessage());
     }
   }
 
   @Test
-  public void testParse_effectivelyEmpty() {
+  public void testParse_effectivelyEmptyInput() {
     try {
-      AppEngineDeployResult.parse("# comment?");
+      GcloudStructuredLog.parse("# comment?");
       fail();
     } catch (JsonParseException e) {
-      assertEquals("Empty JSON: \"# comment?\"", e.getMessage());
+      assertEquals("Empty input: \"# comment?\"", e.getMessage());
     }
   }
 
