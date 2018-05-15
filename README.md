@@ -35,27 +35,22 @@ Build the library using the "mvn clean install" command at the repository root d
 To deploy a new version, a client calls the library in the following way:
 
 ```java
-// Create a Cloud SDK
-CloudSdk cloudSdk = new CloudSdk.Builder().build();
+// All operations require the cloud SDK
+CloudSdk cloudSdk = new CloudSdk.Builder().sdkPath(some-path).javaHome(some-java-home).build();
 
-// Create a deployment
-AppEngineDeployment deployment = new CloudSdkAppEngineDeployment(cloudSdk);
 
-// Configure deployment
-DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
-configuration.setDeployables(Arrays.asList(appYaml1));
-configuration.setBucket("gs://a-bucket");
-configuration.setDockerBuild("cloud");
-configuration.setForce(true);
-configuration.setImageUrl("imageUrl");
-configuration.setProject("project");
-configuration.setPromote(true);
-configuration.setServer("appengine.google.com");
-configuration.setStopPreviousVersion(true);
-configuration.setVersion("v1");
+// Operations that use gcloud command line are initiated by the Gcloud object.
+Gcloud gcloud = Gcloud.builder(sdk).setMetricsEnvironment("asdf","12").setCredentialFile(some-file).build()
 
-// deploy
-deployment.deploy(deployConfiguration);
+// Similarly for AppCfg and the DevAppServer
+AppCfg appcfg = AppCfg.builder(sdk).build()
+LocalRun localRun = LocalRun.builder(sdk).build()
+
+// Operations are started as processes, access to these processes is handled
+// by implementations of ProcessHandler. To continue to interface with processes
+// as before, use LegacyProcessHandler.
+ProcessHandler handler = LegacyProcessHandler.builder()...configureHandler...build();
+gcloud.newDeployment(handler).deploy(myDeployConfiguration);
 ```
 
 ## SDK Manager
