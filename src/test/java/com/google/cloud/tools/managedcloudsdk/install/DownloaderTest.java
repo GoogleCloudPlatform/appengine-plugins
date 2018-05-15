@@ -168,31 +168,28 @@ public class DownloaderTest {
     // Start a new thread for this test to avoid mucking with Thread state when
     // junit reuses threads.
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    try {
-      Future<Void> testThreadToInterrupt =
-          executorService.submit(
-              new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                  Downloader downloader =
-                      new Downloader(
-                          fakeRemoteResource, destination, "user agent", mockProgressListener);
-                  Thread.currentThread().interrupt();
-                  try {
-                    downloader.download();
-                    Assert.fail("InterruptedException expected but not thrown.");
-                  } catch (InterruptedException ex) {
-                    Assert.assertEquals("Download was interrupted", ex.getMessage());
-                  }
-                  return null;
+    Future<Void> testThreadToInterrupt =
+        executorService.submit(
+            new Callable<Void>() {
+              @Override
+              public Void call() throws Exception {
+                Downloader downloader =
+                    new Downloader(
+                        fakeRemoteResource, destination, "user agent", mockProgressListener);
+                Thread.currentThread().interrupt();
+                try {
+                  downloader.download();
+                  Assert.fail("InterruptedException expected but not thrown.");
+                } catch (InterruptedException ex) {
+                  Assert.assertEquals("Download was interrupted", ex.getMessage());
                 }
-              });
-      testThreadToInterrupt.get();
+                return null;
+              }
+            });
+    executorService.shutdown();
+    testThreadToInterrupt.get();
 
-      Assert.assertFalse(Files.exists(destination));
-      Mockito.verify(mockProgressListener, Mockito.never()).update(100);
-    } finally {
-      executorService.shutdown();
-    }
+    Assert.assertFalse(Files.exists(destination));
+    Mockito.verify(mockProgressListener, Mockito.never()).update(100);
   }
 }
