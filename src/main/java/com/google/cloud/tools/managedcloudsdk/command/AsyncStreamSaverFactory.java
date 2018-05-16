@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.nio.charset.StandardCharsets;
 
 /** Factory to create default implementations of {@link AsyncStreamSaver}. */
@@ -26,6 +27,7 @@ class AsyncStreamSaverFactory {
     return new AsyncByteConsumer(new CollectingByteHandler());
   }
 
+  @VisibleForTesting
   static class CollectingByteHandler implements ByteHandler {
 
     private final StringBuilder result = new StringBuilder();
