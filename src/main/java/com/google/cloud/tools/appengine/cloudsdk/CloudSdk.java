@@ -215,7 +215,7 @@ public class CloudSdk {
     }
   }
 
-  void validateJdk() throws InvalidJavaSdkException {
+  public void validateJdk() throws InvalidJavaSdkException {
     if (!Files.exists(getJavaExecutablePath())) {
       throw new InvalidJavaSdkException(
           "Invalid Java SDK. " + getJavaExecutablePath().toString() + " does not exist.");
