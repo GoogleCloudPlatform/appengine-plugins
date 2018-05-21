@@ -126,7 +126,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
     }
     Path appYaml = appEngineDirectory.toPath().resolve(APP_YAML);
-    if (!appYaml.toFile().exists()) {
+    if (!Files.exists(appYaml)) {
       throw new AppEngineException(APP_YAML + " not found in the App Engine directory.");
     }
     if (config.getStagingDirectory() == null) {
