@@ -80,10 +80,10 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   static String findRuntime(StageFlexibleConfiguration config)
       throws IOException, AppEngineException {
     try {
-      // verification for app.yaml that contains runtime:java
+      // verify that app.yaml that contains runtime:java
       File appEngineDirectory = config.getAppEngineDirectory();
       if (appEngineDirectory == null) {
-        throw new AppEngineException("Malformed app.yaml: missing App Engine directory");
+        throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
       }
       Path appYaml = appEngineDirectory.toPath().resolve(APP_YAML);
       return new AppYaml(appYaml).getRuntime();
@@ -121,12 +121,19 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   @VisibleForTesting
   static void copyAppEngineContext(StageFlexibleConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
-    Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
+    File appEngineDirectory = config.getAppEngineDirectory();
+    if (appEngineDirectory == null) {
+      throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
+    }
+    Path appYaml = appEngineDirectory.toPath().resolve(APP_YAML);
     if (!appYaml.toFile().exists()) {
       throw new AppEngineException(APP_YAML + " not found in the App Engine directory.");
     }
-    copyService.copyFileAndReplace(
-        appYaml, config.getStagingDirectory().toPath().resolve(APP_YAML));
+    if (config.getStagingDirectory() == null) {
+      throw new AppEngineException("Invalid Staging Configuration: missing staging directory");
+    }
+    Path stagingDirectory = config.getStagingDirectory().toPath();
+    copyService.copyFileAndReplace(appYaml, stagingDirectory.resolve(APP_YAML));
   }
 
   private static void copyArtifact(StageFlexibleConfiguration config, CopyService copyService)
