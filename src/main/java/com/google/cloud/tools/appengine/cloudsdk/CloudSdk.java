@@ -215,7 +215,12 @@ public class CloudSdk {
     }
   }
 
-  void validateJdk() throws InvalidJavaSdkException {
+  /**
+   * Checks whether the configured Java home path is a valid JDK.
+   *
+   * @see #getJavaHomePath()
+   */
+  public void validateJdk() throws InvalidJavaSdkException {
     if (!Files.exists(getJavaExecutablePath())) {
       throw new InvalidJavaSdkException(
           "Invalid Java SDK. " + getJavaExecutablePath().toString() + " does not exist.");
