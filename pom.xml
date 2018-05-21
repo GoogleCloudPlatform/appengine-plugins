@@ -213,7 +213,6 @@
         <groupId>com.coveo</groupId>
         <artifactId>fmt-maven-plugin</artifactId>
         <version>2.4.0</version>
-        <!-- use fmt:format to auto format -->
         <dependencies>
           <dependency>
             <groupId>com.google.googlejavaformat</groupId>
