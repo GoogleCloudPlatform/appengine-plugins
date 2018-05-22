@@ -299,8 +299,16 @@
         <version>0.8.1</version>
         <executions>
           <execution>
+            <id>initialize</id>
             <goals>
               <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>generation</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
             </goals>
           </execution>
         </executions>
