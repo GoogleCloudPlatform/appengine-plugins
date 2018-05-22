@@ -158,7 +158,7 @@
             </path>
           </annotationProcessorPaths>
           <compilerArgs>
-            <arg>-Xep:NullAway:ERROR</arg>    
+            <arg>-Xep:NullAway:ERROR</arg>
             <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools.appengine,com.google.cloud.tools.libraries,com.google.cloud.tools.managedcloudsdk,com.google.cloud.tools.io,com.google.cloud.tools.project</arg>
             <arg>-XepOpt:NullAway:UnannotatedSubPackages=com.google.cloud.tools.appengine.cloudsdk.[a-zA-Z.]*</arg>
 <arg>-XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock,org.junit.runners.Parameterized</arg>
@@ -275,7 +275,7 @@
             <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
             <Import-Package>!javax.annotation,*</Import-Package>
             <Eclipse-BuddyPolicy>registered</Eclipse-BuddyPolicy>
-            <!--  best URL we have until 
+            <!--  best URL we have until
                   https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/338
                   is fixed -->
             <Bundle-DocURL>https://github.com/GoogleCloudPlatform/appengine-plugins-core</Bundle-DocURL>
@@ -292,18 +292,20 @@
         </executions>
       </plugin>
 
+      <!-- set up surefire for JaCoCo code coverage -->
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <formats>
-            <format>html</format>
-            <format>xml</format>
-          </formats>
-          <check />
-        </configuration>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
        </plugin>
+
        <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -405,5 +407,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>
