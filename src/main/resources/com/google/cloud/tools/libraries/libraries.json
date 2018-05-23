@@ -1,31 +1,6 @@
 [
-  {
-    "name": "Dialogflow",
-    "id": "dialogflow",
-    "serviceName": "dialogflow.googleapis.com",
-    "documentation": "https://dialogflow.com/",
-    "description": "An NLU platform for designing and integrating conversational user interfaces into mobile apps, web applications, devices, and bots.",
-    "transports": ["grpc"],
-    "clients": [
-      {
-      "name": "Java Client Libraries for the Dialogflow API",
-      "language": "java",
-      "site": "https://dialogflow.com/",
-      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/dialogflow/v2beta1/package-summary.html",
-      "infotip": "The com.google.cloud.dialogflow.v2beta1 packages",
-      "launchStage": "alpha",
-      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-os-login",
-      "languageLevel": "1.7.0",
-      "mavenCoordinates": {
-         "groupId": "com.google.cloud",
-         "artifactId": "google-cloud-dialogflow",
-         "version": "0.47.0-alpha"
-       }
-      }
-    ]
-  },
-  {
-    "name": "Google BigQuery API",
+{
+    "name": "BigQuery API",
     "id": "googlebiqqueryapi",
     "serviceName": "bigquery-json.googleapis.com",
     "serviceRoles": [
@@ -42,7 +17,7 @@
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/bigquery.svg",
     "clients": [
       {
-      "name": "Google Cloud Java Client for BigQuery",
+      "name": "Cloud Java Client for BigQuery",
       "language": "java",
       "site": "https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/com/google/cloud/bigquery/package-summary.html",
@@ -59,7 +34,7 @@
     ]
   },
   {
-    "name": "Google BigQuery Data Transfer API",
+    "name": "BigQuery Data Transfer API",
     "id": "googlebiqquerydatatransferapi",
     "serviceName": "bigquerydatatransfer.googleapis.com",
     "documentation": "https://cloud.google.com/bigquery/docs/transfer-service-overview",
@@ -68,7 +43,7 @@
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/bigquery.svg",
     "clients": [
       {
-      "name": "Google Cloud Java Client for BigQuery Data Transfer",
+      "name": "Cloud Java Client for BigQuery Data Transfer",
       "language": "java",
       "site": "https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/bigquerydatatransfer/v1/package-summary.html",
@@ -85,7 +60,7 @@
     ]
   },
  {
-    "name": "Google Cloud Data Loss Prevention",
+    "name": "Cloud Data Loss Prevention",
     "id": "datalossprevention",
     "serviceName": "dlp.googleapis.com",
     "documentation": "https://cloud.google.com/dlp/docs/reference/libraries",
@@ -111,7 +86,7 @@
     ]
   },
   {
-    "name": "Google Cloud Datastore",
+    "name": "Cloud Datastore",
     "id": "clouddatastore",
     "serviceName": "datastore.googleapis.com",
     "serviceRoles": [
@@ -122,7 +97,7 @@
       "roles/datastore.viewer"
     ],
     "documentation": "https://cloud.google.com/datastore/docs/reference/libraries",
-    "description": "Google Cloud Datastore is a NoSQL key-value database built for automatic scaling.",
+    "description": "Cloud Datastore is a NoSQL key-value database built for automatic scaling.",
     "transports": ["http"],
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/datastore.svg",
     "clients": [
@@ -144,7 +119,7 @@
     ]
   },
   {
-    "name": "Google Cloud DNS",
+    "name": "Cloud DNS",
     "id": "clouddns",
     "serviceName": "dns.googleapis.com",
     "serviceRoles": [
@@ -152,7 +127,7 @@
       "roles/dns.reader"
     ],
     "documentation": "https://cloud.google.com/dns/docs/apis",
-    "description": "Google Cloud DNS is a managed authoritative Domain Name System (DNS) service running on Google infrastructure. Cloud DNS translates domain names such as www.google.com into IP addresses such as 74.125.29.101.",
+    "description": "Cloud DNS is a managed authoritative Domain Name System (DNS) service running on Google infrastructure. Cloud DNS translates domain names such as www.google.com into IP addresses such as 74.125.29.101.",
     "transports": [
       "http"
     ],
@@ -175,7 +150,7 @@
     ]
   },
   {
-    "name": "Google Cloud Firestore",
+    "name": "Cloud Firestore",
     "id": "cloudfirestore",
     "serviceName": "firestore.googleapis.com",
     "documentation": "https://cloud.google.com/firestore/docs/",
@@ -183,7 +158,7 @@
     "transports": ["grpc"],
     "clients": [
       {
-      "name": "Java Client Libraries for Google Cloud Firestore",
+      "name": "Java Client Libraries for Cloud Firestore",
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/firestore/package-summary.html",
       "infotip": "The com.google.cloud.firestore packages",
@@ -199,16 +174,16 @@
     ]
   },
   {
-    "name": "Google Cloud Natural Language",
+    "name": "Cloud Natural Language",
     "id": "googlecloudnaturallanguage",
     "serviceName": "language.googleapis.com",
     "documentation": "https://cloud.google.com/natural-language/docs/reference/libraries",
-    "description": "The Google Cloud Natural Language API provides natural language understanding technologies including sentiment analysis, entity analysis, and syntax analysis.",
+    "description": "The Cloud Natural Language API provides natural language understanding technologies including sentiment analysis, entity analysis, and syntax analysis.",
     "transports": ["grpc"],
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/natural-language.svg",
     "clients": [
       {
-      "name": "Java Client Libraries for the Google Cloud Natural Language API",
+      "name": "Java Client Libraries for the Cloud Natural Language API",
       "language": "java",
       "site": "https://cloud.google.com/natural-language/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/com/google/cloud/language/v1/package-summary.html",
@@ -225,11 +200,11 @@
     ]
   },
   {
-    "name": "Google Cloud OS Login",
+    "name": "Cloud OS Login",
     "id": "cloudoslogin",
     "serviceName": "oslogin.googleapis.com",
     "documentation": "https://cloud.google.com/compute/docs/oslogin/rest/",
-    "description": "Google Cloud OS Login manages OS login configuration for Directory API users.",
+    "description": "Cloud OS Login manages OS login configuration for Directory API users.",
     "transports": ["grpc"],
     "clients": [
       {
@@ -250,7 +225,7 @@
     ]
   },
   {
-    "name": "Google Cloud Pub/Sub",
+    "name": "Cloud Pub/Sub",
     "id": "googlecloudpubsub",
     "serviceName": "pubsub.googleapis.com",
     "serviceRoles": [
@@ -261,12 +236,12 @@
       "roles/pubsub.viewer"
     ],
     "documentation": "https://cloud.google.com/pubsub/docs/reference/libraries",
-    "description": "Google Cloud Pub/Sub provides reliable, many-to-many, asynchronous messaging between applications. Publisher applications can send messages to a topic and other applications can subscribe to that topic to receive the messages.",
+    "description": "Cloud Pub/Sub provides reliable, many-to-many, asynchronous messaging between applications. Publisher applications can send messages to a topic and other applications can subscribe to that topic to receive the messages.",
     "transports": ["grpc"],
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/pubsub.svg",
     "clients": [
       {
-      "name": "Java Client Libraries for the Google Cloud Pub/Sub API",
+      "name": "Java Client Libraries for the Cloud Pub/Sub API",
       "language": "java",
       "site": "https://cloud.google.com/pubsub/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/com/google/cloud/pubsub/v1/package-summary.html",
@@ -283,7 +258,7 @@
     ]
   },
   {
-    "name": "Google Cloud Redis",
+    "name": "Cloud Redis",
     "id": "googlecloudredis",
     "serviceName": "redis.googleapis.com",
     "serviceRoles": [
@@ -292,11 +267,11 @@
       "roles/redis.viewer"
     ],
     "documentation": "https://cloud.google.com/memorystore/docs/redis/",
-    "description": "Google Cloud Redis API transfers data from partner SaaS applications to Google BigQuery on a scheduled, managed basis.",
+    "description": "Cloud Redis API transfers data from partner SaaS applications to Google BigQuery on a scheduled, managed basis.",
     "transports": ["grpc"],
     "clients": [
       {
-      "name": "Java Client Libraries for the Google Cloud Redis API",
+      "name": "Java Client Libraries for the Cloud Redis API",
       "language": "java",
       "site": "https://cloud.google.com/memorystore/",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/redis/v1/package-summary.html",
@@ -313,7 +288,7 @@
     ]
   },
   {
-    "name": "Google Cloud Resource Manager",
+    "name": "Cloud Resource Manager",
     "id": "googlecloudresourcemanager",
     "serviceName": "cloudresourcemanager.googleapis.com",
     "serviceRoles": [
@@ -323,11 +298,11 @@
       "roles/resourcemanager.lienModifier"
     ],
     "documentation": "https://cloud.google.com/resource-manager/docs/",
-    "description": "The Google Cloud Resource Manager service enables you to programmatically manage hierarchical resource containers such as organizations, folders, and projects.",
+    "description": "The Cloud Resource Manager service enables you to programmatically manage hierarchical resource containers such as organizations, folders, and projects.",
     "transports": ["http"],
     "clients": [
       {
-      "name": "Java Client Libraries for the Google Cloud Resource Manager API",
+      "name": "Java Client Libraries for the Cloud Resource Manager API",
       "language": "java",
       "site": "https://cloud.google.com/speech/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/?com/google/cloud/resourcemanager/package-summary.html",
@@ -344,7 +319,7 @@
     ]
   },
   {
-    "name": "Google Cloud Spanner",
+    "name": "Cloud Spanner",
     "id": "googlecloudspanner",
     "serviceName": "spanner.googleapis.com",
     "serviceRoles": [
@@ -360,7 +335,7 @@
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/spanner.svg",
     "clients": [
       {
-      "name": "Google Java Client for Cloud Spanner",
+      "name": "Java Client for Cloud Spanner",
       "language": "java",
       "site": "https://cloud.google.com/spanner/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/com/google/cloud/spanner/package-summary.html",
@@ -377,15 +352,15 @@
     ]
   },
   {
-    "name": "Google Cloud Speech",
+    "name": "Cloud Speech",
     "id": "googlecloudspeech",
     "serviceName": "speech.googleapis.com",
     "documentation": "https://cloud.google.com/speech/docs/reference/libraries",
-    "description": "Google Cloud Speech API converts audio to text in over 100 languages.",
+    "description": "Cloud Speech API converts audio to text in over 100 languages.",
     "transports": ["grpc"],
     "clients": [
       {
-      "name": "Java Client Libraries for the Google Cloud Speech API",
+      "name": "Java Client Libraries for the Cloud Speech API",
       "language": "java",
       "site": "https://cloud.google.com/speech/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/speech/v1beta1/package-summary.html",
@@ -402,7 +377,7 @@
     ]
   },
   {
-    "name": "Google Cloud Storage",
+    "name": "Cloud Storage",
     "id": "googlecloudstorage",
     "serviceName": "storage-component.googleapis.com",
     "serviceRoles": [
@@ -417,7 +392,7 @@
     "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/storage.svg",
     "clients": [
       {
-      "name": "Google Cloud Storage Client Library for Java",
+      "name": "Cloud Storage Client Library for Java",
       "language": "java",
       "site": "https://cloud.google.com/storage/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/storage/package-summary.html",
@@ -434,7 +409,7 @@
     ]
   },
   {
-    "name": "Google Cloud Translation",
+    "name": "Cloud Translation",
     "id": "cloudtranslation",
     "serviceName": "translate.googleapis.com",
     "documentation": "https://cloud.google.com/translate/docs/reference/libraries",
@@ -442,11 +417,11 @@
     "transports": ["http"],
     "clients": [
       {
-      "name": "Google Cloud Translation Client Library for Java",
+      "name": "Cloud Translation Client Library for Java",
       "language": "java",
       "site": "https://cloud.google.com/translate/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/translate/package-summary.html",
-      "infotip": "The com.google.cloud.translate packages for client side access to the Google Cloud Translation API",
+      "infotip": "The com.google.cloud.translate packages for client side access to the Cloud Translation API",
       "launchStage": "GA",
       "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-translate",
       "languageLevel": "1.7.0",
@@ -459,15 +434,15 @@
     ]
   },
   {
-    "name": "Google Cloud Video Intelligence",
+    "name": "Cloud Video Intelligence",
     "id": "videointelligence",
     "serviceName": "videointelligence.googleapis.com",
     "documentation": "https://cloud.google.com/video-intelligence/docs/",
-    "description": "The Google Cloud Video Intelligence API enables developers to annotate videos stored in Google Cloud Storage with video and frame-level (1 fps) contextual information. The API supports common video formats including .mov, .mp4, and .avi.",
+    "description": "The Cloud Video Intelligence API enables developers to annotate videos stored in Google Cloud Storage with video and frame-level (1 fps) contextual information. The API supports common video formats including .mov, .mp4, and .avi.",
     "transports": ["grpc"],
     "clients": [
       {
-      "name": "A client to the Google Cloud Video Intelligence API.",
+      "name": "A client to the Cloud Video Intelligence API.",
       "language": "java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/videointelligence/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.videointelligence packages",
@@ -483,15 +458,15 @@
     ]
   },
   {
-    "name": "Google Cloud Vision",
+    "name": "Cloud Vision",
     "id": "googlecloudvision",
     "serviceName": "vision.googleapis.com",
     "documentation": "https://cloud.google.com/vision/docs/reference/libraries",
-    "description": "The Google Cloud Vision API provides vision features including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content.",
+    "description": "The Cloud Vision API provides vision features including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content.",
     "transports": ["grpc"],
     "clients": [
       {
-      "name": "Java Client Libraries for the Google Cloud Vision API",
+      "name": "Java Client Libraries for the Cloud Vision API",
       "language": "java",
       "site": "https://cloud.google.com/vision/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/vision/v1/package-summary.html",
@@ -503,6 +478,31 @@
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-vision",
          "version": "1.29.0"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Dialogflow",
+    "id": "dialogflow",
+    "serviceName": "dialogflow.googleapis.com",
+    "documentation": "https://dialogflow.com/",
+    "description": "An NLU platform for designing and integrating conversational user interfaces into mobile apps, web applications, devices, and bots.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for the Dialogflow API",
+      "language": "java",
+      "site": "https://dialogflow.com/",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/dialogflow/v2beta1/package-summary.html",
+      "infotip": "The com.google.cloud.dialogflow.v2beta1 packages",
+      "launchStage": "alpha",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-os-login",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-dialogflow",
+         "version": "0.47.0-alpha"
        }
       }
     ]
