@@ -318,6 +318,30 @@
       }
     ]
   },
+{
+    "name": "Cloud Security Scanner",
+    "id": "cloudsecurityscanner",
+    "serviceName": "websecurityscanner.googleapis.com",
+    "documentation": "https://cloud.google.com/security-scanner/docs/",
+    "description": "The Cloud Security Scanner identifies security vulnerabilities in your Google App Engine web applications. It crawls your application, following all links within the scope of your starting URLs, and attempts to exercise as many user inputs and event handlers as possible.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for Web Security Scanner",
+      "language": "java",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/websecurityscanner/v1alpha/package-summary.html",
+      "infotip": "The com.google.cloud.websecurityscanner.v1alpha packages",
+      "launchStage": "alpha",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-websecurityscanner",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-websecurityscanner",
+         "version": "0.48.0-alpha"
+       }
+      }
+    ]
+  },
   {
     "name": "Cloud Spanner",
     "id": "googlecloudspanner",
