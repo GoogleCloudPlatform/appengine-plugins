@@ -438,7 +438,7 @@
     "id": "videointelligence",
     "serviceName": "videointelligence.googleapis.com",
     "documentation": "https://cloud.google.com/video-intelligence/docs/",
-    "description": "The Cloud Video Intelligence API enables developers to annotate videos stored in Google Cloud Storage with video and frame-level (1 fps) contextual information. The API supports common video formats including .mov, .mp4, and .avi.",
+    "description": "The Cloud Video Intelligence API enables developers to annotate videos stored in Cloud Storage with video and frame-level (1 fps) contextual information. The API supports common video formats including .mov, .mp4, and .avi.",
     "transports": ["grpc"],
     "clients": [
       {
