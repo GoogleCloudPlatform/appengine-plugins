@@ -66,6 +66,7 @@ public class LibrariesTest {
     Assert.assertTrue(id.matches("[a-z]+"));
     Assert.assertFalse(api.getString("serviceName").isEmpty());
     Assert.assertFalse(api.getString("name").isEmpty());
+    Assert.assertFalse(api.getString("name").contains("Google"));
     Assert.assertFalse(api.getString("description").isEmpty());
     String transports = api.getJsonArray("transports").getString(0);
     Assert.assertTrue(
