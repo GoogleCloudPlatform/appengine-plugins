@@ -17,51 +17,58 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
+
+import org.junit.Before;
 import org.junit.Test;
 
 public class DefaultStageFlexibleConfigurationTest {
 
+  private DefaultStageFlexibleConfiguration configuration;
+  private File file = new File("");
+
+  @Before
+  public void setUp() {
+    // todo should we check these are not the same and 
+    // files are files and directories are directories?
+    // should we use paths instead?
+    configuration = new DefaultStageFlexibleConfiguration.Builder()
+        .setAppEngineDirectory(file)
+        .setArtifact(file)
+        .setDockerDirectory(file)
+        .setStagingDirectory(file)
+        .build();
+  }
+
+
   @Test
   public void testInitialValues() {
-    DefaultStageFlexibleConfiguration configuration = new DefaultStageFlexibleConfiguration();
-    assertNull(configuration.getAppEngineDirectory());
-    assertNull(configuration.getArtifact());
-    assertNull(configuration.getDockerDirectory());
-    assertNull(configuration.getStagingDirectory());
+    try {
+      new DefaultStageFlexibleConfiguration.Builder().build();
+      fail();
+    } catch (NullPointerException ex) {
+    }
   }
 
   @Test
   public void testSetAppEngineDirectory() {
-    File file = new File("");
-    DefaultStageFlexibleConfiguration configuration = new DefaultStageFlexibleConfiguration();
-    configuration.setAppEngineDirectory(file);
     assertEquals(file, configuration.getAppEngineDirectory());
   }
 
   @Test
   public void testSetArtifact() {
-    File file = new File("");
-    DefaultStageFlexibleConfiguration configuration = new DefaultStageFlexibleConfiguration();
-    configuration.setArtifact(file);
     assertEquals(file, configuration.getArtifact());
   }
 
   @Test
   public void testSetDockerDirectory() {
-    File file = new File("");
-    DefaultStageFlexibleConfiguration configuration = new DefaultStageFlexibleConfiguration();
-    configuration.setDockerDirectory(file);
     assertEquals(file, configuration.getDockerDirectory());
   }
 
   @Test
   public void testSetStagingDirectory() {
-    File file = new File("");
-    DefaultStageFlexibleConfiguration configuration = new DefaultStageFlexibleConfiguration();
-    configuration.setStagingDirectory(file);
     assertEquals(file, configuration.getStagingDirectory());
   }
 }
