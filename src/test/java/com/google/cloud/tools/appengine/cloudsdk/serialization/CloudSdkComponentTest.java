@@ -113,7 +113,7 @@ public class CloudSdkComponentTest {
 
   private void assertJsonKeyValueExists(
       String expectedKey, @Nullable String expectedValue, String result) {
-    // weird case where a null value can be passed so it can be checked that it's not null
+    // unusual case where a null argument is allowed in order to check that it's not null
     assertNotNull(expectedValue);
     String regex = String.format(Locale.US, ".*%s\":\\s*\"%s\".*", expectedKey, expectedValue);
     assertTrue(result.matches(regex));
