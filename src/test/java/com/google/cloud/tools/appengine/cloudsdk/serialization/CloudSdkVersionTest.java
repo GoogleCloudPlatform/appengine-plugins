@@ -16,35 +16,58 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
-import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
+
+import org.junit.Assert;
 import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
 
 public class CloudSdkVersionTest {
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void testConstructor_null() {
-    new CloudSdkVersion(null);
+    try {
+      new CloudSdkVersion(null);
+      Assert.fail();
+    } catch (NullPointerException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testConstructor_emptyString() {
-    new CloudSdkVersion("");
+    try {
+      new CloudSdkVersion("");
+      Assert.fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testConstructor_preReleaseBeforeNumber() {
-    new CloudSdkVersion("v1.beta.3-1.0.0");
+    try {
+      new CloudSdkVersion("v1.beta.3-1.0.0");
+      Assert.fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testConstructor_missingRequiredNumbers() {
-    new CloudSdkVersion("1.0");
+    try {
+      new CloudSdkVersion("1.0");
+      Assert.fail();
+    } catch (IllegalArgumentException ex) {
+      Assert.assertNotNull(ex.getMessage());
+    }
   }
 
   @Test
