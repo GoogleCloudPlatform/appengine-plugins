@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,17 +30,17 @@ public class DefaultStageFlexibleConfigurationTest {
 
   @Before
   public void setUp() {
-    // todo should we check these are not the same and 
+    // todo should we check these are not the same and
     // files are files and directories are directories?
     // should we use paths instead?
-    configuration = new DefaultStageFlexibleConfiguration.Builder()
-        .setAppEngineDirectory(file)
-        .setArtifact(file)
-        .setDockerDirectory(file)
-        .setStagingDirectory(file)
-        .build();
+    configuration =
+        new DefaultStageFlexibleConfiguration.Builder()
+            .setAppEngineDirectory(file)
+            .setArtifact(file)
+            .setDockerDirectory(file)
+            .setStagingDirectory(file)
+            .build();
   }
-
 
   @Test
   public void testInitialValues() {

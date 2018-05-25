@@ -16,21 +16,20 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
+import com.google.common.base.Preconditions;
 import java.io.File;
 import javax.annotation.Nullable;
-
-import com.google.common.base.Preconditions;
 
 /** Plain Java bean implementation of {@link StageFlexibleConfiguration}. */
 public class DefaultStageFlexibleConfiguration implements StageFlexibleConfiguration {
 
-  @Nullable private File appEngineDirectory;
-  @Nullable private File dockerDirectory;
-  @Nullable private File artifact;
-  @Nullable private File stagingDirectory;
-  
-  private DefaultStageFlexibleConfiguration(File appEngineDirectory, File dockerDirectory,
-      File artifact, File stagingDirectory) {
+  private File appEngineDirectory;
+  private File dockerDirectory;
+  private File artifact;
+  private File stagingDirectory;
+
+  private DefaultStageFlexibleConfiguration(
+      File appEngineDirectory, File dockerDirectory, File artifact, File stagingDirectory) {
     this.appEngineDirectory = Preconditions.checkNotNull(appEngineDirectory);
     this.dockerDirectory = Preconditions.checkNotNull(dockerDirectory);
     this.artifact = Preconditions.checkNotNull(artifact);
@@ -38,7 +37,6 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   }
 
   @Override
-  @Nullable
   public File getAppEngineDirectory() {
     return appEngineDirectory;
   }
@@ -48,7 +46,6 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   }
 
   @Override
-  @Nullable
   public File getDockerDirectory() {
     return dockerDirectory;
   }
@@ -58,7 +55,6 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   }
 
   @Override
-  @Nullable
   public File getArtifact() {
     return artifact;
   }
@@ -68,7 +64,6 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   }
 
   @Override
-  @Nullable
   public File getStagingDirectory() {
     return stagingDirectory;
   }
@@ -76,38 +71,43 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
   public void setStagingDirectory(File stagingDirectory) {
     this.stagingDirectory = stagingDirectory;
   }
-  
+
   public static class Builder {
-  
+
     @Nullable private File appEngineDirectory;
     @Nullable private File dockerDirectory;
     @Nullable private File artifact;
     @Nullable private File stagingDirectory;
-    
+
     public Builder setAppEngineDirectory(File appEngineDirectory) {
       this.appEngineDirectory = Preconditions.checkNotNull(appEngineDirectory);
       return this;
     }
-    
+
     public Builder setDockerDirectory(File dockerDirectory) {
       this.dockerDirectory = Preconditions.checkNotNull(dockerDirectory);
       return this;
     }
-    
+
     public Builder setArtifact(File artifact) {
       this.artifact = Preconditions.checkNotNull(artifact);
       return this;
     }
-    
+
     public Builder setStagingDirectory(File stagingDirectory) {
       this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
       return this;
     }
-    
+
     public DefaultStageFlexibleConfiguration build() {
-      return new DefaultStageFlexibleConfiguration(appEngineDirectory, dockerDirectory,
-          artifact, stagingDirectory);
+      if (appEngineDirectory == null
+          || dockerDirectory == null
+          || artifact == null
+          || stagingDirectory == null) {
+        throw new NullPointerException("Incomplete configuration");
+      }
+      return new DefaultStageFlexibleConfiguration(
+          appEngineDirectory, dockerDirectory, artifact, stagingDirectory);
     }
-  
   }
 }
