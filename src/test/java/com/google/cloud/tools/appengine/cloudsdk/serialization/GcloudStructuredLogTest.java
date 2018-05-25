@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 
 import com.google.cloud.tools.appengine.cloudsdk.JsonParseException;
 import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class GcloudStructuredLogTest {
@@ -121,7 +122,9 @@ public class GcloudStructuredLogTest {
 
   @Test
   public void testParse_noErrorWhenMessageMissing() throws JsonParseException {
-    GcloudStructuredLog.parse(
-        "{'version': '0.0.1', 'verbosity': 'INFO', 'timestamp': 'a-timestamp'}");
+    GcloudStructuredLog log =
+        GcloudStructuredLog.parse(
+            "{'version': '0.0.1', 'verbosity': 'INFO', 'timestamp': 'a-timestamp'}");
+    Assert.assertEquals("", log.getMessage());
   }
 }

@@ -18,17 +18,18 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /** Command Line argument helper for AppCfg based commands. */
 public class AppCfgArgs {
 
   /** Returns {@code [--name=value]} or {@code []} if value=null. */
-  public static List<String> get(String name, String value) {
+  public static List<String> get(String name, @Nullable String value) {
     return Args.stringWithEq(name, value);
   }
 
   /** Returns {@code [--name]} if value=true, {@code []} if value=false/null. */
-  public static List<String> get(String name, Boolean value) {
+  public static List<String> get(String name, @Nullable Boolean value) {
     if (Boolean.TRUE.equals(value)) {
       return Collections.singletonList("--" + name);
     }

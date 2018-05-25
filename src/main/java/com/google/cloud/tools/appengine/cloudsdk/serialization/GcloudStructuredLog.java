@@ -27,33 +27,37 @@ public class GcloudStructuredLog {
 
   public static class GcloudError {
     // Don't change the field names because Gson uses them for automatic de-serialization.
-    private String type;
-    private String stacktrace;
-    private String details;
+    @Nullable private String type;
+    @Nullable private String stacktrace;
+    @Nullable private String details;
 
     // empty private constructor; GSON instantiates
     private GcloudError() {}
 
+    @Nullable
     public String getType() {
       return type;
     }
 
+    @Nullable
     public String getStacktrace() {
       return stacktrace;
     }
 
+    @Nullable
     public String getDetails() {
       return details;
     }
   }
 
   // Don't change the field names because Gson uses them for automatic de-serialization.
-  private String version;
+  @Nullable private String version;
   @Nullable private String verbosity;
-  private String timestamp;
-  private String message;
+  @Nullable private String timestamp;
+  @Nullable private String message;
   @Nullable private GcloudError error;
 
+  @Nullable
   public String getVersion() {
     return version;
   }
@@ -63,11 +67,15 @@ public class GcloudStructuredLog {
     return verbosity;
   }
 
+  @Nullable
   public String getTimestamp() {
     return timestamp;
   }
 
   public String getMessage() {
+    if (message == null) {
+      return "";
+    }
     return message;
   }
 

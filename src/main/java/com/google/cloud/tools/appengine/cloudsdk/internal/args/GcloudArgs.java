@@ -23,17 +23,18 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /** Command Line argument helper for gcloud based commands. */
 public class GcloudArgs {
 
   /** Returns {@code [--name, value]} or {@code []} if value is null. */
-  public static List<String> get(String name, String value) {
+  public static List<String> get(String name, @Nullable String value) {
     return Args.string(name, value);
   }
 
   /** Returns {@code [--name, value]} or {@code []} if value is null. */
-  public static List<String> get(String name, Integer value) {
+  public static List<String> get(String name, @Nullable Integer value) {
     return Args.integer(name, value);
   }
 
@@ -41,7 +42,7 @@ public class GcloudArgs {
    * Returns {@code [--name]} if value is true, {@code [--no-name]} if value is false, {@code []} if
    * value is null.
    */
-  public static List<String> get(String name, Boolean value) {
+  public static List<String> get(String name, @Nullable Boolean value) {
     if (value != null) {
       if (value) {
         return Collections.singletonList("--" + name);
@@ -52,7 +53,7 @@ public class GcloudArgs {
   }
 
   /** Returns {@code [--name, file.toPath().toString()]} or {@code []} if file is null. */
-  public static List<String> get(String name, File file) {
+  public static List<String> get(String name, @Nullable File file) {
     return Args.filePath(name, file);
   }
 
@@ -60,19 +61,21 @@ public class GcloudArgs {
    * Returns {@code [--name, path.toString()]} or {@code []} if path is null, or its representation
    * is empty.
    */
-  public static List<String> get(String name, Path path) {
+  public static List<String> get(String name, @Nullable Path path) {
     return Args.path(name, path);
   }
 
   /** Returns {@code [key1=value1,key2=value2,...]}, {@code []} if keyValueMapping=empty/null. */
-  public static List<String> get(Map<?, ?> keyValueMapping) {
+  public static List<String> get(@Nullable Map<?, ?> keyValueMapping) {
     return Args.keyValueString(keyValueMapping);
   }
 
   /** Returns a list of args for the common arguments in {@link Configuration}. */
   public static List<String> get(Configuration configuration) {
     List<String> result = Lists.newArrayList();
-    result.addAll(get("project", configuration.getProject()));
+    if (configuration != null) {
+      result.addAll(get("project", configuration.getProject()));
+    }
     return result;
   }
 }
