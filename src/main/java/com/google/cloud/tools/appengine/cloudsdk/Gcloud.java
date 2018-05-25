@@ -29,25 +29,26 @@ import com.google.gson.JsonSyntaxException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import javax.annotation.Nullable;
 
 /** Operations that use gcloud. */
 public class Gcloud {
   private final CloudSdk sdk;
   private final GcloudRunner.Factory gcloudRunnerFactory;
-  private final String metricsEnvironment;
-  private final String metricsEnvironmentVersion;
-  private final File credentialFile;
-  private final String outputFormat;
-  private final String showStructuredLogs;
+  @Nullable private final String metricsEnvironment;
+  @Nullable private final String metricsEnvironmentVersion;
+  @Nullable private final File credentialFile;
+  @Nullable private final String outputFormat;
+  @Nullable private final String showStructuredLogs;
 
   private Gcloud(
       CloudSdk sdk,
       GcloudRunner.Factory gcloudRunnerFactory,
-      String metricsEnvironment,
-      String metricsEnvironmentVersion,
-      File credentialFile,
-      String outputFormat,
-      String showStructuredLogs) {
+      @Nullable String metricsEnvironment,
+      @Nullable String metricsEnvironmentVersion,
+      @Nullable File credentialFile,
+      @Nullable String outputFormat,
+      @Nullable String showStructuredLogs) {
     this.gcloudRunnerFactory = gcloudRunnerFactory;
     this.sdk = sdk;
     this.metricsEnvironment = metricsEnvironment;
@@ -157,11 +158,11 @@ public class Gcloud {
     private final CloudSdk sdk;
     private final GcloudRunner.Factory gcloudRunnerFactory;
 
-    private String metricsEnvironment;
-    private String metricsEnvironmentVersion;
-    private File credentialFile;
-    private String outputFormat;
-    private String showStructuredLogs;
+    @Nullable private String metricsEnvironment;
+    @Nullable private String metricsEnvironmentVersion;
+    @Nullable private File credentialFile;
+    @Nullable private String outputFormat;
+    @Nullable private String showStructuredLogs;
 
     private Builder(CloudSdk sdk) {
       this(sdk, new GcloudRunner.Factory());
