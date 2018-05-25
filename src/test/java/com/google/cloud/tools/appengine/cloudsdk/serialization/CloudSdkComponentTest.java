@@ -18,10 +18,13 @@ package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import javax.annotation.Nullable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -64,9 +67,14 @@ public class CloudSdkComponentTest {
     assertJsonKeyValueExists(
         "current_version_string", cloudSdkComponent.getCurrentVersion(), result);
     assertJsonKeyValueExists("id", cloudSdkComponent.getId(), result);
-    assertJsonKeyValueExists("is_configuration", cloudSdkComponent.getIsConfiguration(), result);
-    assertJsonKeyValueExists("is_hidden", cloudSdkComponent.getIsHidden(), result);
-    assertJsonKeyValueExists("latest_version_string", cloudSdkComponent.getLatestVersion(), result);
+    Boolean isConfiguration = cloudSdkComponent.getIsConfiguration();
+    assertNotNull(isConfiguration);
+    assertJsonKeyValueExists("is_configuration", isConfiguration, result);
+    Boolean isHidden = cloudSdkComponent.getIsHidden();
+    assertNotNull(isHidden);
+    assertJsonKeyValueExists("is_hidden", isHidden, result);
+    String latestVersion = cloudSdkComponent.getLatestVersion();
+    assertJsonKeyValueExists("latest_version_string", latestVersion, result);
     assertJsonKeyValueExists("name", cloudSdkComponent.getName(), result);
     assertJsonKeyValueExists("size", cloudSdkComponent.getSizeInBytes(), result);
   }
@@ -103,18 +111,21 @@ public class CloudSdkComponentTest {
     }
   }
 
-  private void assertJsonKeyValueExists(String expectedKey, String expectedValue, String result) {
-    String regex = String.format(".*%s\":\\s*\"%s\".*", expectedKey, expectedValue);
+  private void assertJsonKeyValueExists(
+      String expectedKey, @Nullable String expectedValue, String result) {
+    // weird case where a null value can be passed so it can be checked that it's not null
+    assertNotNull(expectedValue);
+    String regex = String.format(Locale.US, ".*%s\":\\s*\"%s\".*", expectedKey, expectedValue);
     assertTrue(result.matches(regex));
   }
 
   private void assertJsonKeyValueExists(String expectedKey, int expectedValue, String result) {
-    String regex = String.format(".*%s\":\\s*%s.*", expectedKey, expectedValue);
+    String regex = String.format(Locale.US, ".*%s\":\\s*%s.*", expectedKey, expectedValue);
     assertTrue(result.matches(regex));
   }
 
   private void assertJsonKeyValueExists(String expectedKey, boolean expectedValue, String result) {
-    String regex = String.format(".*%s\":\\s*%s.*", expectedKey, expectedValue);
+    String regex = String.format(Locale.US, ".*%s\":\\s*%s.*", expectedKey, expectedValue);
     assertTrue(result.matches(regex));
   }
 
