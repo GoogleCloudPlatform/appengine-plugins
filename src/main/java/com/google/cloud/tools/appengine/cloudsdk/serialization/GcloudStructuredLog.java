@@ -72,6 +72,9 @@ public class GcloudStructuredLog {
     return timestamp;
   }
 
+  /**
+   * Returns a human readable description of the error. 
+   */
   public String getMessage() {
     if (message == null) {
       return "";
@@ -90,7 +93,7 @@ public class GcloudStructuredLog {
   /**
    * Parses a JSON string representing {@code gcloud} structured log output.
    *
-   * @return parsed JSON; never {@code null}
+   * @return parsed JSON
    * @throws JsonParseException if {@code jsonString} has syntax errors or incompatible JSON element
    *     type
    */

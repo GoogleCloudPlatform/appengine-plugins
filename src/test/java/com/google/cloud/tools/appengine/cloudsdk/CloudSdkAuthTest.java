@@ -50,7 +50,8 @@ public class CloudSdkAuthTest {
   }
 
   @Test
-  public void testLogin_withUser() throws AppEngineException, ProcessHandlerException, IOException {
+  public void testLogin_withUser()
+      throws AppEngineException, ProcessHandlerException, IOException {
     String testUsername = "potato@potato.com";
     new CloudSdkAuth(gcloudRunner).login(testUsername);
     Mockito.verify(gcloudRunner).run(eq(Arrays.asList("auth", "login", testUsername)), isNull());
