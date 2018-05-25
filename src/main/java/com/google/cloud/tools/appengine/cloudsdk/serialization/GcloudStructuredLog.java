@@ -72,9 +72,7 @@ public class GcloudStructuredLog {
     return timestamp;
   }
 
-  /**
-   * Returns a human readable description of the error. 
-   */
+  /** Returns a human readable description of the error. */
   public String getMessage() {
     if (message == null) {
       return "";
