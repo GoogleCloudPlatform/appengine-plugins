@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent.State;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -76,7 +77,9 @@ public class CloudSdkComponentTest {
     String latestVersion = cloudSdkComponent.getLatestVersion();
     assertJsonKeyValueExists("latest_version_string", latestVersion, result);
     assertJsonKeyValueExists("name", cloudSdkComponent.getName(), result);
-    assertJsonKeyValueExists("size", cloudSdkComponent.getSizeInBytes(), result);
+    Integer sizeInBytes = cloudSdkComponent.getSizeInBytes();
+    assertNotNull(sizeInBytes);
+    assertJsonKeyValueExists("size", sizeInBytes, result);
   }
 
   @Test
@@ -161,7 +164,8 @@ public class CloudSdkComponentTest {
     return expected;
   }
 
-  private void assertCloudSdkComponentsEqual(CloudSdkComponent expected, CloudSdkComponent actual) {
+  private static void assertCloudSdkComponentsEqual(
+      CloudSdkComponent expected, CloudSdkComponent actual) {
     assertEquals(expected.getCurrentVersion(), actual.getCurrentVersion());
     assertEquals(expected.getId(), actual.getId());
     assertEquals(expected.getIsConfiguration(), actual.getIsConfiguration());
@@ -169,6 +173,11 @@ public class CloudSdkComponentTest {
     assertEquals(expected.getLatestVersion(), actual.getLatestVersion());
     assertEquals(expected.getName(), actual.getName());
     assertEquals(expected.getSizeInBytes(), actual.getSizeInBytes());
-    assertEquals(expected.getState().getName(), actual.getState().getName());
+    State expectedState = expected.getState();
+    if (expectedState != null) {
+      State actualState = actual.getState();
+      assertNotNull(actualState);
+      assertEquals(expectedState.getName(), actualState.getName());
+    }
   }
 }

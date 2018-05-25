@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk.internal.process;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
@@ -44,6 +45,8 @@ public class ExitCodeRecorderProcessExitListenerTest {
   public void testGetMostRecentExitCode_notNull() {
     int code = 0;
     listener.onExit(code);
-    assertEquals(0, listener.getMostRecentExitCode().intValue());
+    Integer mostRecentExitCode = listener.getMostRecentExitCode();
+    assertNotNull(mostRecentExitCode);
+    assertEquals(0, mostRecentExitCode.intValue());
   }
 }

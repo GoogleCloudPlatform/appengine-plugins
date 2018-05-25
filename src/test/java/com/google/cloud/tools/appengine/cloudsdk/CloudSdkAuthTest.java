@@ -67,14 +67,15 @@ public class CloudSdkAuthTest {
           e.getMessage(), CoreMatchers.containsString("Invalid email address: " + testUsername));
       // pass
     }
+  }
 
+  @Test
+  public void testLogin_withNullUser() throws AppEngineException {
     try {
       new CloudSdkAuth(gcloudRunner).login(null);
       Assert.fail("Should have failed with bad user.");
     } catch (NullPointerException npe) {
       // pass
-    } catch (AppEngineException e) {
-      e.printStackTrace();
     }
   }
 

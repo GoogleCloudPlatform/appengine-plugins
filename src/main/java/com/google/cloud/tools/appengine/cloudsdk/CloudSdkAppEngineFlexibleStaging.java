@@ -51,17 +51,17 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   @Override
   public void stageFlexible(StageFlexibleConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getStagingDirectory());
+    File stagingDirectory = config.getStagingDirectory();
+    Preconditions.checkNotNull(stagingDirectory);
     Preconditions.checkNotNull(config.getArtifact());
 
-    if (!config.getStagingDirectory().exists()) {
+    if (!stagingDirectory.exists()) {
       throw new AppEngineException(
-          "Staging directory does not exist. Location: " + config.getStagingDirectory().toPath());
+          "Staging directory does not exist. Location: " + stagingDirectory);
     }
-    if (!config.getStagingDirectory().isDirectory()) {
+    if (!stagingDirectory.isDirectory()) {
       throw new AppEngineException(
-          "Staging location is not a directory. Location: "
-              + config.getStagingDirectory().toPath());
+          "Staging location is not a directory. Location: " + stagingDirectory);
     }
 
     try {
