@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class LocalRunRunnerTest {
   private Path appengineSdkForJavaPath;
   private File workingDirectory;
   private Path javaHomePath;
-  private Path windowsPythonPath;
+  @Nullable private Path windowsPythonPath = null;
   private Path devAppServer2Path;
 
   @Before
@@ -136,7 +137,7 @@ public class LocalRunRunnerTest {
     devAppServerRunner.runV2(inputArgs);
 
     ImmutableList.Builder<String> expected = ImmutableList.builder();
-    if (IS_WINDOWS) {
+    if (windowsPythonPath != null) {
       expected.add(windowsPythonPath.toString());
     }
     expected.add(devAppServer2Path.toString()).addAll(inputArgs);
