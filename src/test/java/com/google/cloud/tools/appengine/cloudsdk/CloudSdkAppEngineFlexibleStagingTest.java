@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.DefaultStageFlexibleConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging.CopyService;
 import com.google.cloud.tools.test.utils.LogStoringHandler;
 import java.io.File;
@@ -48,9 +48,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineFlexibleStagingTest {
 
-  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
+  @Rule private TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-  @Mock private DefaultStageFlexibleConfiguration config;
+  @Mock private StageFlexibleConfiguration config;
   @Mock private CopyService copyService;
 
   private LogStoringHandler handler;

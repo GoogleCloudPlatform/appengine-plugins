@@ -23,7 +23,7 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DefaultStageFlexibleConfigurationTest {
+public class StageFlexibleConfigurationTest {
 
   private StageFlexibleConfiguration configuration;
   private File file = new File("");
@@ -34,7 +34,7 @@ public class DefaultStageFlexibleConfigurationTest {
     // files are files and directories are directories?
     // should we use paths instead?
     configuration =
-        new DefaultStageFlexibleConfiguration.Builder()
+        new StageFlexibleConfiguration.Builder()
             .setAppEngineDirectory(file)
             .setArtifact(file)
             .setDockerDirectory(file)
@@ -45,7 +45,7 @@ public class DefaultStageFlexibleConfigurationTest {
   @Test
   public void testInitialValues() {
     try {
-      new DefaultStageFlexibleConfiguration.Builder().build();
+      new StageFlexibleConfiguration.Builder().build();
       fail();
     } catch (NullPointerException ex) {
     }
