@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
 import java.io.File;
 import javax.annotation.Nullable;
 
+/** Configuration for {@link AppEngineFlexibleStaging#stageFlexible(StageFlexibleConfiguration)}. */
 public class DefaultStageFlexibleConfiguration implements StageFlexibleConfiguration {
 
   private File appEngineDirectory;
@@ -35,21 +36,28 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
     this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
   }
 
+  /** Directory containing {@code app.yaml}. */
   @Override
   public File getAppEngineDirectory() {
     return appEngineDirectory;
   }
 
+  /** Directory containing {@code Dockerfile} and other resources used by it. */
   @Override
   public File getDockerDirectory() {
     return dockerDirectory;
   }
 
+  /** Artifact to deploy such as WAR or JAR. */
   @Override
   public File getArtifact() {
     return artifact;
   }
 
+  /**
+   * Directory where {@code app.yaml}, files in docker directory, and the artifact to deploy will be
+   * copied for deploying.
+   */
   @Override
   public File getStagingDirectory() {
     return stagingDirectory;
