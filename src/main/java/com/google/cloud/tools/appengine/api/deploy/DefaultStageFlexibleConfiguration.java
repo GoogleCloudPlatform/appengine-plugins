@@ -20,7 +20,6 @@ import com.google.common.base.Preconditions;
 import java.io.File;
 import javax.annotation.Nullable;
 
-/** Plain Java bean implementation of {@link StageFlexibleConfiguration}. */
 public class DefaultStageFlexibleConfiguration implements StageFlexibleConfiguration {
 
   private File appEngineDirectory;
