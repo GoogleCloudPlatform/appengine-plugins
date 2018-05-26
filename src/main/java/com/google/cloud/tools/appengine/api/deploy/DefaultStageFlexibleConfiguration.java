@@ -99,7 +99,12 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
       return this;
     }
 
-    public DefaultStageFlexibleConfiguration build() {
+    /**
+     * Returns a fully configured StageFlexibleConfiguration object.
+     * 
+     * @throws NullPointerException if any of the fields have not been set
+     */
+    public StageFlexibleConfiguration build() {
       if (appEngineDirectory == null
           || dockerDirectory == null
           || artifact == null
