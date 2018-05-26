@@ -41,17 +41,9 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
     return appEngineDirectory;
   }
 
-  public void setAppEngineDirectory(File appEngineDirectory) {
-    this.appEngineDirectory = appEngineDirectory;
-  }
-
   @Override
   public File getDockerDirectory() {
     return dockerDirectory;
-  }
-
-  public void setDockerDirectory(File dockerDirectory) {
-    this.dockerDirectory = dockerDirectory;
   }
 
   @Override
@@ -59,17 +51,9 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
     return artifact;
   }
 
-  public void setArtifact(File artifact) {
-    this.artifact = artifact;
-  }
-
   @Override
   public File getStagingDirectory() {
     return stagingDirectory;
-  }
-
-  public void setStagingDirectory(File stagingDirectory) {
-    this.stagingDirectory = stagingDirectory;
   }
 
   public static class Builder {
