@@ -85,7 +85,7 @@ public class DefaultStageFlexibleConfiguration implements StageFlexibleConfigura
 
     /**
      * Returns a fully configured StageFlexibleConfiguration object.
-     * 
+     *
      * @throws NullPointerException if any of the fields have not been set
      */
     public StageFlexibleConfiguration build() {

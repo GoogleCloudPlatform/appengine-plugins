@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class DefaultStageFlexibleConfigurationTest {
 
-  private DefaultStageFlexibleConfiguration configuration;
+  private StageFlexibleConfiguration configuration;
   private File file = new File("");
 
   @Before
