@@ -48,7 +48,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineFlexibleStagingTest {
 
-  @Rule private TemporaryFolder temporaryFolder = new TemporaryFolder();
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Mock private StageFlexibleConfiguration config;
   @Mock private CopyService copyService;
