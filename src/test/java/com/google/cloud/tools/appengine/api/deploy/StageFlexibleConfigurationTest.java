@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -43,31 +44,32 @@ public class StageFlexibleConfigurationTest {
   }
 
   @Test
-  public void testInitialValues() {
+  public void testInitialValuesRequired() {
     try {
       new StageFlexibleConfiguration.Builder().build();
       fail();
     } catch (NullPointerException ex) {
+      assertNotNull(ex.getMessage());
     }
   }
 
   @Test
-  public void testSetAppEngineDirectory() {
+  public void testGetAppEngineDirectory() {
     assertEquals(file, configuration.getAppEngineDirectory());
   }
 
   @Test
-  public void testSetArtifact() {
+  public void testGetArtifact() {
     assertEquals(file, configuration.getArtifact());
   }
 
   @Test
-  public void testSetDockerDirectory() {
+  public void testGetDockerDirectory() {
     assertEquals(file, configuration.getDockerDirectory());
   }
 
   @Test
-  public void testSetStagingDirectory() {
+  public void testGetStagingDirectory() {
     assertEquals(file, configuration.getStagingDirectory());
   }
 }
