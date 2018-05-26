@@ -82,7 +82,9 @@ public class AsyncByteConsumerTest {
     int count = bytes.getAllValues().size();
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < count; i++) {
-      result.append(new String(bytes.getAllValues().get(i), 0, nBytes.getAllValues().get(i)));
+      byte[] rawBytes = bytes.getAllValues().get(i);
+      int length = nBytes.getAllValues().get(i);
+      result.append(new String(rawBytes, 0, length, StandardCharsets.UTF_8));
     }
     Assert.assertEquals(TEST_STRING, result.toString());
 
