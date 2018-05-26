@@ -54,13 +54,16 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Mock private CopyService copyService;
 
   private LogStoringHandler handler;
-  @Nullable private File stagingDirectory;
-  @Nullable private File dockerDirectory;
-  @Nullable private File appEngineDirectory;
+  private File stagingDirectory;
+  private File dockerDirectory;
+  private File appEngineDirectory;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     handler = LogStoringHandler.getForLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
+    appEngineDirectory = temporaryFolder.newFolder();
+    dockerDirectory = temporaryFolder.newFolder();
+    stagingDirectory = temporaryFolder.newFolder();
   }
 
   @Test
@@ -235,7 +238,6 @@ public class CloudSdkAppEngineFlexibleStagingTest {
    */
   private class FlexibleStagingContext {
     private FlexibleStagingContext withStagingDirectory() throws IOException {
-      stagingDirectory = temporaryFolder.newFolder();
       when(config.getStagingDirectory()).thenReturn(stagingDirectory);
       return this;
     }
@@ -248,14 +250,11 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     }
 
     private FlexibleStagingContext withDockerDirectory() throws IOException {
-      dockerDirectory = temporaryFolder.newFolder();
       when(config.getDockerDirectory()).thenReturn(dockerDirectory);
       return this;
     }
 
     private FlexibleStagingContext withDockerFile() throws IOException {
-      Assert.assertNotNull("needs withDockerDirectory to be called first", dockerDirectory);
-      assertTrue("needs withDockerDirectory to be called first", dockerDirectory.exists());
       File dockerFile = new File(dockerDirectory, "Dockerfile");
       if (!dockerFile.createNewFile()) {
         throw new IOException("Could not create Dockerfile for test");
@@ -271,16 +270,12 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     }
 
     private FlexibleStagingContext withAppEngineDirectory() throws IOException {
-      appEngineDirectory = temporaryFolder.newFolder();
       when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
       return this;
     }
 
     private FlexibleStagingContext withFileInAppEngineDirectory(
         String fileName, @Nullable String contents) throws IOException {
-      Assert.assertNotNull("needs withAppEngineDirectory to be called first", appEngineDirectory);
-      assertTrue("needs withAppEngineDirectory to be called first", appEngineDirectory.exists());
-
       File file = new File(appEngineDirectory, fileName);
       if (!file.createNewFile()) {
         throw new IOException("Could not create " + fileName + " for test");
