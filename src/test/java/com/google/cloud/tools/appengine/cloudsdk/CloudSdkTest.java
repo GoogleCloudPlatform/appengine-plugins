@@ -43,12 +43,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class CloudSdkTest {
 
   private Path root;
-  private CloudSdk.Builder builder;
+  private CloudSdk sdk;
 
   @Before
-  public void setup() {
+  public void setup() throws CloudSdkNotFoundException {
     root = Paths.get(Files.createTempDir().toString());
-    builder = new CloudSdk.Builder().sdkPath(root);
+    sdk = new CloudSdk.Builder().sdkPath(root).build();
   }
 
   private void writeVersionFile(String contents) throws IOException {
@@ -56,8 +56,8 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetSdkPath() throws CloudSdkNotFoundException {
-    assertEquals(root, builder.build().getPath());
+  public void testGetSdkPath() {
+    assertEquals(root, sdk.getPath());
   }
 
   @Test
@@ -79,9 +79,9 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileNotExists() throws CloudSdkNotFoundException {
+  public void testGetVersion_fileNotExists() {
     try {
-      builder.build().getVersion();
+      sdk.getVersion();
       fail();
     } catch (CloudSdkVersionFileException e) {
       assertEquals(
@@ -90,11 +90,11 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileContentInvalid() throws IOException, CloudSdkNotFoundException {
+  public void testGetVersion_fileContentInvalid() throws IOException {
     String fileContents = "this is not a valid version string";
     writeVersionFile(fileContents);
     try {
-      builder.build().getVersion();
+      sdk.getVersion();
       fail();
     } catch (CloudSdkVersionFileException ex) {
       assertEquals(
@@ -104,11 +104,10 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileContentValid()
-      throws IOException, CloudSdkVersionFileException, CloudSdkNotFoundException {
+  public void testGetVersion_fileContentValid() throws IOException, CloudSdkVersionFileException {
     String version = "136.0.0";
     writeVersionFile(version);
-    assertEquals(version, builder.build().getVersion().toString());
+    assertEquals(version, sdk.getVersion().toString());
   }
 
   @Test
@@ -118,26 +117,24 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetWindowsPythonPath() throws CloudSdkNotFoundException {
-    assertThat(
-        builder.build().getWindowsPythonPath().toString(),
-        anyOf(is("python"), endsWith("python.exe")));
+  public void testGetWindowsPythonPath() {
+    assertThat(sdk.getWindowsPythonPath().toString(), anyOf(is("python"), endsWith("python.exe")));
   }
 
   @Test
-  public void testGetJavaAppEngineSdkPath() throws CloudSdkNotFoundException {
+  public void testAppEngineSdkForJavaPath() {
     assertEquals(
         root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
-        builder.build().getAppEngineSdkForJavaPath());
+        sdk.getAppEngineSdkForJavaPath());
   }
 
   @Test
-  public void testGetJarPathJavaTools() throws CloudSdkNotFoundException {
+  public void testGetJarPathJavaTools() {
     assertEquals(
         root.resolve(
             "platform/google_appengine/google/appengine"
                 + "/tools/java/lib/appengine-tools-api.jar"),
-        builder.build().getJarPath("appengine-tools-api.jar"));
+        sdk.getJarPath("appengine-tools-api.jar"));
   }
 
   @Test
