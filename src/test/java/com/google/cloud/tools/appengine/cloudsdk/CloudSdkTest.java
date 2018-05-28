@@ -56,7 +56,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetSdkPath() throws CloudSdkNotFoundException {
+  public void testGetSdkPath() {
     assertEquals(root, sdk.getPath());
   }
 
@@ -79,7 +79,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileNotExists() throws CloudSdkNotFoundException {
+  public void testGetVersion_fileNotExists() {
     try {
       sdk.getVersion();
       fail();
@@ -90,7 +90,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileContentInvalid() throws IOException, CloudSdkNotFoundException {
+  public void testGetVersion_fileContentInvalid() throws IOException {
     String fileContents = "this is not a valid version string";
     writeVersionFile(fileContents);
     try {
@@ -104,8 +104,7 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetVersion_fileContentValid()
-      throws IOException, CloudSdkVersionFileException, CloudSdkNotFoundException {
+  public void testGetVersion_fileContentValid() throws IOException, CloudSdkVersionFileException {
     String version = "136.0.0";
     writeVersionFile(version);
     assertEquals(version, sdk.getVersion().toString());
@@ -118,19 +117,19 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testGetWindowsPythonPath() throws CloudSdkNotFoundException {
+  public void testGetWindowsPythonPath() {
     assertThat(sdk.getWindowsPythonPath().toString(), anyOf(is("python"), endsWith("python.exe")));
   }
 
   @Test
-  public void testGetJavaAppEngineSdkPath() throws CloudSdkNotFoundException {
+  public void testAppEngineSdkForJavaPath() {
     assertEquals(
         root.resolve("platform/google_appengine/google/appengine/tools/java/lib"),
         sdk.getAppEngineSdkForJavaPath());
   }
 
   @Test
-  public void testGetJarPathJavaTools() throws CloudSdkNotFoundException {
+  public void testGetJarPathJavaTools() {
     assertEquals(
         root.resolve(
             "platform/google_appengine/google/appengine"
