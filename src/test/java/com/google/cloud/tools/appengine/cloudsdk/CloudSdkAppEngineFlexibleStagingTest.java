@@ -62,12 +62,12 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     appEngineDirectory = temporaryFolder.newFolder();
     dockerDirectory = temporaryFolder.newFolder();
     stagingDirectory = temporaryFolder.newFolder();
-    
+
     dockerFile = new File(dockerDirectory, "Dockerfile");
     if (!dockerFile.createNewFile()) {
       throw new IOException("Could not create Dockerfile for test");
     }
-    
+
     when(config.getDockerDirectory()).thenReturn(dockerDirectory);
     when(config.getStagingDirectory()).thenReturn(stagingDirectory);
     when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
@@ -78,7 +78,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
     assertFalse(dockerDirectory.exists());
     when(config.getDockerDirectory()).thenReturn(dockerDirectory);
-    
+
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
 
     List<LogRecord> logs = handler.getLogs();
@@ -107,7 +107,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyDockerContext_runtimeNotJavaNoDockerfile() throws IOException {
-  
+
     dockerFile.delete();
     try {
       CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
@@ -136,7 +136,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyDockerContext_runtimeNullNoDockerfile() throws IOException {
-  
+
     dockerFile.delete();
     try {
       CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
@@ -169,7 +169,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     appEngineDirectory = new File(temporaryFolder.getRoot(), "non-existent-directory");
     assertFalse(appEngineDirectory.exists());
     when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
-    
+
     try {
       CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
       fail();
@@ -213,7 +213,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testFindRuntime_malformedAppYaml() throws IOException {
-  
+
     File file = new File(appEngineDirectory, "app.yaml");
     if (!file.createNewFile()) {
       throw new IOException("Could not create app.yaml for test");
@@ -227,5 +227,4 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       assertEquals("Malformed 'app.yaml'.", ex.getMessage());
     }
   }
-
 }
