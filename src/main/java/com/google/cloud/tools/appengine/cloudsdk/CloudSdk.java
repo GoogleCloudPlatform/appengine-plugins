@@ -18,6 +18,7 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -57,12 +58,10 @@ public class CloudSdk {
   private final Path javaHomePath;
 
   private CloudSdk(Path sdkPath, Path javaHomePath) {
-    this.sdkPath = sdkPath;
+    this.sdkPath = Preconditions.checkNotNull(sdkPath);
     this.javaHomePath = javaHomePath;
 
     // Populate jar locations.
-    // TODO(joaomartins): Consider case where SDK doesn't contain these jars. Only App Engine
-    // SDK does.
     jarLocations.put(
         "servlet-api.jar", getAppEngineSdkForJavaPath().resolve("shared/servlet-api.jar"));
     jarLocations.put("jsp-api.jar", getAppEngineSdkForJavaPath().resolve("shared/jsp-api.jar"));
@@ -196,9 +195,6 @@ public class CloudSdk {
   }
 
   void validateCloudSdkLocation() throws CloudSdkNotFoundException {
-    if (sdkPath == null) {
-      throw new CloudSdkNotFoundException("Validation Error: Cloud SDK path is null");
-    }
     if (!Files.isDirectory(sdkPath)) {
       throw new CloudSdkNotFoundException(
           "Validation Error: SDK location '" + sdkPath + "' is not a directory.");
@@ -266,9 +262,10 @@ public class CloudSdk {
     /**
      * The home directory of Google Cloud SDK.
      *
-     * @param sdkPath the root path for the Cloud SDK
+     * @param sdkPath the root path for the Cloud SDK. If null, the system will be searched for a
+     *     Cloud SDK installation.
      */
-    public Builder sdkPath(Path sdkPath) {
+    public Builder sdkPath(@Nullable Path sdkPath) {
       this.sdkPath = sdkPath;
       return this;
     }

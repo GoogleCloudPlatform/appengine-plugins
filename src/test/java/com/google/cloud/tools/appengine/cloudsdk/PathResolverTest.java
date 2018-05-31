@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.LogRecord;
+import javax.annotation.Nullable;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
@@ -36,7 +37,7 @@ import org.mockito.Mockito;
 public class PathResolverTest {
 
   @ClassRule public static TemporaryFolder symlinkTestArea = new TemporaryFolder();
-  private static Exception symlinkException = null;
+  @Nullable private static Exception symlinkException = null;
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 

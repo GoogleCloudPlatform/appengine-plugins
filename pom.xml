@@ -85,7 +85,7 @@
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
-      <version>1.17</version>
+      <version>1.21</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -159,10 +159,10 @@
           </annotationProcessorPaths>
           <compilerArgs>
             <arg>-Xep:NullAway:ERROR</arg>
-            <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools.appengine,com.google.cloud.tools.libraries,com.google.cloud.tools.managedcloudsdk,com.google.cloud.tools.io,com.google.cloud.tools.project</arg>
-            <arg>-XepOpt:NullAway:UnannotatedSubPackages=com.google.cloud.tools.appengine.cloudsdk.[a-zA-Z.]*</arg>
+            <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools</arg>
+            
 <arg>-XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock,org.junit.runners.Parameterized</arg>
-<arg>-XepOpt:NullAway:ExcludedClasses=com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1Test,com.google.cloud.tools.io.FilePermissionsTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2Test,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest</arg>
+<arg>-XepOpt:NullAway:ExcludedClasses=com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1Test,com.google.cloud.tools.appengine.cloudsdk.serialization.AppEngineDeployResult,com.google.cloud.tools.io.FilePermissionsTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2Test,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest,com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersionTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFileTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeploymentTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAuthTest</arg>
 <arg>-XepOpt:NullAway:KnownInitializers=com.google.gson.Gson.fromJson</arg>
 
           </compilerArgs>
@@ -218,7 +218,7 @@
           <dependency>
             <groupId>com.google.googlejavaformat</groupId>
             <artifactId>google-java-format</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
           </dependency>
         </dependencies>
         <configuration>

@@ -25,6 +25,7 @@ import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,17 +51,17 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   @Override
   public void stageFlexible(StageFlexibleConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
-    Preconditions.checkNotNull(config.getStagingDirectory());
+    File stagingDirectory = config.getStagingDirectory();
+    Preconditions.checkNotNull(stagingDirectory);
     Preconditions.checkNotNull(config.getArtifact());
 
-    if (!config.getStagingDirectory().exists()) {
+    if (!stagingDirectory.exists()) {
       throw new AppEngineException(
-          "Staging directory does not exist. Location: " + config.getStagingDirectory().toPath());
+          "Staging directory does not exist. Location: " + stagingDirectory);
     }
-    if (!config.getStagingDirectory().isDirectory()) {
+    if (!stagingDirectory.isDirectory()) {
       throw new AppEngineException(
-          "Staging location is not a directory. Location: "
-              + config.getStagingDirectory().toPath());
+          "Staging location is not a directory. Location: " + stagingDirectory);
     }
 
     try {
@@ -79,8 +80,12 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   static String findRuntime(StageFlexibleConfiguration config)
       throws IOException, AppEngineException {
     try {
-      // verification for app.yaml that contains runtime:java
-      Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
+      // verify that app.yaml that contains runtime:java
+      File appEngineDirectory = config.getAppEngineDirectory();
+      if (appEngineDirectory == null) {
+        throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
+      }
+      Path appYaml = appEngineDirectory.toPath().resolve(APP_YAML);
       return new AppYaml(appYaml).getRuntime();
     } catch (ScannerException | ParserException ex) {
       throw new AppEngineException("Malformed 'app.yaml'.", ex);
@@ -91,23 +96,26 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   static void copyDockerContext(
       StageFlexibleConfiguration config, CopyService copyService, @Nullable String runtime)
       throws IOException, AppEngineException {
-    if (config.getDockerDirectory() != null && config.getDockerDirectory().exists()) {
+    File dockerDirectory = config.getDockerDirectory();
+    if (dockerDirectory != null && dockerDirectory.exists()) {
       if ("java".equals(runtime)) {
         log.warning(
             "WARNING: runtime 'java' detected, any docker configuration in "
-                + config.getDockerDirectory()
+                + dockerDirectory
                 + " will be ignored. If you wish to specify a docker configuration, please use "
                 + "'runtime: custom'.");
       } else {
         // Copy docker context to staging
-        if (!Files.isRegularFile(config.getDockerDirectory().toPath().resolve("Dockerfile"))) {
+        if (!Files.isRegularFile(dockerDirectory.toPath().resolve("Dockerfile"))) {
           throw new AppEngineException(
-              "Docker directory "
-                  + config.getDockerDirectory().toPath()
-                  + " does not contain Dockerfile.");
+              "Docker directory " + dockerDirectory.toPath() + " does not contain Dockerfile.");
         } else {
-          copyService.copyDirectory(
-              config.getDockerDirectory().toPath(), config.getStagingDirectory().toPath());
+          File stagingDirectory = config.getStagingDirectory();
+          if (stagingDirectory == null) {
+            throw new AppEngineException(
+                "Invalid Staging Configuration: missing staging directory");
+          }
+          copyService.copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
         }
       }
     }
@@ -116,27 +124,37 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   @VisibleForTesting
   static void copyAppEngineContext(StageFlexibleConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
-    Path appYaml = config.getAppEngineDirectory().toPath().resolve(APP_YAML);
-    if (!appYaml.toFile().exists()) {
+    File appEngineDirectory = config.getAppEngineDirectory();
+    if (appEngineDirectory == null) {
+      throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
+    }
+    Path appYaml = appEngineDirectory.toPath().resolve(APP_YAML);
+    if (!Files.exists(appYaml)) {
       throw new AppEngineException(APP_YAML + " not found in the App Engine directory.");
     }
-    copyService.copyFileAndReplace(
-        appYaml, config.getStagingDirectory().toPath().resolve(APP_YAML));
+    if (config.getStagingDirectory() == null) {
+      throw new AppEngineException("Invalid Staging Configuration: missing staging directory");
+    }
+    Path stagingDirectory = config.getStagingDirectory().toPath();
+    copyService.copyFileAndReplace(appYaml, stagingDirectory.resolve(APP_YAML));
   }
 
   private static void copyArtifact(StageFlexibleConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
     // Copy the JAR/WAR file to staging.
-    if (config.getArtifact() != null && config.getArtifact().exists()) {
-      Path destination =
-          config
-              .getStagingDirectory()
-              .toPath()
-              .resolve(config.getArtifact().toPath().getFileName());
-      copyService.copyFileAndReplace(config.getArtifact().toPath(), destination);
+    File artifact = config.getArtifact();
+    if (artifact == null) {
+      throw new AppEngineException("Invalid Staging Configuration: missing artifact");
+    } else if (artifact.exists()) {
+      File stagingDirectory = config.getStagingDirectory();
+      if (stagingDirectory == null) {
+        throw new AppEngineException("Invalid Staging Configuration: missing staging directory");
+      } else {
+        Path destination = stagingDirectory.toPath().resolve(artifact.toPath().getFileName());
+        copyService.copyFileAndReplace(artifact.toPath(), destination);
+      }
     } else {
-      throw new AppEngineException(
-          "Artifact doesn't exist at '" + config.getArtifact().getPath() + "'.");
+      throw new AppEngineException("Artifact doesn't exist at '" + artifact.getPath() + "'.");
     }
   }
 

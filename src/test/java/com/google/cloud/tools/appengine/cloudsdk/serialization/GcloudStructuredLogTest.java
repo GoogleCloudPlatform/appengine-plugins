@@ -17,12 +17,14 @@
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import com.google.cloud.tools.appengine.cloudsdk.JsonParseException;
 import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class GcloudStructuredLogTest {
@@ -54,11 +56,12 @@ public class GcloudStructuredLogTest {
     assertEquals(
         "time event logged in UTC log file format: %Y-%m-%dT%H:%M:%S.%3f%Ez", log.getTimestamp());
     assertEquals("log/error message string", log.getMessage());
+    GcloudStructuredLog.GcloudError error = log.getError();
+    assertNotNull(error);
     assertEquals(
-        "exception or error raised (if logged message has actual exception data)",
-        log.getError().getType());
-    assertEquals("stacktrace or error if available", log.getError().getStacktrace());
-    assertEquals("any additional error details", log.getError().getDetails());
+        "exception or error raised (if logged message has actual exception data)", error.getType());
+    assertEquals("stacktrace or error if available", error.getStacktrace());
+    assertEquals("any additional error details", error.getDetails());
   }
 
   @Test
@@ -121,7 +124,9 @@ public class GcloudStructuredLogTest {
 
   @Test
   public void testParse_noErrorWhenMessageMissing() throws JsonParseException {
-    GcloudStructuredLog.parse(
-        "{'version': '0.0.1', 'verbosity': 'INFO', 'timestamp': 'a-timestamp'}");
+    GcloudStructuredLog log =
+        GcloudStructuredLog.parse(
+            "{'version': '0.0.1', 'verbosity': 'INFO', 'timestamp': 'a-timestamp'}");
+    Assert.assertEquals("", log.getMessage());
   }
 }

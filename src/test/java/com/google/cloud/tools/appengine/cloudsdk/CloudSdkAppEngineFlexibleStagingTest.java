@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
@@ -35,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.LogRecord;
+import javax.annotation.Nullable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -54,9 +54,9 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Mock public CopyService copyService;
 
   private LogStoringHandler handler;
-  private File stagingDirectory;
-  private File dockerDirectory;
-  private File appEngineDirectory;
+  @Nullable private File stagingDirectory;
+  @Nullable private File dockerDirectory;
+  @Nullable private File appEngineDirectory;
 
   @Before
   public void setUp() {
@@ -103,9 +103,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       fail();
     } catch (AppEngineException ex) {
       assertEquals(
-          "Docker directory "
-              + config.getDockerDirectory().toPath()
-              + " does not contain Dockerfile.",
+          "Docker directory " + config.getDockerDirectory() + " does not contain Dockerfile.",
           ex.getMessage());
     }
 
@@ -124,8 +122,11 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
-
-    verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+    if (dockerDirectory != null && stagingDirectory != null) {
+      verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+    } else {
+      fail("bad test setup");
+    }
   }
 
   @Test
@@ -137,9 +138,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       fail();
     } catch (AppEngineException ex) {
       assertEquals(
-          "Docker directory "
-              + config.getDockerDirectory().toPath()
-              + " does not contain Dockerfile.",
+          "Docker directory " + config.getDockerDirectory() + " does not contain Dockerfile.",
           ex.getMessage());
     }
 
@@ -158,7 +157,11 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
 
-    verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+    if (dockerDirectory != null && stagingDirectory != null) {
+      verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+    } else {
+      fail("bad test setup");
+    }
   }
 
   @Test
@@ -203,10 +206,14 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
-    verify(copyService)
-        .copyFileAndReplace(
-            appEngineDirectory.toPath().resolve("app.yaml"),
-            stagingDirectory.toPath().resolve("app.yaml"));
+    if (appEngineDirectory != null && stagingDirectory != null) {
+      verify(copyService)
+          .copyFileAndReplace(
+              appEngineDirectory.toPath().resolve("app.yaml"),
+              stagingDirectory.toPath().resolve("app.yaml"));
+    } else {
+      fail("bad test setup");
+    }
   }
 
   @Test
@@ -216,7 +223,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
         .withFileInAppEngineDirectory("app.yaml", ": m a l f o r m e d !");
 
     try {
-      assertNull(CloudSdkAppEngineFlexibleStaging.findRuntime(config));
+      CloudSdkAppEngineFlexibleStaging.findRuntime(config);
+      fail();
     } catch (AppEngineException ex) {
       assertEquals("Malformed 'app.yaml'.", ex.getMessage());
     }
@@ -268,8 +276,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
       return this;
     }
 
-    private FlexibleStagingContext withFileInAppEngineDirectory(String fileName, String contents)
-        throws IOException {
+    private FlexibleStagingContext withFileInAppEngineDirectory(
+        String fileName, @Nullable String contents) throws IOException {
       Assert.assertNotNull("needs withAppEngineDirectory to be called first", appEngineDirectory);
       assertTrue("needs withAppEngineDirectory to be called first", appEngineDirectory.exists());
 

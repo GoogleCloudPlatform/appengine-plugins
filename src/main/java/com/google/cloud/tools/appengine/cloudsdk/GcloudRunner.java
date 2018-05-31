@@ -36,21 +36,21 @@ class GcloudRunner {
   private static final Logger logger = Logger.getLogger(GcloudRunner.class.getName());
 
   private final CloudSdk sdk;
-  private final String metricsEnvironment;
-  private final String metricsEnvironmentVersion;
-  private final File credentialFile;
-  private final String outputFormat;
-  private final String showStructuredLogs;
+  @Nullable private final String metricsEnvironment;
+  @Nullable private final String metricsEnvironmentVersion;
+  @Nullable private final File credentialFile;
+  @Nullable private final String outputFormat;
+  @Nullable private final String showStructuredLogs;
   private final ProcessBuilderFactory processBuilderFactory;
   private final ProcessHandler processHandler;
 
   GcloudRunner(
       CloudSdk sdk,
-      String metricsEnvironment,
-      String metricsEnvironmentVersion,
-      File credentialFile,
-      String outputFormat,
-      String showStructuredLogs,
+      @Nullable String metricsEnvironment,
+      @Nullable String metricsEnvironmentVersion,
+      @Nullable File credentialFile,
+      @Nullable String outputFormat,
+      @Nullable String showStructuredLogs,
       ProcessBuilderFactory processBuilderFactory,
       ProcessHandler processHandler) {
     this.sdk = sdk;
@@ -78,7 +78,9 @@ class GcloudRunner {
     command.add(sdk.getGCloudPath().toAbsolutePath().toString());
 
     command.addAll(arguments);
-    command.addAll(GcloudArgs.get("format", outputFormat));
+    if (outputFormat != null) {
+      command.addAll(GcloudArgs.get("format", outputFormat));
+    }
 
     if (credentialFile != null) {
       command.addAll(GcloudArgs.get("credential-file-override", credentialFile));
@@ -134,11 +136,11 @@ class GcloudRunner {
 
     GcloudRunner newRunner(
         CloudSdk sdk,
-        String metricsEnvironment,
-        String metricsEnvironmentVersion,
-        File credentialFile,
-        String outputFormat,
-        String showStructuredLogs,
+        @Nullable String metricsEnvironment,
+        @Nullable String metricsEnvironmentVersion,
+        @Nullable File credentialFile,
+        @Nullable String outputFormat,
+        @Nullable String showStructuredLogs,
         ProcessHandler processHandler) {
       return new GcloudRunner(
           sdk,

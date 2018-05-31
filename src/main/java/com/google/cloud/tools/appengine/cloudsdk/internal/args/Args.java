@@ -21,10 +21,12 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 /** Command Line argument helper. */
 class Args {
@@ -34,7 +36,7 @@ class Args {
    *
    * @return {@code [--name, value]} or {@code []} if value is null.
    */
-  static List<String> string(String name, String value) {
+  static List<String> string(String name, @Nullable String value) {
     if (!Strings.isNullOrEmpty(value)) {
       return Arrays.asList("--" + name, value);
     }
@@ -46,7 +48,7 @@ class Args {
    *
    * @return {@code [--name=value]} or {@code []} if value is null.
    */
-  static List<String> stringWithEq(String name, String value) {
+  static List<String> stringWithEq(String name, @Nullable String value) {
     if (!Strings.isNullOrEmpty(value)) {
       return Collections.singletonList("--" + name + "=" + value);
     }
@@ -58,8 +60,8 @@ class Args {
    *
    * @return {@code [--name=value1, --name=value2, ...]} or {@code []} if value is null.
    */
-  static List<String> stringsWithEq(String name, List<String> values) {
-    List<String> result = Lists.newArrayList();
+  static List<String> stringsWithEq(String name, @Nullable List<String> values) {
+    List<String> result = new ArrayList<>();
     if (values != null) {
       for (String value : values) {
         result.addAll(stringWithEq(name, value));
@@ -73,7 +75,7 @@ class Args {
    *
    * @return {@code [--name, value]} or {@code []} if value is null.
    */
-  static List<String> integer(String name, Integer value) {
+  static List<String> integer(String name, @Nullable Integer value) {
     if (value != null) {
       return Arrays.asList("--" + name, value.toString());
     }
@@ -86,7 +88,7 @@ class Args {
    *
    * @return {@code [--name=value]} or {@code []} if value is null.
    */
-  static List<String> integerWithEq(String name, Integer value) {
+  static List<String> integerWithEq(String name, @Nullable Integer value) {
     if (value != null) {
       return Arrays.asList("--" + name + "=" + value.toString());
     }
@@ -98,7 +100,7 @@ class Args {
    *
    * @return {@code [--name, file.toPath().toString()]} or {@code []} if file is null.
    */
-  static List<String> filePath(String name, File file) {
+  static List<String> filePath(String name, @Nullable File file) {
     if (file != null) {
       return path(name, file.toPath());
     }
@@ -110,7 +112,7 @@ class Args {
    *
    * @return {@code [--name, path.toString()]} or {@code []} if path is null or not set.
    */
-  static List<String> path(String name, Path path) {
+  static List<String> path(String name, @Nullable Path path) {
     if (path != null && !path.toString().isEmpty()) {
       return Arrays.asList("--" + name, path.toString());
     }
@@ -122,7 +124,7 @@ class Args {
    *
    * @return {@code ["key1=value1,key2=value2,..."]} or {@code []} if keyValueMapping=empty/null
    */
-  static List<String> keyValueString(Map<?, ?> keyValueMapping) {
+  static List<String> keyValueString(@Nullable Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
     if (keyValueMapping != null && keyValueMapping.size() > 0) {
       for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
@@ -141,7 +143,7 @@ class Args {
    * @return {@code [--flagName, key1=value1, --flagName, key2=value2, ...]} or {@code []} if
    *     keyValueMapping=empty/null
    */
-  static List<String> flaggedKeyValues(final String flagName, Map<?, ?> keyValueMapping) {
+  static List<String> flaggedKeyValues(final String flagName, @Nullable Map<?, ?> keyValueMapping) {
     List<String> result = Lists.newArrayList();
     if (keyValueMapping != null && keyValueMapping.size() > 0) {
       for (Map.Entry<?, ?> entry : keyValueMapping.entrySet()) {
