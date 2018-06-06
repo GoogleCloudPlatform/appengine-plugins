@@ -531,6 +531,42 @@
       }
     ]
   },
+{
+    "name": "IoT Core",
+    "id": "iotcore",
+    "serviceName": "cloudiot.googleapis.com",
+    "serviceRoles": [
+      "roles/cloudiot.admin",
+      "roles/owner",
+      "roles/cloudiot.deviceController",
+      "roles/cloudiot.editor",
+      "roles/editor",
+      "roles/cloudiot.provisioner",
+      "roles/cloudiot.viewer",
+      "roles/viewer",
+      "roles/cloudiot.serviceAgent"
+    ],
+    "documentation": "https://cloud.google.com/iot-core",
+    "description": "A fully managed service that allows you to easily and securely connect, manage, and ingest data from millions of globally dispersed devices.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for IoT Core",
+      "language": "java",
+      "site": "https://cloud.google.com/iot-core",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/iot/v1/package-summary.htmlocs/index.html?com/google/cloud/dialogflow/v2beta1/package-summary.html",
+      "infotip": "The com.google.cloud.iot.v1 packages",
+      "launchStage": "beta",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-iot",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-iot",
+         "version": "0.50.0-beta"
+       }
+      }
+    ]
+  },
   {
     "name": "Stackdriver Error Reporting",
     "id": "stackdrivererrorreporting",
