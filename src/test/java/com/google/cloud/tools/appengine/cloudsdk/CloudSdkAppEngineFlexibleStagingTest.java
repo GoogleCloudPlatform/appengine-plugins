@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.cloudsdk;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -34,8 +33,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.LogRecord;
-import javax.annotation.Nullable;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,22 +47,37 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-  @Mock public StageFlexibleConfiguration config;
-  @Mock public CopyService copyService;
+  @Mock private StageFlexibleConfiguration config;
+  @Mock private CopyService copyService;
 
   private LogStoringHandler handler;
-  @Nullable private File stagingDirectory;
-  @Nullable private File dockerDirectory;
-  @Nullable private File appEngineDirectory;
+  private File stagingDirectory;
+  private File dockerDirectory;
+  private File appEngineDirectory;
+  private File dockerFile;
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     handler = LogStoringHandler.getForLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
+    appEngineDirectory = temporaryFolder.newFolder();
+    dockerDirectory = temporaryFolder.newFolder();
+    stagingDirectory = temporaryFolder.newFolder();
+
+    dockerFile = new File(dockerDirectory, "Dockerfile");
+    if (!dockerFile.createNewFile()) {
+      throw new IOException("Could not create Dockerfile for test");
+    }
+
+    when(config.getDockerDirectory()).thenReturn(dockerDirectory);
+    when(config.getStagingDirectory()).thenReturn(stagingDirectory);
+    when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
   }
 
   @Test
   public void testCopyDockerContext_runtimeJavaNoWarning() throws AppEngineException, IOException {
-    new FlexibleStagingContext().withNonExistantDockerDirectory();
+    dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
+    assertFalse(dockerDirectory.exists());
+    when(config.getDockerDirectory()).thenReturn(dockerDirectory);
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
 
@@ -78,7 +90,6 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Test
   public void testCopyDockerContext_runtimeJavaWithWarning()
       throws AppEngineException, IOException {
-    new FlexibleStagingContext().withDockerDirectory();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
 
@@ -96,8 +107,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyDockerContext_runtimeNotJavaNoDockerfile() throws IOException {
-    new FlexibleStagingContext().withDockerDirectory();
 
+    dockerFile.delete();
     try {
       CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
       fail();
@@ -116,23 +127,17 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Test
   public void testCopyDockerContext_runtimeNotJavaWithDockerfile()
       throws AppEngineException, IOException {
-    new FlexibleStagingContext().withStagingDirectory().withDockerDirectory().withDockerFile();
-
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
-    if (dockerDirectory != null && stagingDirectory != null) {
-      verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
-    } else {
-      fail("bad test setup");
-    }
+    verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
   }
 
   @Test
   public void testCopyDockerContext_runtimeNullNoDockerfile() throws IOException {
-    new FlexibleStagingContext().withDockerDirectory();
 
+    dockerFile.delete();
     try {
       CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
       fail();
@@ -150,23 +155,20 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyDockerContext_runtimeNull() throws AppEngineException, IOException {
-    new FlexibleStagingContext().withStagingDirectory().withDockerDirectory().withDockerFile();
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
 
-    if (dockerDirectory != null && stagingDirectory != null) {
-      verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
-    } else {
-      fail("bad test setup");
-    }
+    verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
   }
 
   @Test
   public void testCopyAppEngineContext_nonExistentAppEngineDirectory() throws IOException {
-    new FlexibleStagingContext().withNonExistentAppEngineDirectory();
+    appEngineDirectory = new File(temporaryFolder.getRoot(), "non-existent-directory");
+    assertFalse(appEngineDirectory.exists());
+    when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
 
     try {
       CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
@@ -181,8 +183,6 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyAppEngineContext_emptyAppEngineDirectory() throws IOException {
-    new FlexibleStagingContext().withAppEngineDirectory();
-
     try {
       CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
       fail();
@@ -197,98 +197,34 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Test
   public void testCopyAppEngineContext_appYamlInAppEngineDirectory()
       throws AppEngineException, IOException {
-    new FlexibleStagingContext()
-        .withStagingDirectory()
-        .withAppEngineDirectory()
-        .withFileInAppEngineDirectory("app.yaml", null);
-
+    File file = new File(appEngineDirectory, "app.yaml");
+    if (!file.createNewFile()) {
+      throw new IOException("Could not create app.yaml for test");
+    }
     CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
-    if (appEngineDirectory != null && stagingDirectory != null) {
-      verify(copyService)
-          .copyFileAndReplace(
-              appEngineDirectory.toPath().resolve("app.yaml"),
-              stagingDirectory.toPath().resolve("app.yaml"));
-    } else {
-      fail("bad test setup");
-    }
+    verify(copyService)
+        .copyFileAndReplace(
+            appEngineDirectory.toPath().resolve("app.yaml"),
+            stagingDirectory.toPath().resolve("app.yaml"));
   }
 
   @Test
   public void testFindRuntime_malformedAppYaml() throws IOException {
-    new FlexibleStagingContext()
-        .withAppEngineDirectory()
-        .withFileInAppEngineDirectory("app.yaml", ": m a l f o r m e d !");
+
+    File file = new File(appEngineDirectory, "app.yaml");
+    if (!file.createNewFile()) {
+      throw new IOException("Could not create app.yaml for test");
+    }
+    Files.write(file.toPath(), ": m a l f o r m e d !".getBytes(StandardCharsets.UTF_8));
 
     try {
       CloudSdkAppEngineFlexibleStaging.findRuntime(config);
       fail();
     } catch (AppEngineException ex) {
       assertEquals("Malformed 'app.yaml'.", ex.getMessage());
-    }
-  }
-
-  /**
-   * Private class for creating test file system structures. It writes to the test class members.
-   */
-  private class FlexibleStagingContext {
-    private FlexibleStagingContext withStagingDirectory() throws IOException {
-      stagingDirectory = temporaryFolder.newFolder();
-      when(config.getStagingDirectory()).thenReturn(stagingDirectory);
-      return this;
-    }
-
-    private FlexibleStagingContext withNonExistantDockerDirectory() {
-      dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
-      assertFalse(dockerDirectory.exists());
-      when(config.getDockerDirectory()).thenReturn(dockerDirectory);
-      return this;
-    }
-
-    private FlexibleStagingContext withDockerDirectory() throws IOException {
-      dockerDirectory = temporaryFolder.newFolder();
-      when(config.getDockerDirectory()).thenReturn(dockerDirectory);
-      return this;
-    }
-
-    private FlexibleStagingContext withDockerFile() throws IOException {
-      Assert.assertNotNull("needs withDockerDirectory to be called first", dockerDirectory);
-      assertTrue("needs withDockerDirectory to be called first", dockerDirectory.exists());
-      File dockerFile = new File(dockerDirectory, "Dockerfile");
-      if (!dockerFile.createNewFile()) {
-        throw new IOException("Could not create Dockerfile for test");
-      }
-      return this;
-    }
-
-    private FlexibleStagingContext withNonExistentAppEngineDirectory() {
-      appEngineDirectory = new File(temporaryFolder.getRoot(), "non-existent-directory");
-      assertFalse(appEngineDirectory.exists());
-      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
-      return this;
-    }
-
-    private FlexibleStagingContext withAppEngineDirectory() throws IOException {
-      appEngineDirectory = temporaryFolder.newFolder();
-      when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
-      return this;
-    }
-
-    private FlexibleStagingContext withFileInAppEngineDirectory(
-        String fileName, @Nullable String contents) throws IOException {
-      Assert.assertNotNull("needs withAppEngineDirectory to be called first", appEngineDirectory);
-      assertTrue("needs withAppEngineDirectory to be called first", appEngineDirectory.exists());
-
-      File file = new File(appEngineDirectory, fileName);
-      if (!file.createNewFile()) {
-        throw new IOException("Could not create " + fileName + " for test");
-      }
-      if (contents != null) {
-        Files.write(file.toPath(), contents.getBytes(StandardCharsets.UTF_8));
-      }
-      return this;
     }
   }
 }
