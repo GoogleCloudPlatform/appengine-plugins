@@ -21,8 +21,8 @@ import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +48,8 @@ public class SdkUpdaterTest {
   @Before
   public void setUpFakesAndMocks()
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    fakeGcloudPath = Paths.get("/my/path/to/fake-gcloud");
+    Path root = FileSystems.getDefault().getRootDirectories().iterator().next();
+    fakeGcloudPath = root.resolve("my/path/to/fake-gcloud");
     Mockito.when(mockBundledPythonCopier.copyPython()).thenReturn(mockPythonEnv);
   }
 
