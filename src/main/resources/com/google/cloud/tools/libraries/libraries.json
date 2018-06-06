@@ -537,13 +537,10 @@
     "serviceName": "cloudiot.googleapis.com",
     "serviceRoles": [
       "roles/cloudiot.admin",
-      "roles/owner",
       "roles/cloudiot.deviceController",
       "roles/cloudiot.editor",
-      "roles/editor",
       "roles/cloudiot.provisioner",
       "roles/cloudiot.viewer",
-      "roles/viewer",
       "roles/cloudiot.serviceAgent"
     ],
     "documentation": "https://cloud.google.com/iot-core",
