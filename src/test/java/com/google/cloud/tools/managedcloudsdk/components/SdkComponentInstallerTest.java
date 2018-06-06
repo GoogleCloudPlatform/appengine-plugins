@@ -61,7 +61,12 @@ public class SdkComponentInstallerTest {
     testInstaller.installComponent(testComponent, mockProgressListener, mockConsoleListener);
     Mockito.verify(mockProgressListener).start(Mockito.anyString(), Mockito.eq(-1L));
     Mockito.verify(mockProgressListener).done();
-    Mockito.verify(mockCommandRunner).run(expectedCommand(), null, null, mockConsoleListener);
+    Mockito.verify(mockCommandRunner)
+        .run(
+            Mockito.eq(expectedCommand()),
+            Mockito.nullable(Path.class),
+            Mockito.<Map<String, String>>any(),
+            Mockito.eq(mockConsoleListener));
   }
 
   @Test
@@ -73,7 +78,25 @@ public class SdkComponentInstallerTest {
     Mockito.verify(mockProgressListener).start(Mockito.anyString(), Mockito.eq(-1L));
     Mockito.verify(mockProgressListener).done();
     Mockito.verify(mockCommandRunner)
-        .run(expectedCommand(), null, mockPythonEnv, mockConsoleListener);
+        .run(
+            Mockito.eq(expectedCommand()),
+            Mockito.nullable(Path.class),
+            Mockito.eq(mockPythonEnv),
+            Mockito.eq(mockConsoleListener));
+  }
+
+  @Test
+  public void testInstallComponent_workingDirectorySet()
+      throws InterruptedException, CommandExitException, CommandExecutionException {
+    SdkComponentInstaller testInstaller =
+        new SdkComponentInstaller(fakeGcloud, mockCommandRunner, null);
+    testInstaller.installComponent(testComponent, mockProgressListener, mockConsoleListener);
+    Mockito.verify(mockCommandRunner)
+        .run(
+            Mockito.anyList(),
+            Mockito.eq(fakeGcloud.getRoot()),
+            Mockito.<Map<String, String>>any(),
+            Mockito.any(ConsoleListener.class));
   }
 
   private List<String> expectedCommand() {

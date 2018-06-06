@@ -65,9 +65,10 @@ public class SdkComponentInstaller {
       environment = pythonCopier.copyPython();
     }
 
+    Path workingDirectory = gcloud.getRoot();
     List<String> command =
         Arrays.asList(gcloud.toString(), "components", "install", component.toString(), "--quiet");
-    commandRunner.run(command, null, environment, consoleListener);
+    commandRunner.run(command, workingDirectory, environment, consoleListener);
     progressListener.done();
   }
 
