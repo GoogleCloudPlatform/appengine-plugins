@@ -16,14 +16,15 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
+import com.google.common.base.Preconditions;
 import java.io.File;
 import javax.annotation.Nullable;
 
 /** Plain Java bean implementation of {@link StageStandardConfiguration}. */
 public class DefaultStageStandardConfiguration implements StageStandardConfiguration {
 
-  @Nullable private File sourceDirectory;
-  @Nullable private File stagingDirectory;
+  private File sourceDirectory;
+  private File stagingDirectory;
   @Nullable private File dockerfile;
   @Nullable private Boolean enableQuickstart;
   @Nullable private Boolean disableUpdateCheck;
@@ -35,24 +36,19 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
   @Nullable private Boolean disableJarJsps;
   @Nullable private String runtime;
 
+  public DefaultStageStandardConfiguration(File sourceDirectory, File stagingDirectory) {
+    this.sourceDirectory = Preconditions.checkNotNull(sourceDirectory);
+    this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
+  }
+
   @Override
-  @Nullable
   public File getSourceDirectory() {
     return sourceDirectory;
   }
 
-  public void setSourceDirectory(File sourceDirectory) {
-    this.sourceDirectory = sourceDirectory;
-  }
-
   @Override
-  @Nullable
   public File getStagingDirectory() {
     return stagingDirectory;
-  }
-
-  public void setStagingDirectory(File stagingDirectory) {
-    this.stagingDirectory = stagingDirectory;
   }
 
   @Override
@@ -61,7 +57,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return dockerfile;
   }
 
-  public void setDockerfile(File dockerfile) {
+  public void setDockerfile(@Nullable File dockerfile) {
     this.dockerfile = dockerfile;
   }
 
@@ -71,7 +67,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return enableQuickstart;
   }
 
-  public void setEnableQuickstart(Boolean enableQuickstart) {
+  public void setEnableQuickstart(@Nullable Boolean enableQuickstart) {
     this.enableQuickstart = enableQuickstart;
   }
 
@@ -81,7 +77,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return disableUpdateCheck;
   }
 
-  public void setDisableUpdateCheck(Boolean disableUpdateCheck) {
+  public void setDisableUpdateCheck(@Nullable Boolean disableUpdateCheck) {
     this.disableUpdateCheck = disableUpdateCheck;
   }
 
@@ -91,7 +87,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return enableJarSplitting;
   }
 
-  public void setEnableJarSplitting(Boolean enableJarSplitting) {
+  public void setEnableJarSplitting(@Nullable Boolean enableJarSplitting) {
     this.enableJarSplitting = enableJarSplitting;
   }
 
@@ -101,7 +97,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return jarSplittingExcludes;
   }
 
-  public void setJarSplittingExcludes(String jarSplittingExcludes) {
+  public void setJarSplittingExcludes(@Nullable String jarSplittingExcludes) {
     this.jarSplittingExcludes = jarSplittingExcludes;
   }
 
@@ -111,7 +107,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return compileEncoding;
   }
 
-  public void setCompileEncoding(String compileEncoding) {
+  public void setCompileEncoding(@Nullable String compileEncoding) {
     this.compileEncoding = compileEncoding;
   }
 
@@ -121,7 +117,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return deleteJsps;
   }
 
-  public void setDeleteJsps(Boolean deleteJsps) {
+  public void setDeleteJsps(@Nullable Boolean deleteJsps) {
     this.deleteJsps = deleteJsps;
   }
 
@@ -131,7 +127,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return enableJarClasses;
   }
 
-  public void setEnableJarClasses(Boolean enableJarClasses) {
+  public void setEnableJarClasses(@Nullable Boolean enableJarClasses) {
     this.enableJarClasses = enableJarClasses;
   }
 
@@ -141,7 +137,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return disableJarJsps;
   }
 
-  public void setDisableJarJsps(Boolean disableJarJsps) {
+  public void setDisableJarJsps(@Nullable Boolean disableJarJsps) {
     this.disableJarJsps = disableJarJsps;
   }
 
@@ -151,7 +147,7 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
     return runtime;
   }
 
-  public void setRuntime(String runtime) {
+  public void setRuntime(@Nullable String runtime) {
     this.runtime = runtime;
   }
 }

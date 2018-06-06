@@ -65,9 +65,7 @@ public class CloudSdkAppEngineStandardStagingTest {
   public void testCheckFlags_allFlags() throws Exception {
 
     DefaultStageStandardConfiguration configuration =
-        Mockito.spy(new DefaultStageStandardConfiguration());
-    configuration.setSourceDirectory(source);
-    configuration.setStagingDirectory(destination);
+        Mockito.spy(new DefaultStageStandardConfiguration(source, destination));
     configuration.setDockerfile(dockerfile);
     configuration.setEnableQuickstart(true);
     configuration.setDisableUpdateCheck(true);
@@ -113,9 +111,8 @@ public class CloudSdkAppEngineStandardStagingTest {
   public void testCheckFlags_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
-    configuration.setSourceDirectory(source);
-    configuration.setStagingDirectory(destination);
+    DefaultStageStandardConfiguration configuration =
+        new DefaultStageStandardConfiguration(source, destination);
     configuration.setDockerfile(dockerfile);
     configuration.setEnableQuickstart(false);
     configuration.setDisableUpdateCheck(false);
@@ -136,9 +133,8 @@ public class CloudSdkAppEngineStandardStagingTest {
   public void testCheckFlags_noFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
-    configuration.setSourceDirectory(source);
-    configuration.setStagingDirectory(destination);
+    DefaultStageStandardConfiguration configuration =
+        new DefaultStageStandardConfiguration(source, destination);
 
     List<String> expected =
         ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
