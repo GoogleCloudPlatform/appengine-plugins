@@ -60,7 +60,7 @@ public class ManagedCloudSdk {
   }
 
   /** Returns a path to gcloud executable (operating system specific). */
-  public Path getGcloud() {
+  public Path getGcloudPath() {
     return getSdkHome()
         .resolve("bin")
         .resolve(osInfo.name().equals(WINDOWS) ? "gcloud.cmd" : "gcloud");
@@ -75,7 +75,7 @@ public class ManagedCloudSdk {
     if (!Files.isDirectory(getSdkHome())) {
       return false;
     }
-    if (!Files.isRegularFile(getGcloud())) {
+    if (!Files.isRegularFile(getGcloudPath())) {
       return false;
     }
     // Verify the versions match up for fixed version installs
@@ -104,13 +104,13 @@ public class ManagedCloudSdk {
    * network accesses.
    */
   public boolean hasComponent(SdkComponent component) throws ManagedSdkVerificationException {
-    if (!Files.isRegularFile(getGcloud())) {
+    if (!Files.isRegularFile(getGcloudPath())) {
       return false;
     }
 
     List<String> listComponentCommand =
         Arrays.asList(
-            getGcloud().toString(),
+            getGcloudPath().toString(),
             "components",
             "list",
             "--only-local-state",
@@ -132,7 +132,7 @@ public class ManagedCloudSdk {
 
   /** Query gcloud to see if SDK is up to date. Gcloud makes a call to the server to check this. */
   public boolean isUpToDate() throws ManagedSdkVerificationException {
-    if (!Files.isRegularFile(getGcloud())) {
+    if (!Files.isRegularFile(getGcloudPath())) {
       return false;
     }
 
@@ -142,7 +142,7 @@ public class ManagedCloudSdk {
 
     List<String> updateAvailableCommand =
         Arrays.asList(
-            getGcloud().toString(),
+            getGcloudPath().toString(),
             "components",
             "list",
             "--format=json",
@@ -171,7 +171,7 @@ public class ManagedCloudSdk {
   }
 
   public SdkComponentInstaller newComponentInstaller() {
-    return SdkComponentInstaller.newComponentInstaller(osInfo.name(), getGcloud());
+    return SdkComponentInstaller.newComponentInstaller(osInfo.name(), getGcloudPath());
   }
 
   /**
@@ -184,7 +184,7 @@ public class ManagedCloudSdk {
     if (version != Version.LATEST) {
       throw new UnsupportedOperationException("Cannot update a fixed version SDK.");
     }
-    return SdkUpdater.newUpdater(osInfo.name(), getGcloud());
+    return SdkUpdater.newUpdater(osInfo.name(), getGcloudPath());
   }
 
   /** Get a new {@link ManagedCloudSdk} instance for @{link Version} specified. */
