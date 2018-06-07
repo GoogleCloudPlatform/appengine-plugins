@@ -53,7 +53,11 @@ final class TarGzExtractorProvider implements ExtractorProvider {
     try (TarArchiveInputStream in = new TarArchiveInputStream(gzipIn)) {
       TarArchiveEntry entry;
       while ((entry = in.getNextTarEntry()) != null) {
-        final Path entryTarget = destination.resolve(entry.getName());
+        Path entryTarget = destination.resolve(entry.getName());
+
+        if (!Extractor.isTargetInsideDestination(destination, entryTarget)) {
+          throw new IOException("Blocked unzipping files outside destination: " + entry.getName());
+        }
 
         progressListener.update(1);
         logger.fine(entryTarget.toString());
