@@ -27,6 +27,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
@@ -84,7 +85,9 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
         throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
       }
       Path appYaml = appEngineDirectory.toPath().resolve(APP_YAML);
-      return new AppYaml(appYaml).getRuntime();
+      try (InputStream input = Files.newInputStream(appYaml)) {
+        return AppYaml.parse(input).getRuntime();
+      }
     } catch (ScannerException | ParserException ex) {
       throw new AppEngineException("Malformed 'app.yaml'.", ex);
     }

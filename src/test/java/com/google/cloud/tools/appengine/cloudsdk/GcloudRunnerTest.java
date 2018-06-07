@@ -67,7 +67,7 @@ public class GcloudRunnerTest {
   @Test
   public void testRun_builtFromFactory()
       throws CloudSdkOutOfDateException, CloudSdkNotFoundException, ProcessHandlerException,
-          CloudSdkVersionFileException, InvalidJavaSdkException, IOException {
+          CloudSdkVersionFileException, IOException {
     GcloudRunner gcloudRunner =
         new GcloudRunner.Factory(processBuilderFactory)
             .newRunner(

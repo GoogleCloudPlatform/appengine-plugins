@@ -16,54 +16,90 @@
 
 package com.google.cloud.tools.project;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
-/** Tools for reading app.yaml */
+/** Tools for reading {@code app.yaml}. */
 public class AppYaml {
 
-  private final Map<String, ?> yamlMap;
-
   private static final String RUNTIME_KEY = "runtime";
+  private static final String API_VERSION_KEY = "api_version";
+  private static final String APPLICATION_KEY = "application";
+  private static final String VERSION_KEY = "version";
+  private static final String SERVICE_KEY = "service";
+  private static final String MODULE_KEY = "module";
+  private static final String ENVIRONMENT_KEY = "env_variables";
+
+  private final Map<String, ?> yamlMap;
 
   /**
    * Parse an app.yaml file to an AppYaml object.
    *
-   * @param appYaml the app.yaml file
-   * @throws IOException if reading app.yaml fails due to I/O errors
+   * @param input the input, typically the contents of an {@code app.yaml} file
    * @throws org.yaml.snakeyaml.scanner.ScannerException if reading app.yaml fails while scanning
    *     due to malformed YAML (undocumented {@link RuntimeException} from {@link Yaml#load})
    * @throws org.yaml.snakeyaml.parser.ParserException if reading app.yaml fails while parsing due
    *     to malformed YAML (undocumented {@link RuntimeException} from {@link Yaml#load})
    */
-  public AppYaml(Path appYaml) throws IOException {
-    try (InputStream in = Files.newInputStream(appYaml)) {
-      Object loaded = new Yaml().load(in);
-      if (loaded == null) {
-        yamlMap = Collections.emptyMap();
-      } else {
-        yamlMap = (Map<String, ?>) loaded;
-      }
-    }
+  @SuppressWarnings("unchecked")
+  public static AppYaml parse(InputStream input) {
+    // our needs are simple so just load using primitive objects
+    Yaml yaml = new Yaml(new SafeConstructor());
+    Map<String, ?> contents = (Map<String, ?>) yaml.load(input);
+    return new AppYaml(contents);
   }
 
-  /**
-   * Returns "runtime" value if it is a String type. {@code null} if it is not a String or the
-   * "runtime" key is not present.
-   */
+  private AppYaml(Map<String, ?> yamlMap) {
+    this.yamlMap = yamlMap == null ? Collections.emptyMap() : yamlMap;
+  }
+
   @Nullable
   public String getRuntime() {
-    Object result = yamlMap.get(RUNTIME_KEY);
-    if (result instanceof String) {
-      return (String) result;
-    }
+    return getString(RUNTIME_KEY);
+  }
 
-    return null;
+  @Nullable
+  public String getApiVersion() {
+    return getString(API_VERSION_KEY);
+  }
+
+  @Nullable
+  public String getApplication() {
+    return getString(APPLICATION_KEY);
+  }
+
+  @Nullable
+  public String getProjectVersion() {
+    return getString(VERSION_KEY);
+  }
+
+  @Nullable
+  public String getModuleId() {
+    return getString(MODULE_KEY);
+  }
+
+  @Nullable
+  public String getServiceId() {
+    return getString(SERVICE_KEY);
+  }
+
+  @Nullable
+  public Map<String, ?> getEnvironment() {
+    return getStringMap(ENVIRONMENT_KEY);
+  }
+
+  private String getString(String key) {
+    Object value = yamlMap.get(key);
+    return value instanceof String ? (String) value : null;
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, ?> getStringMap(String key) {
+    Object value = yamlMap.get(key);
+    return value instanceof Map<?, ?> ? (Map<String, ?>) value : null;
   }
 }

@@ -16,48 +16,160 @@
 
 package com.google.cloud.tools.project;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Map;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 /** Tests for AppYaml parsing */
 public class AppYamlTest {
 
-  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-  @Test
-  public void testGetRuntime_success() throws IOException {
-    Path appYaml = writeFile("runtime: java\np2: v2");
-    Assert.assertEquals("java", new AppYaml(appYaml).getRuntime());
-  }
-
-  @Test
-  public void testGetRuntime_failureBecauseWrongType() throws IOException {
-    Path appYaml = writeFile("runtime: [goose, moose]\np2: v2");
-    Assert.assertNull(new AppYaml(appYaml).getRuntime());
-  }
-
-  @Test
-  public void testGetRuntime_failureBecauseNotPresent() throws IOException {
-    Path appYaml = writeFile("p1: v1\np2: v2");
-    Assert.assertNull(new AppYaml(appYaml).getRuntime());
-  }
-
   // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/405
   @Test
-  public void testGetRuntime_emptyAppYaml() throws IOException {
-    Path appYaml = writeFile("");
-    Assert.assertNull(new AppYaml(appYaml).getRuntime());
+  public void testEmptyAppYaml() {
+    InputStream appYaml = asStream("");
+    Assert.assertNull(AppYaml.parse(appYaml).getRuntime());
   }
 
-  private Path writeFile(String contents) throws IOException {
-    File destination = temporaryFolder.newFile();
-    return Files.write(destination.toPath(), contents.getBytes(StandardCharsets.UTF_8));
+  @Test
+  public void testIgnoresUnsupportedElements() {
+    InputStream appYaml = asStream("runtime: java\nhandlers:\n- url: /\n  script: foo.app\n");
+    Assert.assertNotNull(AppYaml.parse(appYaml));
+  }
+
+  @Test
+  public void testGetRuntime_success() {
+    InputStream appYaml = asStream("runtime: java\np2: v2");
+    Assert.assertEquals("java", AppYaml.parse(appYaml).getRuntime());
+  }
+
+  @Test
+  public void testGetRuntime_failureBecauseWrongType() {
+    InputStream appYaml = asStream("runtime: [goose, moose]\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getRuntime());
+  }
+
+  @Test
+  public void testGetRuntime_failureBecauseNotPresent() {
+    InputStream appYaml = asStream("p1: v1\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getRuntime());
+  }
+
+  @Test
+  public void testGetApplication_success() {
+    InputStream appYaml = asStream("application: app\np2: v2");
+    Assert.assertEquals("app", AppYaml.parse(appYaml).getApplication());
+  }
+
+  @Test
+  public void testGetApplication_failureBecauseWrongType() {
+    InputStream appYaml = asStream("application: [goose, moose]\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getApplication());
+  }
+
+  @Test
+  public void testGetApplication_failureBecauseNotPresent() {
+    InputStream appYaml = asStream("p1: v1\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getApplication());
+  }
+
+  @Test
+  public void testGetServiceId_success() {
+    InputStream appYaml = asStream("service: service\np2: v2");
+    Assert.assertEquals("service", AppYaml.parse(appYaml).getServiceId());
+  }
+
+  @Test
+  public void testGetServiceId_failureBecauseWrongType() {
+    InputStream appYaml = asStream("service: [goose, moose]\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getServiceId());
+  }
+
+  @Test
+  public void testGetServiceId_failureBecauseNotPresent() {
+    InputStream appYaml = asStream("p1: v1\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getServiceId());
+  }
+
+  @Test
+  public void testGetModuleId_success() {
+    InputStream appYaml = asStream("module: module\np2: v2");
+    Assert.assertEquals("module", AppYaml.parse(appYaml).getModuleId());
+  }
+
+  @Test
+  public void testGetModuleId_failureBecauseWrongType() {
+    InputStream appYaml = asStream("module: [goose, moose]\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getModuleId());
+  }
+
+  @Test
+  public void testGetModuleId_failureBecauseNotPresent() {
+    InputStream appYaml = asStream("p1: v1\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getModuleId());
+  }
+
+  @Test
+  public void testGetVersion_success() {
+    InputStream appYaml = asStream("version: ver\np2: v2");
+    Assert.assertEquals("ver", AppYaml.parse(appYaml).getProjectVersion());
+  }
+
+  @Test
+  public void testGetVersion_failureBecauseWrongType() {
+    InputStream appYaml = asStream("version: [goose, moose]\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getProjectVersion());
+  }
+
+  @Test
+  public void testGetVersion_failureBecauseNotPresent() {
+    InputStream appYaml = asStream("p1: v1\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getProjectVersion());
+  }
+
+  @Test
+  public void testGetApiVersion_success() {
+    InputStream appYaml = asStream("api_version: ver\np2: v2");
+    Assert.assertEquals("ver", AppYaml.parse(appYaml).getApiVersion());
+  }
+
+  @Test
+  public void testGetApiVersion_failureBecauseWrongType() {
+    InputStream appYaml = asStream("api_version: [goose, moose]\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getApiVersion());
+  }
+
+  @Test
+  public void testGetApiVersion_failureBecauseNotPresent() {
+    InputStream appYaml = asStream("p1: v1\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getApiVersion());
+  }
+
+  @Test
+  public void testGetEnvironment_success() {
+    InputStream appYaml = asStream("env_variables:\n  key1: value1\n  key2: 0\np2: v2");
+    Map<String, ?> environment = AppYaml.parse(appYaml).getEnvironment();
+    Assert.assertNotNull(environment);
+    Assert.assertEquals(2, environment.size());
+    Assert.assertEquals("value1", environment.get("key1"));
+    Assert.assertEquals(0, environment.get("key2"));
+  }
+
+  @Test
+  public void testGetEnvironment_failureBecauseWrongType() {
+    InputStream appYaml = asStream("env_variables: [goose, moose]\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getEnvironment());
+  }
+
+  @Test
+  public void testGetEnvironment_failureBecauseNotPresent() {
+    InputStream appYaml = asStream("p1: v1\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getEnvironment());
+  }
+
+  private InputStream asStream(String contents) {
+    return new ByteArrayInputStream(contents.getBytes(StandardCharsets.UTF_8));
   }
 }
