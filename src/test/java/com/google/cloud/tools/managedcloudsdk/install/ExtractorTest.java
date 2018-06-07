@@ -108,7 +108,6 @@ public class ExtractorTest {
         Extractor.isTargetInsideDestination(
             Paths.get("/cool/../home/user//./destination"),
             Paths.get("/./bin/../home/user/cache///./../destination/yes")));
-    System.out.println("=== TEMP CODE FOR MAC TESTING ===");
   }
 
   @Test
