@@ -42,7 +42,7 @@ public class TarGzExtractorProviderTest {
   private final TarGzExtractorProvider tarGzExtractorProvider = new TarGzExtractorProvider();
 
   @Test
-  public void testCall() throws Exception {
+  public void testCall() throws URISyntaxException, IOException {
     Path extractionRoot = tmp.getRoot().toPath();
     Path testArchive = getResource("genericArchives/test.tar.gz");
 

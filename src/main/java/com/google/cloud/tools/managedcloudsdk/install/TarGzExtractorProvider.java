@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.util.logging.Logger;
+import java.util.zip.ZipException;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -56,7 +57,7 @@ final class TarGzExtractorProvider implements ExtractorProvider {
         Path entryTarget = destination.resolve(entry.getName());
 
         if (!Extractor.isTargetInsideDestination(destination, entryTarget)) {
-          throw new IOException("Blocked unzipping files outside destination: " + entry.getName());
+          throw new ZipException("Blocked unzipping files outside destination: " + entry.getName());
         }
 
         progressListener.update(1);
