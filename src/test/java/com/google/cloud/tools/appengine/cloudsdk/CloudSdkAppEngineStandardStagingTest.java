@@ -21,7 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.DefaultStageStandardConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
@@ -64,8 +64,8 @@ public class CloudSdkAppEngineStandardStagingTest {
   @Test
   public void testCheckFlags_allFlags() throws Exception {
 
-    DefaultStageStandardConfiguration configuration =
-        Mockito.spy(new DefaultStageStandardConfiguration(source, destination));
+    StageStandardConfiguration configuration =
+        Mockito.spy(new StageStandardConfiguration(source, destination));
     configuration.setDockerfile(dockerfile);
     configuration.setEnableQuickstart(true);
     configuration.setDisableUpdateCheck(true);
@@ -111,8 +111,7 @@ public class CloudSdkAppEngineStandardStagingTest {
   public void testCheckFlags_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultStageStandardConfiguration configuration =
-        new DefaultStageStandardConfiguration(source, destination);
+    StageStandardConfiguration configuration = new StageStandardConfiguration(source, destination);
     configuration.setDockerfile(dockerfile);
     configuration.setEnableQuickstart(false);
     configuration.setDisableUpdateCheck(false);
@@ -133,8 +132,7 @@ public class CloudSdkAppEngineStandardStagingTest {
   public void testCheckFlags_noFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultStageStandardConfiguration configuration =
-        new DefaultStageStandardConfiguration(source, destination);
+    StageStandardConfiguration configuration = new StageStandardConfiguration(source, destination);
 
     List<String> expected =
         ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
