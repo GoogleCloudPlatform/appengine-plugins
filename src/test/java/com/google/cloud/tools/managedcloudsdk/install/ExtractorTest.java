@@ -104,10 +104,19 @@ public class ExtractorTest {
 
   @Test
   public void testIsTargetInsideDestination_targetInside() throws IOException {
+    System.out.println("=== TEMP CODE FOR MAC TESTING ===");
+    System.out.println(Paths.get("/tmp/../home/user/./destination").toFile().getCanonicalPath());
+    System.out.println(Paths.get("/tmp/../home//user/./destination").toFile().getCanonicalPath());
+    System.out.println(
+        Paths.get("/./bin/../home/user/cache/./../destination/yes").toFile().getCanonicalPath());
+    System.out.println(
+        Paths.get("/./bin/../home/user///.cache/./../destination/yes").toFile().getCanonicalPath());
+
     Assert.assertTrue(
         Extractor.isTargetInsideDestination(
             Paths.get("/tmp/../home/user/./destination"),
             Paths.get("/./bin/../home/user/cache/./../destination/yes")));
+    System.out.println("=== TEMP CODE FOR MAC TESTING ===");
   }
 
   @Test
