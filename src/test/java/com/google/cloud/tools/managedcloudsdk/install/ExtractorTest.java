@@ -104,9 +104,10 @@ public class ExtractorTest {
 
   @Test
   public void testIsTargetInsideDestination_targetInside() throws IOException {
-    Assert.assertTrue(Extractor.isTargetInsideDestination(
-        Paths.get("/tmp/../home//user/./destination"),
-        Paths.get("/./bin/../home/user///cache/./../destination/yes")));
+    Assert.assertTrue(
+        Extractor.isTargetInsideDestination(
+            Paths.get("/tmp/../home//user/./destination"),
+            Paths.get("/./bin/../home/user///cache/./../destination/yes")));
   }
 
   @Test
@@ -116,7 +117,7 @@ public class ExtractorTest {
 
   @Test
   public void testIsTargetInsideDestination_falseIfSame() throws IOException {
-    Assert.assertFalse(Extractor.isTargetInsideDestination(
-        Paths.get("/cool/path"), Paths.get("/cool/path")));
+    Assert.assertFalse(
+        Extractor.isTargetInsideDestination(Paths.get("/cool/path"), Paths.get("/cool/path")));
   }
 }
