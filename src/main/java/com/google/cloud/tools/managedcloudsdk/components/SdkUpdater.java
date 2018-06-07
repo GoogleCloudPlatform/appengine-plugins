@@ -23,6 +23,7 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
+import com.google.common.base.Preconditions;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -32,12 +33,14 @@ import javax.annotation.Nullable;
 /** Update an SDK. */
 public class SdkUpdater {
 
-  private final Path gcloud;
+  private final Path gcloudPath;
   private final CommandRunner commandRunner;
   @Nullable private final BundledPythonCopier pythonCopier;
 
-  SdkUpdater(Path gcloud, CommandRunner commandRunner, @Nullable BundledPythonCopier pythonCopier) {
-    this.gcloud = gcloud;
+  SdkUpdater(
+      Path gcloudPath, CommandRunner commandRunner, @Nullable BundledPythonCopier pythonCopier) {
+    Preconditions.checkArgument(gcloudPath.isAbsolute());
+    this.gcloudPath = gcloudPath;
     this.commandRunner = commandRunner;
     this.pythonCopier = pythonCopier;
   }
@@ -57,26 +60,27 @@ public class SdkUpdater {
       environment = pythonCopier.copyPython();
     }
 
-    List<String> command = Arrays.asList(gcloud.toString(), "components", "update", "--quiet");
-    commandRunner.run(command, null, environment, consoleListener);
+    Path workingDirectory = gcloudPath.getRoot();
+    List<String> command = Arrays.asList(gcloudPath.toString(), "components", "update", "--quiet");
+    commandRunner.run(command, workingDirectory, environment, consoleListener);
     progressListener.done();
   }
 
   /**
    * Configure and create a new Updater instance.
    *
-   * @param gcloud path to gcloud in the Cloud SDK
+   * @param gcloudPath path to gcloud in the Cloud SDK
    * @return a new configured Cloud SDK updater
    */
-  public static SdkUpdater newUpdater(OsInfo.Name osName, Path gcloud) {
+  public static SdkUpdater newUpdater(OsInfo.Name osName, Path gcloudPath) {
     switch (osName) {
       case WINDOWS:
         return new SdkUpdater(
-            gcloud,
+            gcloudPath,
             CommandRunner.newRunner(),
-            new WindowsBundledPythonCopier(gcloud, CommandCaller.newCaller()));
+            new WindowsBundledPythonCopier(gcloudPath, CommandCaller.newCaller()));
       default:
-        return new SdkUpdater(gcloud, CommandRunner.newRunner(), null);
+        return new SdkUpdater(gcloudPath, CommandRunner.newRunner(), null);
     }
   }
 }

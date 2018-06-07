@@ -212,12 +212,12 @@ public class ManagedCloudSdkTest {
           UnsupportedOsException {
     Map<String, String> env = null;
     if (OsInfo.getSystemOsInfo().name().equals(OsInfo.Name.WINDOWS)) {
-      env = WindowsBundledPythonCopierTestHelper.newInstance(testSdk.getGcloud()).copyPython();
+      env = WindowsBundledPythonCopierTestHelper.newInstance(testSdk.getGcloudPath()).copyPython();
     }
     CommandRunner.newRunner()
         .run(
             Arrays.asList(
-                testSdk.getGcloud().toString(),
+                testSdk.getGcloudPath().toString(),
                 "components",
                 "update",
                 "--quiet",
