@@ -106,13 +106,13 @@ public class ExtractorTest {
   public void testIsTargetInsideDestination_targetInside() throws IOException {
     Assert.assertTrue(
         Extractor.isTargetInsideDestination(
-            Paths.get("/cool/../home/user//./destination"),
-            Paths.get("/./bin/../home/user/cache///./../destination/yes")));
+            Paths.get("/./bin/../home/user/cache///./../destination/yes"),
+            Paths.get("/cool/../home/user//./destination")));
   }
 
   @Test
   public void testIsTargetInsideDestination_targetOutside() throws IOException {
-    Assert.assertFalse(Extractor.isTargetInsideDestination(Paths.get("/cool"), Paths.get("/")));
+    Assert.assertFalse(Extractor.isTargetInsideDestination(Paths.get("/"), Paths.get("/cool")));
   }
 
   @Test

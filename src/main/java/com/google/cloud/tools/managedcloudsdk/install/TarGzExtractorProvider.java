@@ -55,7 +55,7 @@ final class TarGzExtractorProvider implements ExtractorProvider {
       while ((entry = in.getNextTarEntry()) != null) {
         Path entryTarget = destination.resolve(entry.getName());
 
-        if (!Extractor.isTargetInsideDestination(destination, entryTarget)) {
+        if (!Extractor.isTargetInsideDestination(entryTarget, destination)) {
           throw new IOException("Blocked unzipping files outside destination: " + entry.getName());
         }
 

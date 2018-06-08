@@ -62,7 +62,7 @@ final class ZipExtractorProvider implements ExtractorProvider {
         ZipArchiveEntry entry = zipEntries.nextElement();
         Path entryTarget = destination.resolve(entry.getName());
 
-        if (!Extractor.isTargetInsideDestination(destination, entryTarget)) {
+        if (!Extractor.isTargetInsideDestination(entryTarget, destination)) {
           throw new IOException("Blocked unzipping files outside destination: " + entry.getName());
         }
 

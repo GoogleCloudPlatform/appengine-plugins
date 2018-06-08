@@ -83,7 +83,7 @@ final class Extractor {
     MoreFiles.deleteRecursively(target, RecursiveDeleteOption.ALLOW_INSECURE);
   }
 
-  static boolean isTargetInsideDestination(Path destination, Path target) throws IOException {
+  static boolean isTargetInsideDestination(Path target, Path destination) throws IOException {
     String canonicalDestination = destination.toFile().getCanonicalPath();
     String canonicalTarget = target.toFile().getCanonicalPath();
     return canonicalTarget.startsWith(canonicalDestination + File.separator);
