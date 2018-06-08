@@ -20,7 +20,6 @@ import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,9 +27,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExtractorTest {
@@ -45,13 +42,10 @@ public class ExtractorTest {
     Path extractionSource = tmp.newFile("fake.archive").toPath();
 
     Mockito.doAnswer(
-            new Answer<Void>() {
-              @Override
-              public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Files.createDirectory(extractionDestination.resolve("some-dir"));
-                Files.createFile(extractionDestination.resolve("some-file"));
-                return null;
-              }
+            invocation -> {
+              Files.createDirectory(extractionDestination.resolve("some-dir"));
+              Files.createFile(extractionDestination.resolve("some-file"));
+              return null;
             })
         .when(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockProgressListener);
@@ -73,14 +67,11 @@ public class ExtractorTest {
     Path extractionSource = tmp.newFile("fake.archive").toPath();
 
     Mockito.doAnswer(
-            new Answer<Void>() {
-              @Override
-              public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-                // pretend to extract by creating the expected final directory (for success!)
-                Files.createDirectory(extractionDestination.resolve("some-dir"));
-                Files.createFile(extractionDestination.resolve("some-file"));
-                throw new IOException("Failed during extraction");
-              }
+            invocation -> {
+              // pretend to extract by creating the expected final directory (for success!)
+              Files.createDirectory(extractionDestination.resolve("some-dir"));
+              Files.createFile(extractionDestination.resolve("some-file"));
+              throw new IOException("Failed during extraction");
             })
         .when(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockProgressListener);
@@ -100,24 +91,5 @@ public class ExtractorTest {
     Assert.assertFalse(Files.exists(extractionDestination));
     Mockito.verify(mockExtractorProvider)
         .extract(extractionSource, extractionDestination, mockProgressListener);
-  }
-
-  @Test
-  public void testIsTargetInsideDestination_targetInside() throws IOException {
-    Assert.assertTrue(
-        Extractor.isTargetInsideDestination(
-            Paths.get("/./bin/../home/user/cache///./../destination/yes"),
-            Paths.get("/cool/../home/user//./destination")));
-  }
-
-  @Test
-  public void testIsTargetInsideDestination_targetOutside() throws IOException {
-    Assert.assertFalse(Extractor.isTargetInsideDestination(Paths.get("/"), Paths.get("/cool")));
-  }
-
-  @Test
-  public void testIsTargetInsideDestination_falseIfSame() throws IOException {
-    Assert.assertFalse(
-        Extractor.isTargetInsideDestination(Paths.get("/cool/path"), Paths.get("/cool/path")));
   }
 }

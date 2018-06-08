@@ -20,7 +20,6 @@ import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.logging.Logger;
@@ -81,11 +80,5 @@ final class Extractor {
 
   private void cleanUp(final Path target) throws IOException {
     MoreFiles.deleteRecursively(target, RecursiveDeleteOption.ALLOW_INSECURE);
-  }
-
-  static boolean isTargetInsideDestination(Path target, Path destination) throws IOException {
-    String canonicalDestination = destination.toFile().getCanonicalPath();
-    String canonicalTarget = target.toFile().getCanonicalPath();
-    return canonicalTarget.startsWith(canonicalDestination + File.separator);
   }
 }
