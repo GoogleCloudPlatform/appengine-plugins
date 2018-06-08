@@ -107,7 +107,7 @@ public class Gcloud {
    * @param args the arguments to gcloud command (not including 'gcloud')
    * @return standard out collected as a single string
    */
-  private String runCommand(List<String> args)
+  public String runCommand(List<String> args)
       throws CloudSdkNotFoundException, IOException, ProcessHandlerException {
     sdk.validateCloudSdkLocation();
 
