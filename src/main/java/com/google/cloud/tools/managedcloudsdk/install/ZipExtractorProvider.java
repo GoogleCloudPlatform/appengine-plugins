@@ -27,7 +27,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.util.Enumeration;
 import java.util.logging.Logger;
-import java.util.zip.ZipException;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.IOUtils;
@@ -64,7 +63,7 @@ final class ZipExtractorProvider implements ExtractorProvider {
         Path entryTarget = destination.resolve(entry.getName());
 
         if (!Extractor.isTargetInsideDestination(destination, entryTarget)) {
-          throw new ZipException("Blocked unzipping files outside destination: " + entry.getName());
+          throw new IOException("Blocked unzipping files outside destination: " + entry.getName());
         }
 
         progressListener.update(1);
