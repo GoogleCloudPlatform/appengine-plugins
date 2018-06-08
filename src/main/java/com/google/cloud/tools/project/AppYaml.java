@@ -92,11 +92,13 @@ public class AppYaml {
     return getStringMap(ENVIRONMENT_KEY);
   }
 
+  @Nullable
   private String getString(String key) {
     Object value = yamlMap.get(key);
     return value instanceof String ? (String) value : null;
   }
 
+  @Nullable
   @SuppressWarnings("unchecked")
   private Map<String, ?> getStringMap(String key) {
     Object value = yamlMap.get(key);
