@@ -21,8 +21,8 @@ import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -43,37 +43,61 @@ public class SdkUpdaterTest {
   @Mock private BundledPythonCopier mockBundledPythonCopier;
   @Mock private Map<String, String> mockPythonEnv;
 
-  private Path fakeGcloud;
+  private Path fakeGcloudPath;
 
   @Before
   public void setUpFakesAndMocks()
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    fakeGcloud = Paths.get("my/path/to/fake-gcloud");
+    Path root = FileSystems.getDefault().getRootDirectories().iterator().next();
+    fakeGcloudPath = root.resolve("my/path/to/fake-gcloud");
     Mockito.when(mockBundledPythonCopier.copyPython()).thenReturn(mockPythonEnv);
   }
 
   @Test
   public void testUpdate_successRun()
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    SdkUpdater testUpdater = new SdkUpdater(fakeGcloud, mockCommandRunner, null);
+    SdkUpdater testUpdater = new SdkUpdater(fakeGcloudPath, mockCommandRunner, null);
     testUpdater.update(mockProgressListener, mockConsoleListener);
     Mockito.verify(mockProgressListener).start(Mockito.anyString(), Mockito.eq(-1L));
     Mockito.verify(mockProgressListener).done();
-    Mockito.verify(mockCommandRunner).run(expectedCommand(), null, null, mockConsoleListener);
+    Mockito.verify(mockCommandRunner)
+        .run(
+            Mockito.eq(expectedCommand()),
+            Mockito.nullable(Path.class),
+            Mockito.<Map<String, String>>any(),
+            Mockito.eq(mockConsoleListener));
   }
 
   @Test
   public void testUpdate_withBundledPythonCopier()
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    SdkUpdater testUpdater = new SdkUpdater(fakeGcloud, mockCommandRunner, mockBundledPythonCopier);
+    SdkUpdater testUpdater =
+        new SdkUpdater(fakeGcloudPath, mockCommandRunner, mockBundledPythonCopier);
     testUpdater.update(mockProgressListener, mockConsoleListener);
     Mockito.verify(mockProgressListener).start(Mockito.anyString(), Mockito.eq(-1L));
     Mockito.verify(mockProgressListener).done();
     Mockito.verify(mockCommandRunner)
-        .run(expectedCommand(), null, mockPythonEnv, mockConsoleListener);
+        .run(
+            Mockito.eq(expectedCommand()),
+            Mockito.nullable(Path.class),
+            Mockito.eq(mockPythonEnv),
+            Mockito.eq(mockConsoleListener));
+  }
+
+  @Test
+  public void testInstallComponent_workingDirectorySet()
+      throws InterruptedException, CommandExitException, CommandExecutionException {
+    SdkUpdater testUpdater = new SdkUpdater(fakeGcloudPath, mockCommandRunner, null);
+    testUpdater.update(mockProgressListener, mockConsoleListener);
+    Mockito.verify(mockCommandRunner)
+        .run(
+            Mockito.anyList(),
+            Mockito.eq(fakeGcloudPath.getRoot()),
+            Mockito.<Map<String, String>>any(),
+            Mockito.any(ConsoleListener.class));
   }
 
   private List<String> expectedCommand() {
-    return Arrays.asList(fakeGcloud.toString(), "components", "update", "--quiet");
+    return Arrays.asList(fakeGcloudPath.toString(), "components", "update", "--quiet");
   }
 }

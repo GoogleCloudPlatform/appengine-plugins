@@ -34,15 +34,16 @@ import javax.annotation.Nullable;
 /** Install an SDK component. */
 public class SdkComponentInstaller {
 
-  private final Path gcloud;
+  private final Path gcloudPath;
   private final CommandRunner commandRunner;
   @Nullable private final BundledPythonCopier pythonCopier;
 
   /** Use {@link #newComponentInstaller} to instantiate. */
   @VisibleForTesting
   SdkComponentInstaller(
-      Path gcloud, CommandRunner commandRunner, @Nullable BundledPythonCopier pythonCopier) {
-    this.gcloud = Preconditions.checkNotNull(gcloud);
+      Path gcloudPath, CommandRunner commandRunner, @Nullable BundledPythonCopier pythonCopier) {
+    Preconditions.checkArgument(gcloudPath.isAbsolute());
+    this.gcloudPath = Preconditions.checkNotNull(gcloudPath);
     this.commandRunner = Preconditions.checkNotNull(commandRunner);
     this.pythonCopier = pythonCopier;
   }
@@ -65,27 +66,29 @@ public class SdkComponentInstaller {
       environment = pythonCopier.copyPython();
     }
 
+    Path workingDirectory = gcloudPath.getRoot();
     List<String> command =
-        Arrays.asList(gcloud.toString(), "components", "install", component.toString(), "--quiet");
-    commandRunner.run(command, null, environment, consoleListener);
+        Arrays.asList(
+            gcloudPath.toString(), "components", "install", component.toString(), "--quiet");
+    commandRunner.run(command, workingDirectory, environment, consoleListener);
     progressListener.done();
   }
 
   /**
    * Configure and create a new Component Installer instance.
    *
-   * @param gcloud full path to gcloud in the Cloud SDK
+   * @param gcloudPath full path to gcloud in the Cloud SDK
    * @return a new configured Cloud SDK component installer
    */
-  public static SdkComponentInstaller newComponentInstaller(OsInfo.Name osName, Path gcloud) {
+  public static SdkComponentInstaller newComponentInstaller(OsInfo.Name osName, Path gcloudPath) {
     switch (osName) {
       case WINDOWS:
         return new SdkComponentInstaller(
-            gcloud,
+            gcloudPath,
             CommandRunner.newRunner(),
-            new WindowsBundledPythonCopier(gcloud, CommandCaller.newCaller()));
+            new WindowsBundledPythonCopier(gcloudPath, CommandCaller.newCaller()));
       default:
-        return new SdkComponentInstaller(gcloud, CommandRunner.newRunner(), null);
+        return new SdkComponentInstaller(gcloudPath, CommandRunner.newRunner(), null);
     }
   }
 }

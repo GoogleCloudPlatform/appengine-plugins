@@ -17,11 +17,15 @@
 package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -35,14 +39,12 @@ public class TarGzExtractorProviderTest {
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
   @Mock private ProgressListener mockProgressListener;
 
-  @Test
-  public void testCall() throws Exception {
-    Path extractionRoot = tmp.getRoot().toPath();
-    Path testArchive =
-        Paths.get(getClass().getClassLoader().getResource("genericArchives/test.tar.gz").toURI());
-    Assert.assertTrue(Files.exists(testArchive));
+  private final TarGzExtractorProvider tarGzExtractorProvider = new TarGzExtractorProvider();
 
-    TarGzExtractorProvider tarGzExtractorProvider = new TarGzExtractorProvider();
+  @Test
+  public void testCall() throws URISyntaxException, IOException {
+    Path extractionRoot = tmp.getRoot().toPath();
+    Path testArchive = getResource("genericArchives/test.tar.gz");
 
     tarGzExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
 
@@ -54,5 +56,39 @@ public class TarGzExtractorProviderTest {
 
     ProgressVerifier.verifyUnknownProgress(
         mockProgressListener, "Extracting archive: " + testArchive.getFileName());
+  }
+
+  @Test
+  public void testZipSlipVulnerability_windows() throws URISyntaxException {
+    Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
+
+    Path extractionRoot = tmp.getRoot().toPath();
+    Path testArchive = getResource("zipSlipSamples/zip-slip-win.tar.gz");
+    try {
+      tarGzExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
+    } catch (IOException ex) {
+      Assert.assertThat(
+          ex.getMessage(), Matchers.startsWith("Blocked unzipping files outside destination: "));
+    }
+  }
+
+  @Test
+  public void testZipSlipVulnerability_unix() throws URISyntaxException {
+    Assume.assumeTrue(!System.getProperty("os.name").startsWith("Windows"));
+
+    Path extractionRoot = tmp.getRoot().toPath();
+    Path testArchive = getResource("zipSlipSamples/zip-slip.tar.gz");
+    try {
+      tarGzExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
+    } catch (IOException ex) {
+      Assert.assertThat(
+          ex.getMessage(), Matchers.startsWith("Blocked unzipping files outside destination: "));
+    }
+  }
+
+  private Path getResource(String resourcePath) throws URISyntaxException {
+    Path resource = Paths.get(getClass().getClassLoader().getResource(resourcePath).toURI());
+    Assert.assertTrue(Files.exists(resource));
+    return resource;
   }
 }
