@@ -46,8 +46,8 @@ public class CloudSdkAppEngineStandardStagingTest {
   private File source;
   private File destination;
   private File dockerfile;
-  private StageStandardConfiguration configuration;
   private CloudSdkAppEngineStandardStaging staging;
+  private StageStandardConfiguration.Builder builder;
 
   @Before
   public void setUp() throws IOException {
@@ -57,21 +57,12 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging = new CloudSdkAppEngineStandardStaging(appCfgRunner);
 
-    configuration =
-        new StageStandardConfiguration.Builder()
-            .setSourceDirectory(source)
-            .setStagingDirectory(destination)
-            .build();
+    builder = new StageStandardConfiguration.Builder().setSourceDirectory(source)
+        .setStagingDirectory(destination);
   }
 
   @Test
   public void testCheckFlags_allFlags() throws Exception {
-
-    StageStandardConfiguration.Builder builder =
-        new StageStandardConfiguration.Builder()
-            .setSourceDirectory(source)
-            .setStagingDirectory(destination);
-
     builder.setDockerfile(dockerfile);
     builder.setEnableQuickstart(true);
     builder.setDisableUpdateCheck(true);
@@ -83,7 +74,7 @@ public class CloudSdkAppEngineStandardStagingTest {
     builder.setDisableJarJsps(true);
     builder.setRuntime("java");
 
-    configuration = builder.build();
+    StageStandardConfiguration configuration = builder.build();
 
     List<String> expected =
         ImmutableList.of(
@@ -109,12 +100,6 @@ public class CloudSdkAppEngineStandardStagingTest {
   @Test
   public void testCheckFlags_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
-
-    StageStandardConfiguration.Builder builder =
-        new StageStandardConfiguration.Builder()
-            .setSourceDirectory(source)
-            .setStagingDirectory(destination);
-
     builder.setEnableQuickstart(false);
     builder.setDisableUpdateCheck(false);
     builder.setEnableJarSplitting(false);
@@ -122,7 +107,7 @@ public class CloudSdkAppEngineStandardStagingTest {
     builder.setEnableJarClasses(false);
     builder.setDisableJarJsps(false);
 
-    configuration = builder.build();
+    StageStandardConfiguration configuration = builder.build();
 
     List<String> expected =
         ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
@@ -139,7 +124,7 @@ public class CloudSdkAppEngineStandardStagingTest {
     List<String> expected =
         ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
 
-    staging.stageStandard(configuration);
+    staging.stageStandard(builder.build());
 
     verify(appCfgRunner, times(1)).run(eq(expected));
   }
