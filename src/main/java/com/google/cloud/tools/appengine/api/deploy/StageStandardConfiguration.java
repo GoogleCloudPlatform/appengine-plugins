@@ -167,6 +167,9 @@ public class StageStandardConfiguration {
       this.runtime = runtime;
     }
 
+    /**
+     * Builds the configuration.
+     */
     public StageStandardConfiguration build() {
       if (sourceDirectory == null || stagingDirectory == null) {
         throw new NullPointerException("Incomplete configuration");
