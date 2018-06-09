@@ -57,17 +57,9 @@ public class StageStandardConfiguration {
     return dockerfile;
   }
 
-  public void setDockerfile(@Nullable File dockerfile) {
-    this.dockerfile = dockerfile;
-  }
-
   @Nullable
   public Boolean getEnableQuickstart() {
     return enableQuickstart;
-  }
-
-  public void setEnableQuickstart(@Nullable Boolean enableQuickstart) {
-    this.enableQuickstart = enableQuickstart;
   }
 
   @Nullable
@@ -75,17 +67,9 @@ public class StageStandardConfiguration {
     return disableUpdateCheck;
   }
 
-  public void setDisableUpdateCheck(@Nullable Boolean disableUpdateCheck) {
-    this.disableUpdateCheck = disableUpdateCheck;
-  }
-
   @Nullable
   public Boolean getEnableJarSplitting() {
     return enableJarSplitting;
-  }
-
-  public void setEnableJarSplitting(@Nullable Boolean enableJarSplitting) {
-    this.enableJarSplitting = enableJarSplitting;
   }
 
   @Nullable
@@ -93,17 +77,9 @@ public class StageStandardConfiguration {
     return jarSplittingExcludes;
   }
 
-  public void setJarSplittingExcludes(@Nullable String jarSplittingExcludes) {
-    this.jarSplittingExcludes = jarSplittingExcludes;
-  }
-
   @Nullable
   public String getCompileEncoding() {
     return compileEncoding;
-  }
-
-  public void setCompileEncoding(@Nullable String compileEncoding) {
-    this.compileEncoding = compileEncoding;
   }
 
   @Nullable
@@ -111,17 +87,9 @@ public class StageStandardConfiguration {
     return deleteJsps;
   }
 
-  public void setDeleteJsps(@Nullable Boolean deleteJsps) {
-    this.deleteJsps = deleteJsps;
-  }
-
   @Nullable
   public Boolean getEnableJarClasses() {
     return enableJarClasses;
-  }
-
-  public void setEnableJarClasses(@Nullable Boolean enableJarClasses) {
-    this.enableJarClasses = enableJarClasses;
   }
 
   @Nullable
@@ -129,24 +97,26 @@ public class StageStandardConfiguration {
     return disableJarJsps;
   }
 
-  public void setDisableJarJsps(@Nullable Boolean disableJarJsps) {
-    this.disableJarJsps = disableJarJsps;
-  }
-
   @Nullable
   public String getRuntime() {
     return runtime;
-  }
-
-  public void setRuntime(@Nullable String runtime) {
-    this.runtime = runtime;
   }
 
   public static class Builder {
 
     @Nullable private File sourceDirectory;
     @Nullable private File stagingDirectory;
-
+    @Nullable private File dockerfile;
+    @Nullable private Boolean enableQuickstart;
+    @Nullable private Boolean disableUpdateCheck;
+    @Nullable private Boolean enableJarSplitting;
+    @Nullable private String jarSplittingExcludes;
+    @Nullable private String compileEncoding;
+    @Nullable private Boolean deleteJsps;
+    @Nullable private Boolean enableJarClasses;
+    @Nullable private Boolean disableJarJsps;
+    @Nullable private String runtime;
+  
     public Builder setSourceDirectory(File sourceDirectory) {
       this.sourceDirectory = Preconditions.checkNotNull(sourceDirectory);
       return this;
@@ -156,12 +126,65 @@ public class StageStandardConfiguration {
       this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
       return this;
     }
+  
+    public void setDockerfile(@Nullable File dockerfile) {
+      this.dockerfile = dockerfile;
+    }
+  
+    public void setEnableQuickstart(@Nullable Boolean enableQuickstart) {
+      this.enableQuickstart = enableQuickstart;
+    }
+  
+    public void setDisableUpdateCheck(@Nullable Boolean disableUpdateCheck) {
+      this.disableUpdateCheck = disableUpdateCheck;
+    }
+  
+    public void setEnableJarSplitting(@Nullable Boolean enableJarSplitting) {
+      this.enableJarSplitting = enableJarSplitting;
+    }
+  
+    public void setJarSplittingExcludes(@Nullable String jarSplittingExcludes) {
+      this.jarSplittingExcludes = jarSplittingExcludes;
+    }
+  
+    public void setCompileEncoding(@Nullable String compileEncoding) {
+      this.compileEncoding = compileEncoding;
+    }
+  
+    public void setDeleteJsps(@Nullable Boolean deleteJsps) {
+      this.deleteJsps = deleteJsps;
+    }
+  
+    public void setEnableJarClasses(@Nullable Boolean enableJarClasses) {
+      this.enableJarClasses = enableJarClasses;
+    }
+  
+    public void setDisableJarJsps(@Nullable Boolean disableJarJsps) {
+      this.disableJarJsps = disableJarJsps;
+    }
+  
+    public void setRuntime(@Nullable String runtime) {
+      this.runtime = runtime;
+    }
 
     public StageStandardConfiguration build() {
       if (sourceDirectory == null || stagingDirectory == null) {
         throw new NullPointerException("Incomplete configuration");
       }
-      return new StageStandardConfiguration(sourceDirectory, stagingDirectory);
+      StageStandardConfiguration stageStandardConfiguration =
+          new StageStandardConfiguration(sourceDirectory, stagingDirectory);
+          
+      stageStandardConfiguration.dockerfile = dockerfile;
+      stageStandardConfiguration.enableQuickstart = enableQuickstart;
+      stageStandardConfiguration.disableUpdateCheck = disableUpdateCheck;
+      stageStandardConfiguration.enableJarSplitting = enableJarSplitting;
+      stageStandardConfiguration.jarSplittingExcludes = jarSplittingExcludes;
+      stageStandardConfiguration.compileEncoding = compileEncoding;
+      stageStandardConfiguration.deleteJsps = deleteJsps;
+      stageStandardConfiguration.enableJarClasses = enableJarClasses;
+      stageStandardConfiguration.disableJarJsps = disableJarJsps;
+      stageStandardConfiguration.runtime = runtime;
+      return stageStandardConfiguration;
     }
   }
 }
