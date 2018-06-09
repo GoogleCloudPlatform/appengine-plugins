@@ -144,8 +144,8 @@ public class StageStandardConfiguration {
 
   public static class Builder {
 
-    private File sourceDirectory;
-    private File stagingDirectory;
+    @Nullable private File sourceDirectory;
+    @Nullable private File stagingDirectory;
 
     public Builder setSourceDirectory(File sourceDirectory) {
       this.sourceDirectory = Preconditions.checkNotNull(sourceDirectory);
@@ -158,6 +158,9 @@ public class StageStandardConfiguration {
     }
 
     public StageStandardConfiguration build() {
+      if (sourceDirectory == null || stagingDirectory == null) {
+        throw new NullPointerException("Incomplete configuration");
+      }
       return new StageStandardConfiguration(sourceDirectory, stagingDirectory);
     }
   }
