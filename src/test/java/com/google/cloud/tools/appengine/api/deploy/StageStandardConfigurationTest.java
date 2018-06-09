@@ -21,11 +21,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import com.google.common.io.Files;
 import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.io.Files;
 
 public class StageStandardConfigurationTest {
 

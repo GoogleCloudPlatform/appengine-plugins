@@ -116,7 +116,7 @@ public class StageStandardConfiguration {
     @Nullable private Boolean enableJarClasses;
     @Nullable private Boolean disableJarJsps;
     @Nullable private String runtime;
-  
+
     public Builder setSourceDirectory(File sourceDirectory) {
       this.sourceDirectory = Preconditions.checkNotNull(sourceDirectory);
       return this;
@@ -126,43 +126,43 @@ public class StageStandardConfiguration {
       this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
       return this;
     }
-  
+
     public void setDockerfile(@Nullable File dockerfile) {
       this.dockerfile = dockerfile;
     }
-  
+
     public void setEnableQuickstart(@Nullable Boolean enableQuickstart) {
       this.enableQuickstart = enableQuickstart;
     }
-  
+
     public void setDisableUpdateCheck(@Nullable Boolean disableUpdateCheck) {
       this.disableUpdateCheck = disableUpdateCheck;
     }
-  
+
     public void setEnableJarSplitting(@Nullable Boolean enableJarSplitting) {
       this.enableJarSplitting = enableJarSplitting;
     }
-  
+
     public void setJarSplittingExcludes(@Nullable String jarSplittingExcludes) {
       this.jarSplittingExcludes = jarSplittingExcludes;
     }
-  
+
     public void setCompileEncoding(@Nullable String compileEncoding) {
       this.compileEncoding = compileEncoding;
     }
-  
+
     public void setDeleteJsps(@Nullable Boolean deleteJsps) {
       this.deleteJsps = deleteJsps;
     }
-  
+
     public void setEnableJarClasses(@Nullable Boolean enableJarClasses) {
       this.enableJarClasses = enableJarClasses;
     }
-  
+
     public void setDisableJarJsps(@Nullable Boolean disableJarJsps) {
       this.disableJarJsps = disableJarJsps;
     }
-  
+
     public void setRuntime(@Nullable String runtime) {
       this.runtime = runtime;
     }
@@ -173,7 +173,7 @@ public class StageStandardConfiguration {
       }
       StageStandardConfiguration stageStandardConfiguration =
           new StageStandardConfiguration(sourceDirectory, stagingDirectory);
-          
+
       stageStandardConfiguration.dockerfile = dockerfile;
       stageStandardConfiguration.enableQuickstart = enableQuickstart;
       stageStandardConfiguration.disableUpdateCheck = disableUpdateCheck;
