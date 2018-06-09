@@ -49,7 +49,7 @@ public class CloudSdkAppEngineStandardStagingTest {
   private File source;
   private File destination;
   private File dockerfile;
-
+  private StageStandardConfiguration configuration;
   private CloudSdkAppEngineStandardStaging staging;
 
   @Before
@@ -59,25 +59,29 @@ public class CloudSdkAppEngineStandardStagingTest {
     dockerfile = tmpDir.newFile("dockerfile");
 
     staging = new CloudSdkAppEngineStandardStaging(appCfgRunner);
+
+    configuration =
+        new StageStandardConfiguration.Builder()
+            .setSourceDirectory(source)
+            .setStagingDirectory(destination)
+            .build();
   }
 
   @Test
   public void testCheckFlags_allFlags() throws Exception {
+    StageStandardConfiguration spy = Mockito.spy(configuration);
+    spy.setDockerfile(dockerfile);
+    spy.setEnableQuickstart(true);
+    spy.setDisableUpdateCheck(true);
+    spy.setEnableJarSplitting(true);
+    spy.setJarSplittingExcludes("suffix1,suffix2");
+    spy.setCompileEncoding("UTF8");
+    spy.setDeleteJsps(true);
+    spy.setEnableJarClasses(true);
+    spy.setDisableJarJsps(true);
+    spy.setRuntime("java");
 
-    StageStandardConfiguration configuration =
-        Mockito.spy(new StageStandardConfiguration(source, destination));
-    configuration.setDockerfile(dockerfile);
-    configuration.setEnableQuickstart(true);
-    configuration.setDisableUpdateCheck(true);
-    configuration.setEnableJarSplitting(true);
-    configuration.setJarSplittingExcludes("suffix1,suffix2");
-    configuration.setCompileEncoding("UTF8");
-    configuration.setDeleteJsps(true);
-    configuration.setEnableJarClasses(true);
-    configuration.setDisableJarJsps(true);
-    configuration.setRuntime("java");
-
-    SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
+    SpyVerifier.newVerifier(spy).verifyDeclaredSetters();
 
     List<String> expected =
         ImmutableList.of(
@@ -95,10 +99,10 @@ public class CloudSdkAppEngineStandardStagingTest {
             source.toPath().toString(),
             destination.toPath().toString());
 
-    staging.stageStandard(configuration);
+    staging.stageStandard(spy);
 
     verify(appCfgRunner, times(1)).run(eq(expected));
-    SpyVerifier.newVerifier(configuration)
+    SpyVerifier.newVerifier(spy)
         .verifyDeclaredGetters(
             ImmutableMap.<String, Integer>of(
                 "getRuntime", 4,
@@ -110,9 +114,6 @@ public class CloudSdkAppEngineStandardStagingTest {
   @Test
   public void testCheckFlags_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
-
-    StageStandardConfiguration configuration = new StageStandardConfiguration(source, destination);
-    configuration.setDockerfile(dockerfile);
     configuration.setEnableQuickstart(false);
     configuration.setDisableUpdateCheck(false);
     configuration.setEnableJarSplitting(false);
@@ -131,8 +132,6 @@ public class CloudSdkAppEngineStandardStagingTest {
   @Test
   public void testCheckFlags_noFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
-
-    StageStandardConfiguration configuration = new StageStandardConfiguration(source, destination);
 
     List<String> expected =
         ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());

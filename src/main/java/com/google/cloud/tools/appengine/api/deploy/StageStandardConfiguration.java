@@ -39,7 +39,7 @@ public class StageStandardConfiguration {
   @Nullable private Boolean disableJarJsps;
   @Nullable private String runtime;
 
-  public StageStandardConfiguration(File sourceDirectory, File stagingDirectory) {
+  private StageStandardConfiguration(File sourceDirectory, File stagingDirectory) {
     this.sourceDirectory = Preconditions.checkNotNull(sourceDirectory);
     this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
   }
@@ -140,5 +140,25 @@ public class StageStandardConfiguration {
 
   public void setRuntime(@Nullable String runtime) {
     this.runtime = runtime;
+  }
+
+  public static class Builder {
+
+    private File sourceDirectory;
+    private File stagingDirectory;
+
+    public Builder setSourceDirectory(File sourceDirectory) {
+      this.sourceDirectory = Preconditions.checkNotNull(sourceDirectory);
+      return this;
+    }
+
+    public Builder setStagingDirectory(File stagingDirectory) {
+      this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
+      return this;
+    }
+
+    public StageStandardConfiguration build() {
+      return new StageStandardConfiguration(sourceDirectory, stagingDirectory);
+    }
   }
 }
