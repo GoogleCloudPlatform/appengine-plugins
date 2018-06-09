@@ -18,6 +18,7 @@ package com.google.cloud.tools.managedcloudsdk.install;
 
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -49,11 +50,18 @@ final class TarGzExtractorProvider implements ExtractorProvider {
     progressListener.start(
         "Extracting archive: " + archive.getFileName(), ProgressListener.UNKNOWN);
 
+    String canonicalDestination = destination.toFile().getCanonicalPath();
+
     GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(Files.newInputStream(archive));
     try (TarArchiveInputStream in = new TarArchiveInputStream(gzipIn)) {
       TarArchiveEntry entry;
       while ((entry = in.getNextTarEntry()) != null) {
-        final Path entryTarget = destination.resolve(entry.getName());
+        Path entryTarget = destination.resolve(entry.getName());
+
+        String canonicalTarget = entryTarget.toFile().getCanonicalPath();
+        if (!canonicalTarget.startsWith(canonicalDestination + File.separator)) {
+          throw new IOException("Blocked unzipping files outside destination: " + entry.getName());
+        }
 
         progressListener.update(1);
         logger.fine(entryTarget.toString());
