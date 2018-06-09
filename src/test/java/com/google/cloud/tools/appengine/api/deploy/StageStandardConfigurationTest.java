@@ -56,12 +56,12 @@ public class StageStandardConfigurationTest {
   }
 
   @Test
-  public void testGetAppEngineDirectory() {
+  public void testGetStagingDirectory() {
     assertEquals(stagingDirectory, configuration.getStagingDirectory());
   }
 
   @Test
-  public void testGetArtifact() {
+  public void testGetSourceDirectory() {
     assertEquals(sourceDirectory, configuration.getSourceDirectory());
   }
 
