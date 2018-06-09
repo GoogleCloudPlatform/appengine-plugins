@@ -57,8 +57,10 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging = new CloudSdkAppEngineStandardStaging(appCfgRunner);
 
-    builder = new StageStandardConfiguration.Builder().setSourceDirectory(source)
-        .setStagingDirectory(destination);
+    builder =
+        new StageStandardConfiguration.Builder()
+            .setSourceDirectory(source)
+            .setStagingDirectory(destination);
   }
 
   @Test
