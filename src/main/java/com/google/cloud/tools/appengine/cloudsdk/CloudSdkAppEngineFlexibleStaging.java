@@ -95,21 +95,23 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       StageFlexibleConfiguration config, CopyService copyService, @Nullable String runtime)
       throws IOException, AppEngineException {
     File dockerDirectory = config.getDockerDirectory();
-    if (dockerDirectory.exists()) {
-      if ("java".equals(runtime)) {
-        log.warning(
-            "WARNING: runtime 'java' detected, any docker configuration in "
-                + dockerDirectory
-                + " will be ignored. If you wish to specify a docker configuration, please use "
-                + "'runtime: custom'.");
-      } else {
-        // Copy docker context to staging
-        if (!Files.isRegularFile(dockerDirectory.toPath().resolve("Dockerfile"))) {
-          throw new AppEngineException(
-              "Docker directory " + dockerDirectory.toPath() + " does not contain Dockerfile.");
+    if (dockerDirectory != null) {
+      if (dockerDirectory.exists()) {
+        if ("java".equals(runtime)) {
+          log.warning(
+              "WARNING: runtime 'java' detected, any docker configuration in "
+                  + dockerDirectory
+                  + " will be ignored. If you wish to specify a docker configuration, please use "
+                  + "'runtime: custom'.");
         } else {
-          File stagingDirectory = config.getStagingDirectory();
-          copyService.copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+          // Copy docker context to staging
+          if (!Files.isRegularFile(dockerDirectory.toPath().resolve("Dockerfile"))) {
+            throw new AppEngineException(
+                "Docker directory " + dockerDirectory.toPath() + " does not contain Dockerfile.");
+          } else {
+            File stagingDirectory = config.getStagingDirectory();
+            copyService.copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+          }
         }
       }
     }
