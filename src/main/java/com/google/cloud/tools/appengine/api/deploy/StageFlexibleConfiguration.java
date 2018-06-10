@@ -28,8 +28,11 @@ public class StageFlexibleConfiguration {
   private File artifact;
   private File stagingDirectory;
 
-  private StageFlexibleConfiguration(File appEngineDirectory, @Nullable File dockerDirectory,
-      File artifact, File stagingDirectory) {
+  private StageFlexibleConfiguration(
+      File appEngineDirectory,
+      @Nullable File dockerDirectory,
+      File artifact,
+      File stagingDirectory) {
     this.appEngineDirectory = Preconditions.checkNotNull(appEngineDirectory);
     this.dockerDirectory = dockerDirectory;
     this.artifact = Preconditions.checkNotNull(artifact);
@@ -90,7 +93,7 @@ public class StageFlexibleConfiguration {
     /**
      * Returns a fully configured StageFlexibleConfiguration object.
      *
-     * @throws NullPointerException if any of the fields have not been set
+     * @throws NullPointerException if any required field has not been set
      */
     public StageFlexibleConfiguration build() {
       if (appEngineDirectory == null) {
