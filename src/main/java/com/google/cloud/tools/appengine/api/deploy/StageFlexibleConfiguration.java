@@ -28,8 +28,8 @@ public class StageFlexibleConfiguration {
   private File artifact;
   private File stagingDirectory;
 
-  private StageFlexibleConfiguration(
-      File appEngineDirectory, File dockerDirectory, File artifact, File stagingDirectory) {
+  private StageFlexibleConfiguration(File appEngineDirectory, @Nullable File dockerDirectory,
+      File artifact, File stagingDirectory) {
     this.appEngineDirectory = Preconditions.checkNotNull(appEngineDirectory);
     this.dockerDirectory = dockerDirectory;
     this.artifact = Preconditions.checkNotNull(artifact);
