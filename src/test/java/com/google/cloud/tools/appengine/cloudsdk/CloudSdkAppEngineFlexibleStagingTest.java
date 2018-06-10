@@ -86,7 +86,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
     verifyZeroInteractions(copyService);
   }
-  
+
   @Test
   public void testCopyDockerContext_noDocker() throws AppEngineException, IOException {
     when(config.getDockerDirectory()).thenReturn(null);
