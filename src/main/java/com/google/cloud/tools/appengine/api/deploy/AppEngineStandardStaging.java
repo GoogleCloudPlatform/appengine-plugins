@@ -27,8 +27,8 @@ public interface AppEngineStandardStaging {
   /**
    * Stages the application for App Engine standard deployment.
    *
-   * @param config Configuration parameters for staging.
-   * @throws AppEngineException When staging fails.
+   * @param config parameters for staging
+   * @throws AppEngineException when staging fails
    */
   void stageStandard(StageStandardConfiguration config) throws AppEngineException;
 }

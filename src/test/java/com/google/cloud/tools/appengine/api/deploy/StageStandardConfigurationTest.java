@@ -38,7 +38,7 @@ public class StageStandardConfigurationTest {
     // files are files and directories are directories?
     // should we use paths instead?
     configuration =
-        new StageStandardConfiguration.Builder()
+        new DefaultStageStandardConfiguration.Builder()
             .setStagingDirectory(stagingDirectory)
             .setSourceDirectory(sourceDirectory)
             .build();
@@ -47,7 +47,7 @@ public class StageStandardConfigurationTest {
   @Test
   public void testInitialValuesRequired() {
     try {
-      new StageStandardConfiguration.Builder().build();
+      new DefaultStageStandardConfiguration.Builder().build();
       fail();
     } catch (NullPointerException ex) {
       assertNotNull(ex.getMessage());
