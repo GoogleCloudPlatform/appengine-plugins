@@ -24,9 +24,9 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-public class StageFlexibleConfigurationTest {
+public class DefaultStageFlexibleConfigurationTest {
 
-  private StageFlexibleConfiguration configuration;
+  private DefaultStageFlexibleConfiguration configuration;
   private File file = new File("");
 
   @Before
@@ -35,7 +35,7 @@ public class StageFlexibleConfigurationTest {
     // files are files and directories are directories?
     // should we use paths instead?
     configuration =
-        new StageFlexibleConfiguration.Builder()
+        new DefaultStageFlexibleConfiguration.Builder()
             .setAppEngineDirectory(file)
             .setArtifact(file)
             .setDockerDirectory(file)
@@ -46,7 +46,7 @@ public class StageFlexibleConfigurationTest {
   @Test
   public void testInitialValuesRequired() {
     try {
-      new StageFlexibleConfiguration.Builder().build();
+      new DefaultStageFlexibleConfiguration.Builder().build();
       fail();
     } catch (NullPointerException ex) {
       assertNotNull(ex.getMessage());
@@ -55,7 +55,7 @@ public class StageFlexibleConfigurationTest {
 
   @Test
   public void testDockerNotRequired() {
-    new StageFlexibleConfiguration.Builder()
+    new DefaultStageFlexibleConfiguration.Builder()
         .setAppEngineDirectory(file)
         .setArtifact(file)
         .setStagingDirectory(file)
