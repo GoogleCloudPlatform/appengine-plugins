@@ -40,6 +40,24 @@ public class AppYamlTest {
   }
 
   @Test
+  public void testGetEnvironmentType_success() {
+    InputStream appYaml = asStream("env: flex\nruntime: java\np2: v2");
+    Assert.assertEquals("flex", AppYaml.parse(appYaml).getEnvironmentType());
+  }
+
+  @Test
+  public void testGetEnvironmentType_failureBecauseWrongType() {
+    InputStream appYaml = asStream("env: [goose, moose]\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getEnvironmentType());
+  }
+
+  @Test
+  public void testGetEnvironmentType_failureBecauseNotPresent() {
+    InputStream appYaml = asStream("p1: v1\np2: v2");
+    Assert.assertNull(AppYaml.parse(appYaml).getEnvironmentType());
+  }
+
+  @Test
   public void testGetRuntime_success() {
     InputStream appYaml = asStream("runtime: java\np2: v2");
     Assert.assertEquals("java", AppYaml.parse(appYaml).getRuntime());
@@ -148,9 +166,9 @@ public class AppYamlTest {
   }
 
   @Test
-  public void testGetEnvironment_success() {
+  public void testGetEnvironmentVariables_success() {
     InputStream appYaml = asStream("env_variables:\n  key1: value1\n  key2: 0\np2: v2");
-    Map<String, ?> environment = AppYaml.parse(appYaml).getEnvironment();
+    Map<String, ?> environment = AppYaml.parse(appYaml).getEnvironmentVariables();
     Assert.assertNotNull(environment);
     Assert.assertEquals(2, environment.size());
     Assert.assertEquals("value1", environment.get("key1"));
@@ -158,15 +176,15 @@ public class AppYamlTest {
   }
 
   @Test
-  public void testGetEnvironment_failureBecauseWrongType() {
+  public void testGetEnvironmentVariables_failureBecauseWrongType() {
     InputStream appYaml = asStream("env_variables: [goose, moose]\np2: v2");
-    Assert.assertNull(AppYaml.parse(appYaml).getEnvironment());
+    Assert.assertNull(AppYaml.parse(appYaml).getEnvironmentVariables());
   }
 
   @Test
-  public void testGetEnvironment_failureBecauseNotPresent() {
+  public void testGetEnvironmentVariables_failureBecauseNotPresent() {
     InputStream appYaml = asStream("p1: v1\np2: v2");
-    Assert.assertNull(AppYaml.parse(appYaml).getEnvironment());
+    Assert.assertNull(AppYaml.parse(appYaml).getEnvironmentVariables());
   }
 
   private InputStream asStream(String contents) {

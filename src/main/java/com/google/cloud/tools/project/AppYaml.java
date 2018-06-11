@@ -26,13 +26,14 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 /** Tools for reading {@code app.yaml}. */
 public class AppYaml {
 
+  private static final String ENVIRONMENT_TYPE_KEY = "env";
   private static final String RUNTIME_KEY = "runtime";
   private static final String API_VERSION_KEY = "api_version";
   private static final String APPLICATION_KEY = "application";
   private static final String VERSION_KEY = "version";
   private static final String SERVICE_KEY = "service";
   private static final String MODULE_KEY = "module";
-  private static final String ENVIRONMENT_KEY = "env_variables";
+  private static final String ENVIRONMENT_VARIABLES_KEY = "env_variables";
 
   private final Map<String, ?> yamlMap;
 
@@ -55,6 +56,11 @@ public class AppYaml {
 
   private AppYaml(Map<String, ?> yamlMap) {
     this.yamlMap = yamlMap == null ? Collections.emptyMap() : yamlMap;
+  }
+
+  @Nullable
+  public String getEnvironmentType() {
+    return getString(ENVIRONMENT_TYPE_KEY);
   }
 
   @Nullable
@@ -88,8 +94,8 @@ public class AppYaml {
   }
 
   @Nullable
-  public Map<String, ?> getEnvironment() {
-    return getStringMap(ENVIRONMENT_KEY);
+  public Map<String, ?> getEnvironmentVariables() {
+    return getStringMap(ENVIRONMENT_VARIABLES_KEY);
   }
 
   @Nullable
