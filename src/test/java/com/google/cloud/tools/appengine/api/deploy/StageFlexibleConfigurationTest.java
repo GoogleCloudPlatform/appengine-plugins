@@ -54,6 +54,15 @@ public class StageFlexibleConfigurationTest {
   }
 
   @Test
+  public void testDockerNotRequired() {
+    new StageFlexibleConfiguration.Builder()
+        .setAppEngineDirectory(file)
+        .setArtifact(file)
+        .setStagingDirectory(file)
+        .build();
+  }
+
+  @Test
   public void testGetAppEngineDirectory() {
     assertEquals(file, configuration.getAppEngineDirectory());
   }

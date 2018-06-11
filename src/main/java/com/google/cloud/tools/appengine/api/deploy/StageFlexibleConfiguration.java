@@ -24,14 +24,17 @@ import javax.annotation.Nullable;
 public class StageFlexibleConfiguration {
 
   private File appEngineDirectory;
-  private File dockerDirectory;
+  @Nullable private File dockerDirectory;
   private File artifact;
   private File stagingDirectory;
 
   private StageFlexibleConfiguration(
-      File appEngineDirectory, File dockerDirectory, File artifact, File stagingDirectory) {
+      File appEngineDirectory,
+      @Nullable File dockerDirectory,
+      File artifact,
+      File stagingDirectory) {
     this.appEngineDirectory = Preconditions.checkNotNull(appEngineDirectory);
-    this.dockerDirectory = Preconditions.checkNotNull(dockerDirectory);
+    this.dockerDirectory = dockerDirectory;
     this.artifact = Preconditions.checkNotNull(artifact);
     this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
   }
@@ -42,6 +45,7 @@ public class StageFlexibleConfiguration {
   }
 
   /** Directory containing {@code Dockerfile} and other resources used by it. */
+  @Nullable
   public File getDockerDirectory() {
     return dockerDirectory;
   }
@@ -89,14 +93,17 @@ public class StageFlexibleConfiguration {
     /**
      * Returns a fully configured StageFlexibleConfiguration object.
      *
-     * @throws NullPointerException if any of the fields have not been set
+     * @throws NullPointerException if any required field has not been set
      */
     public StageFlexibleConfiguration build() {
-      if (appEngineDirectory == null
-          || dockerDirectory == null
-          || artifact == null
-          || stagingDirectory == null) {
-        throw new NullPointerException("Incomplete configuration");
+      if (appEngineDirectory == null) {
+        throw new NullPointerException("Incomplete configuration: Missing App Engine directory");
+      }
+      if (artifact == null) {
+        throw new NullPointerException("Incomplete configuration: Missing artifact");
+      }
+      if (stagingDirectory == null) {
+        throw new NullPointerException("Incomplete configuration: Missing staging directory");
       }
       return new StageFlexibleConfiguration(
           appEngineDirectory, dockerDirectory, artifact, stagingDirectory);

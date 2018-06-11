@@ -88,6 +88,18 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
+  public void testCopyDockerContext_noDocker() throws AppEngineException, IOException {
+    when(config.getDockerDirectory()).thenReturn(null);
+
+    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
+
+    List<LogRecord> logs = handler.getLogs();
+    assertEquals(0, logs.size());
+
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
   public void testCopyDockerContext_runtimeJavaWithWarning()
       throws AppEngineException, IOException {
 
