@@ -111,6 +111,7 @@ public class AppYamlTest {
     Assert.assertEquals("module", AppYaml.parse(appYaml).getServiceId());
   }
 
+  @Test
   public void testGetServiceId_failureWithModuleBecauseWrongType() {
     InputStream appYaml = asStream("module: [goose, moose]\np2: v2");
     Assert.assertNull(AppYaml.parse(appYaml).getServiceId());
