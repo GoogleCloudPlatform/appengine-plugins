@@ -78,19 +78,19 @@ public class AppYamlTest {
   @Test
   public void testGetApplication_success() {
     InputStream appYaml = asStream("application: app\np2: v2");
-    Assert.assertEquals("app", AppYaml.parse(appYaml).getApplication());
+    Assert.assertEquals("app", AppYaml.parse(appYaml).getProjectId());
   }
 
   @Test
   public void testGetApplication_failureBecauseWrongType() {
     InputStream appYaml = asStream("application: [goose, moose]\np2: v2");
-    Assert.assertNull(AppYaml.parse(appYaml).getApplication());
+    Assert.assertNull(AppYaml.parse(appYaml).getProjectId());
   }
 
   @Test
   public void testGetApplication_failureBecauseNotPresent() {
     InputStream appYaml = asStream("p1: v1\np2: v2");
-    Assert.assertNull(AppYaml.parse(appYaml).getApplication());
+    Assert.assertNull(AppYaml.parse(appYaml).getProjectId());
   }
 
   @Test
@@ -106,27 +106,20 @@ public class AppYamlTest {
   }
 
   @Test
-  public void testGetServiceId_failureBecauseNotPresent() {
-    InputStream appYaml = asStream("p1: v1\np2: v2");
+  public void testGetServiceId_successWithModule() {
+    InputStream appYaml = asStream("module: module\np2: v2");
+    Assert.assertEquals("module", AppYaml.parse(appYaml).getServiceId());
+  }
+
+  public void testGetServiceId_failureWithModuleBecauseWrongType() {
+    InputStream appYaml = asStream("module: [goose, moose]\np2: v2");
     Assert.assertNull(AppYaml.parse(appYaml).getServiceId());
   }
 
   @Test
-  public void testGetModuleId_success() {
-    InputStream appYaml = asStream("module: module\np2: v2");
-    Assert.assertEquals("module", AppYaml.parse(appYaml).getModuleId());
-  }
-
-  @Test
-  public void testGetModuleId_failureBecauseWrongType() {
-    InputStream appYaml = asStream("module: [goose, moose]\np2: v2");
-    Assert.assertNull(AppYaml.parse(appYaml).getModuleId());
-  }
-
-  @Test
-  public void testGetModuleId_failureBecauseNotPresent() {
+  public void testGetServiceId_failureBecauseNotPresent() {
     InputStream appYaml = asStream("p1: v1\np2: v2");
-    Assert.assertNull(AppYaml.parse(appYaml).getModuleId());
+    Assert.assertNull(AppYaml.parse(appYaml).getServiceId());
   }
 
   @Test

@@ -58,41 +58,56 @@ public class AppYaml {
     this.yamlMap = yamlMap == null ? Collections.emptyMap() : yamlMap;
   }
 
+  /**
+   * Return the content of the {@code environment} field, which defines this app's required App
+   * Engine environment.
+   */
   @Nullable
   public String getEnvironmentType() {
     return getString(ENVIRONMENT_TYPE_KEY);
   }
 
+  /** Return the content of the {@code runtime} field, which defines this app's expected runtime. */
   @Nullable
   public String getRuntime() {
     return getString(RUNTIME_KEY);
   }
 
+  /**
+   * Return the content of the {@code application} field, which identifies the App Engine API
+   * version used by this app.
+   */
   @Nullable
   public String getApiVersion() {
     return getString(API_VERSION_KEY);
   }
 
+  /** Return the content of the {@code application} field, which identifies the Project ID. */
   @Nullable
-  public String getApplication() {
+  public String getProjectId() {
     return getString(APPLICATION_KEY);
   }
 
+  /** Return the content of the {@code version} field, which identifies the Project version. */
   @Nullable
   public String getProjectVersion() {
     return getString(VERSION_KEY);
   }
 
-  @Nullable
-  public String getModuleId() {
-    return getString(MODULE_KEY);
-  }
-
+  /**
+   * Return the content of the {@code service} field or the now-deprecated {@code module} field,
+   * which identifies the Service ID.
+   */
   @Nullable
   public String getServiceId() {
-    return getString(SERVICE_KEY);
+    String serviceId = getString(SERVICE_KEY);
+    if (serviceId == null) {
+      serviceId = getString(MODULE_KEY);
+    }
+    return serviceId;
   }
 
+  /** Return the content of the {@code env_variables} field, which defines environment variables. */
   @Nullable
   public Map<String, ?> getEnvironmentVariables() {
     return getStringMap(ENVIRONMENT_VARIABLES_KEY);
