@@ -16,12 +16,15 @@
 
 package com.google.cloud.tools.project;
 
+import com.google.cloud.tools.appengine.api.AppEngineException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.parser.ParserException;
+import org.yaml.snakeyaml.scanner.ScannerException;
 
 /** Tools for reading {@code app.yaml}. */
 public class AppYaml {
@@ -41,20 +44,22 @@ public class AppYaml {
    * Parse an app.yaml file to an AppYaml object.
    *
    * @param input the input, typically the contents of an {@code app.yaml} file
-   * @throws org.yaml.snakeyaml.scanner.ScannerException if reading app.yaml fails while scanning
-   *     due to malformed YAML (undocumented {@link RuntimeException} from {@link Yaml#load})
-   * @throws org.yaml.snakeyaml.parser.ParserException if reading app.yaml fails while parsing due
-   *     to malformed YAML (undocumented {@link RuntimeException} from {@link Yaml#load})
+   * @throws AppEngineException if reading app.yaml fails while scanning such as due to malformed
+   *     YAML
    */
   @SuppressWarnings("unchecked")
-  public static AppYaml parse(InputStream input) {
-    // our needs are simple so just load using primitive objects
-    Yaml yaml = new Yaml(new SafeConstructor());
-    Map<String, ?> contents = (Map<String, ?>) yaml.load(input);
-    return new AppYaml(contents);
+  public static AppYaml parse(InputStream input) throws AppEngineException {
+    try {
+      // our needs are simple so just load using primitive objects
+      Yaml yaml = new Yaml(new SafeConstructor());
+      Map<String, ?> contents = (Map<String, ?>) yaml.load(input);
+      return new AppYaml(contents);
+    } catch (ScannerException | ParserException ex) {
+      throw new AppEngineException("Malformed 'app.yaml'.", ex);
+    }
   }
 
-  private AppYaml(Map<String, ?> yamlMap) {
+  private AppYaml(@Nullable Map<String, ?> yamlMap) {
     this.yamlMap = yamlMap == null ? Collections.emptyMap() : yamlMap;
   }
 
