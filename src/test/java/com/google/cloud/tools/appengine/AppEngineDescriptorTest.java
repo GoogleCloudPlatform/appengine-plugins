@@ -124,7 +124,7 @@ public class AppEngineDescriptorTest {
   }
 
   @Test
-  public void testParse_null() throws AppEngineException, IOException, SAXException {
+  public void testParse_null() throws IOException, SAXException {
     try {
       AppEngineDescriptor.parse(null);
       Assert.fail("allowed null input");
