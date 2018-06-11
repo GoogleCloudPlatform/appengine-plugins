@@ -41,7 +41,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Test the CloudSdkAppEngineFlexibleStaging functionality */
+/** Test the CloudSdkAppEngineFlexibleStaging functionality. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineFlexibleStagingTest {
 
