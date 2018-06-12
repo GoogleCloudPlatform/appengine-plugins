@@ -139,7 +139,7 @@ public class AppEngineDeployResultTest {
   }
 
   @Test
-  public void testParse_errorWhenVersionIdMissing() throws JsonParseException {
+  public void testParse_errorWhenVersionIdMissing() {
     try {
       AppEngineDeployResult.parse(
           "{'versions': [ {'service': 'a-service', 'project': 'a-project'} ]}");
@@ -150,7 +150,7 @@ public class AppEngineDeployResultTest {
   }
 
   @Test
-  public void testParse_errorWhenVersionServiceMissing() throws JsonParseException {
+  public void testParse_errorWhenVersionServiceMissing() {
     try {
       AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'project': 'a-project'} ]}");
       fail();
@@ -160,7 +160,7 @@ public class AppEngineDeployResultTest {
   }
 
   @Test
-  public void testParse_errorWhenVersionProjectMissing() throws JsonParseException {
+  public void testParse_errorWhenVersionProjectMissing() {
     try {
       AppEngineDeployResult.parse("{'versions': [ {'id': 'a-id', 'service': 'a-service'} ]}");
       fail();

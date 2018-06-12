@@ -25,15 +25,14 @@ import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.io.MoreFiles;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
-import org.yaml.snakeyaml.error.YAMLException;
-import org.yaml.snakeyaml.parser.ParserException;
-import org.yaml.snakeyaml.scanner.ScannerException;
 
 /** Cloud SDK based implementation of {@link AppEngineFlexibleStaging}. */
 public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStaging {
@@ -68,7 +67,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
       copyDockerContext(config, copyService, runtime);
       copyAppEngineContext(config, copyService);
       copyArtifact(config, copyService);
-    } catch (IOException | YAMLException ex) {
+    } catch (IOException ex) {
       throw new AppEngineException(ex);
     }
   }
@@ -77,16 +76,14 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   @Nullable
   static String findRuntime(StageFlexibleConfiguration config)
       throws IOException, AppEngineException {
-    try {
-      // verify that app.yaml that contains runtime:java
-      File appEngineDirectory = config.getAppEngineDirectory();
-      if (appEngineDirectory == null) {
-        throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
-      }
-      Path appYaml = appEngineDirectory.toPath().resolve(APP_YAML);
-      return new AppYaml(appYaml).getRuntime();
-    } catch (ScannerException | ParserException ex) {
-      throw new AppEngineException("Malformed 'app.yaml'.", ex);
+    // verify that app.yaml that contains runtime:java
+    File appEngineDirectory = config.getAppEngineDirectory();
+    if (appEngineDirectory == null) {
+      throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
+    }
+    Path appYaml = appEngineDirectory.toPath().resolve(APP_YAML);
+    try (InputStream input = MoreFiles.asByteSource(appYaml).openBufferedStream()) {
+      return AppYaml.parse(input).getRuntime();
     }
   }
 
