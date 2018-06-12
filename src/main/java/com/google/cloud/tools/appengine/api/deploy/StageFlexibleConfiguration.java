@@ -16,97 +16,25 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import com.google.common.base.Preconditions;
 import java.io.File;
 import javax.annotation.Nullable;
 
 /** Configuration for {@link AppEngineFlexibleStaging#stageFlexible(StageFlexibleConfiguration)}. */
-public class StageFlexibleConfiguration {
-
-  private File appEngineDirectory;
-  @Nullable private File dockerDirectory;
-  private File artifact;
-  private File stagingDirectory;
-
-  private StageFlexibleConfiguration(
-      File appEngineDirectory,
-      @Nullable File dockerDirectory,
-      File artifact,
-      File stagingDirectory) {
-    this.appEngineDirectory = Preconditions.checkNotNull(appEngineDirectory);
-    this.dockerDirectory = dockerDirectory;
-    this.artifact = Preconditions.checkNotNull(artifact);
-    this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
-  }
+public interface StageFlexibleConfiguration {
 
   /** Directory containing {@code app.yaml}. */
-  public File getAppEngineDirectory() {
-    return appEngineDirectory;
-  }
+  File getAppEngineDirectory();
 
   /** Directory containing {@code Dockerfile} and other resources used by it. */
   @Nullable
-  public File getDockerDirectory() {
-    return dockerDirectory;
-  }
+  File getDockerDirectory();
 
   /** Artifact to deploy such as WAR or JAR. */
-  public File getArtifact() {
-    return artifact;
-  }
+  File getArtifact();
 
   /**
    * Directory where {@code app.yaml}, files in docker directory, and the artifact to deploy will be
    * copied for deploying.
    */
-  public File getStagingDirectory() {
-    return stagingDirectory;
-  }
-
-  public static class Builder {
-
-    @Nullable private File appEngineDirectory;
-    @Nullable private File dockerDirectory;
-    @Nullable private File artifact;
-    @Nullable private File stagingDirectory;
-
-    public Builder setAppEngineDirectory(File appEngineDirectory) {
-      this.appEngineDirectory = Preconditions.checkNotNull(appEngineDirectory);
-      return this;
-    }
-
-    public Builder setDockerDirectory(File dockerDirectory) {
-      this.dockerDirectory = Preconditions.checkNotNull(dockerDirectory);
-      return this;
-    }
-
-    public Builder setArtifact(File artifact) {
-      this.artifact = Preconditions.checkNotNull(artifact);
-      return this;
-    }
-
-    public Builder setStagingDirectory(File stagingDirectory) {
-      this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
-      return this;
-    }
-
-    /**
-     * Returns a fully configured StageFlexibleConfiguration object.
-     *
-     * @throws NullPointerException if any required field has not been set
-     */
-    public StageFlexibleConfiguration build() {
-      if (appEngineDirectory == null) {
-        throw new NullPointerException("Incomplete configuration: Missing App Engine directory");
-      }
-      if (artifact == null) {
-        throw new NullPointerException("Incomplete configuration: Missing artifact");
-      }
-      if (stagingDirectory == null) {
-        throw new NullPointerException("Incomplete configuration: Missing staging directory");
-      }
-      return new StageFlexibleConfiguration(
-          appEngineDirectory, dockerDirectory, artifact, stagingDirectory);
-    }
-  }
+  File getStagingDirectory();
 }
