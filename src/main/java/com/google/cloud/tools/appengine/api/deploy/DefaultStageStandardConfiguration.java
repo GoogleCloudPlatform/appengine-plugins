@@ -139,44 +139,54 @@ public class DefaultStageStandardConfiguration implements StageStandardConfigura
       return this;
     }
 
-    public void setDockerfile(@Nullable File dockerfile) {
+    public Builder setDockerfile(@Nullable File dockerfile) {
       this.dockerfile = dockerfile;
+      return this;
     }
 
-    public void setEnableQuickstart(@Nullable Boolean enableQuickstart) {
+    public Builder setEnableQuickstart(@Nullable Boolean enableQuickstart) {
       this.enableQuickstart = enableQuickstart;
+      return this;
     }
 
-    public void setDisableUpdateCheck(@Nullable Boolean disableUpdateCheck) {
+    public Builder setDisableUpdateCheck(@Nullable Boolean disableUpdateCheck) {
       this.disableUpdateCheck = disableUpdateCheck;
+      return this;
     }
 
-    public void setEnableJarSplitting(@Nullable Boolean enableJarSplitting) {
+    public Builder setEnableJarSplitting(@Nullable Boolean enableJarSplitting) {
       this.enableJarSplitting = enableJarSplitting;
+      return this;
     }
 
-    public void setJarSplittingExcludes(@Nullable String jarSplittingExcludes) {
+    public Builder setJarSplittingExcludes(@Nullable String jarSplittingExcludes) {
       this.jarSplittingExcludes = jarSplittingExcludes;
+      return this;
     }
 
-    public void setCompileEncoding(@Nullable String compileEncoding) {
+    public Builder setCompileEncoding(@Nullable String compileEncoding) {
       this.compileEncoding = compileEncoding;
+      return this;
     }
 
-    public void setDeleteJsps(@Nullable Boolean deleteJsps) {
+    public Builder setDeleteJsps(@Nullable Boolean deleteJsps) {
       this.deleteJsps = deleteJsps;
+      return this;
     }
 
-    public void setEnableJarClasses(@Nullable Boolean enableJarClasses) {
+    public Builder setEnableJarClasses(@Nullable Boolean enableJarClasses) {
       this.enableJarClasses = enableJarClasses;
+      return this;
     }
 
-    public void setDisableJarJsps(@Nullable Boolean disableJarJsps) {
+    public Builder setDisableJarJsps(@Nullable Boolean disableJarJsps) {
       this.disableJarJsps = disableJarJsps;
+      return this;
     }
 
-    public void setRuntime(@Nullable String runtime) {
+    public Builder setRuntime(@Nullable String runtime) {
       this.runtime = runtime;
+      return this;
     }
 
     /** Builds the configuration. */
