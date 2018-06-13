@@ -62,10 +62,11 @@ final class Installer {
     command.add("--quiet"); // don't accept user input during install
     command.add("--usage-reporting=" + usageReporting); // usage reporing passthrough
 
+    Path workingDirectory = installedSdkRoot.getParent();
     Map<String, String> installerEnvironment = installScriptProvider.getScriptEnvironment();
 
     progressListener.start("Installing Cloud SDK", ProgressListener.UNKNOWN);
-    commandRunner.run(command, installedSdkRoot, installerEnvironment, consoleListener);
+    commandRunner.run(command, workingDirectory, installerEnvironment, consoleListener);
     progressListener.done();
   }
 
