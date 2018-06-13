@@ -34,7 +34,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
   private final String version;
   private final int majorVersion;
-  private final int minorVerion;
+  private final int minorVersion;
   private final int patchVersion;
 
   @Nullable
@@ -52,22 +52,29 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     Preconditions.checkNotNull(version, "Null version");
     Preconditions.checkArgument(!version.isEmpty(), "empty version");
 
-    Matcher matcher = SEMVER_PATTERN.matcher(version);
-    if (!matcher.matches()) {
-      throw new IllegalArgumentException(
-          String.format("Pattern \"%s\" is not a valid CloudSdkVersion.", version));
+    if ("HEAD".equals(version)) {
+      majorVersion = Integer.MAX_VALUE;
+      minorVersion = Integer.MAX_VALUE;
+      patchVersion = Integer.MAX_VALUE;
+      preRelease = null;
+      buildIdentifier = null;
+    } else {
+      Matcher matcher = SEMVER_PATTERN.matcher(version);
+      if (!matcher.matches()) {
+        throw new IllegalArgumentException(
+            String.format("Pattern \"%s\" is not a valid CloudSdkVersion.", version));
+      }
+
+      majorVersion = Integer.parseInt(matcher.group("major"));
+      minorVersion = Integer.parseInt(matcher.group("minor"));
+      patchVersion = Integer.parseInt(matcher.group("patch"));
+
+      preRelease =
+          matcher.group("prerelease") != null
+              ? new CloudSdkVersionPreRelease(matcher.group("prerelease"))
+              : null;
+      buildIdentifier = matcher.group("build");
     }
-
-    majorVersion = Integer.parseInt(matcher.group("major"));
-    minorVerion = Integer.parseInt(matcher.group("minor"));
-    patchVersion = Integer.parseInt(matcher.group("patch"));
-
-    preRelease =
-        matcher.group("prerelease") != null
-            ? new CloudSdkVersionPreRelease(matcher.group("prerelease"))
-            : null;
-    buildIdentifier = matcher.group("build");
-
     this.version = version;
   }
 
@@ -114,9 +121,9 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     Preconditions.checkNotNull(other);
 
     // First, compare required fields
-    List<Integer> mine = ImmutableList.of(majorVersion, minorVerion, patchVersion);
+    List<Integer> mine = ImmutableList.of(majorVersion, minorVersion, patchVersion);
     List<Integer> others =
-        ImmutableList.of(other.getMajorVersion(), other.getMinorVerion(), other.getPatchVersion());
+        ImmutableList.of(other.getMajorVersion(), other.getMinorVersion(), other.getPatchVersion());
     for (int i = 0; i < mine.size(); i++) {
       int result = mine.get(i).compareTo(others.get(i));
       if (result != 0) {
@@ -142,7 +149,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(majorVersion, minorVerion, patchVersion, preRelease, buildIdentifier);
+    return Objects.hash(majorVersion, minorVersion, patchVersion, preRelease, buildIdentifier);
   }
 
   /**
@@ -164,7 +171,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     CloudSdkVersion otherVersion = (CloudSdkVersion) obj;
 
     return Objects.equals(majorVersion, otherVersion.majorVersion)
-        && Objects.equals(minorVerion, otherVersion.minorVerion)
+        && Objects.equals(minorVersion, otherVersion.minorVersion)
         && Objects.equals(patchVersion, otherVersion.patchVersion)
         && Objects.equals(preRelease, otherVersion.preRelease)
         && Objects.equals(buildIdentifier, otherVersion.buildIdentifier);
@@ -174,8 +181,8 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     return majorVersion;
   }
 
-  public int getMinorVerion() {
-    return minorVerion;
+  public int getMinorVersion() {
+    return minorVersion;
   }
 
   public int getPatchVersion() {
