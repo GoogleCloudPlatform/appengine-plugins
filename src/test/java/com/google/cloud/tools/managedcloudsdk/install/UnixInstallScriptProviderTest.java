@@ -16,16 +16,35 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 public class UnixInstallScriptProviderTest {
 
   @Test
-  public void testGetCommandLine() {
-    List<String> commandLine = new UnixInstallScriptProvider().getScriptCommandLine();
+  public void testGetScriptCommandLine_nonAbsoluteSdkRoot() {
+    try {
+      new UnixInstallScriptProvider().getScriptCommandLine(Paths.get("relative/path"));
+      Assert.fail();
+    } catch (IllegalArgumentException e) {
+      Assert.assertEquals("non-absolute SDK path", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testGetScriptCommandLine() {
+    Assume.assumeFalse(System.getProperty("os.name").startsWith("Windows"));
+
+    Path sdkRoot = Paths.get("/path/to/sdk");
+    List<String> commandLine = new UnixInstallScriptProvider().getScriptCommandLine(sdkRoot);
+
     Assert.assertEquals(1, commandLine.size());
-    Assert.assertEquals("./google-cloud-sdk/install.sh", commandLine.get(0));
+    Path scriptPath = Paths.get(commandLine.get(0));
+    Assert.assertTrue(scriptPath.isAbsolute());
+    Assert.assertEquals(Paths.get("/path/to/sdk/install.sh"), scriptPath);
   }
 }

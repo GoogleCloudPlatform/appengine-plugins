@@ -56,7 +56,8 @@ final class Installer {
   /** Install a cloud sdk (only run this on LATEST). */
   public void install()
       throws CommandExitException, CommandExecutionException, InterruptedException {
-    List<String> command = new ArrayList<>(installScriptProvider.getScriptCommandLine());
+    List<String> command =
+        new ArrayList<>(installScriptProvider.getScriptCommandLine(installedSdkRoot));
     command.add("--path-update=false"); // don't update user's path
     command.add("--command-completion=false"); // don't add command completion
     command.add("--quiet"); // don't accept user input during install

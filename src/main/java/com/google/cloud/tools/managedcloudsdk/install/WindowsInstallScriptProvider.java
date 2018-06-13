@@ -16,7 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +30,13 @@ final class WindowsInstallScriptProvider implements InstallScriptProvider {
   WindowsInstallScriptProvider() {}
 
   @Override
-  public List<String> getScriptCommandLine() {
+  public List<String> getScriptCommandLine(Path installedSdkRoot) {
+    Preconditions.checkArgument(installedSdkRoot.isAbsolute(), "non-absolute SDK path");
+
     List<String> script = new ArrayList<>(3);
     script.add("cmd.exe");
     script.add("/c");
-    script.add("google-cloud-sdk\\install.bat");
+    script.add(installedSdkRoot.resolve("install.bat").toString());
     return script;
   }
 

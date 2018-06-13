@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.common.base.Preconditions;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +30,11 @@ final class UnixInstallScriptProvider implements InstallScriptProvider {
   UnixInstallScriptProvider() {}
 
   @Override
-  public List<String> getScriptCommandLine() {
+  public List<String> getScriptCommandLine(Path installedSdkRoot) {
+    Preconditions.checkArgument(installedSdkRoot.isAbsolute(), "non-absolute SDK path");
+
     List<String> script = new ArrayList<>(1);
-    script.add("./google-cloud-sdk/install.sh");
+    script.add(installedSdkRoot.resolve("install.sh").toString());
     return script;
   }
 

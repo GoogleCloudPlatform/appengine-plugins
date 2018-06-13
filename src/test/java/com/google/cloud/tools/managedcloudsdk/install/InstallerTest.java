@@ -55,7 +55,8 @@ public class InstallerTest {
   public void setUp() throws IOException {
     sdkParentDirectory = tmp.getRoot().toPath();
     fakeSdkRoot = tmp.newFolder().toPath();
-    Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
+    Mockito.when(mockInstallScriptProvider.getScriptCommandLine(fakeSdkRoot))
+        .thenReturn(fakeCommand);
     Mockito.when(mockInstallScriptProvider.getScriptEnvironment()).thenReturn(fakeEnv);
   }
 
