@@ -218,9 +218,7 @@ public class CloudSdkVersionTest {
 
   @Test
   public void testCompareTo_headIsGreater() {
-    assertTrue(
-        new CloudSdkVersion("HEAD").compareTo(new CloudSdkVersion("0.1.0-alpha.1.0.1")) > 0);
-    assertTrue(
-        new CloudSdkVersion("0.1.0").compareTo(new CloudSdkVersion("HEAD")) < 0);
+    assertTrue(new CloudSdkVersion("HEAD").compareTo(new CloudSdkVersion("0.1.0-alpha.1.0.1")) > 0);
+    assertTrue(new CloudSdkVersion("0.1.0").compareTo(new CloudSdkVersion("HEAD")) < 0);
   }
 }
