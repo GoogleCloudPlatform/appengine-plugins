@@ -19,13 +19,14 @@ package com.google.cloud.tools.appengine.api.deploy;
 import java.io.File;
 import javax.annotation.Nullable;
 
-/** Configuration for {@link AppEngineStandardStaging#stageStandard(StageStandardConfiguration)}. */
+/**
+ * Arguments needed to stage an App Engine standard environment application. Null return values
+ * indicate that the configuration was not set, and thus assumes the tool default value.
+ */
 public interface StageStandardConfiguration {
 
-  @Nullable
   File getSourceDirectory();
 
-  @Nullable
   File getStagingDirectory();
 
   @Nullable

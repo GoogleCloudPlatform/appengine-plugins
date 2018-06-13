@@ -22,10 +22,9 @@ import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.DefaultStageStandardConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
-import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +34,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 /** Unit tests for {@link CloudSdkAppEngineStandardStaging}. */
@@ -49,8 +47,8 @@ public class CloudSdkAppEngineStandardStagingTest {
   private File source;
   private File destination;
   private File dockerfile;
-
   private CloudSdkAppEngineStandardStaging staging;
+  private DefaultStageStandardConfiguration.Builder builder;
 
   @Before
   public void setUp() throws IOException {
@@ -59,27 +57,27 @@ public class CloudSdkAppEngineStandardStagingTest {
     dockerfile = tmpDir.newFile("dockerfile");
 
     staging = new CloudSdkAppEngineStandardStaging(appCfgRunner);
+
+    builder =
+        new DefaultStageStandardConfiguration.Builder()
+            .setSourceDirectory(source)
+            .setStagingDirectory(destination);
   }
 
   @Test
   public void testCheckFlags_allFlags() throws Exception {
+    builder.setDockerfile(dockerfile);
+    builder.setEnableQuickstart(true);
+    builder.setDisableUpdateCheck(true);
+    builder.setEnableJarSplitting(true);
+    builder.setJarSplittingExcludes("suffix1,suffix2");
+    builder.setCompileEncoding("UTF8");
+    builder.setDeleteJsps(true);
+    builder.setEnableJarClasses(true);
+    builder.setDisableJarJsps(true);
+    builder.setRuntime("java");
 
-    DefaultStageStandardConfiguration configuration =
-        Mockito.spy(new DefaultStageStandardConfiguration());
-    configuration.setSourceDirectory(source);
-    configuration.setStagingDirectory(destination);
-    configuration.setDockerfile(dockerfile);
-    configuration.setEnableQuickstart(true);
-    configuration.setDisableUpdateCheck(true);
-    configuration.setEnableJarSplitting(true);
-    configuration.setJarSplittingExcludes("suffix1,suffix2");
-    configuration.setCompileEncoding("UTF8");
-    configuration.setDeleteJsps(true);
-    configuration.setEnableJarClasses(true);
-    configuration.setDisableJarJsps(true);
-    configuration.setRuntime("java");
-
-    SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
+    StageStandardConfiguration configuration = builder.build();
 
     List<String> expected =
         ImmutableList.of(
@@ -100,29 +98,19 @@ public class CloudSdkAppEngineStandardStagingTest {
     staging.stageStandard(configuration);
 
     verify(appCfgRunner, times(1)).run(eq(expected));
-    SpyVerifier.newVerifier(configuration)
-        .verifyDeclaredGetters(
-            ImmutableMap.<String, Integer>of(
-                "getRuntime", 4,
-                "getSourceDirectory", 3,
-                "getDockerfile", 2,
-                "getStagingDirectory", 3));
   }
 
   @Test
   public void testCheckFlags_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
+    builder.setEnableQuickstart(false);
+    builder.setDisableUpdateCheck(false);
+    builder.setEnableJarSplitting(false);
+    builder.setDeleteJsps(false);
+    builder.setEnableJarClasses(false);
+    builder.setDisableJarJsps(false);
 
-    DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
-    configuration.setSourceDirectory(source);
-    configuration.setStagingDirectory(destination);
-    configuration.setDockerfile(dockerfile);
-    configuration.setEnableQuickstart(false);
-    configuration.setDisableUpdateCheck(false);
-    configuration.setEnableJarSplitting(false);
-    configuration.setDeleteJsps(false);
-    configuration.setEnableJarClasses(false);
-    configuration.setDisableJarJsps(false);
+    StageStandardConfiguration configuration = builder.build();
 
     List<String> expected =
         ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
@@ -136,14 +124,10 @@ public class CloudSdkAppEngineStandardStagingTest {
   public void testCheckFlags_noFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultStageStandardConfiguration configuration = new DefaultStageStandardConfiguration();
-    configuration.setSourceDirectory(source);
-    configuration.setStagingDirectory(destination);
-
     List<String> expected =
         ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
 
-    staging.stageStandard(configuration);
+    staging.stageStandard(builder.build());
 
     verify(appCfgRunner, times(1)).run(eq(expected));
   }

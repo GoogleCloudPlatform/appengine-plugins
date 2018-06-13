@@ -41,7 +41,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Test the CloudSdkAppEngineFlexibleStaging functionality */
+/** Test the CloudSdkAppEngineFlexibleStaging functionality. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineFlexibleStagingTest {
 
@@ -78,6 +78,18 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
     assertFalse(dockerDirectory.exists());
     when(config.getDockerDirectory()).thenReturn(dockerDirectory);
+
+    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
+
+    List<LogRecord> logs = handler.getLogs();
+    assertEquals(0, logs.size());
+
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyDockerContext_noDocker() throws AppEngineException, IOException {
+    when(config.getDockerDirectory()).thenReturn(null);
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
 
