@@ -28,6 +28,6 @@ public class WindowsInstallScriptProviderTest {
     Assert.assertEquals(3, commandLine.size());
     Assert.assertEquals("cmd.exe", commandLine.get(0));
     Assert.assertEquals("/c", commandLine.get(1));
-    Assert.assertEquals("google-cloud-sdk/install.bat", commandLine.get(2));
+    Assert.assertEquals("google-cloud-sdk\\install.bat", commandLine.get(2));
   }
 }
