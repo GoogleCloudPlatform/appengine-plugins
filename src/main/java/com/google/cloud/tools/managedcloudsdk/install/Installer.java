@@ -60,7 +60,7 @@ final class Installer {
     command.add("--path-update=false"); // don't update user's path
     command.add("--command-completion=false"); // don't add command completion
     command.add("--quiet"); // don't accept user input during install
-    command.add("--usage-reporting=" + usageReporting); // usage reporing passthrough
+    command.add("--usage-reporting=" + usageReporting); // usage reporting passthrough
 
     Path workingDirectory = installedSdkRoot.getParent();
     Map<String, String> installerEnvironment = installScriptProvider.getScriptEnvironment();

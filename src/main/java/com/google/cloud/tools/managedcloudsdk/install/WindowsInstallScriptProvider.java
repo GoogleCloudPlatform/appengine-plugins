@@ -32,7 +32,7 @@ final class WindowsInstallScriptProvider implements InstallScriptProvider {
     List<String> script = new ArrayList<>(3);
     script.add("cmd.exe");
     script.add("/c");
-    script.add("install.bat");
+    script.add("google-cloud-sdk/install.bat");
     return script;
   }
 

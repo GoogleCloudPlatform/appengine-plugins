@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2018 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,18 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import javax.annotation.Nullable;
+import org.junit.Assert;
+import org.junit.Test;
 
-/** {@link InstallScriptProvider} for Mac and Linux. */
-final class UnixInstallScriptProvider implements InstallScriptProvider {
+public class WindowsInstallScriptProviderTest {
 
-  /** Instantiated by {@link InstallerFactory}. */
-  UnixInstallScriptProvider() {}
-
-  @Override
-  public List<String> getScriptCommandLine() {
-    List<String> script = new ArrayList<>(1);
-    script.add("./google-cloud-sdk/install.sh");
-    return script;
-  }
-
-  // todo should probably return an empty map
-  @Override
-  @Nullable
-  public Map<String, String> getScriptEnvironment() {
-    return null;
+  @Test
+  public void testGetCommandLine() {
+    List<String> commandLine = new WindowsInstallScriptProvider().getScriptCommandLine();
+    Assert.assertEquals(3, commandLine.size());
+    Assert.assertEquals("cmd.exe", commandLine.get(0));
+    Assert.assertEquals("/c", commandLine.get(1));
+    Assert.assertEquals("google-cloud-sdk/install.bat", commandLine.get(2));
   }
 }
