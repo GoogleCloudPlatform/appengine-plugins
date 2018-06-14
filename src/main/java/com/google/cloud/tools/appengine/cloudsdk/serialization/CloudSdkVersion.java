@@ -53,9 +53,11 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     Preconditions.checkArgument(!version.isEmpty(), "empty version");
 
     if ("HEAD".equals(version.trim())) {
-      majorVersion = Integer.MAX_VALUE;
-      minorVersion = Integer.MAX_VALUE;
-      patchVersion = Integer.MAX_VALUE;
+      // For the choice of 99999,
+      // see https://github.com/GoogleCloudPlatform/appengine-plugins-core/pull/670
+      majorVersion = 99999;
+      minorVersion = 99999;
+      patchVersion = 99999;
       preRelease = null;
       buildIdentifier = null;
     } else {

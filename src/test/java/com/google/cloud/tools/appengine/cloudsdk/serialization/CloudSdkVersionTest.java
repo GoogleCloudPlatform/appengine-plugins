@@ -52,9 +52,9 @@ public class CloudSdkVersionTest {
   public void testConstructor_head() {
     CloudSdkVersion version = new CloudSdkVersion("HEAD");
     assertEquals("HEAD", version.toString());
-    assertEquals(Integer.MAX_VALUE, version.getMajorVersion());
-    assertEquals(Integer.MAX_VALUE, version.getMinorVersion());
-    assertEquals(Integer.MAX_VALUE, version.getPatchVersion());
+    assertEquals(99999, version.getMajorVersion());
+    assertEquals(99999, version.getMinorVersion());
+    assertEquals(99999, version.getPatchVersion());
     assertNull(version.getPreRelease());
     assertNull(version.getBuildIdentifier());
   }
