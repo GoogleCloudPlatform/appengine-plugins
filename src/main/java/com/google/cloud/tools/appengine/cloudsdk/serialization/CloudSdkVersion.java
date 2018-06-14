@@ -52,7 +52,7 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     Preconditions.checkNotNull(version, "Null version");
     Preconditions.checkArgument(!version.isEmpty(), "empty version");
 
-    if ("HEAD".equals(version)) {
+    if ("HEAD".equals(version.trim())) {
       majorVersion = Integer.MAX_VALUE;
       minorVersion = Integer.MAX_VALUE;
       patchVersion = Integer.MAX_VALUE;
