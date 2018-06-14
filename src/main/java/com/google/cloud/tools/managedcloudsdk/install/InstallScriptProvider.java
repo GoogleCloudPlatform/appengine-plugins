@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -28,7 +29,7 @@ interface InstallScriptProvider {
    * the script itself and supporting CLI launch scripts. It does NOT provide configuration
    * parameters for the script.
    */
-  List<String> getScriptCommandLine();
+  List<String> getScriptCommandLine(Path installedSdkRoot);
 
   @Nullable
   Map<String, String> getScriptEnvironment();

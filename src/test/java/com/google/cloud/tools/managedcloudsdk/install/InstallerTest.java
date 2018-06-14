@@ -20,6 +20,7 @@ import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,21 +46,24 @@ public class InstallerTest {
 
   @Rule public TemporaryFolder tmp = new TemporaryFolder();
 
-  private Path fakeWorkingDirectory;
+  private Path sdkParentDirectory;
+  private Path fakeSdkRoot;
   private List<String> fakeCommand = Arrays.asList("scriptexec", "test-install.script");
   private Map<String, String> fakeEnv = ImmutableMap.of("PROPERTY", "value");
 
   @Before
-  public void setUp() {
-    fakeWorkingDirectory = tmp.getRoot().toPath();
-    Mockito.when(mockInstallScriptProvider.getScriptCommandLine()).thenReturn(fakeCommand);
+  public void setUp() throws IOException {
+    sdkParentDirectory = tmp.getRoot().toPath();
+    fakeSdkRoot = tmp.newFolder().toPath();
+    Mockito.when(mockInstallScriptProvider.getScriptCommandLine(fakeSdkRoot))
+        .thenReturn(fakeCommand);
     Mockito.when(mockInstallScriptProvider.getScriptEnvironment()).thenReturn(fakeEnv);
   }
 
   @Test
   public void testCall() throws Exception {
     new Installer(
-            fakeWorkingDirectory,
+            fakeSdkRoot,
             mockInstallScriptProvider,
             false,
             mockProgressListener,
@@ -68,7 +72,7 @@ public class InstallerTest {
         .install();
 
     Mockito.verify(mockCommandRunner)
-        .run(expectedCommand(false), fakeWorkingDirectory, fakeEnv, mockConsoleListener);
+        .run(expectedCommand(false), sdkParentDirectory, fakeEnv, mockConsoleListener);
     Mockito.verifyNoMoreInteractions(mockCommandRunner);
 
     ProgressVerifier.verifyUnknownProgress(mockProgressListener, "Installing Cloud SDK");
@@ -77,7 +81,7 @@ public class InstallerTest {
   @Test
   public void testCall_withUsageReporting() throws Exception {
     new Installer(
-            tmp.getRoot().toPath(),
+            fakeSdkRoot,
             mockInstallScriptProvider,
             true,
             mockProgressListener,
@@ -86,7 +90,7 @@ public class InstallerTest {
         .install();
 
     Mockito.verify(mockCommandRunner)
-        .run(expectedCommand(true), fakeWorkingDirectory, fakeEnv, mockConsoleListener);
+        .run(expectedCommand(true), sdkParentDirectory, fakeEnv, mockConsoleListener);
     Mockito.verifyNoMoreInteractions(mockCommandRunner);
   }
 
