@@ -56,16 +56,18 @@ final class Installer {
   /** Install a cloud sdk (only run this on LATEST). */
   public void install()
       throws CommandExitException, CommandExecutionException, InterruptedException {
-    List<String> command = new ArrayList<>(installScriptProvider.getScriptCommandLine());
+    List<String> command =
+        new ArrayList<>(installScriptProvider.getScriptCommandLine(installedSdkRoot));
     command.add("--path-update=false"); // don't update user's path
     command.add("--command-completion=false"); // don't add command completion
     command.add("--quiet"); // don't accept user input during install
-    command.add("--usage-reporting=" + usageReporting); // usage reporing passthrough
+    command.add("--usage-reporting=" + usageReporting); // usage reporting passthrough
 
+    Path workingDirectory = installedSdkRoot.getParent();
     Map<String, String> installerEnvironment = installScriptProvider.getScriptEnvironment();
 
     progressListener.start("Installing Cloud SDK", ProgressListener.UNKNOWN);
-    commandRunner.run(command, installedSdkRoot, installerEnvironment, consoleListener);
+    commandRunner.run(command, workingDirectory, installerEnvironment, consoleListener);
     progressListener.done();
   }
 
