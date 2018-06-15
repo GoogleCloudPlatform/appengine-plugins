@@ -23,8 +23,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
-import org.yaml.snakeyaml.parser.ParserException;
-import org.yaml.snakeyaml.scanner.ScannerException;
+import org.yaml.snakeyaml.error.YAMLException;
 
 /** Tools for reading {@code app.yaml}. */
 public class AppYaml {
@@ -54,7 +53,7 @@ public class AppYaml {
       Yaml yaml = new Yaml(new SafeConstructor());
       Map<String, ?> contents = (Map<String, ?>) yaml.load(input);
       return new AppYaml(contents);
-    } catch (ScannerException | ParserException ex) {
+    } catch (YAMLException ex) {
       throw new AppEngineException("Malformed 'app.yaml'.", ex);
     }
   }
