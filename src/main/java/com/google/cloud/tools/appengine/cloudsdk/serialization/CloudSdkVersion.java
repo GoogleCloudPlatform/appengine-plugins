@@ -155,7 +155,8 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(version, majorVersion, minorVersion, patchVersion, preRelease, buildIdentifier);
+    return Objects.hash(
+        version, majorVersion, minorVersion, patchVersion, preRelease, buildIdentifier);
   }
 
   /**
