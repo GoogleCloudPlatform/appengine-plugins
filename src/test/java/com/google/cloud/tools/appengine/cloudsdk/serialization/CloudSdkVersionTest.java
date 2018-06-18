@@ -49,6 +49,14 @@ public class CloudSdkVersionTest {
   }
 
   @Test
+  public void testConstructor_head() {
+    CloudSdkVersion version = new CloudSdkVersion("HEAD");
+    assertEquals("HEAD", version.toString());
+    assertNull(version.getPreRelease());
+    assertNull(version.getBuildIdentifier());
+  }
+
+  @Test
   public void testConstructor_preReleaseBeforeNumber() {
     try {
       new CloudSdkVersion("v1.beta.3-1.0.0");
@@ -71,9 +79,6 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_requiredNumbersOnly() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0");
-    assertEquals(0, version.getMajorVersion());
-    assertEquals(1, version.getMinorVerion());
-    assertEquals(0, version.getPatchVersion());
     assertNull(version.getBuildIdentifier());
     assertNull(version.getPreRelease());
   }
@@ -81,9 +86,6 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_withPreRelease() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0-beta");
-    assertEquals(0, version.getMajorVersion());
-    assertEquals(1, version.getMinorVerion());
-    assertEquals(0, version.getPatchVersion());
     assertEquals(new CloudSdkVersionPreRelease("beta"), version.getPreRelease());
     assertNull(version.getBuildIdentifier());
   }
@@ -91,9 +93,6 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_withBuild() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0+12345v0");
-    assertEquals(0, version.getMajorVersion());
-    assertEquals(1, version.getMinorVerion());
-    assertEquals(0, version.getPatchVersion());
     assertEquals("12345v0", version.getBuildIdentifier());
     assertNull(version.getPreRelease());
   }
@@ -101,9 +100,6 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_withPreReleaseAndBuild() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0-beta.1.0+22xyz331");
-    assertEquals(0, version.getMajorVersion());
-    assertEquals(1, version.getMinorVerion());
-    assertEquals(0, version.getPatchVersion());
     assertEquals("22xyz331", version.getBuildIdentifier());
     assertEquals("beta.1.0", version.getPreRelease().toString());
   }
@@ -111,9 +107,6 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_buildBeforePreRelease() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0+v01234-beta.1");
-    assertEquals(0, version.getMajorVersion());
-    assertEquals(1, version.getMinorVerion());
-    assertEquals(0, version.getPatchVersion());
     // the build identifier should match greedily
     assertEquals("v01234-beta.1", version.getBuildIdentifier());
     assertNull(version.getPreRelease());
@@ -142,6 +135,17 @@ public class CloudSdkVersionTest {
   public void testEquals_buildNumbers() {
     assertEquals(new CloudSdkVersion("0.1.0-rc.1+123"), new CloudSdkVersion("0.1.0-rc.1+123"));
     assertNotEquals(new CloudSdkVersion("0.1.0-rc.1+123"), new CloudSdkVersion("0.1.0-rc.1+456"));
+  }
+
+  @Test
+  public void testEquals_heads() {
+    assertEquals(new CloudSdkVersion("HEAD"), new CloudSdkVersion("HEAD"));
+  }
+
+  @Test
+  public void testEquals_headAndNonHead() {
+    assertNotEquals(new CloudSdkVersion("0.1.0-rc.1+123"), new CloudSdkVersion("HEAD"));
+    assertNotEquals(new CloudSdkVersion("HEAD"), new CloudSdkVersion("1.0.0"));
   }
 
   @Test
@@ -187,5 +191,26 @@ public class CloudSdkVersionTest {
         new CloudSdkVersion("0.1.0-alpha").compareTo(new CloudSdkVersion("0.1.0-alpha.0")) < 0);
     assertTrue(
         new CloudSdkVersion("0.1.0-alpha.1.0.1").compareTo(new CloudSdkVersion("0.1.0-omega")) < 0);
+  }
+
+  @Test
+  public void testCompareTo_heads() {
+    assertEquals(0, new CloudSdkVersion("HEAD").compareTo(new CloudSdkVersion("HEAD")));
+  }
+
+  @Test
+  public void testCompareTo_headIsGreater() {
+    assertTrue(new CloudSdkVersion("HEAD").compareTo(new CloudSdkVersion("0.1.0-alpha.1.0.1")) > 0);
+    assertTrue(new CloudSdkVersion("0.1.0").compareTo(new CloudSdkVersion("HEAD")) < 0);
+  }
+
+  @Test
+  public void testHashCode_heads() {
+    assertEquals(new CloudSdkVersion("HEAD"), new CloudSdkVersion("HEAD"));
+  }
+
+  @Test
+  public void testHashCode_headAndNonHead() {
+    assertNotEquals(new CloudSdkVersion("HEAD"), new CloudSdkVersion("1.23.98"));
   }
 }

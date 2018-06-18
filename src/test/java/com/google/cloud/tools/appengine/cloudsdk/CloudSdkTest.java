@@ -26,6 +26,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.io.Files;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -75,7 +76,7 @@ public class CloudSdkTest {
   @Test
   public void testMinimumCloudSdkVersion() {
     // 160.0 through 170.0 have serious bugs on Windows
-    assertTrue(CloudSdk.MINIMUM_VERSION.getMajorVersion() > 170);
+    assertTrue(CloudSdk.MINIMUM_VERSION.compareTo(new CloudSdkVersion("170.0.0")) > 0);
   }
 
   @Test
