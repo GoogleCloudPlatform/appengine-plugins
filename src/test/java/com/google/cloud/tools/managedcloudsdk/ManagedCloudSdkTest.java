@@ -44,7 +44,7 @@ public class ManagedCloudSdkTest {
 
   @Rule public TemporaryFolder tempDir = new TemporaryFolder();
 
-  private static final String FIXED_VERSION = "178.0.0";
+  private static final String FIXED_VERSION = "201.0.0";
   private static final Map<String, String> EMPTY_MAP = Collections.emptyMap();
   private final MessageCollector testListener = new MessageCollector();
   private final ProgressListener testProgressListener = new NullProgressListener();
