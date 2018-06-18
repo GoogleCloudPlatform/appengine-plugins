@@ -205,6 +205,87 @@ public class CloudSdkVersionTest {
   }
 
   @Test
+  public void testMajorVersionParsing() {
+    CloudSdkVersion major0 = new CloudSdkVersion("0.99.88");
+    CloudSdkVersion major1 = new CloudSdkVersion("1.77.66");
+    CloudSdkVersion major2 = new CloudSdkVersion("2.55.44");
+    CloudSdkVersion major3 = new CloudSdkVersion("3.33.22");
+    CloudSdkVersion major4 = new CloudSdkVersion("4.11.0");
+    CloudSdkVersion major5 = new CloudSdkVersion("5.0.11");
+    CloudSdkVersion major6 = new CloudSdkVersion("6.22.33");
+    CloudSdkVersion major7 = new CloudSdkVersion("7.44.55");
+    assertTrue(major0.compareTo(major1) < 0);
+    assertTrue(major1.compareTo(major2) < 0);
+    assertTrue(major2.compareTo(major3) < 0);
+    assertTrue(major3.compareTo(major4) < 0);
+    assertTrue(major4.compareTo(major5) < 0);
+    assertTrue(major5.compareTo(major6) < 0);
+    assertTrue(major6.compareTo(major7) < 0);
+
+    assertTrue(major7.compareTo(major6) > 0);
+    assertTrue(major6.compareTo(major5) > 0);
+    assertTrue(major5.compareTo(major4) > 0);
+    assertTrue(major4.compareTo(major3) > 0);
+    assertTrue(major3.compareTo(major2) > 0);
+    assertTrue(major2.compareTo(major1) > 0);
+    assertTrue(major1.compareTo(major0) > 0);
+  }
+
+  @Test
+  public void testMinorVersionParsing() {
+    CloudSdkVersion minor0 = new CloudSdkVersion("0.0.88");
+    CloudSdkVersion minor1 = new CloudSdkVersion("0.1.66");
+    CloudSdkVersion minor2 = new CloudSdkVersion("0.2.44");
+    CloudSdkVersion minor3 = new CloudSdkVersion("0.3.22");
+    CloudSdkVersion minor4 = new CloudSdkVersion("0.4.0");
+    CloudSdkVersion minor5 = new CloudSdkVersion("0.5.11");
+    CloudSdkVersion minor6 = new CloudSdkVersion("0.6.33");
+    CloudSdkVersion minor7 = new CloudSdkVersion("0.7.55");
+    assertTrue(minor0.compareTo(minor1) < 0);
+    assertTrue(minor1.compareTo(minor2) < 0);
+    assertTrue(minor2.compareTo(minor3) < 0);
+    assertTrue(minor3.compareTo(minor4) < 0);
+    assertTrue(minor4.compareTo(minor5) < 0);
+    assertTrue(minor5.compareTo(minor6) < 0);
+    assertTrue(minor6.compareTo(minor7) < 0);
+
+    assertTrue(minor7.compareTo(minor6) > 0);
+    assertTrue(minor6.compareTo(minor5) > 0);
+    assertTrue(minor5.compareTo(minor4) > 0);
+    assertTrue(minor4.compareTo(minor3) > 0);
+    assertTrue(minor3.compareTo(minor2) > 0);
+    assertTrue(minor2.compareTo(minor1) > 0);
+    assertTrue(minor1.compareTo(minor0) > 0);
+  }
+
+  @Test
+  public void testPatchVersionParsing() {
+    CloudSdkVersion patch0 = new CloudSdkVersion("0.99.0");
+    CloudSdkVersion patch1 = new CloudSdkVersion("0.99.1");
+    CloudSdkVersion patch2 = new CloudSdkVersion("0.99.2");
+    CloudSdkVersion patch3 = new CloudSdkVersion("0.99.3");
+    CloudSdkVersion patch4 = new CloudSdkVersion("0.99.4");
+    CloudSdkVersion patch5 = new CloudSdkVersion("0.99.5");
+    CloudSdkVersion patch6 = new CloudSdkVersion("0.99.6");
+    CloudSdkVersion patch7 = new CloudSdkVersion("0.99.7");
+    assertTrue(patch0.compareTo(patch1) < 0);
+    assertTrue(patch1.compareTo(patch2) < 0);
+    assertTrue(patch2.compareTo(patch3) < 0);
+    assertTrue(patch3.compareTo(patch4) < 0);
+    assertTrue(patch4.compareTo(patch5) < 0);
+    assertTrue(patch5.compareTo(patch6) < 0);
+    assertTrue(patch6.compareTo(patch7) < 0);
+
+    assertTrue(patch7.compareTo(patch6) > 0);
+    assertTrue(patch6.compareTo(patch5) > 0);
+    assertTrue(patch5.compareTo(patch4) > 0);
+    assertTrue(patch4.compareTo(patch3) > 0);
+    assertTrue(patch3.compareTo(patch2) > 0);
+    assertTrue(patch2.compareTo(patch1) > 0);
+    assertTrue(patch1.compareTo(patch0) > 0);
+  }
+
+  @Test
   public void testHashCode_heads() {
     assertEquals(new CloudSdkVersion("HEAD"), new CloudSdkVersion("HEAD"));
   }
