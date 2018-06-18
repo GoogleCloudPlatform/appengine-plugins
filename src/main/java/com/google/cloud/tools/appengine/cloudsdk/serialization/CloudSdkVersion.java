@@ -52,12 +52,10 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     Preconditions.checkNotNull(version, "Null version");
     Preconditions.checkArgument(!version.isEmpty(), "empty version");
 
-    if ("HEAD".equals(version.trim())) {
-      // For the choice of 99999,
-      // see https://github.com/GoogleCloudPlatform/appengine-plugins-core/pull/670
-      majorVersion = 99999;
-      minorVersion = 99999;
-      patchVersion = 99999;
+    if ("HEAD".equals(version)) {
+      majorVersion = -1;
+      minorVersion = -1;
+      patchVersion = -1;
       preRelease = null;
       buildIdentifier = null;
     } else {
@@ -122,10 +120,16 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
   public int compareTo(CloudSdkVersion other) {
     Preconditions.checkNotNull(other);
 
+    if ("HEAD".equals(version) && !"HEAD".equals(other.version)) {
+      return 1;
+    } else if (!"HEAD".equals(version) && "HEAD".equals(other.version)) {
+      return -1;
+    }
+
     // First, compare required fields
     List<Integer> mine = ImmutableList.of(majorVersion, minorVersion, patchVersion);
     List<Integer> others =
-        ImmutableList.of(other.getMajorVersion(), other.getMinorVersion(), other.getPatchVersion());
+        ImmutableList.of(other.majorVersion, other.minorVersion, other.patchVersion);
     for (int i = 0; i < mine.size(); i++) {
       int result = mine.get(i).compareTo(others.get(i));
       if (result != 0) {
@@ -151,7 +155,8 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(majorVersion, minorVersion, patchVersion, preRelease, buildIdentifier);
+    return Objects.hash(
+        version, majorVersion, minorVersion, patchVersion, preRelease, buildIdentifier);
   }
 
   /**
@@ -177,18 +182,6 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
         && Objects.equals(patchVersion, otherVersion.patchVersion)
         && Objects.equals(preRelease, otherVersion.preRelease)
         && Objects.equals(buildIdentifier, otherVersion.buildIdentifier);
-  }
-
-  public int getMajorVersion() {
-    return majorVersion;
-  }
-
-  public int getMinorVersion() {
-    return minorVersion;
-  }
-
-  public int getPatchVersion() {
-    return patchVersion;
   }
 
   @Nullable
