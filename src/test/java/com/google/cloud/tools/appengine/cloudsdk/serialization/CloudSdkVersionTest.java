@@ -79,6 +79,9 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_requiredNumbersOnly() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0");
+    assertEquals(0, version.majorVersion);
+    assertEquals(1, version.minorVersion);
+    assertEquals(0, version.patchVersion);
     assertNull(version.getBuildIdentifier());
     assertNull(version.getPreRelease());
   }
@@ -86,6 +89,9 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_withPreRelease() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0-beta");
+    assertEquals(0, version.majorVersion);
+    assertEquals(1, version.minorVersion);
+    assertEquals(0, version.patchVersion);
     assertEquals(new CloudSdkVersionPreRelease("beta"), version.getPreRelease());
     assertNull(version.getBuildIdentifier());
   }
@@ -93,6 +99,9 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_withBuild() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0+12345v0");
+    assertEquals(0, version.majorVersion);
+    assertEquals(1, version.minorVersion);
+    assertEquals(0, version.patchVersion);
     assertEquals("12345v0", version.getBuildIdentifier());
     assertNull(version.getPreRelease());
   }
@@ -100,6 +109,9 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_withPreReleaseAndBuild() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0-beta.1.0+22xyz331");
+    assertEquals(0, version.majorVersion);
+    assertEquals(1, version.minorVersion);
+    assertEquals(0, version.patchVersion);
     assertEquals("22xyz331", version.getBuildIdentifier());
     assertEquals("beta.1.0", version.getPreRelease().toString());
   }
@@ -107,6 +119,9 @@ public class CloudSdkVersionTest {
   @Test
   public void testConstructor_buildBeforePreRelease() {
     CloudSdkVersion version = new CloudSdkVersion("0.1.0+v01234-beta.1");
+    assertEquals(0, version.majorVersion);
+    assertEquals(1, version.minorVersion);
+    assertEquals(0, version.patchVersion);
     // the build identifier should match greedily
     assertEquals("v01234-beta.1", version.getBuildIdentifier());
     assertNull(version.getPreRelease());

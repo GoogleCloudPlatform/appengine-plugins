@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
@@ -33,9 +34,9 @@ public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
   private static final Pattern SEMVER_PATTERN = Pattern.compile(getSemVerRegex());
 
   private final String version;
-  private final int majorVersion;
-  private final int minorVersion;
-  private final int patchVersion;
+  @VisibleForTesting final int majorVersion;
+  @VisibleForTesting final int minorVersion;
+  @VisibleForTesting final int patchVersion;
 
   @Nullable
   private final CloudSdkVersionPreRelease preRelease; // optional pre-release component of version
