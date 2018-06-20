@@ -18,28 +18,34 @@ package com.google.cloud.tools.appengine.cloudsdk.process;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 /** Unit tests for {@link StringBuilderProcessOutputLineListener} */
 public class StringBuilderProcessOutputLineListenerTest {
 
-  private StringBuilderProcessOutputLineListener listener;
-
-  @Before
-  public void setup() {
-    listener = new StringBuilderProcessOutputLineListener();
-  }
-
   @Test
   public void testToString_empty() {
+    StringBuilderProcessOutputLineListener listener =
+        StringBuilderProcessOutputLineListener.newListener();
     assertEquals("", listener.toString());
   }
 
   @Test
   public void testToString_nonempty() {
+    StringBuilderProcessOutputLineListener listener =
+        StringBuilderProcessOutputLineListener.newListener();
     listener.onOutputLine("line 1");
     listener.onOutputLine("line 2");
     assertEquals("line 1line 2", listener.toString());
+  }
+
+  @Test
+  public void testToString_withNewLines() {
+    StringBuilderProcessOutputLineListener listener =
+        StringBuilderProcessOutputLineListener.newListenerWithNewlines();
+    String lineSeparator = System.getProperty("line.separator");
+    listener.onOutputLine("line 1");
+    listener.onOutputLine("line 2");
+    assertEquals("line 1" + lineSeparator + "line 2" + lineSeparator, listener.toString());
   }
 }

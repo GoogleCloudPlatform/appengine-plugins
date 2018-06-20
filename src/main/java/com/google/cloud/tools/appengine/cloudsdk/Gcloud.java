@@ -29,6 +29,7 @@ import com.google.gson.JsonSyntaxException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
 /** Operations that use gcloud. */
@@ -112,7 +113,9 @@ public class Gcloud {
     sdk.validateCloudSdkLocation();
 
     StringBuilderProcessOutputLineListener stdOutListener =
-        new StringBuilderProcessOutputLineListener();
+        StringBuilderProcessOutputLineListener.newListener();
+    StringBuilderProcessOutputLineListener stdErrListener =
+        StringBuilderProcessOutputLineListener.newListenerWithNewlines();
     ExitCodeRecorderProcessExitListener exitListener = new ExitCodeRecorderProcessExitListener();
 
     // build and run the command
@@ -125,13 +128,16 @@ public class Gcloud {
     Process process = new ProcessBuilder(command).start();
     LegacyProcessHandler.builder()
         .addStdOutLineListener(stdOutListener)
+        .addStdErrLineListener(stdErrListener)
         .setExitListener(exitListener)
         .build()
         .handleProcess(process);
 
     if (exitListener.getMostRecentExitCode() != null
         && !exitListener.getMostRecentExitCode().equals(0)) {
-      throw new ProcessHandlerException("Process exited unsuccessfully");
+      Logger.getLogger(Gcloud.class.getName()).severe(stdErrListener.toString());
+      throw new ProcessHandlerException(
+          "Process exited unsuccessfully with code " + exitListener.getMostRecentExitCode());
     }
 
     return stdOutListener.toString();

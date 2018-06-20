@@ -19,19 +19,30 @@ package com.google.cloud.tools.appengine.cloudsdk.process;
 /** A ProcessOutputLineListener that uses a StringBuffer to store the contents of all lines. */
 public class StringBuilderProcessOutputLineListener implements ProcessOutputLineListener {
 
+  private final String separator;
   // This used to be a StringBuilder but that wasn't thread safe.
   @SuppressWarnings("JdkObsolete")
   private final StringBuffer buffer = new StringBuffer();
 
-  public StringBuilderProcessOutputLineListener() {}
+  private StringBuilderProcessOutputLineListener(String separator) {
+    this.separator = separator;
+  }
 
   @Override
   public void onOutputLine(String line) {
-    buffer.append(line);
+    buffer.append(line).append(separator);
   }
 
   @Override
   public String toString() {
     return buffer.toString();
+  }
+
+  public static StringBuilderProcessOutputLineListener newListener() {
+    return new StringBuilderProcessOutputLineListener("");
+  }
+
+  public static StringBuilderProcessOutputLineListener newListenerWithNewlines() {
+    return new StringBuilderProcessOutputLineListener(System.getProperty("line.separator"));
   }
 }
