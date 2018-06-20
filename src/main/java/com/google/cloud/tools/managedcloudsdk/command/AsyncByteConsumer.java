@@ -24,7 +24,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 /**
@@ -62,14 +61,7 @@ class AsyncByteConsumer implements AsyncStreamSaver {
     if (executorService.isShutdown()) {
       throw new IllegalStateException("Cannot re-use " + this.getClass().getName());
     }
-    result.setFuture(
-        executorService.submit(
-            new Callable<String>() {
-              @Override
-              public String call() throws Exception {
-                return consumeBytes(inputStream);
-              }
-            }));
+    result.setFuture(executorService.submit(() -> consumeBytes(inputStream)));
     executorService.shutdown();
   }
 

@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.process;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -33,16 +33,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class LegacyProcessHandlerTest {
 
-  @Mock ProcessOutputLineListener stdOut;
-  @Mock ProcessOutputLineListener stdErr;
-  @Mock ProcessStartListener start;
-  @Mock ProcessExitListener exit;
-  @Mock LegacyProcessHandler.Builder.DevAppServerAsyncOutputWatcherFactory watcherFactory;
-  @Mock WaitingProcessOutputLineListener watcher;
-  List<ProcessOutputLineListener> stdOutListeners = new ArrayList<>();
-  List<ProcessOutputLineListener> stdErrListeners = new ArrayList<>();
-  List<ProcessStartListener> startListeners = new ArrayList<>();
-  List<ProcessExitListener> exitListeners = new ArrayList<>();
+  @Mock private ProcessOutputLineListener stdOut;
+  @Mock private ProcessOutputLineListener stdErr;
+  @Mock private ProcessStartListener start;
+  @Mock private ProcessExitListener exit;
+  @Mock private LegacyProcessHandler.Builder.DevAppServerAsyncOutputWatcherFactory watcherFactory;
+  @Mock private WaitingProcessOutputLineListener watcher;
+  private final List<ProcessOutputLineListener> stdOutListeners = new ArrayList<>();
+  private final List<ProcessOutputLineListener> stdErrListeners = new ArrayList<>();
+  private final List<ProcessStartListener> startListeners = new ArrayList<>();
+  private final List<ProcessExitListener> exitListeners = new ArrayList<>();
 
   @Before
   public void setUp() {

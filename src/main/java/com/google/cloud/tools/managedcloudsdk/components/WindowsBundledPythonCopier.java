@@ -55,25 +55,10 @@ public class WindowsBundledPythonCopier implements BundledPythonCopier {
     String pythonExePath = commandCaller.call(copyPythonCommand, null, null).trim();
 
     if (isUnderTempDirectory(pythonExePath, System.getenv())) {
-      Runtime.getRuntime().addShutdownHook(new Thread(new PythonDeleter(pythonExePath)));
+      Runtime.getRuntime().addShutdownHook(new Thread(() -> deleteCopiedPython(pythonExePath)));
     }
 
     return ImmutableMap.of("CLOUDSDK_PYTHON", pythonExePath);
-  }
-
-  // WARNING: do not turn this into a lambda. Cobertura and JavaNCSS can't handle that.
-  private static class PythonDeleter implements Runnable {
-
-    private final String pythonExePath;
-
-    public PythonDeleter(String pythonExePath) {
-      this.pythonExePath = pythonExePath;
-    }
-
-    @Override
-    public void run() {
-      deleteCopiedPython(pythonExePath);
-    }
   }
 
   @VisibleForTesting
