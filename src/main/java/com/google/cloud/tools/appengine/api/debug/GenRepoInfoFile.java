@@ -17,10 +17,6 @@
 package com.google.cloud.tools.appengine.api.debug;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkVersionFileException;
-import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 
 /** Main interface for generating source context files, needed by the Cloud Debugger. */
 public interface GenRepoInfoFile {
