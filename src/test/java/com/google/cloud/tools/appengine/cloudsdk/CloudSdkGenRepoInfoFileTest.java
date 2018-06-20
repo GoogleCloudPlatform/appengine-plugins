@@ -49,7 +49,6 @@ public class CloudSdkGenRepoInfoFileTest {
 
     List<String> arguments =
         ImmutableList.of(
-            "gcloud",
             "beta",
             "debug",
             "source",

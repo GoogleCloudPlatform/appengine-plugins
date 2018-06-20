@@ -50,7 +50,6 @@ public class CloudSdkGenRepoInfoFile implements GenRepoInfoFile {
   public void generate(GenRepoInfoFileConfiguration configuration) throws AppEngineException {
     List<String> arguments = new ArrayList<>();
 
-    arguments.add("gcloud");
     arguments.add("beta");
     arguments.add("debug");
     arguments.add("source");

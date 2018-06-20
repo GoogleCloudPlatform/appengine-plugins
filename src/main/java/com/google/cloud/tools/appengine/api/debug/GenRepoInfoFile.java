@@ -25,7 +25,5 @@ import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 /** Main interface for generating source context files, needed by the Cloud Debugger. */
 public interface GenRepoInfoFile {
 
-  void generate(GenRepoInfoFileConfiguration configuration)
-      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException,
-          InvalidJavaSdkException, AppEngineException;
+  void generate(GenRepoInfoFileConfiguration configuration) throws AppEngineException;
 }
