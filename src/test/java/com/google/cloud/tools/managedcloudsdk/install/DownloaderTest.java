@@ -27,7 +27,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -170,21 +169,18 @@ public class DownloaderTest {
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     Future<Void> testThreadToInterrupt =
         executorService.submit(
-            new Callable<Void>() {
-              @Override
-              public Void call() throws Exception {
-                Downloader downloader =
-                    new Downloader(
-                        fakeRemoteResource, destination, "user agent", mockProgressListener);
-                Thread.currentThread().interrupt();
-                try {
-                  downloader.download();
-                  Assert.fail("InterruptedException expected but not thrown.");
-                } catch (InterruptedException ex) {
-                  Assert.assertEquals("Download was interrupted", ex.getMessage());
-                }
-                return null;
+            () -> {
+              Downloader downloader =
+                  new Downloader(
+                      fakeRemoteResource, destination, "user agent", mockProgressListener);
+              Thread.currentThread().interrupt();
+              try {
+                downloader.download();
+                Assert.fail("InterruptedException expected but not thrown.");
+              } catch (InterruptedException ex) {
+                Assert.assertEquals("Download was interrupted", ex.getMessage());
               }
+              return null;
             });
     executorService.shutdown();
     testThreadToInterrupt.get();
