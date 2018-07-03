@@ -691,7 +691,7 @@
       }
     ]
   },
-{
+  {
     "name": "Text-to-Speech",
     "id": "texttospeech",
     "serviceName": "texttospeech.googleapis.com",
