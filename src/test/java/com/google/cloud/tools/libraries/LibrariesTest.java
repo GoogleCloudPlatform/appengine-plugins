@@ -95,7 +95,16 @@ public class LibrariesTest {
       JsonString language = client.getJsonString("language");
       Assert.assertNotNull("Missing language in " + client.getString("name"), language);
       Assert.assertEquals("java", language.getString());
-      Assert.assertNotNull(client.getJsonObject("mavenCoordinates"));
+      JsonObject mavenCoordinates = client.getJsonObject("mavenCoordinates");
+      String version = mavenCoordinates.getString("version");
+      Assert.assertFalse(version.isEmpty());
+      if ("beta".equals(launchStage) || "alpha".equals(launchStage)) {
+        Assert.assertTrue(version.endsWith(launchStage));
+      } else {
+        Assert.assertTrue(version.matches("\\d+\\.\\d+\\.\\d+"));
+      }
+      Assert.assertFalse(mavenCoordinates.getString("artifactId").isEmpty());
+      Assert.assertFalse(mavenCoordinates.getString("groupId").isEmpty());
       if (client.getString("source") != null) {
         assertReachable(client.getString("source"));
       }
