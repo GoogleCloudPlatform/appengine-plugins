@@ -53,7 +53,7 @@ public class CloudSdkTest {
   }
 
   private void writeVersionFile(String contents) throws IOException {
-    Files.write(contents, root.resolve("VERSION").toFile(), StandardCharsets.UTF_8);
+    Files.asCharSink(root.resolve("VERSION").toFile(), StandardCharsets.UTF_8).write(contents);
   }
 
   @Test
