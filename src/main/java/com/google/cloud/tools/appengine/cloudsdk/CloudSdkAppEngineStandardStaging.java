@@ -23,7 +23,6 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.args.AppCfgArgs;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Preconditions;
 import com.google.common.io.FileWriteMode;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
