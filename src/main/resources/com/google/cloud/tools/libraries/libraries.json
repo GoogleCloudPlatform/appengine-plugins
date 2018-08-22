@@ -60,6 +60,31 @@
     ]
   },
  {
+    "name": "Cloud Container Analysis API",
+    "id": "containeranalysis",
+    "serviceName": "containeranalysis.googleapis.com",
+    "documentation": "https://cloud.google.com/container-analysis/api/reference/rest/",
+    "description": "An implementation of the Grafeas API, which stores, and enables querying and retrieval of metadata about your software artifacts.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for Cloud Container Analysis",
+      "language": "java",
+      "site": "https://cloud.google.com/container-registry/docs/container-analysis",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/devtools/containeranalysis/v1beta1/package-summary.html",
+      "infotip": "The com.google.cloud.devtools.containeranalysis.v1beta1 packages",
+      "launchStage": "beta",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-containeranalysis",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-containeranalysis",
+         "version": "0.58.0-beta"
+       }
+      }
+    ]
+  },
+ {
     "name": "Cloud Data Loss Prevention",
     "id": "datalossprevention",
     "serviceName": "dlp.googleapis.com",
