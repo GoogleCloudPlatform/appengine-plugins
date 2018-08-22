@@ -52,7 +52,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   @Nullable private File datastorePath;
   @Nullable private Map<String, String> environment;
   @Nullable private List<String> additionalArguments;
-  @Nullable private String project;
+  @Nullable private String projectId;
 
   @Override
   @Nullable
@@ -315,13 +315,16 @@ public class DefaultRunConfiguration implements RunConfiguration {
         additionalArguments != null ? ImmutableList.copyOf(additionalArguments) : null;
   }
 
+
+  /** Gets the App Engine project ID. */
   @Override
   @Nullable
-  public String getProject() {
-    return project;
+  public String getProjectId() {
+    return projectId;
   }
 
-  public void setProject(String project) {
-    this.project = project;
+  /** Sets the App Engine project ID. */
+  public void setProjectId(String project) {
+    this.projectId = project;
   }
 }

@@ -135,7 +135,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setDefaultGcsBucketName("buckets");
     configuration.setEnvironment(null);
     configuration.setAutomaticRestart(true);
-    configuration.setProject("my-project");
+    configuration.setProjectId("my-project");
 
     // these params are not used by devappserver1 and will log warnings
     configuration.setAdminHost("adminHost");

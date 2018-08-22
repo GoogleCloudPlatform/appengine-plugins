@@ -82,7 +82,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
 
     arguments.addAll(DevAppServerArgs.get("default_gcs_bucket", config.getDefaultGcsBucketName()));
-    arguments.addAll(DevAppServerArgs.get("application", config.getProject()));
+    arguments.addAll(DevAppServerArgs.get("application", config.getProjectId()));
 
     // Arguments ignored by dev appserver 1
     checkAndWarnIgnored(config.getAdminHost(), "adminHost");

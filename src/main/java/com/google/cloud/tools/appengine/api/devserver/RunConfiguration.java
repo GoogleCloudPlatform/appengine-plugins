@@ -112,6 +112,7 @@ public interface RunConfiguration {
   @Nullable
   List<String> getAdditionalArguments();
 
+  /** Gets the App Engine project ID. */
   @Nullable
-  String getProject();
+  String getProjectId();
 }

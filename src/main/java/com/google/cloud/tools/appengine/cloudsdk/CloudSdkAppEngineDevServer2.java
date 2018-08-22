@@ -90,7 +90,7 @@ public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
     arguments.addAll(DevAppServerArgs.get("clear_datastore", config.getClearDatastore()));
     arguments.addAll(DevAppServerArgs.get("datastore_path", config.getDatastorePath()));
     arguments.addAll(DevAppServerArgs.get("env_var", config.getEnvironment()));
-    arguments.addAll(DevAppServerArgs.get("application", config.getProject()));
+    arguments.addAll(DevAppServerArgs.get("application", config.getProjectId()));
 
     List<String> additionalArguments = config.getAdditionalArguments();
     if (additionalArguments != null) {

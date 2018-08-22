@@ -95,7 +95,7 @@ public class CloudSdkAppEngineDevServer2Test {
     configuration.setClearDatastore(true);
     configuration.setDatastorePath(fakeDatastorePath.toFile());
     configuration.setEnvironment(null);
-    configuration.setProject("my-project");
+    configuration.setProjectId("my-project");
     configuration.setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"));
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
