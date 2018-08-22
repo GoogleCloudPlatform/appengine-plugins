@@ -225,6 +225,40 @@
     ]
   },
   {
+    "name": "Cloud KMS",
+    "id": "googlecloudkms",
+    "serviceName": "cloudkms.googleapis.com",
+    "serviceRoles": [
+      "roles/cloudkms.admin",
+      "roles/cloudkms.cryptoKeyDecrypter",
+      "roles/cloudkms.cryptoKeyEncrypter",
+      "roles/cloudkms.cryptoKeyEncrypterDecrypter",
+      "roles/cloudkms.publicKeyViewer",
+      "roles/cloudkms.signer",
+      "roles/cloudkms.signerVerifier",
+    ],
+    "documentation": "https://cloud.google.com/kms/docs/",
+    "description": "Cloud KMS allows you to keep encryption keys in one central cloud service, for direct use by other cloud resources and applications.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "A Java client for the Google Cloud Key Management Service (KMS) API.",
+      "language": "java",
+      "site": "https://cloud.google.com/kms/docs/accessing-the-api",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/kms/v1/package-summary.html",
+      "infotip": "The com.google.cloud.kms.v1 packages",
+      "launchStage": "beta",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-kms",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-kms",
+         "version": "0.58.0-beta"
+       }
+      }
+    ]
+  },
+  {
     "name": "Cloud OS Login",
     "id": "cloudoslogin",
     "serviceName": "oslogin.googleapis.com",
