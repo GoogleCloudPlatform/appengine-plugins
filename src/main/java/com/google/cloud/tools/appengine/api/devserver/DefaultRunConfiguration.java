@@ -315,7 +315,6 @@ public class DefaultRunConfiguration implements RunConfiguration {
         additionalArguments != null ? ImmutableList.copyOf(additionalArguments) : null;
   }
 
-
   /** Gets the App Engine project ID. */
   @Override
   @Nullable
