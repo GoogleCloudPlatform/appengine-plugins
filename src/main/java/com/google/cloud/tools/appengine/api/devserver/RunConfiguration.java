@@ -111,4 +111,7 @@ public interface RunConfiguration {
    */
   @Nullable
   List<String> getAdditionalArguments();
+
+  @Nullable
+  String getProject();
 }
