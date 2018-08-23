@@ -315,15 +315,15 @@ public class DefaultRunConfiguration implements RunConfiguration {
         additionalArguments != null ? ImmutableList.copyOf(additionalArguments) : null;
   }
 
-  /** Gets the App Engine project ID. */
+  /** Gets the GCP project ID. */
   @Override
   @Nullable
   public String getProjectId() {
     return projectId;
   }
 
-  /** Sets the App Engine project ID. */
-  public void setProjectId(String project) {
-    this.projectId = project;
+  /** Sets the GCP project ID. */
+  public void setProjectId(String projectId) {
+    this.projectId = projectId;
   }
 }

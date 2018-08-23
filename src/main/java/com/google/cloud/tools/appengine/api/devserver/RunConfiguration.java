@@ -112,7 +112,7 @@ public interface RunConfiguration {
   @Nullable
   List<String> getAdditionalArguments();
 
-  /** Gets the App Engine project ID. */
+  /** Gets the GCP project ID. */
   @Nullable
   String getProjectId();
 }
