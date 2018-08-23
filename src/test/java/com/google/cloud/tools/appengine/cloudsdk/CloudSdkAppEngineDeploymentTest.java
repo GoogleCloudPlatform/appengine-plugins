@@ -89,7 +89,7 @@ public class CloudSdkAppEngineDeploymentTest {
     configuration.setDeployables(Arrays.asList(appYaml1));
     configuration.setBucket("gs://a-bucket");
     configuration.setImageUrl("imageUrl");
-    configuration.setProject("project");
+    configuration.setProjectId("project");
     configuration.setPromote(true);
     configuration.setServer("appengine.google.com");
     configuration.setStopPreviousVersion(true);
@@ -238,7 +238,7 @@ public class CloudSdkAppEngineDeploymentTest {
     File testConfigYaml = tmpDir.newFile("testconfig.yaml");
     configuration.setAppEngineDirectory(tmpDir.getRoot());
     configuration.setServer("appengine.google.com");
-    configuration.setProject("project");
+    configuration.setProjectId("project");
 
     deployment.deployConfig("testconfig.yaml", configuration);
 

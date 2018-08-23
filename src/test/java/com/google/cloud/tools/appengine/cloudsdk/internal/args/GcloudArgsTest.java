@@ -83,7 +83,7 @@ public class GcloudArgsTest {
     DefaultConfiguration config =
         new DefaultConfiguration() {
           @Override
-          public String getProject() {
+          public String getProjectId() {
             return "myProject";
           }
         };

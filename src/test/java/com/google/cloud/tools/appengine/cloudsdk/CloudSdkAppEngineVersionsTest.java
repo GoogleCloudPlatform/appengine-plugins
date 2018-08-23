@@ -150,14 +150,14 @@ public class CloudSdkAppEngineVersionsTest {
         new DefaultVersionsSelectionConfiguration();
     configuration.setVersions(Arrays.asList("v1", "v2"));
     configuration.setService("myService");
-    configuration.setProject("myProject");
+    configuration.setProjectId("myProject");
     return configuration;
   }
 
   private static DefaultVersionsListConfiguration getListConfig(boolean hideNoTraffic) {
     DefaultVersionsListConfiguration listConfiguration = new DefaultVersionsListConfiguration();
     listConfiguration.setService("myService");
-    listConfiguration.setProject("myProject");
+    listConfiguration.setProjectId("myProject");
     listConfiguration.setHideNoTraffic(hideNoTraffic);
     return listConfiguration;
   }
