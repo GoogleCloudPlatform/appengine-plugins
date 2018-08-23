@@ -66,6 +66,7 @@ public class ZipExtractorProviderTest {
     Path testArchive = getResource("zipSlipSamples/zip-slip-win.zip");
     try {
       zipExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
+      Assert.fail("IOException expected");
     } catch (IOException ex) {
       Assert.assertThat(
           ex.getMessage(), Matchers.startsWith("Blocked unzipping files outside destination: "));
@@ -80,6 +81,7 @@ public class ZipExtractorProviderTest {
     Path testArchive = getResource("zipSlipSamples/zip-slip.zip");
     try {
       zipExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
+      Assert.fail("IOException expected");
     } catch (IOException ex) {
       Assert.assertThat(
           ex.getMessage(), Matchers.startsWith("Blocked unzipping files outside destination: "));
