@@ -28,7 +28,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-bigquery",
-         "version": "1.37.1"
+         "version": "1.41.0"
        }
       }
     ]
@@ -54,7 +54,32 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-bigquerydatatransfer",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
+       }
+      }
+    ]
+  },
+ {
+    "name": "Cloud Container Analysis API",
+    "id": "containeranalysis",
+    "serviceName": "containeranalysis.googleapis.com",
+    "documentation": "https://cloud.google.com/container-analysis/api/reference/rest/",
+    "description": "An implementation of the Grafeas API, which stores, and enables querying and retrieval of metadata about your software artifacts.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for Cloud Container Analysis",
+      "language": "java",
+      "site": "https://cloud.google.com/container-registry/docs/container-analysis",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/devtools/containeranalysis/v1beta1/package-summary.html",
+      "infotip": "The com.google.cloud.devtools.containeranalysis.v1beta1 packages",
+      "launchStage": "beta",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-containeranalysis",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-containeranalysis",
+         "version": "0.59.0-beta"
        }
       }
     ]
@@ -80,7 +105,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dlp",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
        }
       }
     ]
@@ -113,7 +138,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-datastore",
-         "version": "1.37.1"
+         "version": "1.41.0"
        }
       }
     ]
@@ -144,7 +169,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dns",
-         "version": "0.55.1-alpha"
+         "version": "0.59.0-alpha"
         }
       }
     ]
@@ -168,7 +193,42 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-firestore",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Cloud KMS",
+    "id": "googlecloudkms",
+    "serviceName": "cloudkms.googleapis.com",
+    "serviceRoles": [
+      "roles/cloudkms.admin",
+      "roles/cloudkms.cryptoKeyDecrypter",
+      "roles/cloudkms.cryptoKeyEncrypter",
+      "roles/cloudkms.cryptoKeyEncrypterDecrypter",
+      "roles/cloudkms.publicKeyViewer",
+      "roles/cloudkms.signer",
+      "roles/cloudkms.signerVerifier"
+    ],
+    "documentation": "https://cloud.google.com/kms/docs/",
+    "description": "Cloud KMS allows you to keep encryption keys in one central cloud service, for direct use by other cloud resources and applications.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/kms.svg",
+    "clients": [
+      {
+      "name": "A Java client for the Google Cloud Key Management Service (KMS) API.",
+      "language": "java",
+      "site": "https://cloud.google.com/kms/docs/accessing-the-api",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/kms/v1/package-summary.html",
+      "infotip": "The com.google.cloud.kms.v1 packages",
+      "launchStage": "beta",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-kms",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-kms",
+         "version": "0.59.0-beta"
        }
       }
     ]
@@ -194,7 +254,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-language",
-         "version": "1.37.1"
+         "version": "1.41.0"
        }
       }
     ]
@@ -219,7 +279,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-os-login",
-         "version": "0.55.1-alpha"
+         "version": "0.59.0-alpha"
        }
       }
     ]
@@ -252,7 +312,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-pubsub",
-         "version": "1.37.1"
+         "version": "1.41.0"
        }
       }
     ]
@@ -282,7 +342,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-redis",
-         "version": "0.55.1-alpha"
+         "version": "0.59.0-alpha"
        }
       }
     ]
@@ -313,7 +373,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-resourcemanager",
-         "version": "0.55.1-alpha"
+         "version": "0.59.0-alpha"
        }
       }
     ]
@@ -337,7 +397,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-websecurityscanner",
-         "version": "0.55.1-alpha"
+         "version": "0.59.0-alpha"
        }
       }
     ]
@@ -370,7 +430,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-spanner",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
        }
       }
     ]
@@ -395,7 +455,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-speech",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
        }
       }
     ]
@@ -427,7 +487,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-storage",
-         "version": "1.37.1"
+         "version": "1.41.0"
        }
       }
     ]
@@ -452,7 +512,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-translate",
-         "version": "1.37.1"
+         "version": "1.41.0"
        }
       }
     ]
@@ -476,7 +536,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-video-intelligence",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
        }
       }
     ]
@@ -501,7 +561,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-vision",
-         "version": "1.37.1"
+         "version": "1.41.0"
        }
       }
     ]
@@ -526,7 +586,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-dialogflow",
-         "version": "0.55.1-alpha"
+         "version": "0.59.0-alpha"
        }
       }
     ]
@@ -544,7 +604,7 @@
       "roles/cloudiot.serviceAgent"
     ],
     "documentation": "https://cloud.google.com/iot-core",
-    "description": "A fully managed service that allows you to easily and securely connect, manage, and ingest data from millions of globally dispersed devices.",
+    "description": "A fully managed service that allows you to securely connect, manage, and ingest data from millions of globally dispersed devices.",
     "transports": ["grpc"],
     "clients": [
       {
@@ -559,7 +619,39 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-iot",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
+       }
+      }
+    ]
+  },
+  {
+    "name": "Kubernetes",
+    "id": "kubernetes",
+    "serviceName": "kubernetes.googleapis.com",
+    "serviceRoles": [
+      "roles/container.admin",
+      "roles/container.developer",
+      "roles/container.clusterAdmin",
+      "roles/container.viewer"
+    ],
+    "documentation": "https://cloud.google.com/kubernetes-engine/docs/",
+    "description": "Kubernetes Engine is a managed, production-ready environment for deploying containerized applications.",
+    "transports": ["grpc"],
+    "icon": "https://cloud.google.com/_static/images/cloud/products/logos/svg/kubernetes-engine.svg",
+    "clients": [
+      {
+      "name": "Java client to the Google Kubernetes Engine API.",
+      "language": "java",
+      "site": "https://cloud.google.com/kubernetes-engine/",
+      "apireference": "https://googlecloudplatform.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/container/v1/package-summary.html",
+      "infotip": "The com.google.cloud.container.v1 packages",
+      "launchStage": "beta",
+      "source": "https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-clients/google-cloud-container",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-container",
+         "version": "0.59.0-beta"
        }
       }
     ]
@@ -590,7 +682,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-errorreporting",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
        }
       }
     ]
@@ -623,7 +715,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-logging",
-         "version": "1.37.1"
+         "version": "1.41.0"
        }
       }
     ]
@@ -656,7 +748,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-monitoring",
-         "version": "1.37.1"
+         "version": "1.41.0"
        }
       }
     ]
@@ -686,7 +778,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-trace",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
        }
       }
     ]
@@ -711,7 +803,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-texttospeech",
-         "version": "0.55.1-beta"
+         "version": "0.59.0-beta"
        }
       }
     ]

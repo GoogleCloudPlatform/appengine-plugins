@@ -170,7 +170,8 @@ public class LibrariesTest {
               + "/"
               + coordinates.getString("artifactId")
               + "/"
-              + coordinates.getString("version");
+              + coordinates.getString("version")
+              + "/";
       assertReachable(repo);
     }
   }
