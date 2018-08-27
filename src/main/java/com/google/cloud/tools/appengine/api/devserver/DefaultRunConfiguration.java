@@ -52,6 +52,7 @@ public class DefaultRunConfiguration implements RunConfiguration {
   @Nullable private File datastorePath;
   @Nullable private Map<String, String> environment;
   @Nullable private List<String> additionalArguments;
+  @Nullable private String projectId;
 
   @Override
   @Nullable
@@ -312,5 +313,17 @@ public class DefaultRunConfiguration implements RunConfiguration {
   public void setAdditionalArguments(List<String> additionalArguments) {
     this.additionalArguments =
         additionalArguments != null ? ImmutableList.copyOf(additionalArguments) : null;
+  }
+
+  /** Gets the GCP project ID. */
+  @Override
+  @Nullable
+  public String getProjectId() {
+    return projectId;
+  }
+
+  /** Sets the GCP project ID. */
+  public void setProjectId(String projectId) {
+    this.projectId = projectId;
   }
 }
