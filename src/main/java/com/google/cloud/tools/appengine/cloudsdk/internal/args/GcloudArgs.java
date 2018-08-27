@@ -74,7 +74,7 @@ public class GcloudArgs {
   public static List<String> get(Configuration configuration) {
     List<String> result = Lists.newArrayList();
     if (configuration != null) {
-      result.addAll(get("project", configuration.getProject()));
+      result.addAll(get("project", configuration.getProjectId()));
     }
     return result;
   }

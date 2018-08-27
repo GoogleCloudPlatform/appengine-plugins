@@ -21,15 +21,15 @@ import javax.annotation.Nullable;
 /** Base implementation for common configuration elements. */
 public abstract class DefaultConfiguration implements Configuration {
 
-  @Nullable private String project;
+  @Nullable private String projectId;
 
   @Override
   @Nullable
-  public String getProject() {
-    return project;
+  public String getProjectId() {
+    return projectId;
   }
 
-  public void setProject(String project) {
-    this.project = project;
+  public void setProjectId(String projectId) {
+    this.projectId = projectId;
   }
 }

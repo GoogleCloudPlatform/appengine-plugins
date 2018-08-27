@@ -22,5 +22,5 @@ import javax.annotation.Nullable;
 public interface Configuration {
 
   @Nullable
-  String getProject();
+  String getProjectId();
 }
