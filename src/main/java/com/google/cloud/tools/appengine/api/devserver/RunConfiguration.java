@@ -111,4 +111,8 @@ public interface RunConfiguration {
    */
   @Nullable
   List<String> getAdditionalArguments();
+
+  /** Gets the GCP project ID. */
+  @Nullable
+  String getProjectId();
 }
