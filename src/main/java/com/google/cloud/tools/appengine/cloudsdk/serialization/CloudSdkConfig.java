@@ -18,21 +18,16 @@ package com.google.cloud.tools.appengine.cloudsdk.serialization;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.annotations.SerializedName;
 import javax.annotation.Nullable;
 
 /** Representation of gcloud state. Used for JSON serialization/deserialization. */
 public class CloudSdkConfig {
 
   public static class Core {
-    @Nullable
-    @SerializedName("project")
-    public String project;
+    @Nullable public String project;
   }
 
-  @Nullable
-  @SerializedName("core")
-  private Core core;
+  @Nullable private Core core;
 
   private static final Gson gson = new Gson();
 
