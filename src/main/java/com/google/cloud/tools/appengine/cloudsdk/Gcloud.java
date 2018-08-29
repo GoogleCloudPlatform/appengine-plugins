@@ -23,6 +23,7 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.appengine.cloudsdk.process.StringBuilderProcessOutputLineListener;
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
+import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkConfig;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonSyntaxException;
@@ -100,6 +101,25 @@ public class Gcloud {
 
     String componentsJson = runCommand(command);
     return CloudSdkComponent.fromJsonList(componentsJson);
+  }
+
+  /**
+   * Returns a representation of gcloud config, it makes a synchronous call to gcloud config list to
+   * do so.
+   */
+  public CloudSdkConfig getConfig()
+      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException,
+          IOException, ProcessHandlerException {
+    sdk.validateCloudSdk();
+
+    List<String> command =
+        new ImmutableList.Builder<String>()
+            .add("config", "list")
+            .addAll(GcloudArgs.get("format", "json"))
+            .build();
+
+    String configJson = runCommand(command);
+    return CloudSdkConfig.fromJson(configJson);
   }
 
   /**
