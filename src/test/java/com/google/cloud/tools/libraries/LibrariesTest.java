@@ -165,7 +165,7 @@ public class LibrariesTest {
       JsonObject coordinates =
           ((JsonObject) api.getJsonArray("clients").get(0)).getJsonObject("mavenCoordinates");
       String repo =
-          "https://repo1.maven.org/maven2/"
+          "https://repo.maven.apache.org/maven2/"
               + coordinates.getString("groupId").replace('.', '/')
               + "/"
               + coordinates.getString("artifactId")

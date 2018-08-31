@@ -9,6 +9,10 @@ cache:
 install:
   # https://github.com/travis-ci/travis-ci/issues/8408
   - unset _JAVA_OPTIONS
+  # show external ip address
+  - dig +short myip.opendns.com @resolver1.opendns.com
+  - curl --head --show-error https://repo1.maven.org/maven2/com/google/cloud/google-cloud-bigquery/1.41.0/
+  - curl --head --show-error https://repo.maven.apache.org/maven2/com/google/cloud/google-cloud-bigquery/1.41.0/
   # download Cloud SDK
   - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-200.0.0-linux-x86_64.tar.gz
   - tar -xzf google-cloud-sdk-200.0.0-linux-x86_64.tar.gz -C /home/travis
