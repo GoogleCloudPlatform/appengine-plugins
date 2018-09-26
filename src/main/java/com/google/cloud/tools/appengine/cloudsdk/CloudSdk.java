@@ -188,6 +188,8 @@ public class CloudSdk {
       if (version.compareTo(MINIMUM_VERSION) < 0) {
         throw new CloudSdkOutOfDateException(version, MINIMUM_VERSION);
       }
+    } catch (CloudSdkVersionFileParseException ex) {
+      // unusual string in version file. Continue onward and hope.
     } catch (CloudSdkVersionFileNotFoundException ex) {
       // this is likely a version of the Cloud SDK prior to when VERSION files were introduced
       throw new CloudSdkOutOfDateException(MINIMUM_VERSION);

@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.io.Files;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -94,7 +95,7 @@ public class CloudSdkTest {
   public void testGetVersion_fileContentInvalid() throws IOException {
     String fileContents = "this is not a valid version string";
     writeVersionFile(fileContents);
-    try {
+    try { 
       sdk.getVersion();
       fail();
     } catch (CloudSdkVersionFileException ex) {
@@ -102,6 +103,20 @@ public class CloudSdkTest {
           "Pattern found in the Cloud SDK version file could not be parsed: " + fileContents,
           ex.getMessage());
     }
+  }
+  
+  @Test
+  public void testValidateCloudSdk_versionFileContentInvalid() 
+      throws IOException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
+      CloudSdkVersionFileException {
+    String fileContents = "this is not a valid version string";
+    writeVersionFile(fileContents);
+    root.resolve("bin").toFile().mkdir();
+    // fake SDK contents
+    root.resolve("bin/gcloud").toFile().createNewFile();
+    root.resolve("bin/gcloud.cmd").toFile().createNewFile(); // for Windows
+    root.resolve("bin/dev_appserver.py").toFile().createNewFile();
+    sdk.validateCloudSdk();
   }
 
   @Test
