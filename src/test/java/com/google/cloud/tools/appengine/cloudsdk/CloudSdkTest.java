@@ -28,7 +28,6 @@ import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersion;
 import com.google.common.io.Files;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -95,7 +94,7 @@ public class CloudSdkTest {
   public void testGetVersion_fileContentInvalid() throws IOException {
     String fileContents = "this is not a valid version string";
     writeVersionFile(fileContents);
-    try { 
+    try {
       sdk.getVersion();
       fail();
     } catch (CloudSdkVersionFileException ex) {
@@ -104,11 +103,11 @@ public class CloudSdkTest {
           ex.getMessage());
     }
   }
-  
+
   @Test
-  public void testValidateCloudSdk_versionFileContentInvalid() 
+  public void testValidateCloudSdk_versionFileContentInvalid()
       throws IOException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
-      CloudSdkVersionFileException {
+          CloudSdkVersionFileException {
     String fileContents = "this is not a valid version string";
     writeVersionFile(fileContents);
     root.resolve("bin").toFile().mkdir();
