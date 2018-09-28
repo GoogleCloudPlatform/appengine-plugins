@@ -3,10 +3,6 @@
 
 set -e
 
-Colorize() {
-	echo "$(tput setff $2)$1$(tput sgr0)"
-}
-
 EchoRed() {
 	echo "$(tput setaf 1; tput bold)$1$(tput sgr0)"
 }
