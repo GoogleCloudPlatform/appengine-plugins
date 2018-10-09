@@ -256,7 +256,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       }
     }
     if (relaxSandbox && java7Detected) {
-      log.warning("Mixed runtimes java7/java8 detected, will not enforce sandobx restrictions.");
+      log.warning("Mixed runtimes java7/java8 detected, will not enforce sandbox restrictions.");
     }
     return relaxSandbox;
   }
