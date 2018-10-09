@@ -482,37 +482,38 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Test
   public void testDetermineJavaRuntime_noWarningsJava7() throws AppEngineException {
-    Assert.assertFalse(devServer.isJava8(ImmutableList.of(java7Service)));
+    Assert.assertTrue(devServer.isWhiteListEnforced(ImmutableList.of(java7Service)));
     Assert.assertEquals(0, testHandler.getLogs().size());
   }
 
   @Test
   public void testDetermineJavaRuntime_noWarningsJava7Multiple() throws AppEngineException {
-    Assert.assertFalse(devServer.isJava8(ImmutableList.of(java7Service, java7Service)));
+    Assert.assertTrue(devServer.isWhiteListEnforced(ImmutableList.of(java7Service, java7Service)));
     Assert.assertEquals(0, testHandler.getLogs().size());
   }
 
   @Test
   public void testDetermineJavaRuntime_noWarningsJava8() throws AppEngineException {
-    Assert.assertTrue(devServer.isJava8(ImmutableList.of(java8Service)));
+    Assert.assertFalse(devServer.isWhiteListEnforced(ImmutableList.of(java8Service)));
     Assert.assertEquals(0, testHandler.getLogs().size());
   }
 
   @Test
   public void testDetermineJavaRuntime_noWarningsJava8Multiple() throws AppEngineException {
-    Assert.assertTrue(devServer.isJava8(ImmutableList.of(java8Service, java8Service)));
+    Assert.assertFalse(devServer.isWhiteListEnforced(ImmutableList.of(java8Service, java8Service)));
     Assert.assertEquals(0, testHandler.getLogs().size());
   }
 
   @Test
   public void testDetermineJavaRuntime_mixedModeWarning() throws AppEngineException {
 
-    Assert.assertTrue(devServer.isJava8(ImmutableList.of(java8Service, java7Service)));
+    Assert.assertFalse(devServer.isWhiteListEnforced(ImmutableList.of(java8Service, java7Service)));
     Assert.assertEquals(1, testHandler.getLogs().size());
 
     LogRecord logRecord = testHandler.getLogs().get(0);
     Assert.assertEquals(
-        "Mixed runtimes java7/java8 detected, will use java8 settings", logRecord.getMessage());
+        "Mixed runtimes java7/java8 detected, will not enforce sandbox restrictions.",
+        logRecord.getMessage());
     Assert.assertEquals(Level.WARNING, logRecord.getLevel());
   }
 

@@ -111,9 +111,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       arguments.addAll(additionalArguments);
     }
 
-    boolean isJava8 = isJava8(config.getServices());
+    boolean isWhiteListEnforced = isWhiteListEnforced(config.getServices());
 
-    if (isJava8) {
+    if (!isWhiteListEnforced) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
       jvmArguments.add("-D--enable_all_permissions=true");
       arguments.add("--no_java_agent");
@@ -138,7 +138,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
               + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
     }
 
-    String gaeRuntime = getGaeRuntimeJava(isJava8);
+    String gaeRuntime = getGaeRuntimeJava(!isWhiteListEnforced);
     appEngineEnvironment.putAll(getLocalAppEngineEnvironmentVariables(gaeRuntime));
 
     if (config.getEnvironment() != null) {
@@ -202,33 +202,32 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   }
 
   /**
-   * This method tries to guess the runtime based on the appengine-web.xml of all services that are
-   * expected to run.
+   * This method determines if the runtime based on the appengine-web.xml of all services that are
+   * expected to run can run without sandbox restrictions.
    *
    * @param services a list of app engine standard service directories
-   * @return {@code false} if only java7 modules are found or {@code true} is at least one java8
-   *     module is found (i.e. pure java8 or mixed java7/java8)
+   * @return {@code true} if there no need to enforce the sandbox restrictions.
    */
   @VisibleForTesting
-  boolean isJava8(List<File> services) throws AppEngineException {
-    boolean java8Detected = false;
+  boolean isWhiteListEnforced(List<File> services) throws AppEngineException {
+    boolean relaxSandbox = false;
     boolean java7Detected = false;
     for (File serviceDirectory : services) {
       Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
       try (InputStream is = Files.newInputStream(appengineWebXml)) {
-        if (AppEngineDescriptor.parse(is).isJava8()) {
-          java8Detected = true;
-        } else {
+        if (AppEngineDescriptor.parse(is).isWhiteListEnforced()) {
           java7Detected = true;
+        } else {
+          relaxSandbox = true;
         }
       } catch (IOException | SAXException ex) {
         throw new AppEngineException(ex);
       }
     }
-    if (java8Detected && java7Detected) {
-      log.warning("Mixed runtimes java7/java8 detected, will use java8 settings");
+    if (relaxSandbox && java7Detected) {
+      log.warning("Mixed runtimes java7/java8 detected, will not enforce sandbox restrictions.");
     }
-    return java8Detected;
+    return !relaxSandbox;
   }
 
   private static Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(List<File> services)

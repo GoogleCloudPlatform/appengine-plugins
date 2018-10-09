@@ -72,12 +72,15 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * Returns runtime from the &lt;runtime&gt; element of the appengine-web.xml or null if it is
-   * missing.
+   * Returns runtime from the &lt;runtime&gt; element of the appengine-web.xml or the default one
+   * when it is missing.
    */
-  @Nullable
   public String getRuntime() throws AppEngineException {
-    return getText(getNode(document, "appengine-web-app", "runtime"));
+    String runtime = getText(getNode(document, "appengine-web-app", "runtime"));
+    if (runtime == null) {
+      runtime = "java7"; // the default runtime when not specified.
+    }
+    return runtime;
   }
 
   /**
@@ -106,6 +109,14 @@ public class AppEngineDescriptor {
   public boolean isJava8() throws AppEngineException {
     String runtime = getRuntime();
     return "java8".equals(runtime) || "java8g".equals(runtime);
+  }
+
+  /**
+   * Returns true if the runtime needs to enforce the Java white list and other original sandbox
+   * restrictions (for example, the Java7 runtime).
+   */
+  public boolean isWhiteListEnforced() throws AppEngineException {
+    return "java7".equals(getRuntime());
   }
 
   /**
