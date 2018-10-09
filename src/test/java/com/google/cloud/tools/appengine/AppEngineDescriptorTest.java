@@ -137,7 +137,7 @@ public class AppEngineDescriptorTest {
   public void testRuntime_noContent() throws AppEngineException, IOException, SAXException {
     AppEngineDescriptor descriptor = parse(ROOT_START_TAG + ROOT_END_TAG);
 
-    assertNull(descriptor.getRuntime());
+    assertEquals("java7", descriptor.getRuntime());
   }
 
   @Test
