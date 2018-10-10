@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.libraries;
 
-import static org.hamcrest.collection.IsArrayContaining.hasItemInArray;
-
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.io.IOException;
@@ -29,15 +27,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonReaderFactory;
 import javax.json.JsonString;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Document;
 
 public class LibrariesTest {
 
@@ -187,5 +191,42 @@ public class LibrariesTest {
       String current = names.get(i).toLowerCase(Locale.US);
       Assert.assertTrue(current + " < " + previous, current.compareTo(previous) > 0);
     }
+  }
+
+  /** Check that {@code libraries.json} libraries are up-to-date. */
+  @Test
+  public void testUpToDate() throws Exception {
+    StringJoiner outOfDate = new StringJoiner("\n");
+    for (JsonObject api : apis) {
+      JsonObject coordinates =
+          ((JsonObject) api.getJsonArray("clients").get(0)).getJsonObject("mavenCoordinates");
+      String listedVersion = coordinates.getString("version");
+      String latestVersion = getLatestAvailableVersion(coordinates);
+      if (!listedVersion.equals(latestVersion)) {
+        outOfDate.add(
+            coordinates.getString("groupId")
+                + ":"
+                + coordinates.getString("artifactId")
+                + ": "
+                + coordinates.getString("version")
+                + " -> "
+                + latestVersion);
+      }
+    }
+    Assert.assertTrue("Out of date artifacts: " + outOfDate.toString(), outOfDate.length() == 0);
+  }
+
+  /** Return the latest version of an group:artifact. */
+  private static String getLatestAvailableVersion(JsonObject coordinates) throws Exception {
+    String metadataUrl =
+        "https://repo1.maven.org/maven2/"
+            + coordinates.getString("groupId").replace('.', '/')
+            + "/"
+            + coordinates.getString("artifactId")
+            + "/maven-metadata.xml";
+    Document document =
+        DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(metadataUrl);
+    XPath xpath = XPathFactory.newInstance().newXPath();
+    return (String) xpath.evaluate("/metadata/versioning/latest", document, XPathConstants.STRING);
   }
 }
