@@ -111,9 +111,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
       arguments.addAll(additionalArguments);
     }
 
-    boolean isWhiteListEnforced = isWhiteListEnforced(config.getServices());
+    boolean isSandboxEnforced = isSandboxEnforced(config.getServices());
 
-    if (!isWhiteListEnforced) {
+    if (!isSandboxEnforced) {
       jvmArguments.add("-Duse_jetty9_runtime=true");
       jvmArguments.add("-D--enable_all_permissions=true");
       arguments.add("--no_java_agent");
@@ -138,7 +138,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
               + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
     }
 
-    String gaeRuntime = getGaeRuntimeJava(!isWhiteListEnforced);
+    String gaeRuntime = getGaeRuntimeJava(!isSandboxEnforced);
     appEngineEnvironment.putAll(getLocalAppEngineEnvironmentVariables(gaeRuntime));
 
     if (config.getEnvironment() != null) {
@@ -202,21 +202,22 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   }
 
   /**
-   * This method determines if the runtime based on the appengine-web.xml of all services that are
-   * expected to run can run without sandbox restrictions.
+   * This method determines if the dev app server should run with sandbox restrictions based on the
+   * runtime parsed from appengine-web.xml on all services. If one service can run with no sandbox
+   * restrictions, all other services will also run locally with no restrictions.
    *
    * @param services a list of app engine standard service directories
    * @return {@code true} if there no need to enforce the sandbox restrictions.
    */
   @VisibleForTesting
-  boolean isWhiteListEnforced(List<File> services) throws AppEngineException {
+  boolean isSandboxEnforced(List<File> services) throws AppEngineException {
     boolean relaxSandbox = false;
-    boolean java7Detected = false;
+    boolean enforceSandbox = false;
     for (File serviceDirectory : services) {
       Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
       try (InputStream is = Files.newInputStream(appengineWebXml)) {
-        if (AppEngineDescriptor.parse(is).isWhiteListEnforced()) {
-          java7Detected = true;
+        if (AppEngineDescriptor.parse(is).isSandboxEnforced()) {
+          enforceSandbox = true;
         } else {
           relaxSandbox = true;
         }
@@ -224,8 +225,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
         throw new AppEngineException(ex);
       }
     }
-    if (relaxSandbox && java7Detected) {
-      log.warning("Mixed runtimes java7/java8 detected, will not enforce sandbox restrictions.");
+    if (relaxSandbox && enforceSandbox) {
+      log.warning("Mixed runtimes detected, will not enforce sandbox restrictions.");
     }
     return !relaxSandbox;
   }
@@ -272,12 +273,12 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   /**
    * Gets the App Engine runtime ID for Java runtimes.
    *
-   * @param isJava8 if {@code true}, use Java 8; otherwise, use Java 7
+   * @param isSandboxEnforced if {@code true}, use Java 8; otherwise, use Java 7
    * @return "java8" if {@code isJava8} is true; otherwise, returns "java7"
    */
   @VisibleForTesting
-  static String getGaeRuntimeJava(boolean isJava8) {
-    return isJava8 ? "java8" : "java7";
+  static String getGaeRuntimeJava(boolean isSandboxEnforced) {
+    return isSandboxEnforced ? "java8" : "java7";
   }
 
   private static void checkAndWarnDuplicateEnvironmentVariables(
