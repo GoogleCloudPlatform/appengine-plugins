@@ -207,7 +207,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    * restrictions, all other services will also run locally with no restrictions.
    *
    * @param services a list of app engine standard service directories
-   * @return {@code true} if there no need to enforce the sandbox restrictions.
+   * @return {@code false} if there no need to enforce the sandbox restrictions.
    */
   @VisibleForTesting
   boolean isSandboxEnforced(List<File> services) throws AppEngineException {
