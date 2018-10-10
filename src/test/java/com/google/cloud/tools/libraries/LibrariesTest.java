@@ -38,6 +38,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,7 +88,7 @@ public class LibrariesTest {
     for (int i = 0; i < clients.size(); i++) {
       JsonObject client = (JsonObject) clients.get(i);
       String launchStage = client.getString("launchStage");
-      Assert.assertThat(statuses, hasItemInArray(launchStage));
+      Assert.assertThat(statuses, Matchers.hasItemInArray(launchStage));
       try {
         assertReachable(client.getString("site"));
       } catch (NullPointerException ex) {
