@@ -32,7 +32,7 @@ IncrementVersion() {
   echo $version | sed "s/\([0-9][0-9]*\.[0-9][0-9]*\)\.[0-9][0-9]*/\1.$nextMinorVersion/"
 }
 
-[ $# -ne 1 ] && DieUsage
+[ $# -ne 1 ] && [ $# -ne 2 ] && DieUsage
 
 EchoGreen '===== RELEASE SETUP SCRIPT ====='
 
