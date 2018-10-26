@@ -106,14 +106,37 @@ public class SpyVerifier {
    */
   public SpyVerifier verifyDeclaredGetters(Map<String, Integer> overrides) throws Exception {
     Method[] methods = classToInspectAs.getDeclaredMethods();
-    for (Method m : methods) {
+
+    // extract all invocations of getters by inspecting the spy
+    List<Method> knownGetters = Arrays.asList(classToInspectAs.getDeclaredMethods());
+
+    Map<Method, Integer> methodInvocationCount = new HashMap<>();
+    for (Invocation invocation : Mockito.mockingDetails(objectToInspect).getInvocations()) {
+      Method m = invocation.getMethod();
+      if (knownGetters.contains(m) && isGetter(m)) {
+        if (methodInvocationCount.containsKey(m)) {
+          methodInvocationCount.put(m, methodInvocationCount.get(m) + 1);
+        } else {
+          methodInvocationCount.put(m, 1);
+        }
+        invocation.markVerified();
+      }
+    }
+
+    // compare setter invocations against our expectations
+    for (Method m : knownGetters) {
       if (isGetter(m)) {
-        Integer times = overrides.get(m.getName());
-        times = (times == null) ? 1 : times;
-        Mockito.verify(objectToInspect, Mockito.times(times))
-            .getClass()
-            .getMethod(m.getName())
-            .invoke(objectToInspect);
+        int invocationCount = methodInvocationCount.getOrDefault(m, 0);
+        int expectedInvocationCount = overrides.getOrDefault(m.getName(), 1);
+        if (invocationCount != expectedInvocationCount) {
+          throw new MockitoAssertionError(
+              "Getter invocations for '"
+                  + m.getName()
+                  + "' expected "
+                  + expectedInvocationCount
+                  + ", but was "
+                  + invocationCount);
+        }
       }
     }
     return this;

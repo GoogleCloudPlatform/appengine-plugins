@@ -104,7 +104,7 @@ public class CloudSdkAppEngineDevServer1Test {
       Assert.fail();
     } catch (AppEngineException ex) {
       Assert.assertEquals(
-          ex.getMessage(), "Error connecting to http://localhost:7777/_ah/admin/quit");
+          "Error connecting to http://localhost:7777/_ah/admin/quit", ex.getMessage());
     }
   }
 

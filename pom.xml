@@ -108,6 +108,11 @@
       <artifactId>commons-compress</artifactId>
       <version>1.18</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value-annotations</artifactId>
+      <version>1.6.2</version>
+    </dependency>
 
     <!-- test dependencies -->
     <dependency>
@@ -152,19 +157,23 @@
           <showWarnings>true</showWarnings>
           <annotationProcessorPaths>
             <path>
-               <groupId>com.uber.nullaway</groupId>
-               <artifactId>nullaway</artifactId>
-               <version>0.4.4</version>
+              <groupId>com.uber.nullaway</groupId>
+              <artifactId>nullaway</artifactId>
+              <version>0.4.4</version>
+            </path>
+            <path>
+              <groupId>com.google.auto.value</groupId>
+              <artifactId>auto-value</artifactId>
+              <version>1.6.2</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs>
             <arg>-Xep:NullAway:ERROR</arg>
+            <arg>-XepExcludedPaths:.*/target/generated-sources/.*</arg>
             <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools</arg>
-            
-<arg>-XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock,org.junit.runners.Parameterized</arg>
-<arg>-XepOpt:NullAway:ExcludedClasses=com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1Test,com.google.cloud.tools.appengine.cloudsdk.serialization.AppEngineDeployResult,com.google.cloud.tools.io.FilePermissionsTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2Test,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest,com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersionTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFileTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeploymentTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAuthTest</arg>
-<arg>-XepOpt:NullAway:KnownInitializers=com.google.gson.Gson.fromJson</arg>
-
+            <arg>-XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock,org.junit.runners.Parameterized</arg>
+            <arg>-XepOpt:NullAway:ExcludedClasses=com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1Test,com.google.cloud.tools.appengine.cloudsdk.serialization.AppEngineDeployResult,com.google.cloud.tools.io.FilePermissionsTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2Test,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest,com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersionTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFileTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeploymentTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAuthTest</arg>
+            <arg>-XepOpt:NullAway:KnownInitializers=com.google.gson.Gson.fromJson</arg>
           </compilerArgs>
         </configuration>
         <dependencies>
@@ -257,6 +266,7 @@
           <violationSeverity>warning</violationSeverity>
           <configLocation>google_checks.xml</configLocation>
           <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+          <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
         </configuration>
         <executions>
           <execution>

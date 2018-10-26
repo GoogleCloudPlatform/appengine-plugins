@@ -16,32 +16,68 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import com.google.cloud.tools.appengine.api.Configuration;
+import com.google.auto.value.AutoValue;
 import java.io.File;
 import java.util.List;
 import javax.annotation.Nullable;
 
 /** Configuration for {@link AppEngineDeployment#deploy(DeployConfiguration)}. */
-public interface DeployConfiguration extends Configuration {
-
+@AutoValue
+public abstract class DeployConfiguration {
+  /** GCS storage bucket used for staging files associated with deployment. */
   @Nullable
-  List<File> getDeployables();
+  public abstract String getBucket();
 
+  /** List of deployable target directories or yaml files. */
   @Nullable
-  String getBucket();
+  public abstract List<File> getDeployables();
 
+  /** Docker image to use during deployment (only for app.yaml deployments). */
   @Nullable
-  String getImageUrl();
+  public abstract String getImageUrl();
 
+  /** Google Cloud Project ID to deploy to. */
   @Nullable
-  Boolean getPromote();
+  public abstract String getProjectId();
 
+  /** Promote the deployed version to receive all traffic. */
   @Nullable
-  String getServer();
+  public abstract Boolean getPromote();
 
+  /** The App Engine server to use. Users typically will never set this value. */
   @Nullable
-  Boolean getStopPreviousVersion();
+  public abstract String getServer();
 
+  /** Stop the previous running version when deploying and promoting a new version. */
   @Nullable
-  String getVersion();
+  public abstract Boolean getStopPreviousVersion();
+
+  /** Version to deploy. */
+  @Nullable
+  public abstract String getVersion();
+
+  public static Builder builder() {
+    return new AutoValue_DeployConfiguration.Builder();
+  }
+
+  @AutoValue.Builder
+  public abstract static class Builder {
+    public abstract Builder setBucket(String bucket);
+
+    public abstract Builder setDeployables(List<File> deployables);
+
+    public abstract Builder setImageUrl(String imageUrl);
+
+    public abstract Builder setProjectId(String projectId);
+
+    public abstract Builder setPromote(Boolean promote);
+
+    public abstract Builder setServer(String server);
+
+    public abstract Builder setStopPreviousVersion(Boolean stopPreviousVersion);
+
+    public abstract Builder setVersion(String version);
+
+    public abstract DeployConfiguration build();
+  }
 }

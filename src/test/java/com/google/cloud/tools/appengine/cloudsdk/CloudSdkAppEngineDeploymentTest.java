@@ -1,19 +1,3 @@
-/*
- * Copyright 2016 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import static org.junit.Assert.assertEquals;
@@ -25,8 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.DefaultDeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DefaultDeployProjectConfigurationConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
@@ -85,15 +69,18 @@ public class CloudSdkAppEngineDeploymentTest {
   @Test
   public void testDeploy_allFlags() throws Exception {
 
-    DefaultDeployConfiguration configuration = Mockito.spy(new DefaultDeployConfiguration());
-    configuration.setDeployables(Arrays.asList(appYaml1));
-    configuration.setBucket("gs://a-bucket");
-    configuration.setImageUrl("imageUrl");
-    configuration.setProjectId("project");
-    configuration.setPromote(true);
-    configuration.setServer("appengine.google.com");
-    configuration.setStopPreviousVersion(true);
-    configuration.setVersion("v1");
+    DeployConfiguration configuration =
+        Mockito.spy(
+            DeployConfiguration.builder()
+                .setDeployables(Arrays.asList(appYaml1))
+                .setBucket("gs://a-bucket")
+                .setImageUrl("imageUrl")
+                .setProjectId("project")
+                .setPromote(true)
+                .setServer("appengine.google.com")
+                .setStopPreviousVersion(true)
+                .setVersion("v1")
+                .build());
 
     SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
 
@@ -126,10 +113,12 @@ public class CloudSdkAppEngineDeploymentTest {
   @Test
   public void testDeploy_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
-    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
-    configuration.setDeployables(Arrays.asList(appYaml1));
-    configuration.setPromote(false);
-    configuration.setStopPreviousVersion(false);
+    DeployConfiguration configuration =
+        DeployConfiguration.builder()
+            .setDeployables(Arrays.asList(appYaml1))
+            .setPromote(false)
+            .setStopPreviousVersion(false)
+            .build();
 
     deployment.deploy(configuration);
 
@@ -143,8 +132,8 @@ public class CloudSdkAppEngineDeploymentTest {
   @Test
   public void testDeploy_noFlags() throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
-    configuration.setDeployables(Arrays.asList(appYaml1));
+    DeployConfiguration configuration =
+        DeployConfiguration.builder().setDeployables(Arrays.asList(appYaml1)).build();
 
     List<String> expectedCommand = ImmutableList.of("app", "deploy", appYaml1.toString());
 
@@ -156,8 +145,8 @@ public class CloudSdkAppEngineDeploymentTest {
   @Test
   public void testDeploy_dir() throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
-    configuration.setDeployables(Arrays.asList(stagingDirectory));
+    DeployConfiguration configuration =
+        DeployConfiguration.builder().setDeployables(Arrays.asList(stagingDirectory)).build();
 
     List<String> expectedCommand = ImmutableList.of("app", "deploy");
 
@@ -170,8 +159,8 @@ public class CloudSdkAppEngineDeploymentTest {
   public void testDeploy_multipleDeployables()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultDeployConfiguration configuration = new DefaultDeployConfiguration();
-    configuration.setDeployables(Arrays.asList(appYaml1, appYaml2));
+    DeployConfiguration configuration =
+        DeployConfiguration.builder().setDeployables(Arrays.asList(appYaml1, appYaml2)).build();
 
     deployment.deploy(configuration);
 

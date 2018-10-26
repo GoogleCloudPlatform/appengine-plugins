@@ -82,7 +82,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.addAll(GcloudArgs.get("server", config.getServer()));
     arguments.addAll(GcloudArgs.get("stop-previous-version", config.getStopPreviousVersion()));
     arguments.addAll(GcloudArgs.get("version", config.getVersion()));
-    arguments.addAll(GcloudArgs.get(config));
+    arguments.addAll(GcloudArgs.get("project", config.getProjectId()));
 
     try {
       runner.run(arguments, workingDirectory);
