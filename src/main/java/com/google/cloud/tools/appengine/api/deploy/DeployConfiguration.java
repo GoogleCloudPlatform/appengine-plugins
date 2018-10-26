@@ -62,21 +62,21 @@ public abstract class DeployConfiguration {
 
   @AutoValue.Builder
   public abstract static class Builder {
-    public abstract Builder setBucket(String bucket);
+    public abstract Builder setBucket(@Nullable  String bucket);
 
-    public abstract Builder setDeployables(List<File> deployables);
+    public abstract Builder setDeployables(@Nullable  List<File> deployables);
 
-    public abstract Builder setImageUrl(String imageUrl);
+    public abstract Builder setImageUrl(@Nullable  String imageUrl);
 
-    public abstract Builder setProjectId(String projectId);
+    public abstract Builder setProjectId(@Nullable String projectId);
 
-    public abstract Builder setPromote(Boolean promote);
+    public abstract Builder setPromote(@Nullable Boolean promote);
 
-    public abstract Builder setServer(String server);
+    public abstract Builder setServer(@Nullable String server);
 
-    public abstract Builder setStopPreviousVersion(Boolean stopPreviousVersion);
+    public abstract Builder setStopPreviousVersion(@Nullable Boolean stopPreviousVersion);
 
-    public abstract Builder setVersion(String version);
+    public abstract Builder setVersion(@Nullable String version);
 
     public abstract DeployConfiguration build();
   }
