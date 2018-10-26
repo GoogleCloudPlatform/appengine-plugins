@@ -140,7 +140,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     arguments.add("deploy");
     arguments.add(deployable.toAbsolutePath().toString());
     arguments.addAll(GcloudArgs.get("server", configuration.getServer()));
-    arguments.addAll(GcloudArgs.get(configuration));
+    arguments.addAll(GcloudArgs.get("project", configuration.getProjectId()));
 
     try {
       runner.run(arguments, null);

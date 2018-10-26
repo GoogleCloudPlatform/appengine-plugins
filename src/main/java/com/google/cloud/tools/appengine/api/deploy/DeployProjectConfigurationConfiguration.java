@@ -16,16 +16,71 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import com.google.cloud.tools.appengine.api.Configuration;
 import java.io.File;
 import javax.annotation.Nullable;
 
 /** Configuration for {@link AppEngineDeployment} project-level yaml deployments. */
-public interface DeployProjectConfigurationConfiguration extends Configuration {
+public class DeployProjectConfigurationConfiguration {
 
-  @Nullable
-  File getAppEngineDirectory();
+  private final File appEngineDirectory;
+  @Nullable private final String projectId;
+  @Nullable private final String server;
 
+  private DeployProjectConfigurationConfiguration(
+      File appEngineDirectory, @Nullable String projectId, @Nullable String server) {
+    this.appEngineDirectory = appEngineDirectory;
+    this.projectId = projectId;
+    this.server = server;
+  }
+
+  /** Directory with yaml configuration files. */
+  public File getAppEngineDirectory() {
+    return appEngineDirectory;
+  }
+
+  /** Google Cloud Project ID to deploy to. */
   @Nullable
-  String getServer();
+  public String getProjectId() {
+    return projectId;
+  }
+
+  /** The App Engine server to use. Users typically will never set this value. */
+  @Nullable
+  public String getServer() {
+    return server;
+  }
+
+  public static Builder builder(File appEngineDirectory) {
+    return new Builder(appEngineDirectory);
+  }
+
+  public static final class Builder {
+    private File appEngineDirectory;
+    @Nullable private String projectId;
+    @Nullable private String server;
+
+    private Builder(File appEngineDirectory) {
+      if (appEngineDirectory == null) {
+        throw new NullPointerException("Null appEngineDirectory");
+      }
+      this.appEngineDirectory = appEngineDirectory;
+    }
+
+    public DeployProjectConfigurationConfiguration.Builder setProjectId(
+        @Nullable String projectId) {
+      this.projectId = projectId;
+      return this;
+    }
+
+    public DeployProjectConfigurationConfiguration.Builder setServer(@Nullable String server) {
+      this.server = server;
+      return this;
+    }
+
+    /** Build a {@link DeployProjectConfigurationConfiguration}. */
+    public DeployProjectConfigurationConfiguration build() {
+      return new DeployProjectConfigurationConfiguration(
+          this.appEngineDirectory, this.projectId, this.server);
+    }
+  }
 }

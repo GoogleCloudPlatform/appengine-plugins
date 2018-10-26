@@ -17,9 +17,7 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 import com.google.common.io.Files;
 import java.io.File;
@@ -37,21 +35,7 @@ public class StageStandardConfigurationTest {
     // todo should we check these are not the same and
     // files are files and directories are directories?
     // should we use paths instead?
-    configuration =
-        new DefaultStageStandardConfiguration.Builder()
-            .setStagingDirectory(stagingDirectory)
-            .setSourceDirectory(sourceDirectory)
-            .build();
-  }
-
-  @Test
-  public void testInitialValuesRequired() {
-    try {
-      new DefaultStageStandardConfiguration.Builder().build();
-      fail();
-    } catch (NullPointerException ex) {
-      assertNotNull(ex.getMessage());
-    }
+    configuration = StageStandardConfiguration.builder(sourceDirectory, stagingDirectory).build();
   }
 
   @Test

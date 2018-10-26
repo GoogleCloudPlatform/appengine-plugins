@@ -21,7 +21,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.DefaultStageStandardConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.collect.ImmutableList;
@@ -48,7 +47,7 @@ public class CloudSdkAppEngineStandardStagingTest {
   private File destination;
   private File dockerfile;
   private CloudSdkAppEngineStandardStaging staging;
-  private DefaultStageStandardConfiguration.Builder builder;
+  private StageStandardConfiguration.Builder builder;
 
   @Before
   public void setUp() throws IOException {
@@ -58,24 +57,22 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     staging = new CloudSdkAppEngineStandardStaging(appCfgRunner);
 
-    builder =
-        new DefaultStageStandardConfiguration.Builder()
-            .setSourceDirectory(source)
-            .setStagingDirectory(destination);
+    builder = StageStandardConfiguration.builder(source, destination);
   }
 
   @Test
   public void testCheckFlags_allFlags() throws Exception {
-    builder.setDockerfile(dockerfile);
-    builder.setEnableQuickstart(true);
-    builder.setDisableUpdateCheck(true);
-    builder.setEnableJarSplitting(true);
-    builder.setJarSplittingExcludes("suffix1,suffix2");
-    builder.setCompileEncoding("UTF8");
-    builder.setDeleteJsps(true);
-    builder.setEnableJarClasses(true);
-    builder.setDisableJarJsps(true);
-    builder.setRuntime("java");
+    builder
+        .setDockerfile(dockerfile)
+        .setEnableQuickstart(true)
+        .setDisableUpdateCheck(true)
+        .setEnableJarSplitting(true)
+        .setJarSplittingExcludes("suffix1,suffix2")
+        .setCompileEncoding("UTF8")
+        .setDeleteJsps(true)
+        .setEnableJarClasses(true)
+        .setDisableJarJsps(true)
+        .setRuntime("java");
 
     StageStandardConfiguration configuration = builder.build();
 

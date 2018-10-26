@@ -17,16 +17,14 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DefaultStageFlexibleConfigurationTest {
+public class StageFlexibleConfigurationTest {
 
-  private DefaultStageFlexibleConfiguration configuration;
+  private StageFlexibleConfiguration configuration;
   private File file = new File("");
 
   @Before
@@ -35,31 +33,12 @@ public class DefaultStageFlexibleConfigurationTest {
     // files are files and directories are directories?
     // should we use paths instead?
     configuration =
-        new DefaultStageFlexibleConfiguration.Builder()
-            .setAppEngineDirectory(file)
-            .setArtifact(file)
-            .setDockerDirectory(file)
-            .setStagingDirectory(file)
-            .build();
-  }
-
-  @Test
-  public void testInitialValuesRequired() {
-    try {
-      new DefaultStageFlexibleConfiguration.Builder().build();
-      fail();
-    } catch (NullPointerException ex) {
-      assertNotNull(ex.getMessage());
-    }
+        StageFlexibleConfiguration.builder(file, file, file).setDockerDirectory(file).build();
   }
 
   @Test
   public void testDockerNotRequired() {
-    new DefaultStageFlexibleConfiguration.Builder()
-        .setAppEngineDirectory(file)
-        .setArtifact(file)
-        .setStagingDirectory(file)
-        .build();
+    StageFlexibleConfiguration.builder(file, file, file).build();
   }
 
   @Test

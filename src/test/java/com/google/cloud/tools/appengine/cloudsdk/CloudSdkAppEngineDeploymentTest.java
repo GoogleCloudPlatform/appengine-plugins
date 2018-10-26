@@ -25,7 +25,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.DefaultDeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
 import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
@@ -50,8 +49,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 /** Unit tests for {@link CloudSdkAppEngineDeployment}. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineDeploymentTest {
-
-  @Mock private CloudSdk sdk;
 
   @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
@@ -237,13 +234,12 @@ public class CloudSdkAppEngineDeploymentTest {
    */
   @Test
   public void testDeployConfig() throws Exception {
-    DefaultDeployProjectConfigurationConfiguration configuration =
-        new DefaultDeployProjectConfigurationConfiguration();
     File testConfigYaml = tmpDir.newFile("testconfig.yaml");
-    configuration.setAppEngineDirectory(tmpDir.getRoot());
-    configuration.setServer("appengine.google.com");
-    configuration.setProjectId("project");
-
+    DeployProjectConfigurationConfiguration configuration =
+        DeployProjectConfigurationConfiguration.builder(tmpDir.getRoot())
+            .setServer("appengine.google.com")
+            .setProjectId("project")
+            .build();
     deployment.deployConfig("testconfig.yaml", configuration);
 
     List<String> expectedCommand =
@@ -261,11 +257,10 @@ public class CloudSdkAppEngineDeploymentTest {
 
   @Test
   public void testDeployConfig_doesNotExist() throws AppEngineException {
-    DefaultDeployProjectConfigurationConfiguration configuration =
-        new DefaultDeployProjectConfigurationConfiguration();
     File testConfigYaml = new File(tmpDir.getRoot(), "testconfig.yaml");
     assertFalse(testConfigYaml.exists());
-    configuration.setAppEngineDirectory(tmpDir.getRoot());
+    DeployProjectConfigurationConfiguration configuration =
+        DeployProjectConfigurationConfiguration.builder(tmpDir.getRoot()).build();
     try {
       deployment.deployConfig("testconfig.yaml", configuration);
       fail();
