@@ -141,8 +141,9 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     String gaeRuntime = getGaeRuntimeJava(!isSandboxEnforced);
     appEngineEnvironment.putAll(getLocalAppEngineEnvironmentVariables(gaeRuntime));
 
-    if (config.getEnvironment() != null) {
-      appEngineEnvironment.putAll(config.getEnvironment());
+    Map<String, String> configEnvironment = config.getEnvironment();
+    if (configEnvironment != null) {
+      appEngineEnvironment.putAll(configEnvironment);
     }
 
     try {

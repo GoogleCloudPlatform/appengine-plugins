@@ -82,7 +82,7 @@ public class CloudSdkAppEngineDeploymentTest {
                 .setVersion("v1")
                 .build());
 
-    SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
+    SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
 
     deployment.deploy(configuration);
 

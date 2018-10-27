@@ -94,11 +94,11 @@ public class CloudSdkAppEngineDevServer2Test {
     configuration.setDefaultGcsBucketName("buckets");
     configuration.setClearDatastore(true);
     configuration.setDatastorePath(fakeDatastorePath.toFile());
-    configuration.setEnvironment(null);
+    configuration.setEnvironment(ImmutableMap.of("ENV_NAME", "ENV_VAL"));
     configuration.setProjectId("my-project");
     configuration.setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"));
 
-    SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
+    SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
 
     List<String> expected =
         ImmutableList.of(
@@ -127,6 +127,8 @@ public class CloudSdkAppEngineDevServer2Test {
             "--default_gcs_bucket_name=buckets",
             "--clear_datastore=true",
             "--datastore_path=" + fakeDatastorePath,
+            "--env_var",
+            "ENV_NAME=ENV_VAL",
             "--application=my-project",
             "--ARG1",
             "--ARG2");

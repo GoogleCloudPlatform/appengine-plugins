@@ -17,6 +17,7 @@
 package com.google.cloud.tools.test.utils;
 
 import com.google.common.base.Preconditions;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.Assert;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.invocation.Invocation;
@@ -43,46 +45,12 @@ public class SpyVerifier {
         Mockito.mockingDetails(objectToInspect).getMockCreationSettings().getTypeToMock();
   }
 
-  /**
-   * This method is to verify that all setters in a configuration were called. The motivation is to
-   * ensure that configurations are fully built and we can ensure our handling is being properly
-   * tested.
-   */
-  public SpyVerifier verifyDeclaredSetters() {
-    // extract all invocations of getters by inspecting the spy
-    List<Method> knownSetters = Arrays.asList(classToInspectAs.getDeclaredMethods());
-
-    Map<Method, Integer> methodInvocationCount = new HashMap<>();
-    for (Invocation invocation : Mockito.mockingDetails(objectToInspect).getInvocations()) {
-      Method m = invocation.getMethod();
-      if (knownSetters.contains(m) && isSetter(m)) {
-        if (methodInvocationCount.containsKey(m)) {
-          methodInvocationCount.put(m, methodInvocationCount.get(m) + 1);
-        } else {
-          methodInvocationCount.put(m, 1);
-        }
-        invocation.markVerified();
-      }
-    }
-
-    // compare setter invocations against our expectations
-    for (Method m : knownSetters) {
-      if (isSetter(m)) {
-        Integer invocationCount = methodInvocationCount.get(m);
-        if (invocationCount == null || invocationCount != 1) {
-          throw new MockitoAssertionError(
-              "Setter invocations for '"
-                  + m.getName()
-                  + "' expected 1, but was "
-                  + invocationCount);
-        }
-      }
+  public SpyVerifier verifyAllValuesNotNull() throws IllegalAccessException {
+    for (Field field : classToInspectAs.getDeclaredFields()) {
+      field.setAccessible(true);
+      Assert.assertNotNull(field.getName() + " was null.", field.get(objectToInspect));
     }
     return this;
-  }
-
-  private static boolean isSetter(Method method) {
-    return isPublicWithPrefix(method, "set");
   }
 
   private static boolean isGetter(Method method) {

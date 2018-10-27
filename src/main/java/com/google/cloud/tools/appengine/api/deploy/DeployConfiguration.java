@@ -62,11 +62,11 @@ public abstract class DeployConfiguration {
 
   @AutoValue.Builder
   public abstract static class Builder {
-    public abstract Builder setBucket(@Nullable  String bucket);
+    public abstract Builder setBucket(@Nullable String bucket);
 
-    public abstract Builder setDeployables(@Nullable  List<File> deployables);
+    public abstract Builder setDeployables(@Nullable List<File> deployables);
 
-    public abstract Builder setImageUrl(@Nullable  String imageUrl);
+    public abstract Builder setImageUrl(@Nullable String imageUrl);
 
     public abstract Builder setProjectId(@Nullable String projectId);
 

@@ -147,6 +147,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setCustomEntrypoint("entrypoint");
     configuration.setDatastorePath(fakeDatastorePath);
     configuration.setDevAppserverLogLevel("info");
+    configuration.setEnvironment(ImmutableMap.of("ENV_NAME", "ENV_VAL"));
     configuration.setLogLevel("debug");
     configuration.setMaxModuleInstances(3);
     configuration.setPythonStartupScript("script.py");
@@ -158,7 +159,7 @@ public class CloudSdkAppEngineDevServer1Test {
     configuration.setUseMtimeFileWatcher(true);
     configuration.setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"));
 
-    SpyVerifier.newVerifier(configuration).verifyDeclaredSetters();
+    SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
 
     List<String> expectedFlags =
         ImmutableList.of(
@@ -187,7 +188,10 @@ public class CloudSdkAppEngineDevServer1Test {
         .runV1(
             expectedJvmArgs,
             expectedFlags,
-            expectedJava8Environment,
+            ImmutableMap.<String, String>builder()
+                .putAll(expectedJava8Environment)
+                .put("ENV_NAME", "ENV_VAL")
+                .build(),
             java8Service /* workingDirectory */);
 
     SpyVerifier.newVerifier(configuration)
