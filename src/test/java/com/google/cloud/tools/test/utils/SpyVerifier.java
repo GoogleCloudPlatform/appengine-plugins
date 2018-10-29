@@ -80,26 +80,26 @@ public class SpyVerifier {
 
     Map<Method, Integer> methodInvocationCount = new HashMap<>();
     for (Invocation invocation : Mockito.mockingDetails(objectToInspect).getInvocations()) {
-      Method m = invocation.getMethod();
-      if (knownGetters.contains(m) && isGetter(m)) {
-        if (methodInvocationCount.containsKey(m)) {
-          methodInvocationCount.put(m, methodInvocationCount.get(m) + 1);
+      Method method = invocation.getMethod();
+      if (knownGetters.contains(method) && isGetter(method)) {
+        if (methodInvocationCount.containsKey(method)) {
+          methodInvocationCount.put(method, methodInvocationCount.get(method) + 1);
         } else {
-          methodInvocationCount.put(m, 1);
+          methodInvocationCount.put(method, 1);
         }
         invocation.markVerified();
       }
     }
 
     // compare setter invocations against our expectations
-    for (Method m : knownGetters) {
-      if (isGetter(m)) {
-        int invocationCount = methodInvocationCount.getOrDefault(m, 0);
-        int expectedInvocationCount = overrides.getOrDefault(m.getName(), 1);
+    for (Method method : knownGetters) {
+      if (isGetter(method)) {
+        int invocationCount = methodInvocationCount.getOrDefault(method, 0);
+        int expectedInvocationCount = overrides.getOrDefault(method.getName(), 1);
         if (invocationCount != expectedInvocationCount) {
           throw new MockitoAssertionError(
               "Getter invocations for '"
-                  + m.getName()
+                  + method.getName()
                   + "' expected "
                   + expectedInvocationCount
                   + ", but was "
