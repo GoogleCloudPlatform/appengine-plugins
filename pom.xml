@@ -108,12 +108,6 @@
       <artifactId>commons-compress</artifactId>
       <version>1.18</version>
     </dependency>
-    <dependency>
-      <groupId>com.google.auto.value</groupId>
-      <artifactId>auto-value-annotations</artifactId>
-      <version>1.6.2</version>
-      <scope>provided</scope>
-    </dependency>
 
     <!-- test dependencies -->
     <dependency>
@@ -162,15 +156,9 @@
               <artifactId>nullaway</artifactId>
               <version>0.4.4</version>
             </path>
-            <path>
-              <groupId>com.google.auto.value</groupId>
-              <artifactId>auto-value</artifactId>
-              <version>1.6.2</version>
-            </path>
           </annotationProcessorPaths>
           <compilerArgs>
             <arg>-Xep:NullAway:ERROR</arg>
-            <arg>-XepExcludedPaths:.*/target/generated-sources/.*</arg>
             <arg>-XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools</arg>
             <arg>-XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock,org.junit.runners.Parameterized</arg>
             <arg>-XepOpt:NullAway:ExcludedClasses=com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer1Test,com.google.cloud.tools.appengine.cloudsdk.serialization.AppEngineDeployResult,com.google.cloud.tools.io.FilePermissionsTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDevServer2Test,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest,com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkVersionTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkGenRepoInfoFileTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineDeploymentTest,com.google.cloud.tools.appengine.cloudsdk.CloudSdkAuthTest</arg>
