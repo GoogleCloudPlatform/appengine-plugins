@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 public class DeployConfiguration {
 
   @Nullable private final String bucket;
-  @Nullable private final List<File> deployables;
+  private final List<File> deployables;
   @Nullable private final String imageUrl;
   @Nullable private final String projectId;
   @Nullable private final Boolean promote;
@@ -34,7 +34,7 @@ public class DeployConfiguration {
 
   private DeployConfiguration(
       @Nullable String bucket,
-      @Nullable List<File> deployables,
+      List<File> deployables,
       @Nullable String imageUrl,
       @Nullable String projectId,
       @Nullable Boolean promote,
@@ -58,7 +58,6 @@ public class DeployConfiguration {
   }
 
   /** List of deployable target directories or yaml files. */
-  @Nullable
   public List<File> getDeployables() {
     return deployables;
   }
@@ -120,7 +119,11 @@ public class DeployConfiguration {
       return this;
     }
 
-    public DeployConfiguration.Builder setDeployables(@Nullable List<File> deployables) {
+    /** Set a non-null non-empty list of deployables. */
+    public DeployConfiguration.Builder setDeployables(List<File> deployables) {
+      if (deployables == null || deployables.size() == 0) {
+        throw new IllegalArgumentException("Null/empty deployables");
+      }
       this.deployables = deployables;
       return this;
     }
@@ -158,6 +161,9 @@ public class DeployConfiguration {
 
     /** Build a {@link DeployConfiguration}. */
     public DeployConfiguration build() {
+      if (deployables == null) {
+        throw new IllegalStateException("Missing required properties: deployables");
+      }
       return new DeployConfiguration(
           this.bucket,
           this.deployables,
