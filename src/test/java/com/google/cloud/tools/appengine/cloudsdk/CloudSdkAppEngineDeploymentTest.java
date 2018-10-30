@@ -35,6 +35,7 @@ import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -87,8 +88,7 @@ public class CloudSdkAppEngineDeploymentTest {
 
     DeployConfiguration configuration =
         Mockito.spy(
-            DeployConfiguration.builder()
-                .setDeployables(Arrays.asList(appYaml1))
+            DeployConfiguration.builder(Collections.singletonList(appYaml1))
                 .setBucket("gs://a-bucket")
                 .setImageUrl("imageUrl")
                 .setProjectId("project")
@@ -130,8 +130,7 @@ public class CloudSdkAppEngineDeploymentTest {
   public void testDeploy_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
     DeployConfiguration configuration =
-        DeployConfiguration.builder()
-            .setDeployables(Arrays.asList(appYaml1))
+        DeployConfiguration.builder(Collections.singletonList(appYaml1))
             .setPromote(false)
             .setStopPreviousVersion(false)
             .build();
@@ -149,7 +148,7 @@ public class CloudSdkAppEngineDeploymentTest {
   public void testDeploy_noFlags() throws AppEngineException, ProcessHandlerException, IOException {
 
     DeployConfiguration configuration =
-        DeployConfiguration.builder().setDeployables(Arrays.asList(appYaml1)).build();
+        DeployConfiguration.builder(Collections.singletonList(appYaml1)).build();
 
     List<String> expectedCommand = ImmutableList.of("app", "deploy", appYaml1.toString());
 
@@ -162,7 +161,7 @@ public class CloudSdkAppEngineDeploymentTest {
   public void testDeploy_dir() throws AppEngineException, ProcessHandlerException, IOException {
 
     DeployConfiguration configuration =
-        DeployConfiguration.builder().setDeployables(Arrays.asList(stagingDirectory)).build();
+        DeployConfiguration.builder(Collections.singletonList(stagingDirectory)).build();
 
     List<String> expectedCommand = ImmutableList.of("app", "deploy");
 
@@ -176,7 +175,7 @@ public class CloudSdkAppEngineDeploymentTest {
       throws AppEngineException, ProcessHandlerException, IOException {
 
     DeployConfiguration configuration =
-        DeployConfiguration.builder().setDeployables(Arrays.asList(appYaml1, appYaml2)).build();
+        DeployConfiguration.builder(Arrays.asList(appYaml1, appYaml2)).build();
 
     deployment.deploy(configuration);
 

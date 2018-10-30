@@ -98,13 +98,13 @@ public class DeployConfiguration {
     return version;
   }
 
-  public static Builder builder() {
-    return new Builder();
+  public static Builder builder(List<File> deployables) {
+    return new Builder(deployables);
   }
 
   public static final class Builder {
     @Nullable private String bucket;
-    @Nullable private List<File> deployables;
+    private List<File> deployables;
     @Nullable private String imageUrl;
     @Nullable private String projectId;
     @Nullable private Boolean promote;
@@ -112,19 +112,15 @@ public class DeployConfiguration {
     @Nullable private Boolean stopPreviousVersion;
     @Nullable private String version;
 
-    Builder() {}
-
-    public DeployConfiguration.Builder setBucket(@Nullable String bucket) {
-      this.bucket = bucket;
-      return this;
-    }
-
-    /** Set a non-null non-empty list of deployables. */
-    public DeployConfiguration.Builder setDeployables(List<File> deployables) {
+    private Builder(List<File> deployables) {
       if (deployables == null || deployables.size() == 0) {
         throw new IllegalArgumentException("Null/empty deployables");
       }
       this.deployables = deployables;
+    }
+
+    public DeployConfiguration.Builder setBucket(@Nullable String bucket) {
+      this.bucket = bucket;
       return this;
     }
 
@@ -161,9 +157,6 @@ public class DeployConfiguration {
 
     /** Build a {@link DeployConfiguration}. */
     public DeployConfiguration build() {
-      if (deployables == null) {
-        throw new IllegalStateException("Missing required properties: deployables");
-      }
       return new DeployConfiguration(
           this.bucket,
           this.deployables,
