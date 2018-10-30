@@ -24,7 +24,6 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -54,7 +53,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDeployables());
     Preconditions.checkArgument(config.getDeployables().size() > 0);
-    File workingDirectory = null;
+    Path workingDirectory = null;
 
     List<String> arguments = new ArrayList<>();
     arguments.add("app");
@@ -64,15 +63,14 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     // Instead, we have to run 'gcloud app deploy' from the staging directory to achieve this.
     // So, if we find that the only deployable in the list is a directory, we just run the command
     // from that directory without passing in any deployables to gcloud.
-    if (config.getDeployables().size() == 1 && config.getDeployables().get(0).isDirectory()) {
+    if (config.getDeployables().size() == 1 && Files.isDirectory(config.getDeployables().get(0))) {
       workingDirectory = config.getDeployables().get(0);
     } else {
-      for (File deployable : config.getDeployables()) {
-        if (!deployable.exists()) {
-          throw new IllegalArgumentException(
-              "Deployable " + deployable.toPath() + " does not exist.");
+      for (Path deployable : config.getDeployables()) {
+        if (!Files.exists(deployable)) {
+          throw new IllegalArgumentException("Deployable " + deployable + " does not exist.");
         }
-        arguments.add(deployable.toPath().toString());
+        arguments.add(deployable.toString());
       }
     }
 
@@ -131,7 +129,7 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getAppEngineDirectory());
 
-    Path deployable = configuration.getAppEngineDirectory().toPath().resolve(filename);
+    Path deployable = configuration.getAppEngineDirectory().resolve(filename);
     Preconditions.checkArgument(
         Files.isRegularFile(deployable), deployable.toString() + " does not exist.");
 

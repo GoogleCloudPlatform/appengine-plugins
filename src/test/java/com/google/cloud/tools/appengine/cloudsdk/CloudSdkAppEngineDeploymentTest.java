@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -52,9 +53,9 @@ public class CloudSdkAppEngineDeploymentTest {
 
   @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
-  private File appYaml1;
-  private File appYaml2;
-  private File stagingDirectory;
+  private Path appYaml1;
+  private Path appYaml2;
+  private Path stagingDirectory;
 
   private CloudSdkAppEngineDeployment deployment;
 
@@ -64,9 +65,9 @@ public class CloudSdkAppEngineDeploymentTest {
 
   @Before
   public void setUp() throws IOException {
-    appYaml1 = tmpDir.newFile("app1.yaml");
-    appYaml2 = tmpDir.newFile("app2.yaml");
-    stagingDirectory = tmpDir.newFolder("appengine-staging");
+    appYaml1 = tmpDir.newFile("app1.yaml").toPath();
+    appYaml2 = tmpDir.newFile("app2.yaml").toPath();
+    stagingDirectory = tmpDir.newFolder("appengine-staging").toPath();
     deployment = new CloudSdkAppEngineDeployment(gcloudRunner);
   }
 
@@ -236,7 +237,7 @@ public class CloudSdkAppEngineDeploymentTest {
   public void testDeployConfig() throws Exception {
     File testConfigYaml = tmpDir.newFile("testconfig.yaml");
     DeployProjectConfigurationConfiguration configuration =
-        DeployProjectConfigurationConfiguration.builder(tmpDir.getRoot())
+        DeployProjectConfigurationConfiguration.builder(tmpDir.getRoot().toPath())
             .setServer("appengine.google.com")
             .setProjectId("project")
             .build();
@@ -260,7 +261,7 @@ public class CloudSdkAppEngineDeploymentTest {
     File testConfigYaml = new File(tmpDir.getRoot(), "testconfig.yaml");
     assertFalse(testConfigYaml.exists());
     DeployProjectConfigurationConfiguration configuration =
-        DeployProjectConfigurationConfiguration.builder(tmpDir.getRoot()).build();
+        DeployProjectConfigurationConfiguration.builder(tmpDir.getRoot().toPath()).build();
     try {
       deployment.deployConfig("testconfig.yaml", configuration);
       fail();

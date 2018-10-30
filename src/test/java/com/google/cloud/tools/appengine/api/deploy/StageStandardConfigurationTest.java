@@ -20,15 +20,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import com.google.common.io.Files;
-import java.io.File;
+import java.nio.file.Path;
 import org.junit.Before;
 import org.junit.Test;
 
 public class StageStandardConfigurationTest {
 
   private StageStandardConfiguration configuration;
-  private File stagingDirectory = Files.createTempDir();
-  private File sourceDirectory = Files.createTempDir();
+  private Path stagingDirectory = Files.createTempDir().toPath();
+  private Path sourceDirectory = Files.createTempDir().toPath();
 
   @Before
   public void setUp() {

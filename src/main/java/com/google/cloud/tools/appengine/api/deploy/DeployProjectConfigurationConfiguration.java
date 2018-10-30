@@ -16,25 +16,25 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import java.io.File;
+import java.nio.file.Path;
 import javax.annotation.Nullable;
 
 /** Configuration for {@link AppEngineDeployment} project-level yaml deployments. */
 public class DeployProjectConfigurationConfiguration {
 
-  private final File appEngineDirectory;
+  private final Path appEngineDirectory;
   @Nullable private final String projectId;
   @Nullable private final String server;
 
   private DeployProjectConfigurationConfiguration(
-      File appEngineDirectory, @Nullable String projectId, @Nullable String server) {
+      Path appEngineDirectory, @Nullable String projectId, @Nullable String server) {
     this.appEngineDirectory = appEngineDirectory;
     this.projectId = projectId;
     this.server = server;
   }
 
   /** Directory with yaml configuration files. */
-  public File getAppEngineDirectory() {
+  public Path getAppEngineDirectory() {
     return appEngineDirectory;
   }
 
@@ -50,16 +50,16 @@ public class DeployProjectConfigurationConfiguration {
     return server;
   }
 
-  public static Builder builder(File appEngineDirectory) {
+  public static Builder builder(Path appEngineDirectory) {
     return new Builder(appEngineDirectory);
   }
 
   public static final class Builder {
-    private File appEngineDirectory;
+    private Path appEngineDirectory;
     @Nullable private String projectId;
     @Nullable private String server;
 
-    private Builder(File appEngineDirectory) {
+    private Builder(Path appEngineDirectory) {
       if (appEngineDirectory == null) {
         throw new NullPointerException("Null appEngineDirectory");
       }

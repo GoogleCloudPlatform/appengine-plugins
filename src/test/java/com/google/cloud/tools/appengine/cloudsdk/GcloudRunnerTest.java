@@ -45,7 +45,7 @@ public class GcloudRunnerTest {
   @Mock private CloudSdk sdk;
   private Path gcloudPath;
   private File credentialFile;
-  private File workingDirectory;
+  private Path workingDirectory;
   @Mock private ProcessHandler processHandler;
   @Mock private ProcessBuilderFactory processBuilderFactory;
   @Mock private ProcessBuilder processBuilder;
@@ -56,7 +56,7 @@ public class GcloudRunnerTest {
   public void setUp() throws IOException {
     credentialFile = testFolder.newFile("credential.file");
     gcloudPath = testFolder.getRoot().toPath().resolve("gcloud");
-    workingDirectory = testFolder.getRoot();
+    workingDirectory = testFolder.getRoot().toPath();
     when(sdk.getGCloudPath()).thenReturn(gcloudPath);
 
     when(processBuilderFactory.newProcessBuilder()).thenReturn(processBuilder);
@@ -83,7 +83,7 @@ public class GcloudRunnerTest {
 
     Mockito.verify(processBuilder).environment();
     Mockito.verify(processEnv).putAll(gcloudRunner.getGcloudCommandEnvironment());
-    Mockito.verify(processBuilder).directory(workingDirectory);
+    Mockito.verify(processBuilder).directory(workingDirectory.toFile());
 
     Mockito.verify(processHandler).handleProcess(process);
     Mockito.verify(processBuilder)

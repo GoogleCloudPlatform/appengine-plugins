@@ -16,22 +16,22 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import java.io.File;
+import java.nio.file.Path;
 import javax.annotation.Nullable;
 
 /** Configuration for {@link AppEngineFlexibleStaging#stageFlexible(StageFlexibleConfiguration)}. */
 public class StageFlexibleConfiguration {
 
-  private final File appEngineDirectory;
-  @Nullable private final File dockerDirectory;
-  private final File artifact;
-  private final File stagingDirectory;
+  private final Path appEngineDirectory;
+  @Nullable private final Path dockerDirectory;
+  private final Path artifact;
+  private final Path stagingDirectory;
 
   private StageFlexibleConfiguration(
-      File appEngineDirectory,
-      @Nullable File dockerDirectory,
-      File artifact,
-      File stagingDirectory) {
+      Path appEngineDirectory,
+      @Nullable Path dockerDirectory,
+      Path artifact,
+      Path stagingDirectory) {
     this.appEngineDirectory = appEngineDirectory;
     this.dockerDirectory = dockerDirectory;
     this.artifact = artifact;
@@ -39,18 +39,18 @@ public class StageFlexibleConfiguration {
   }
 
   /** Directory containing {@code app.yaml}. */
-  public File getAppEngineDirectory() {
+  public Path getAppEngineDirectory() {
     return appEngineDirectory;
   }
 
   /** Directory containing {@code Dockerfile} and other resources used by it. */
   @Nullable
-  public File getDockerDirectory() {
+  public Path getDockerDirectory() {
     return dockerDirectory;
   }
 
   /** Artifact to deploy such as WAR or JAR. */
-  public File getArtifact() {
+  public Path getArtifact() {
     return artifact;
   }
 
@@ -58,21 +58,21 @@ public class StageFlexibleConfiguration {
    * Directory where {@code app.yaml}, files in docker directory, and the artifact to deploy will be
    * copied for deploying.
    */
-  public File getStagingDirectory() {
+  public Path getStagingDirectory() {
     return stagingDirectory;
   }
 
-  public static Builder builder(File appEngineDirectory, File artifact, File stagingDirectory) {
+  public static Builder builder(Path appEngineDirectory, Path artifact, Path stagingDirectory) {
     return new Builder(appEngineDirectory, artifact, stagingDirectory);
   }
 
   public static final class Builder {
-    private File appEngineDirectory;
-    @Nullable private File dockerDirectory;
-    private File artifact;
-    private File stagingDirectory;
+    private Path appEngineDirectory;
+    @Nullable private Path dockerDirectory;
+    private Path artifact;
+    private Path stagingDirectory;
 
-    Builder(File appEngineDirectory, File artifact, File stagingDirectory) {
+    Builder(Path appEngineDirectory, Path artifact, Path stagingDirectory) {
       if (appEngineDirectory == null) {
         throw new NullPointerException("Null appEngineDirectory");
       }
@@ -87,7 +87,7 @@ public class StageFlexibleConfiguration {
       this.stagingDirectory = stagingDirectory;
     }
 
-    public StageFlexibleConfiguration.Builder setDockerDirectory(@Nullable File dockerDirectory) {
+    public StageFlexibleConfiguration.Builder setDockerDirectory(@Nullable Path dockerDirectory) {
       this.dockerDirectory = dockerDirectory;
       return this;
     }

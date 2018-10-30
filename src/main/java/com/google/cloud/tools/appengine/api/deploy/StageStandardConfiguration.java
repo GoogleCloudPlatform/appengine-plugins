@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import java.io.File;
+import java.nio.file.Path;
 import javax.annotation.Nullable;
 
 /**
@@ -24,9 +24,9 @@ import javax.annotation.Nullable;
  * indicate that the configuration was not set, and thus assumes the tool default value.
  */
 public class StageStandardConfiguration {
-  private final File sourceDirectory;
-  private final File stagingDirectory;
-  @Nullable private final File dockerfile;
+  private final Path sourceDirectory;
+  private final Path stagingDirectory;
+  @Nullable private final Path dockerfile;
   @Nullable private final Boolean enableQuickstart;
   @Nullable private final Boolean disableUpdateCheck;
   @Nullable private final Boolean enableJarSplitting;
@@ -38,9 +38,9 @@ public class StageStandardConfiguration {
   @Nullable private final String runtime;
 
   private StageStandardConfiguration(
-      File sourceDirectory,
-      File stagingDirectory,
-      @Nullable File dockerfile,
+      Path sourceDirectory,
+      Path stagingDirectory,
+      @Nullable Path dockerfile,
       @Nullable Boolean enableQuickstart,
       @Nullable Boolean disableUpdateCheck,
       @Nullable Boolean enableJarSplitting,
@@ -65,18 +65,18 @@ public class StageStandardConfiguration {
   }
 
   /** The exploded war directory to stage from. */
-  public File getSourceDirectory() {
+  public Path getSourceDirectory() {
     return sourceDirectory;
   }
 
   /** The staging output directory. */
-  public File getStagingDirectory() {
+  public Path getStagingDirectory() {
     return stagingDirectory;
   }
 
   /** A dockerfile to copy into the staging directory. */
   @Nullable
-  public File getDockerfile() {
+  public Path getDockerfile() {
     return dockerfile;
   }
 
@@ -126,14 +126,14 @@ public class StageStandardConfiguration {
     return runtime;
   }
 
-  public static Builder builder(File sourceDirectory, File stagingDirectory) {
+  public static Builder builder(Path sourceDirectory, Path stagingDirectory) {
     return new Builder(sourceDirectory, stagingDirectory);
   }
 
   public static final class Builder {
-    private File sourceDirectory;
-    private File stagingDirectory;
-    @Nullable private File dockerfile;
+    private Path sourceDirectory;
+    private Path stagingDirectory;
+    @Nullable private Path dockerfile;
     @Nullable private Boolean enableQuickstart;
     @Nullable private Boolean disableUpdateCheck;
     @Nullable private Boolean enableJarSplitting;
@@ -144,7 +144,7 @@ public class StageStandardConfiguration {
     @Nullable private Boolean disableJarJsps;
     @Nullable private String runtime;
 
-    Builder(File sourceDirectory, File stagingDirectory) {
+    Builder(Path sourceDirectory, Path stagingDirectory) {
       if (sourceDirectory == null) {
         throw new NullPointerException("Null sourceDirectory");
       }
@@ -155,7 +155,7 @@ public class StageStandardConfiguration {
       this.stagingDirectory = stagingDirectory;
     }
 
-    public Builder setDockerfile(@Nullable File dockerfile) {
+    public Builder setDockerfile(@Nullable Path dockerfile) {
       this.dockerfile = dockerfile;
       return this;
     }

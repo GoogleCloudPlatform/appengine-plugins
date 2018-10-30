@@ -24,8 +24,9 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.collect.ImmutableList;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,6 +34,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 /** Unit tests for {@link CloudSdkAppEngineStandardStaging}. */
@@ -43,21 +45,32 @@ public class CloudSdkAppEngineStandardStagingTest {
 
   @Mock private AppCfgRunner appCfgRunner;
 
-  private File source;
-  private File destination;
-  private File dockerfile;
+  private Path source;
+  private Path destination;
+  private Path dockerfile;
   private CloudSdkAppEngineStandardStaging staging;
   private StageStandardConfiguration.Builder builder;
 
   @Before
-  public void setUp() throws IOException {
-    source = tmpDir.newFolder("source");
-    destination = tmpDir.newFolder("destination");
-    dockerfile = tmpDir.newFile("dockerfile");
+  public void setUp()
+      throws IOException, InvalidJavaSdkException, ProcessHandlerException,
+          AppEngineJavaComponentsNotInstalledException {
+    source = tmpDir.newFolder("source").toPath();
+    destination = tmpDir.newFolder("destination").toPath();
+    dockerfile = tmpDir.newFile("dockerfile").toPath();
 
     staging = new CloudSdkAppEngineStandardStaging(appCfgRunner);
 
     builder = StageStandardConfiguration.builder(source, destination);
+
+    // create an app.yaml in staging output when we run.
+    Mockito.doAnswer(
+            ignored -> {
+              Files.createFile(destination.resolve("app.yaml"));
+              return null;
+            })
+        .when(appCfgRunner)
+        .run(Mockito.anyList());
   }
 
   @Test
@@ -89,8 +102,8 @@ public class CloudSdkAppEngineStandardStagingTest {
             "--allow_any_runtime",
             "--runtime=java",
             "stage",
-            source.toPath().toString(),
-            destination.toPath().toString());
+            source.toString(),
+            destination.toString());
 
     staging.stageStandard(configuration);
 
@@ -109,8 +122,7 @@ public class CloudSdkAppEngineStandardStagingTest {
 
     StageStandardConfiguration configuration = builder.build();
 
-    List<String> expected =
-        ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
+    List<String> expected = ImmutableList.of("stage", source.toString(), destination.toString());
 
     staging.stageStandard(configuration);
 
@@ -121,8 +133,7 @@ public class CloudSdkAppEngineStandardStagingTest {
   public void testCheckFlags_noFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    List<String> expected =
-        ImmutableList.of("stage", source.toPath().toString(), destination.toPath().toString());
+    List<String> expected = ImmutableList.of("stage", source.toString(), destination.toString());
 
     staging.stageStandard(builder.build());
 

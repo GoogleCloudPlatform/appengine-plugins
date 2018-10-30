@@ -27,10 +27,10 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
 import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging.CopyService;
 import com.google.cloud.tools.test.utils.LogStoringHandler;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.LogRecord;
 import org.junit.Before;
@@ -51,22 +51,20 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Mock private CopyService copyService;
 
   private LogStoringHandler handler;
-  private File stagingDirectory;
-  private File dockerDirectory;
-  private File appEngineDirectory;
-  private File dockerFile;
+  private Path stagingDirectory;
+  private Path dockerDirectory;
+  private Path appEngineDirectory;
+  private Path dockerFile;
 
   @Before
   public void setUp() throws IOException {
     handler = LogStoringHandler.getForLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
-    appEngineDirectory = temporaryFolder.newFolder();
-    dockerDirectory = temporaryFolder.newFolder();
-    stagingDirectory = temporaryFolder.newFolder();
+    appEngineDirectory = temporaryFolder.newFolder().toPath();
+    dockerDirectory = temporaryFolder.newFolder().toPath();
+    stagingDirectory = temporaryFolder.newFolder().toPath();
 
-    dockerFile = new File(dockerDirectory, "Dockerfile");
-    if (!dockerFile.createNewFile()) {
-      throw new IOException("Could not create Dockerfile for test");
-    }
+    dockerFile = dockerDirectory.resolve("Dockerfile");
+    Files.createFile(dockerFile);
 
     when(config.getDockerDirectory()).thenReturn(dockerDirectory);
     when(config.getStagingDirectory()).thenReturn(stagingDirectory);
@@ -75,8 +73,8 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Test
   public void testCopyDockerContext_runtimeJavaNoWarning() throws AppEngineException, IOException {
-    dockerDirectory = new File(temporaryFolder.getRoot(), "hopefully-made-up-dir");
-    assertFalse(dockerDirectory.exists());
+    dockerDirectory = temporaryFolder.getRoot().toPath().resolve("hopefully-made-up-dir");
+    assertFalse(Files.exists(dockerDirectory));
     when(config.getDockerDirectory()).thenReturn(dockerDirectory);
 
     CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
@@ -120,7 +118,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Test
   public void testCopyDockerContext_runtimeNotJavaNoDockerfile() throws IOException {
 
-    dockerFile.delete();
+    Files.delete(dockerFile);
     try {
       CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
       fail();
@@ -143,13 +141,13 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
-    verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+    verify(copyService).copyDirectory(dockerDirectory, stagingDirectory);
   }
 
   @Test
   public void testCopyDockerContext_runtimeNullNoDockerfile() throws IOException {
 
-    dockerFile.delete();
+    Files.delete(dockerFile);
     try {
       CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
       fail();
@@ -173,13 +171,13 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
 
-    verify(copyService).copyDirectory(dockerDirectory.toPath(), stagingDirectory.toPath());
+    verify(copyService).copyDirectory(dockerDirectory, stagingDirectory);
   }
 
   @Test
   public void testCopyAppEngineContext_nonExistentAppEngineDirectory() throws IOException {
-    appEngineDirectory = new File(temporaryFolder.getRoot(), "non-existent-directory");
-    assertFalse(appEngineDirectory.exists());
+    appEngineDirectory = temporaryFolder.getRoot().toPath().resolve("non-existent-directory");
+    assertFalse(Files.exists(appEngineDirectory));
     when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
 
     try {
@@ -209,28 +207,24 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Test
   public void testCopyAppEngineContext_appYamlInAppEngineDirectory()
       throws AppEngineException, IOException {
-    File file = new File(appEngineDirectory, "app.yaml");
-    if (!file.createNewFile()) {
-      throw new IOException("Could not create app.yaml for test");
-    }
+    Path file = appEngineDirectory.resolve("app.yaml");
+    Files.createFile(file);
+
     CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
     verify(copyService)
         .copyFileAndReplace(
-            appEngineDirectory.toPath().resolve("app.yaml"),
-            stagingDirectory.toPath().resolve("app.yaml"));
+            appEngineDirectory.resolve("app.yaml"), stagingDirectory.resolve("app.yaml"));
   }
 
   @Test
   public void testFindRuntime_malformedAppYaml() throws IOException {
 
-    File file = new File(appEngineDirectory, "app.yaml");
-    if (!file.createNewFile()) {
-      throw new IOException("Could not create app.yaml for test");
-    }
-    Files.write(file.toPath(), ": m a l f o r m e d !".getBytes(StandardCharsets.UTF_8));
+    Path file = appEngineDirectory.resolve("app.yaml");
+    Files.createFile(file);
+    Files.write(file, ": m a l f o r m e d !".getBytes(StandardCharsets.UTF_8));
 
     try {
       CloudSdkAppEngineFlexibleStaging.findRuntime(config);

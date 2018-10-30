@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 public class DeployConfiguration {
 
   @Nullable private final String bucket;
-  private final List<File> deployables;
+  private final List<Path> deployables;
   @Nullable private final String imageUrl;
   @Nullable private final String projectId;
   @Nullable private final Boolean promote;
@@ -34,7 +34,7 @@ public class DeployConfiguration {
 
   private DeployConfiguration(
       @Nullable String bucket,
-      List<File> deployables,
+      List<Path> deployables,
       @Nullable String imageUrl,
       @Nullable String projectId,
       @Nullable Boolean promote,
@@ -58,7 +58,7 @@ public class DeployConfiguration {
   }
 
   /** List of deployable target directories or yaml files. */
-  public List<File> getDeployables() {
+  public List<Path> getDeployables() {
     return deployables;
   }
 
@@ -98,13 +98,13 @@ public class DeployConfiguration {
     return version;
   }
 
-  public static Builder builder(List<File> deployables) {
+  public static Builder builder(List<Path> deployables) {
     return new Builder(deployables);
   }
 
   public static final class Builder {
     @Nullable private String bucket;
-    private List<File> deployables;
+    private List<Path> deployables;
     @Nullable private String imageUrl;
     @Nullable private String projectId;
     @Nullable private Boolean promote;
@@ -112,7 +112,7 @@ public class DeployConfiguration {
     @Nullable private Boolean stopPreviousVersion;
     @Nullable private String version;
 
-    private Builder(List<File> deployables) {
+    private Builder(List<Path> deployables) {
       if (deployables == null || deployables.size() == 0) {
         throw new IllegalArgumentException("Null/empty deployables");
       }

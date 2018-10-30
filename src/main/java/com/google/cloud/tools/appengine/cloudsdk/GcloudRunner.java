@@ -25,6 +25,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,7 @@ class GcloudRunner {
    *
    * @param workingDirectory if null then the working directory of current Java process
    */
-  void run(List<String> arguments, @Nullable File workingDirectory)
+  void run(List<String> arguments, @Nullable Path workingDirectory)
       throws ProcessHandlerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
           CloudSdkVersionFileException, IOException {
 
@@ -90,7 +91,9 @@ class GcloudRunner {
 
     ProcessBuilder processBuilder = processBuilderFactory.newProcessBuilder();
     processBuilder.command(command);
-    processBuilder.directory(workingDirectory);
+    if (workingDirectory != null) {
+      processBuilder.directory(workingDirectory.toFile());
+    }
     processBuilder.environment().putAll(getGcloudCommandEnvironment());
     Process process = processBuilder.start();
     processHandler.handleProcess(process);

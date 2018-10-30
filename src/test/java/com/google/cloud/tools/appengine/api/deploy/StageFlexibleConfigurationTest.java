@@ -18,14 +18,15 @@ package com.google.cloud.tools.appengine.api.deploy;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 
 public class StageFlexibleConfigurationTest {
 
   private StageFlexibleConfiguration configuration;
-  private File file = new File("");
+  private Path file = Paths.get("");
 
   @Before
   public void setUp() {

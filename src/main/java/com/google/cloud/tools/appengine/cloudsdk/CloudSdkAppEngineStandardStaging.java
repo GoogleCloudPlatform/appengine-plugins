@@ -22,13 +22,12 @@ import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.AppCfgArgs;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Preconditions;
-import com.google.common.io.FileWriteMode;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,17 +65,17 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
       arguments.addAll(AppCfgArgs.get("runtime", config.getRuntime()));
     }
     arguments.add("stage");
-    arguments.add(config.getSourceDirectory().toPath().toString());
-    arguments.add(config.getStagingDirectory().toPath().toString());
+    arguments.add(config.getSourceDirectory().toString());
+    arguments.add(config.getStagingDirectory().toString());
 
-    Path dockerfile = config.getDockerfile() == null ? null : config.getDockerfile().toPath();
+    Path dockerfile = config.getDockerfile();
 
     try {
 
       if (dockerfile != null && Files.exists(dockerfile)) {
         Files.copy(
             dockerfile,
-            config.getSourceDirectory().toPath().resolve(dockerfile.getFileName()),
+            config.getSourceDirectory().resolve(dockerfile.getFileName()),
             StandardCopyOption.REPLACE_EXISTING);
       }
 
@@ -84,9 +83,11 @@ public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStagin
 
       // TODO : Move this fix up the chain (appcfg)
       if (config.getRuntime() != null && config.getRuntime().equals("java")) {
-        File appYaml = new File(config.getStagingDirectory(), "app.yaml");
-        com.google.common.io.Files.asCharSink(appYaml, StandardCharsets.UTF_8, FileWriteMode.APPEND)
-            .write("\nruntime_config:\n  jdk: openjdk8\n");
+        Path appYaml = config.getStagingDirectory().resolve("app.yaml");
+        Files.write(
+            appYaml,
+            "\nruntime_config:\n  jdk: openjdk8\n".getBytes(StandardCharsets.UTF_8),
+            StandardOpenOption.APPEND);
       }
 
     } catch (IOException | ProcessHandlerException e) {
