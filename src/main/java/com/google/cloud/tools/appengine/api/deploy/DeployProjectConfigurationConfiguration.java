@@ -66,8 +66,7 @@ public class DeployProjectConfigurationConfiguration {
       this.appEngineDirectory = appEngineDirectory;
     }
 
-    public DeployProjectConfigurationConfiguration.Builder projectId(
-        @Nullable String projectId) {
+    public DeployProjectConfigurationConfiguration.Builder projectId(@Nullable String projectId) {
       this.projectId = projectId;
       return this;
     }

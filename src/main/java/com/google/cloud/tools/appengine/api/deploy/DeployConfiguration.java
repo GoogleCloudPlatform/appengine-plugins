@@ -144,8 +144,7 @@ public class DeployConfiguration {
       return this;
     }
 
-    public DeployConfiguration.Builder stopPreviousVersion(
-        @Nullable Boolean stopPreviousVersion) {
+    public DeployConfiguration.Builder stopPreviousVersion(@Nullable Boolean stopPreviousVersion) {
       this.stopPreviousVersion = stopPreviousVersion;
       return this;
     }
