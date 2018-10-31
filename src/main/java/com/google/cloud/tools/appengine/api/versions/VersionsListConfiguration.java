@@ -57,17 +57,17 @@ public class VersionsListConfiguration {
 
     private Builder() {}
 
-    public Builder setHideNoTraffic(@Nullable Boolean hideNoTraffic) {
+    public Builder hideNoTraffic(@Nullable Boolean hideNoTraffic) {
       this.hideNoTraffic = hideNoTraffic;
       return this;
     }
 
-    public Builder setProjectId(@Nullable String projectId) {
+    public Builder projectId(@Nullable String projectId) {
       this.projectId = projectId;
       return this;
     }
 
-    public Builder setService(@Nullable String service) {
+    public Builder service(@Nullable String service) {
       this.service = service;
       return this;
     }

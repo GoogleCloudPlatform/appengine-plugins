@@ -293,132 +293,132 @@ public class RunConfiguration {
       this.services = services;
     }
 
-    public Builder setHost(@Nullable String host) {
+    public Builder host(@Nullable String host) {
       this.host = host;
       return this;
     }
 
-    public Builder setPort(@Nullable Integer port) {
+    public Builder port(@Nullable Integer port) {
       this.port = port;
       return this;
     }
 
-    public Builder setAdminHost(@Nullable String adminHost) {
+    public Builder adminHost(@Nullable String adminHost) {
       this.adminHost = adminHost;
       return this;
     }
 
-    public Builder setAdminPort(@Nullable Integer adminPort) {
+    public Builder adminPort(@Nullable Integer adminPort) {
       this.adminPort = adminPort;
       return this;
     }
 
-    public Builder setAuthDomain(@Nullable String authDomain) {
+    public Builder authDomain(@Nullable String authDomain) {
       this.authDomain = authDomain;
       return this;
     }
 
-    public Builder setStoragePath(@Nullable Path storagePath) {
+    public Builder storagePath(@Nullable Path storagePath) {
       this.storagePath = storagePath;
       return this;
     }
 
-    public Builder setLogLevel(@Nullable String logLevel) {
+    public Builder logLevel(@Nullable String logLevel) {
       this.logLevel = logLevel;
       return this;
     }
 
-    public Builder setMaxModuleInstances(@Nullable Integer maxModuleInstances) {
+    public Builder maxModuleInstances(@Nullable Integer maxModuleInstances) {
       this.maxModuleInstances = maxModuleInstances;
       return this;
     }
 
-    public Builder setUseMtimeFileWatcher(@Nullable Boolean useMtimeFileWatcher) {
+    public Builder useMtimeFileWatcher(@Nullable Boolean useMtimeFileWatcher) {
       this.useMtimeFileWatcher = useMtimeFileWatcher;
       return this;
     }
 
-    public Builder setThreadsafeOverride(@Nullable String threadsafeOverride) {
+    public Builder threadsafeOverride(@Nullable String threadsafeOverride) {
       this.threadsafeOverride = threadsafeOverride;
       return this;
     }
 
-    public Builder setPythonStartupScript(@Nullable String pythonStartupScript) {
+    public Builder pythonStartupScript(@Nullable String pythonStartupScript) {
       this.pythonStartupScript = pythonStartupScript;
       return this;
     }
 
-    public Builder setPythonStartupArgs(@Nullable String pythonStartupArgs) {
+    public Builder pythonStartupArgs(@Nullable String pythonStartupArgs) {
       this.pythonStartupArgs = pythonStartupArgs;
       return this;
     }
 
-    public Builder setJvmFlags(@Nullable List<String> jvmFlags) {
+    public Builder jvmFlags(@Nullable List<String> jvmFlags) {
       this.jvmFlags = jvmFlags;
       return this;
     }
 
-    public Builder setCustomEntrypoint(@Nullable String customEntrypoint) {
+    public Builder customEntrypoint(@Nullable String customEntrypoint) {
       this.customEntrypoint = customEntrypoint;
       return this;
     }
 
-    public Builder setRuntime(@Nullable String runtime) {
+    public Builder runtime(@Nullable String runtime) {
       this.runtime = runtime;
       return this;
     }
 
-    public Builder setAllowSkippedFiles(@Nullable Boolean allowSkippedFiles) {
+    public Builder allowSkippedFiles(@Nullable Boolean allowSkippedFiles) {
       this.allowSkippedFiles = allowSkippedFiles;
       return this;
     }
 
-    public Builder setApiPort(@Nullable Integer apiPort) {
+    public Builder apiPort(@Nullable Integer apiPort) {
       this.apiPort = apiPort;
       return this;
     }
 
-    public Builder setAutomaticRestart(@Nullable Boolean automaticRestart) {
+    public Builder automaticRestart(@Nullable Boolean automaticRestart) {
       this.automaticRestart = automaticRestart;
       return this;
     }
 
-    public Builder setDevAppserverLogLevel(@Nullable String devAppserverLogLevel) {
+    public Builder devAppserverLogLevel(@Nullable String devAppserverLogLevel) {
       this.devAppserverLogLevel = devAppserverLogLevel;
       return this;
     }
 
-    public Builder setSkipSdkUpdateCheck(@Nullable Boolean skipSdkUpdateCheck) {
+    public Builder skipSdkUpdateCheck(@Nullable Boolean skipSdkUpdateCheck) {
       this.skipSdkUpdateCheck = skipSdkUpdateCheck;
       return this;
     }
 
-    public Builder setDefaultGcsBucketName(@Nullable String defaultGcsBucketName) {
+    public Builder defaultGcsBucketName(@Nullable String defaultGcsBucketName) {
       this.defaultGcsBucketName = defaultGcsBucketName;
       return this;
     }
 
-    public Builder setClearDatastore(@Nullable Boolean clearDatastore) {
+    public Builder clearDatastore(@Nullable Boolean clearDatastore) {
       this.clearDatastore = clearDatastore;
       return this;
     }
 
-    public Builder setDatastorePath(@Nullable Path datastorePath) {
+    public Builder datastorePath(@Nullable Path datastorePath) {
       this.datastorePath = datastorePath;
       return this;
     }
 
-    public Builder setEnvironment(@Nullable Map<String, String> environment) {
+    public Builder environment(@Nullable Map<String, String> environment) {
       this.environment = environment;
       return this;
     }
 
-    public Builder setAdditionalArguments(@Nullable List<String> additionalArguments) {
+    public Builder additionalArguments(@Nullable List<String> additionalArguments) {
       this.additionalArguments = additionalArguments;
       return this;
     }
 
-    public Builder setProjectId(@Nullable String projectId) {
+    public Builder projectId(@Nullable String projectId) {
       this.projectId = projectId;
       return this;
     }

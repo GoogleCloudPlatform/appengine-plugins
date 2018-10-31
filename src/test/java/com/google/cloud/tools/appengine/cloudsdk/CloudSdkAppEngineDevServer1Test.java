@@ -91,7 +91,7 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testStop_allFlags() {
     StopConfiguration configuration =
-        StopConfiguration.builder().setAdminHost("alt-local-host").setAdminPort(7777).build();
+        StopConfiguration.builder().adminHost("alt-local-host").adminPort(7777).build();
     try {
       devServer.stop(configuration);
       Assert.fail();
@@ -103,7 +103,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Test
   public void testStop_defaultAdminHost() {
-    StopConfiguration configuration = StopConfiguration.builder().setAdminPort(7777).build();
+    StopConfiguration configuration = StopConfiguration.builder().adminPort(7777).build();
     try {
       devServer.stop(configuration);
       Assert.fail();
@@ -134,35 +134,35 @@ public class CloudSdkAppEngineDevServer1Test {
     RunConfiguration configuration =
         Mockito.spy(
             RunConfiguration.builder(ImmutableList.of(java8Service))
-                .setHost("host")
-                .setPort(8090)
-                .setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"))
-                .setDefaultGcsBucketName("buckets")
-                .setEnvironment(null)
-                .setAutomaticRestart(true)
-                .setProjectId("my-project")
+                .host("host")
+                .port(8090)
+                .jvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"))
+                .defaultGcsBucketName("buckets")
+                .environment(null)
+                .automaticRestart(true)
+                .projectId("my-project")
 
                 // these params are not used by devappserver1 and will log warnings
-                .setAdminHost("adminHost")
-                .setAdminPort(8000)
-                .setAuthDomain("example.com")
-                .setAllowSkippedFiles(true)
-                .setApiPort(8091)
-                .setClearDatastore(true)
-                .setCustomEntrypoint("entrypoint")
-                .setDatastorePath(fakeDatastorePath)
-                .setDevAppserverLogLevel("info")
-                .setEnvironment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
-                .setLogLevel("debug")
-                .setMaxModuleInstances(3)
-                .setPythonStartupScript("script.py")
-                .setPythonStartupArgs("arguments")
-                .setRuntime("someRuntime")
-                .setStoragePath(fakeStoragePath)
-                .setSkipSdkUpdateCheck(true)
-                .setThreadsafeOverride("default:False,backend:True")
-                .setUseMtimeFileWatcher(true)
-                .setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"))
+                .adminHost("adminHost")
+                .adminPort(8000)
+                .authDomain("example.com")
+                .allowSkippedFiles(true)
+                .apiPort(8091)
+                .clearDatastore(true)
+                .customEntrypoint("entrypoint")
+                .datastorePath(fakeDatastorePath)
+                .devAppserverLogLevel("info")
+                .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
+                .logLevel("debug")
+                .maxModuleInstances(3)
+                .pythonStartupScript("script.py")
+                .pythonStartupArgs("arguments")
+                .runtime("someRuntime")
+                .storagePath(fakeStoragePath)
+                .skipSdkUpdateCheck(true)
+                .threadsafeOverride("default:False,backend:True")
+                .useMtimeFileWatcher(true)
+                .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
@@ -407,7 +407,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
     RunConfiguration configuration =
         RunConfiguration.builder(ImmutableList.of(java7Service))
-            .setEnvironment(clientEnvironmentVariables)
+            .environment(clientEnvironmentVariables)
             .build();
 
     Map<String, String> expectedEnvironment =
@@ -441,7 +441,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
     RunConfiguration configuration =
         RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars))
-            .setEnvironment(clientEnvironmentVariables)
+            .environment(clientEnvironmentVariables)
             .build();
 
     List<String> expectedFlags =

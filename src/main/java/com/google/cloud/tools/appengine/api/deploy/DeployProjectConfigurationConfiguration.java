@@ -66,13 +66,13 @@ public class DeployProjectConfigurationConfiguration {
       this.appEngineDirectory = appEngineDirectory;
     }
 
-    public DeployProjectConfigurationConfiguration.Builder setProjectId(
+    public DeployProjectConfigurationConfiguration.Builder projectId(
         @Nullable String projectId) {
       this.projectId = projectId;
       return this;
     }
 
-    public DeployProjectConfigurationConfiguration.Builder setServer(@Nullable String server) {
+    public DeployProjectConfigurationConfiguration.Builder server(@Nullable String server) {
       this.server = server;
       return this;
     }

@@ -147,16 +147,16 @@ public class CloudSdkAppEngineVersionsTest {
 
   private static VersionsSelectionConfiguration getVersionConfig() {
     return VersionsSelectionConfiguration.builder(Arrays.asList("v1", "v2"))
-        .setService("myService")
-        .setProjectId("myProject")
+        .service("myService")
+        .projectId("myProject")
         .build();
   }
 
   private static VersionsListConfiguration getListConfig(boolean hideNoTraffic) {
     return VersionsListConfiguration.builder()
-        .setService("myService")
-        .setProjectId("myProject")
-        .setHideNoTraffic(hideNoTraffic)
+        .service("myService")
+        .projectId("myProject")
+        .hideNoTraffic(hideNoTraffic)
         .build();
   }
 }

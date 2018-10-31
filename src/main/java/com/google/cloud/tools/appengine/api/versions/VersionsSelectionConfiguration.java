@@ -63,12 +63,12 @@ public class VersionsSelectionConfiguration {
       this.versions = versions;
     }
 
-    public Builder setService(@Nullable String service) {
+    public Builder service(@Nullable String service) {
       this.service = service;
       return this;
     }
 
-    public Builder setProjectId(@Nullable String projectId) {
+    public Builder projectId(@Nullable String projectId) {
       this.projectId = projectId;
       return this;
     }

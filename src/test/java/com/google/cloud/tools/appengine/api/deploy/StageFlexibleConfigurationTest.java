@@ -34,7 +34,7 @@ public class StageFlexibleConfigurationTest {
     // files are files and directories are directories?
     // should we use paths instead?
     configuration =
-        StageFlexibleConfiguration.builder(file, file, file).setDockerDirectory(file).build();
+        StageFlexibleConfiguration.builder(file, file, file).dockerDirectory(file).build();
   }
 
   @Test

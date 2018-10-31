@@ -87,13 +87,13 @@ public class CloudSdkAppEngineDeploymentTest {
     DeployConfiguration configuration =
         Mockito.spy(
             DeployConfiguration.builder(Collections.singletonList(appYaml1))
-                .setBucket("gs://a-bucket")
-                .setImageUrl("imageUrl")
-                .setProjectId("project")
-                .setPromote(true)
-                .setServer("appengine.google.com")
-                .setStopPreviousVersion(true)
-                .setVersion("v1")
+                .bucket("gs://a-bucket")
+                .imageUrl("imageUrl")
+                .projectId("project")
+                .promote(true)
+                .server("appengine.google.com")
+                .stopPreviousVersion(true)
+                .version("v1")
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
@@ -129,8 +129,8 @@ public class CloudSdkAppEngineDeploymentTest {
       throws AppEngineException, ProcessHandlerException, IOException {
     DeployConfiguration configuration =
         DeployConfiguration.builder(Collections.singletonList(appYaml1))
-            .setPromote(false)
-            .setStopPreviousVersion(false)
+            .promote(false)
+            .stopPreviousVersion(false)
             .build();
 
     deployment.deploy(configuration);
@@ -238,8 +238,8 @@ public class CloudSdkAppEngineDeploymentTest {
     File testConfigYaml = tmpDir.newFile("testconfig.yaml");
     DeployProjectConfigurationConfiguration configuration =
         DeployProjectConfigurationConfiguration.builder(tmpDir.getRoot().toPath())
-            .setServer("appengine.google.com")
-            .setProjectId("project")
+            .server("appengine.google.com")
+            .projectId("project")
             .build();
     deployment.deployConfig("testconfig.yaml", configuration);
 

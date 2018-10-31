@@ -87,7 +87,7 @@ public class StageFlexibleConfiguration {
       this.stagingDirectory = stagingDirectory;
     }
 
-    public StageFlexibleConfiguration.Builder setDockerDirectory(@Nullable Path dockerDirectory) {
+    public StageFlexibleConfiguration.Builder dockerDirectory(@Nullable Path dockerDirectory) {
       this.dockerDirectory = dockerDirectory;
       return this;
     }

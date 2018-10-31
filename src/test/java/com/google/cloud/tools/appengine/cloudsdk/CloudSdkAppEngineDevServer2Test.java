@@ -72,32 +72,32 @@ public class CloudSdkAppEngineDevServer2Test {
     RunConfiguration configuration =
         Mockito.spy(
             RunConfiguration.builder(fakeExplodedWarService)
-                .setHost("host")
-                .setPort(8090)
-                .setAdminHost("adminHost")
-                .setAdminPort(8000)
-                .setAuthDomain("example.com")
-                .setStoragePath(fakeStoragePath)
-                .setLogLevel("debug")
-                .setMaxModuleInstances(3)
-                .setUseMtimeFileWatcher(true)
-                .setThreadsafeOverride("default:False,backend:True")
-                .setPythonStartupScript("script.py")
-                .setPythonStartupArgs("arguments")
-                .setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"))
-                .setCustomEntrypoint("entrypoint")
-                .setRuntime("java")
-                .setAllowSkippedFiles(true)
-                .setApiPort(8091)
-                .setAutomaticRestart(false)
-                .setDevAppserverLogLevel("info")
-                .setSkipSdkUpdateCheck(true)
-                .setDefaultGcsBucketName("buckets")
-                .setClearDatastore(true)
-                .setDatastorePath(fakeDatastorePath)
-                .setEnvironment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
-                .setProjectId("my-project")
-                .setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"))
+                .host("host")
+                .port(8090)
+                .adminHost("adminHost")
+                .adminPort(8000)
+                .authDomain("example.com")
+                .storagePath(fakeStoragePath)
+                .logLevel("debug")
+                .maxModuleInstances(3)
+                .useMtimeFileWatcher(true)
+                .threadsafeOverride("default:False,backend:True")
+                .pythonStartupScript("script.py")
+                .pythonStartupArgs("arguments")
+                .jvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"))
+                .customEntrypoint("entrypoint")
+                .runtime("java")
+                .allowSkippedFiles(true)
+                .apiPort(8091)
+                .automaticRestart(false)
+                .devAppserverLogLevel("info")
+                .skipSdkUpdateCheck(true)
+                .defaultGcsBucketName("buckets")
+                .clearDatastore(true)
+                .datastorePath(fakeDatastorePath)
+                .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
+                .projectId("my-project")
+                .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
@@ -147,11 +147,11 @@ public class CloudSdkAppEngineDevServer2Test {
       throws AppEngineException, ProcessHandlerException, IOException {
     RunConfiguration configuration =
         RunConfiguration.builder(fakeExplodedWarService)
-            .setUseMtimeFileWatcher(false)
-            .setAllowSkippedFiles(false)
-            .setAutomaticRestart(false)
-            .setSkipSdkUpdateCheck(false)
-            .setClearDatastore(false)
+            .useMtimeFileWatcher(false)
+            .allowSkippedFiles(false)
+            .automaticRestart(false)
+            .skipSdkUpdateCheck(false)
+            .clearDatastore(false)
             .build();
 
     List<String> expected =
@@ -187,7 +187,7 @@ public class CloudSdkAppEngineDevServer2Test {
     Map<String, String> clientEnvVars = ImmutableMap.of("key1", "val1", "key2", "val2");
 
     RunConfiguration configuration =
-        RunConfiguration.builder(fakeExplodedWarService).setEnvironment(clientEnvVars).build();
+        RunConfiguration.builder(fakeExplodedWarService).environment(clientEnvVars).build();
 
     List<String> expectedArgs =
         ImmutableList.of("exploded-war", "--env_var", "key1=val1", "--env_var", "key2=val2");
