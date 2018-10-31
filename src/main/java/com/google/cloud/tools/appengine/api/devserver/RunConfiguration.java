@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.api.devserver;
 
+import com.google.common.base.Preconditions;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -287,9 +288,8 @@ public class RunConfiguration {
     @Nullable private String projectId;
 
     private Builder(List<Path> services) {
-      if (services == null || services.size() == 0) {
-        throw new IllegalArgumentException("Null/empty services");
-      }
+      Preconditions.checkNotNull(services);
+      Preconditions.checkArgument(services.size() != 0);
       this.services = services;
     }
 

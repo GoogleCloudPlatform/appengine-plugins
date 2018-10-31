@@ -27,8 +27,8 @@ import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkConfig;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonSyntaxException;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ public class Gcloud {
   private final GcloudRunner.Factory gcloudRunnerFactory;
   @Nullable private final String metricsEnvironment;
   @Nullable private final String metricsEnvironmentVersion;
-  @Nullable private final File credentialFile;
+  @Nullable private final Path credentialFile;
   @Nullable private final String outputFormat;
   @Nullable private final String showStructuredLogs;
 
@@ -48,7 +48,7 @@ public class Gcloud {
       GcloudRunner.Factory gcloudRunnerFactory,
       @Nullable String metricsEnvironment,
       @Nullable String metricsEnvironmentVersion,
-      @Nullable File credentialFile,
+      @Nullable Path credentialFile,
       @Nullable String outputFormat,
       @Nullable String showStructuredLogs) {
     this.gcloudRunnerFactory = gcloudRunnerFactory;
@@ -186,7 +186,7 @@ public class Gcloud {
 
     @Nullable private String metricsEnvironment;
     @Nullable private String metricsEnvironmentVersion;
-    @Nullable private File credentialFile;
+    @Nullable private Path credentialFile;
     @Nullable private String outputFormat;
     @Nullable private String showStructuredLogs;
 
@@ -219,7 +219,7 @@ public class Gcloud {
     }
 
     /** Set the credential file override. */
-    public Builder setCredentialFile(File credentialFile) {
+    public Builder setCredentialFile(Path credentialFile) {
       this.credentialFile = credentialFile;
       return this;
     }

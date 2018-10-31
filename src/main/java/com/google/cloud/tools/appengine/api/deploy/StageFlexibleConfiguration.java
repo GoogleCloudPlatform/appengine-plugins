@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
+import com.google.common.base.Preconditions;
 import java.nio.file.Path;
 import javax.annotation.Nullable;
 
@@ -73,15 +74,10 @@ public class StageFlexibleConfiguration {
     private Path stagingDirectory;
 
     Builder(Path appEngineDirectory, Path artifact, Path stagingDirectory) {
-      if (appEngineDirectory == null) {
-        throw new NullPointerException("Null appEngineDirectory");
-      }
-      if (artifact == null) {
-        throw new NullPointerException("Null artifact");
-      }
-      if (stagingDirectory == null) {
-        throw new NullPointerException("Null stagingDirectory");
-      }
+      Preconditions.checkNotNull(appEngineDirectory);
+      Preconditions.checkNotNull(artifact);
+      Preconditions.checkNotNull(stagingDirectory);
+
       this.appEngineDirectory = appEngineDirectory;
       this.artifact = artifact;
       this.stagingDirectory = stagingDirectory;

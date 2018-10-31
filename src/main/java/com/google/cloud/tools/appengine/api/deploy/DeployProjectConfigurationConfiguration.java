@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
+import com.google.common.base.Preconditions;
 import java.nio.file.Path;
 import javax.annotation.Nullable;
 
@@ -60,9 +61,8 @@ public class DeployProjectConfigurationConfiguration {
     @Nullable private String server;
 
     private Builder(Path appEngineDirectory) {
-      if (appEngineDirectory == null) {
-        throw new NullPointerException("Null appEngineDirectory");
-      }
+      Preconditions.checkNotNull(appEngineDirectory);
+
       this.appEngineDirectory = appEngineDirectory;
     }
 

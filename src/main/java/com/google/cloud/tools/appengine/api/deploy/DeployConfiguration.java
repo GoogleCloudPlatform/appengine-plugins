@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
+import com.google.common.base.Preconditions;
 import java.nio.file.Path;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -113,9 +114,9 @@ public class DeployConfiguration {
     @Nullable private String version;
 
     private Builder(List<Path> deployables) {
-      if (deployables == null || deployables.size() == 0) {
-        throw new IllegalArgumentException("Null/empty deployables");
-      }
+      Preconditions.checkNotNull(deployables);
+      Preconditions.checkArgument(deployables.size() != 0);
+
       this.deployables = deployables;
     }
 

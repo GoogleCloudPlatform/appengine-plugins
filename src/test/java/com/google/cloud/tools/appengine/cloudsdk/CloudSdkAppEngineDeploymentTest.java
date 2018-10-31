@@ -31,8 +31,8 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -235,7 +235,7 @@ public class CloudSdkAppEngineDeploymentTest {
    */
   @Test
   public void testDeployConfig() throws Exception {
-    File testConfigYaml = tmpDir.newFile("testconfig.yaml");
+    Path testConfigYaml = tmpDir.newFile("testconfig.yaml").toPath();
     DeployProjectConfigurationConfiguration configuration =
         DeployProjectConfigurationConfiguration.builder(tmpDir.getRoot().toPath())
             .server("appengine.google.com")
@@ -258,8 +258,8 @@ public class CloudSdkAppEngineDeploymentTest {
 
   @Test
   public void testDeployConfig_doesNotExist() throws AppEngineException {
-    File testConfigYaml = new File(tmpDir.getRoot(), "testconfig.yaml");
-    assertFalse(testConfigYaml.exists());
+    Path testConfigYaml = tmpDir.getRoot().toPath().resolve("testconfig.yaml");
+    assertFalse(Files.exists(testConfigYaml));
     DeployProjectConfigurationConfiguration configuration =
         DeployProjectConfigurationConfiguration.builder(tmpDir.getRoot().toPath()).build();
     try {

@@ -23,7 +23,6 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ class GcloudRunner {
   private final CloudSdk sdk;
   @Nullable private final String metricsEnvironment;
   @Nullable private final String metricsEnvironmentVersion;
-  @Nullable private final File credentialFile;
+  @Nullable private final Path credentialFile;
   @Nullable private final String outputFormat;
   @Nullable private final String showStructuredLogs;
   private final ProcessBuilderFactory processBuilderFactory;
@@ -49,7 +48,7 @@ class GcloudRunner {
       CloudSdk sdk,
       @Nullable String metricsEnvironment,
       @Nullable String metricsEnvironmentVersion,
-      @Nullable File credentialFile,
+      @Nullable Path credentialFile,
       @Nullable String outputFormat,
       @Nullable String showStructuredLogs,
       ProcessBuilderFactory processBuilderFactory,
@@ -141,7 +140,7 @@ class GcloudRunner {
         CloudSdk sdk,
         @Nullable String metricsEnvironment,
         @Nullable String metricsEnvironmentVersion,
-        @Nullable File credentialFile,
+        @Nullable Path credentialFile,
         @Nullable String outputFormat,
         @Nullable String showStructuredLogs,
         ProcessHandler processHandler) {

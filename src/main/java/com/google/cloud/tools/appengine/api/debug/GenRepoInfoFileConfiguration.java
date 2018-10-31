@@ -16,15 +16,52 @@
 
 package com.google.cloud.tools.appengine.api.debug;
 
-import java.io.File;
+import java.nio.file.Path;
 import javax.annotation.Nullable;
 
 /** Configuration for {@link GenRepoInfoFile#generate(GenRepoInfoFileConfiguration)}. */
-public interface GenRepoInfoFileConfiguration {
+public class GenRepoInfoFileConfiguration {
+  @Nullable private final Path outputDirectory;
+  @Nullable private final Path sourceDirectory;
+
+  private GenRepoInfoFileConfiguration(
+      @Nullable Path outputDirectory, @Nullable Path sourceDirectory) {
+    this.outputDirectory = outputDirectory;
+    this.sourceDirectory = sourceDirectory;
+  }
 
   @Nullable
-  File getOutputDirectory();
+  public Path getOutputDirectory() {
+    return outputDirectory;
+  }
 
   @Nullable
-  File getSourceDirectory();
+  public Path getSourceDirectory() {
+    return sourceDirectory;
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+    @Nullable private Path outputDirectory;
+    @Nullable private Path sourceDirectory;
+
+    private Builder() {}
+
+    public Builder outputDirectory(@Nullable Path outputDirectory) {
+      this.outputDirectory = outputDirectory;
+      return this;
+    }
+
+    public Builder sourceDirectory(@Nullable Path sourceDirectory) {
+      this.sourceDirectory = sourceDirectory;
+      return this;
+    }
+
+    public GenRepoInfoFileConfiguration build() {
+      return new GenRepoInfoFileConfiguration(outputDirectory, sourceDirectory);
+    }
+  }
 }

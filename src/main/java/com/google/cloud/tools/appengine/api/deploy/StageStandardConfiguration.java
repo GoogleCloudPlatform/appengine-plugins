@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.api.deploy;
 
+import com.google.common.base.Preconditions;
 import java.nio.file.Path;
 import javax.annotation.Nullable;
 
@@ -145,12 +146,9 @@ public class StageStandardConfiguration {
     @Nullable private String runtime;
 
     Builder(Path sourceDirectory, Path stagingDirectory) {
-      if (sourceDirectory == null) {
-        throw new NullPointerException("Null sourceDirectory");
-      }
-      if (stagingDirectory == null) {
-        throw new NullPointerException("Null stagingDirectory");
-      }
+      Preconditions.checkNotNull(sourceDirectory);
+      Preconditions.checkNotNull(stagingDirectory);
+
       this.sourceDirectory = sourceDirectory;
       this.stagingDirectory = stagingDirectory;
     }

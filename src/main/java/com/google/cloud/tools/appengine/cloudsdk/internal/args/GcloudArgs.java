@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -48,11 +47,6 @@ public class GcloudArgs {
       return Collections.singletonList("--no-" + name);
     }
     return Collections.emptyList();
-  }
-
-  /** Returns {@code [--name, file.toPath().toString()]} or {@code []} if file is null. */
-  public static List<String> get(String name, @Nullable File file) {
-    return Args.filePath(name, file);
   }
 
   /**

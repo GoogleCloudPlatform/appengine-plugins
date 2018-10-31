@@ -17,7 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
-import java.io.File;
+import java.nio.file.Path;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -30,7 +30,7 @@ public class GcloudTest {
   @Mock private GcloudRunner.Factory gcloudRunnerFactory;
   @Mock private CloudSdk sdk;
   @Mock private ProcessHandler processHandler;
-  @Mock private File credentialFile;
+  @Mock private Path credentialFile;
 
   @Test
   public void testGetRunner_parametersPassedToFactory() {

@@ -18,8 +18,8 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -55,11 +55,15 @@ public class GcloudArgsTest {
   @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
   @Test
-  public void testGet_file() throws IOException {
-    File file1 = tmpDir.newFile("file1");
-    File file2 = tmpDir.newFile("file2");
-    assertEquals(Arrays.asList("--name1", file1.getAbsolutePath()), GcloudArgs.get("name1", file1));
-    assertEquals(Arrays.asList("--name2", file2.getAbsolutePath()), GcloudArgs.get("name2", file2));
+  public void testGet_path() throws IOException {
+    Path file1 = tmpDir.newFile("file1").toPath();
+    Path file2 = tmpDir.newFile("file2").toPath();
+    assertEquals(
+        Arrays.asList("--name1", file1.toAbsolutePath().toString()),
+        GcloudArgs.get("name1", file1));
+    assertEquals(
+        Arrays.asList("--name2", file2.toAbsolutePath().toString()),
+        GcloudArgs.get("name2", file2));
   }
 
   @Test

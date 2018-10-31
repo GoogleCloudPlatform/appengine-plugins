@@ -24,7 +24,6 @@ import com.google.cloud.tools.appengine.cloudsdk.internal.process.ProcessBuilder
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.collect.ImmutableList;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class GcloudRunnerTest {
 
   @Mock private CloudSdk sdk;
   private Path gcloudPath;
-  private File credentialFile;
+  private Path credentialFile;
   private Path workingDirectory;
   @Mock private ProcessHandler processHandler;
   @Mock private ProcessBuilderFactory processBuilderFactory;
@@ -54,7 +53,7 @@ public class GcloudRunnerTest {
 
   @Before
   public void setUp() throws IOException {
-    credentialFile = testFolder.newFile("credential.file");
+    credentialFile = testFolder.newFile("credential.file").toPath();
     gcloudPath = testFolder.getRoot().toPath().resolve("gcloud");
     workingDirectory = testFolder.getRoot().toPath();
     when(sdk.getGCloudPath()).thenReturn(gcloudPath);
@@ -95,7 +94,7 @@ public class GcloudRunnerTest {
                 "--format",
                 "some-format",
                 "--credential-file-override",
-                credentialFile.toPath().toString()));
+                credentialFile.toString()));
     Mockito.verify(processBuilder).start();
     Mockito.verifyNoMoreInteractions(processBuilder);
 
@@ -109,7 +108,7 @@ public class GcloudRunnerTest {
             sdk,
             "intellij", // metrics env
             "99", // metrics env version
-            mock(File.class), // credential file
+            mock(Path.class), // credential file
             "irrelevant-to-test", // output format
             "always", // show structured logs
             mock(ProcessBuilderFactory.class),
