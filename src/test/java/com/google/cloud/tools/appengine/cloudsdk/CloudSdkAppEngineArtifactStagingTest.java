@@ -20,19 +20,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
-import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineFlexibleStaging.CopyService;
+import com.google.cloud.tools.appengine.api.deploy.StageArtifactConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineArtifactStaging.CopyService;
 import com.google.cloud.tools.test.utils.LogStoringHandler;
+import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.LogRecord;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,13 +46,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Test the CloudSdkAppEngineFlexibleStaging functionality. */
+/** Test the CloudSdkAppEngineArtifactStaging functionality. */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineFlexibleStagingTest {
+public class CloudSdkAppEngineArtifactStagingTest {
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-  @Mock private StageFlexibleConfiguration config;
+  @Mock private StageArtifactConfiguration config;
   @Mock private CopyService copyService;
 
   private LogStoringHandler handler;
@@ -58,7 +63,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
   @Before
   public void setUp() throws IOException {
-    handler = LogStoringHandler.getForLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
+    handler = LogStoringHandler.getForLogger(CloudSdkAppEngineArtifactStaging.class.getName());
     appEngineDirectory = temporaryFolder.newFolder().toPath();
     dockerDirectory = temporaryFolder.newFolder().toPath();
     stagingDirectory = temporaryFolder.newFolder().toPath();
@@ -77,7 +82,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     assertFalse(Files.exists(dockerDirectory));
     when(config.getDockerDirectory()).thenReturn(dockerDirectory);
 
-    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
+    CloudSdkAppEngineArtifactStaging.copyDockerContext(config, copyService, "java");
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
@@ -89,7 +94,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   public void testCopyDockerContext_noDocker() throws AppEngineException, IOException {
     when(config.getDockerDirectory()).thenReturn(null);
 
-    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
+    CloudSdkAppEngineArtifactStaging.copyDockerContext(config, copyService, "java");
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
@@ -101,7 +106,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   public void testCopyDockerContext_runtimeJavaWithWarning()
       throws AppEngineException, IOException {
 
-    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "java");
+    CloudSdkAppEngineArtifactStaging.copyDockerContext(config, copyService, "java");
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(1, logs.size());
@@ -120,7 +125,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
     Files.delete(dockerFile);
     try {
-      CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
+      CloudSdkAppEngineArtifactStaging.copyDockerContext(config, copyService, "custom");
       fail();
     } catch (AppEngineException ex) {
       assertEquals(
@@ -137,7 +142,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Test
   public void testCopyDockerContext_runtimeNotJavaWithDockerfile()
       throws AppEngineException, IOException {
-    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, "custom");
+    CloudSdkAppEngineArtifactStaging.copyDockerContext(config, copyService, "custom");
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
@@ -149,7 +154,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
 
     Files.delete(dockerFile);
     try {
-      CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
+      CloudSdkAppEngineArtifactStaging.copyDockerContext(config, copyService, null);
       fail();
     } catch (AppEngineException ex) {
       assertEquals(
@@ -166,7 +171,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   @Test
   public void testCopyDockerContext_runtimeNull() throws AppEngineException, IOException {
 
-    CloudSdkAppEngineFlexibleStaging.copyDockerContext(config, copyService, null);
+    CloudSdkAppEngineArtifactStaging.copyDockerContext(config, copyService, null);
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
@@ -175,13 +180,13 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyAppEngineContext_nonExistentAppEngineDirectory() throws IOException {
+  public void testCopyAppEngineContextFlex_nonExistentAppEngineDirectory() throws IOException {
     appEngineDirectory = temporaryFolder.getRoot().toPath().resolve("non-existent-directory");
     assertFalse(Files.exists(appEngineDirectory));
     when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
 
     try {
-      CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+      CloudSdkAppEngineArtifactStaging.copyAppEngineContextFlex(config, copyService);
       fail();
     } catch (AppEngineException ex) {
       assertEquals("app.yaml not found in the App Engine directory.", ex.getMessage());
@@ -192,9 +197,9 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyAppEngineContext_emptyAppEngineDirectory() throws IOException {
+  public void testCopyAppEngineContextFlex_emptyAppEngineDirectory() throws IOException {
     try {
-      CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+      CloudSdkAppEngineArtifactStaging.copyAppEngineContextFlex(config, copyService);
       fail();
     } catch (AppEngineException ex) {
       assertEquals("app.yaml not found in the App Engine directory.", ex.getMessage());
@@ -205,18 +210,100 @@ public class CloudSdkAppEngineFlexibleStagingTest {
   }
 
   @Test
-  public void testCopyAppEngineContext_appYamlInAppEngineDirectory()
+  public void testCopyAppEngineContextFlex_appYamlInAppEngineDirectory()
       throws AppEngineException, IOException {
     Path file = appEngineDirectory.resolve("app.yaml");
     Files.createFile(file);
 
-    CloudSdkAppEngineFlexibleStaging.copyAppEngineContext(config, copyService);
+    CloudSdkAppEngineArtifactStaging.copyAppEngineContextFlex(config, copyService);
 
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
     verify(copyService)
         .copyFileAndReplace(
             appEngineDirectory.resolve("app.yaml"), stagingDirectory.resolve("app.yaml"));
+  }
+
+  @Test
+  public void testCopyAppEngineContextStandard_nonExistantAppEngineDirectory() throws IOException {
+    appEngineDirectory = temporaryFolder.getRoot().toPath().resolve("non-existent-directory");
+    assertFalse(Files.exists(appEngineDirectory));
+    when(config.getAppEngineDirectory()).thenReturn(appEngineDirectory);
+
+    try {
+      CloudSdkAppEngineArtifactStaging.copyAppEngineContextStandard(config, copyService);
+      fail();
+    } catch (AppEngineException ex) {
+      assertEquals("app.yaml not found in the App Engine directory.", ex.getMessage());
+    }
+    List<LogRecord> logs = handler.getLogs();
+    assertEquals(0, logs.size());
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyAppEngineContextStandard_emptyAppEngineDirectory() throws IOException {
+    try {
+      CloudSdkAppEngineArtifactStaging.copyAppEngineContextStandard(config, copyService);
+      fail();
+    } catch (AppEngineException ex) {
+      assertEquals("app.yaml not found in the App Engine directory.", ex.getMessage());
+    }
+    List<LogRecord> logs = handler.getLogs();
+    assertEquals(0, logs.size());
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyAppEngineContextStandard_ignoredFiles()
+      throws IOException, AppEngineException {
+    Path file = appEngineDirectory.resolve("app.yaml");
+    Files.createFile(file);
+
+    List<Path> ignoredPaths =
+        CloudSdkAppEngineArtifactStaging.OTHER_YAMLS
+            .stream()
+            .map(appEngineDirectory::resolve)
+            .collect(Collectors.toList());
+
+    CloudSdkAppEngineArtifactStaging.copyAppEngineContextStandard(config, copyService);
+
+    List<LogRecord> logs = handler.getLogs();
+    assertEquals(0, logs.size());
+    verify(copyService).copyDirectory(appEngineDirectory, stagingDirectory, ignoredPaths);
+    verifyNoMoreInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyAppEngineContextStandard_withRealCopyService()
+      throws IOException, AppEngineException {
+
+    List<String> includedFiles = ImmutableList.of("app.yaml", "included.txt");
+    // ignored files in OTHER_YAMLS
+    List<Path> allSourceFiles =
+        Stream.concat(includedFiles.stream(), CloudSdkAppEngineArtifactStaging.OTHER_YAMLS.stream())
+            .map(appEngineDirectory::resolve)
+            .collect(Collectors.toList());
+    for (Path file : allSourceFiles) {
+      Files.createFile(file);
+    }
+
+    CloudSdkAppEngineArtifactStaging.copyAppEngineContextStandard(config, new CopyService());
+
+    // ensure everything was in the source directory
+    for (Path file : allSourceFiles) {
+      Assert.assertTrue(Files.exists(appEngineDirectory.resolve(file.getFileName())));
+    }
+
+    // ensure staging directory only contains the included files
+    for (String copiedFileName : includedFiles) {
+      Assert.assertTrue(Files.exists(stagingDirectory.resolve(copiedFileName)));
+    }
+
+    // ensure staging directory has ignored OTHER_YAMLS
+    for (String ignoredFileName : CloudSdkAppEngineArtifactStaging.OTHER_YAMLS) {
+      Assert.assertFalse(Files.exists(stagingDirectory.resolve(ignoredFileName)));
+    }
   }
 
   @Test
@@ -227,7 +314,7 @@ public class CloudSdkAppEngineFlexibleStagingTest {
     Files.write(file, ": m a l f o r m e d !".getBytes(StandardCharsets.UTF_8));
 
     try {
-      CloudSdkAppEngineFlexibleStaging.findRuntime(config);
+      CloudSdkAppEngineArtifactStaging.findRuntime(config);
       fail();
     } catch (AppEngineException ex) {
       assertEquals("Malformed 'app.yaml'.", ex.getMessage());

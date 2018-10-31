@@ -19,27 +19,35 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineFlexibleStaging;
-import com.google.cloud.tools.appengine.api.deploy.StageFlexibleConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineArtifactStaging;
+import com.google.cloud.tools.appengine.api.deploy.StageArtifactConfiguration;
 import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.MoreFiles;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
-/** Cloud SDK based implementation of {@link AppEngineFlexibleStaging}. */
-public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStaging {
+/** Cloud SDK based implementation of {@link AppEngineArtifactStaging}. */
+public class CloudSdkAppEngineArtifactStaging implements AppEngineArtifactStaging {
 
   private static final Logger log =
-      Logger.getLogger(CloudSdkAppEngineFlexibleStaging.class.getName());
+      Logger.getLogger(CloudSdkAppEngineArtifactStaging.class.getName());
 
   private static final String APP_YAML = "app.yaml";
+
+  @VisibleForTesting
+  static final ImmutableList<String> OTHER_YAMLS =
+      ImmutableList.of("cron.yaml", "dos.yaml", "dispatch.yaml", "index.yaml", "queue.yaml");
 
   /**
    * Stages a Java JAR/WAR App Engine Flexible Environment application to be deployed.
@@ -47,7 +55,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
    * <p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
    */
   @Override
-  public void stageFlexible(StageFlexibleConfiguration config) throws AppEngineException {
+  public void stageFlexible(StageArtifactConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Path stagingDirectory = config.getStagingDirectory();
 
@@ -61,11 +69,25 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
     }
 
     try {
+      String env = findEnv(config);
       String runtime = findRuntime(config);
       CopyService copyService = new CopyService();
-      copyDockerContext(config, copyService, runtime);
-      copyAppEngineContext(config, copyService);
-      copyArtifact(config, copyService);
+      if ("flex".equals(env)) {
+        // stage for flex
+        copyDockerContext(config, copyService, runtime);
+        copyAppEngineContextFlex(config, copyService);
+        copyArtifact(config, copyService);
+      } else if ("java11".equals(runtime)) {
+        // stage for appengine standard in artifact mode
+        copyAppEngineContextStandard(config, copyService);
+        copyArtifact(config, copyService);
+      } else {
+        // I don't know how to deploy this
+        throw new AppEngineException(
+            "Cannot process application with runtime:"
+                + runtime
+                + (Strings.isNullOrEmpty(env) ? "" : " and env" + env));
+      }
     } catch (IOException ex) {
       throw new AppEngineException(ex);
     }
@@ -73,7 +95,20 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
 
   @VisibleForTesting
   @Nullable
-  static String findRuntime(StageFlexibleConfiguration config)
+  static String findEnv(StageArtifactConfiguration config) throws AppEngineException, IOException {
+    Path appEngineDirectory = config.getAppEngineDirectory();
+    if (appEngineDirectory == null) {
+      throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
+    }
+    Path appYaml = appEngineDirectory.resolve(APP_YAML);
+    try (InputStream input = MoreFiles.asByteSource(appYaml).openBufferedStream()) {
+      return AppYaml.parse(input).getEnvironmentType();
+    }
+  }
+
+  @VisibleForTesting
+  @Nullable
+  static String findRuntime(StageArtifactConfiguration config)
       throws IOException, AppEngineException {
     // verify that app.yaml that contains runtime:java
     Path appEngineDirectory = config.getAppEngineDirectory();
@@ -88,7 +123,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
 
   @VisibleForTesting
   static void copyDockerContext(
-      StageFlexibleConfiguration config, CopyService copyService, @Nullable String runtime)
+      StageArtifactConfiguration config, CopyService copyService, @Nullable String runtime)
       throws IOException, AppEngineException {
     Path dockerDirectory = config.getDockerDirectory();
     if (dockerDirectory != null) {
@@ -114,7 +149,7 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
   }
 
   @VisibleForTesting
-  static void copyAppEngineContext(StageFlexibleConfiguration config, CopyService copyService)
+  static void copyAppEngineContextFlex(StageArtifactConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
     Path appYaml = config.getAppEngineDirectory().resolve(APP_YAML);
     if (!Files.exists(appYaml)) {
@@ -124,7 +159,23 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
     copyService.copyFileAndReplace(appYaml, stagingDirectory.resolve(APP_YAML));
   }
 
-  private static void copyArtifact(StageFlexibleConfiguration config, CopyService copyService)
+  @VisibleForTesting
+  static void copyAppEngineContextStandard(
+      StageArtifactConfiguration config, CopyService copyService)
+      throws IOException, AppEngineException {
+    Path appYaml = config.getAppEngineDirectory().resolve(APP_YAML);
+    if (!Files.exists(appYaml)) {
+      throw new AppEngineException(APP_YAML + " not found in the App Engine directory.");
+    }
+    Path appEngineDirectory = config.getAppEngineDirectory();
+    Path stagingDirectory = config.getStagingDirectory();
+    System.out.println(appEngineDirectory + " " + stagingDirectory);
+    List<Path> ignoredFiles =
+        OTHER_YAMLS.stream().map(appEngineDirectory::resolve).collect(Collectors.toList());
+    copyService.copyDirectory(appEngineDirectory, stagingDirectory, ignoredFiles);
+  }
+
+  private static void copyArtifact(StageArtifactConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
     // Copy the JAR/WAR file to staging.
     Path artifact = config.getArtifact();
@@ -139,6 +190,9 @@ public class CloudSdkAppEngineFlexibleStaging implements AppEngineFlexibleStagin
 
   @VisibleForTesting
   static class CopyService {
+    void copyDirectory(Path src, Path dest, List<Path> excludes) throws IOException {
+      FileUtil.copyDirectory(src, dest, excludes);
+    }
 
     void copyDirectory(Path src, Path dest) throws IOException {
       FileUtil.copyDirectory(src, dest);

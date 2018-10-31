@@ -22,7 +22,7 @@ import com.google.cloud.tools.appengine.api.AppEngineException;
  * Main interface for staging Java application for App Engine flexible environment before
  * deployment.
  */
-public interface AppEngineFlexibleStaging {
+public interface AppEngineArtifactStaging {
 
   /**
    * Stages a Java JAR/WAR artifact for App Engine flexible environment deployment. Copies app.yaml,
@@ -31,5 +31,5 @@ public interface AppEngineFlexibleStaging {
    * @param config Specifies artifacts and staging destination
    * @throws AppEngineException When staging fails
    */
-  void stageFlexible(StageFlexibleConfiguration config) throws AppEngineException;
+  void stageFlexible(StageArtifactConfiguration config) throws AppEngineException;
 }
