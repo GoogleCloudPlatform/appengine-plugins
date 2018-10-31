@@ -18,12 +18,46 @@ package com.google.cloud.tools.appengine.api.devserver;
 
 import javax.annotation.Nullable;
 
-/** Configuration for {@link AppEngineDevServer#stop(StopConfiguration)}. */
-public interface StopConfiguration {
+public class StopConfiguration {
+
+  @Nullable private final String adminHost;
+  @Nullable private final Integer adminPort;
+
+  public StopConfiguration(@Nullable String adminHost, @Nullable Integer adminPort) {
+    this.adminHost = adminHost;
+    this.adminPort = adminPort;
+  }
 
   @Nullable
-  String getAdminHost();
+  public String getAdminHost() {
+    return adminHost;
+  }
 
   @Nullable
-  Integer getAdminPort();
+  public Integer getAdminPort() {
+    return adminPort;
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static final class Builder {
+    @Nullable private String adminHost;
+    @Nullable private Integer adminPort;
+
+    public Builder setAdminHost(@Nullable String adminHost) {
+      this.adminHost = adminHost;
+      return this;
+    }
+
+    public Builder setAdminPort(@Nullable Integer adminPort) {
+      this.adminPort = adminPort;
+      return this;
+    }
+
+    public StopConfiguration build() {
+      return new StopConfiguration(adminHost, adminPort);
+    }
+  }
 }

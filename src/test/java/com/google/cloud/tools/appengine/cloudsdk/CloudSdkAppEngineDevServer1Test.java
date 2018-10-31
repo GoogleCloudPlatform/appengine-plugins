@@ -21,14 +21,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
-import com.google.cloud.tools.appengine.api.devserver.DefaultStopConfiguration;
+import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
+import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.LogStoringHandler;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,8 +53,8 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
   private Path fakeJavaSdkHome;
-  private File fakeStoragePath;
-  private File fakeDatastorePath;
+  private Path fakeStoragePath;
+  private Path fakeDatastorePath;
 
   private LogStoringHandler testHandler;
   @Mock private CloudSdk sdk;
@@ -63,19 +62,13 @@ public class CloudSdkAppEngineDevServer1Test {
 
   private CloudSdkAppEngineDevServer1 devServer;
 
-  private final Path pathToJava8Service =
-      Paths.get("src/test/resources/projects/EmptyStandard8Project");
-  private final File java8Service = pathToJava8Service.toFile();
-  private final Path pathToJava7Service =
-      Paths.get("src/test/resources/projects/EmptyStandard7Project");
-  private final File java7Service = pathToJava7Service.toFile();
+  private final Path java8Service = Paths.get("src/test/resources/projects/EmptyStandard8Project");
+  private final Path java7Service = Paths.get("src/test/resources/projects/EmptyStandard7Project");
 
-  private final Path pathToJava8Service1WithEnvVars =
+  private final Path java8Service1EnvVars =
       Paths.get("src/test/resources/projects/Standard8Project1EnvironmentVariables");
-  private final File java8Service1EnvVars = pathToJava8Service1WithEnvVars.toFile();
-  private final Path pathToJava8Service2WithEnvVars =
+  private final Path java8Service2EnvVars =
       Paths.get("src/test/resources/projects/Standard8Project2EnvironmentVariables");
-  private final File java8Service2EnvVars = pathToJava8Service2WithEnvVars.toFile();
 
   // Environment variables included in running the dev server for Java 7/8 runtimes.
   private final Map<String, String> expectedJava7Environment =
@@ -87,8 +80,8 @@ public class CloudSdkAppEngineDevServer1Test {
   public void setUp() throws IOException {
     devServer = Mockito.spy(new CloudSdkAppEngineDevServer1(sdk, devAppServerRunner));
     fakeJavaSdkHome = temporaryFolder.newFolder("java-sdk").toPath();
-    fakeStoragePath = new File("storage/path");
-    fakeDatastorePath = temporaryFolder.newFile("datastore.db");
+    fakeStoragePath = Paths.get("storage/path");
+    fakeDatastorePath = temporaryFolder.newFile("datastore.db").toPath();
 
     Mockito.when(sdk.getAppEngineSdkForJavaPath()).thenReturn(fakeJavaSdkHome);
 
@@ -96,9 +89,21 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testStop() {
-    DefaultStopConfiguration configuration = new DefaultStopConfiguration();
-    configuration.setAdminPort(7777);
+  public void testStop_allFlags() {
+    StopConfiguration configuration =
+        StopConfiguration.builder().setAdminHost("alt-local-host").setAdminPort(7777).build();
+    try {
+      devServer.stop(configuration);
+      Assert.fail();
+    } catch (AppEngineException ex) {
+      Assert.assertEquals(
+          "Error connecting to http://alt-local-host:7777/_ah/admin/quit", ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testStop_defaultAdminHost() {
+    StopConfiguration configuration = StopConfiguration.builder().setAdminPort(7777).build();
     try {
       devServer.stop(configuration);
       Assert.fail();
@@ -126,38 +131,39 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testPrepareCommand_allFlags() throws Exception {
 
-    DefaultRunConfiguration configuration = Mockito.spy(new DefaultRunConfiguration());
+    RunConfiguration configuration =
+        Mockito.spy(
+            RunConfiguration.builder(ImmutableList.of(java8Service))
+                .setHost("host")
+                .setPort(8090)
+                .setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"))
+                .setDefaultGcsBucketName("buckets")
+                .setEnvironment(null)
+                .setAutomaticRestart(true)
+                .setProjectId("my-project")
 
-    configuration.setServices(ImmutableList.of(java8Service));
-    configuration.setHost("host");
-    configuration.setPort(8090);
-    configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
-    configuration.setDefaultGcsBucketName("buckets");
-    configuration.setEnvironment(null);
-    configuration.setAutomaticRestart(true);
-    configuration.setProjectId("my-project");
-
-    // these params are not used by devappserver1 and will log warnings
-    configuration.setAdminHost("adminHost");
-    configuration.setAdminPort(8000);
-    configuration.setAuthDomain("example.com");
-    configuration.setAllowSkippedFiles(true);
-    configuration.setApiPort(8091);
-    configuration.setClearDatastore(true);
-    configuration.setCustomEntrypoint("entrypoint");
-    configuration.setDatastorePath(fakeDatastorePath);
-    configuration.setDevAppserverLogLevel("info");
-    configuration.setEnvironment(ImmutableMap.of("ENV_NAME", "ENV_VAL"));
-    configuration.setLogLevel("debug");
-    configuration.setMaxModuleInstances(3);
-    configuration.setPythonStartupScript("script.py");
-    configuration.setPythonStartupArgs("arguments");
-    configuration.setRuntime("someRuntime");
-    configuration.setStoragePath(fakeStoragePath);
-    configuration.setSkipSdkUpdateCheck(true);
-    configuration.setThreadsafeOverride("default:False,backend:True");
-    configuration.setUseMtimeFileWatcher(true);
-    configuration.setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"));
+                // these params are not used by devappserver1 and will log warnings
+                .setAdminHost("adminHost")
+                .setAdminPort(8000)
+                .setAuthDomain("example.com")
+                .setAllowSkippedFiles(true)
+                .setApiPort(8091)
+                .setClearDatastore(true)
+                .setCustomEntrypoint("entrypoint")
+                .setDatastorePath(fakeDatastorePath)
+                .setDevAppserverLogLevel("info")
+                .setEnvironment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
+                .setLogLevel("debug")
+                .setMaxModuleInstances(3)
+                .setPythonStartupScript("script.py")
+                .setPythonStartupArgs("arguments")
+                .setRuntime("someRuntime")
+                .setStoragePath(fakeStoragePath)
+                .setSkipSdkUpdateCheck(true)
+                .setThreadsafeOverride("default:False,backend:True")
+                .setUseMtimeFileWatcher(true)
+                .setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"))
+                .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
 
@@ -172,7 +178,7 @@ public class CloudSdkAppEngineDevServer1Test {
             "--ARG1",
             "--ARG2",
             "--no_java_agent",
-            pathToJava8Service.toString());
+            java8Service.toString());
 
     List<String> expectedJvmArgs =
         ImmutableList.of(
@@ -230,16 +236,15 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testPrepareCommand_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-
-    configuration.setServices(ImmutableList.of(java8Service));
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service)).build();
 
     List<String> expectedFlags =
         ImmutableList.of(
             "--allow_remote_shutdown",
             "--disable_update_check",
             "--no_java_agent",
-            pathToJava8Service.toString());
+            java8Service.toString());
     List<String> expectedJvmArgs =
         ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
     devServer.run(configuration);
@@ -255,15 +260,15 @@ public class CloudSdkAppEngineDevServer1Test {
   public void testPrepareCommand_noFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java8Service));
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service)).build();
 
     List<String> expectedFlags =
         ImmutableList.of(
             "--allow_remote_shutdown",
             "--disable_update_check",
             "--no_java_agent",
-            pathToJava8Service.toString());
+            java8Service.toString());
 
     List<String> expectedJvmArgs =
         ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
@@ -282,12 +287,12 @@ public class CloudSdkAppEngineDevServer1Test {
   public void testPrepareCommand_noFlagsJava7()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java7Service));
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java7Service)).build();
 
     List<String> expectedFlags =
         ImmutableList.of(
-            "--allow_remote_shutdown", "--disable_update_check", pathToJava7Service.toString());
+            "--allow_remote_shutdown", "--disable_update_check", java7Service.toString());
     List<String> expectedJvmArgs =
         ImmutableList.of(
             "-javaagent:"
@@ -307,16 +312,16 @@ public class CloudSdkAppEngineDevServer1Test {
   public void testPrepareCommand_noFlagsMultiModule()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java7Service, java8Service));
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java7Service, java8Service)).build();
 
     List<String> expectedFlags =
         ImmutableList.of(
             "--allow_remote_shutdown",
             "--disable_update_check",
             "--no_java_agent",
-            pathToJava7Service.toString(),
-            pathToJava8Service.toString());
+            java7Service.toString(),
+            java8Service.toString());
 
     List<String> expectedJvmArgs =
         ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
@@ -331,15 +336,15 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testPrepareCommand_appEngineWebXmlEnvironmentVariables()
       throws AppEngineException, ProcessHandlerException, IOException {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java8Service1EnvVars));
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars)).build();
 
     List<String> expectedFlags =
         ImmutableList.of(
             "--allow_remote_shutdown",
             "--disable_update_check",
             "--no_java_agent",
-            pathToJava8Service1WithEnvVars.toString());
+            java8Service1EnvVars.toString());
 
     List<String> expectedJvmArgs =
         ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
@@ -365,16 +370,17 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testPrepareCommand_multipleServicesDuplicateAppEngineWebXmlEnvironmentVariables()
       throws AppEngineException, ProcessHandlerException, IOException {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java8Service1EnvVars, java8Service2EnvVars));
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars, java8Service2EnvVars))
+            .build();
 
     List<String> expectedFlags =
         ImmutableList.of(
             "--allow_remote_shutdown",
             "--disable_update_check",
             "--no_java_agent",
-            pathToJava8Service1WithEnvVars.toString(),
-            pathToJava8Service2WithEnvVars.toString());
+            java8Service1EnvVars.toString(),
+            java8Service2EnvVars.toString());
 
     List<String> expectedJvmArgs =
         ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
@@ -396,12 +402,13 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testPrepareCommand_clientSuppliedEnvironmentVariables()
       throws AppEngineException, ProcessHandlerException, IOException {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java7Service));
-
     Map<String, String> clientEnvironmentVariables =
         ImmutableMap.of("mykey1", "myval1", "mykey2", "myval2");
-    configuration.setEnvironment(clientEnvironmentVariables);
+
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java7Service))
+            .setEnvironment(clientEnvironmentVariables)
+            .build();
 
     Map<String, String> expectedEnvironment =
         ImmutableMap.<String, String>builder()
@@ -410,7 +417,7 @@ public class CloudSdkAppEngineDevServer1Test {
             .build();
     List<String> expectedFlags =
         ImmutableList.of(
-            "--allow_remote_shutdown", "--disable_update_check", pathToJava7Service.toString());
+            "--allow_remote_shutdown", "--disable_update_check", java7Service.toString());
     List<String> expectedJvmArgs =
         ImmutableList.of(
             "-javaagent:"
@@ -429,19 +436,20 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testPrepareCommand_clientSuppliedAndAppEngineWebXmlEnvironmentVariables()
       throws AppEngineException, ProcessHandlerException, IOException {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java8Service1EnvVars));
-
     Map<String, String> clientEnvironmentVariables =
         ImmutableMap.of("mykey1", "myval1", "mykey2", "myval2");
-    configuration.setEnvironment(clientEnvironmentVariables);
+
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars))
+            .setEnvironment(clientEnvironmentVariables)
+            .build();
 
     List<String> expectedFlags =
         ImmutableList.of(
             "--allow_remote_shutdown",
             "--disable_update_check",
             "--no_java_agent",
-            pathToJava8Service1WithEnvVars.toString());
+            java8Service1EnvVars.toString());
 
     List<String> expectedJvmArgs =
         ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
@@ -523,8 +531,8 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testWorkingDirectory_fallbackIfOneProject()
       throws ProcessHandlerException, AppEngineException, IOException {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java8Service));
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service)).build();
 
     devServer.run(configuration);
 
@@ -534,8 +542,8 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testWorkingDirectory_noFallbackIfManyProjects()
       throws ProcessHandlerException, AppEngineException, IOException {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(java8Service, java8Service));
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service, java8Service)).build();
 
     devServer.run(configuration);
 

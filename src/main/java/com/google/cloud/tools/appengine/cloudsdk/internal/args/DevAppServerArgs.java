@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,11 +53,10 @@ public class DevAppServerArgs {
   }
 
   /** Returns {@code [--name=filePath]} or {@code []} if file=null. */
-  public static List<String> get(String name, @Nullable File file) {
+  public static List<String> get(String name, @Nullable Path file) {
     if (file != null) {
-      Path path = file.toPath();
-      if (!path.toString().isEmpty()) {
-        return Arrays.asList("--" + name + "=" + path.toString());
+      if (!file.toString().isEmpty()) {
+        return Arrays.asList("--" + name + "=" + file.toString());
       }
     }
     return Collections.emptyList();

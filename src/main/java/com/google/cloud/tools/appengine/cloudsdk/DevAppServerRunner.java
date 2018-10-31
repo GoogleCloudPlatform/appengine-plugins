@@ -21,9 +21,9 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +103,7 @@ class DevAppServerRunner {
       List<String> jvmArgs,
       List<String> args,
       Map<String, String> environment,
-      @Nullable File workingDirectory)
+      @Nullable Path workingDirectory)
       throws ProcessHandlerException, AppEngineJavaComponentsNotInstalledException,
           InvalidJavaSdkException, IOException {
     sdk.validateAppEngineJavaComponents();
@@ -130,7 +130,9 @@ class DevAppServerRunner {
 
     ProcessBuilder processBuilder = processBuilderFactory.newProcessBuilder();
     processBuilder.command(command);
-    processBuilder.directory(workingDirectory);
+    if (workingDirectory != null) {
+      processBuilder.directory(workingDirectory.toFile());
+    }
     processBuilder.environment().putAll(devServerEnvironment);
     Process process = processBuilder.start();
 

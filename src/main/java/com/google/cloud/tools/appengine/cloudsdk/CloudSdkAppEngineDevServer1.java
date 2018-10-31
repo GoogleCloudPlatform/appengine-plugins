@@ -27,7 +27,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -126,8 +125,8 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
               .toString();
       jvmArguments.add("-javaagent:" + appengineAgentJar);
     }
-    for (File service : config.getServices()) {
-      arguments.add(service.toPath().toString());
+    for (Path service : config.getServices()) {
+      arguments.add(service.toString());
     }
 
     Map<String, String> appEngineEnvironment =
@@ -147,7 +146,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     }
 
     try {
-      File workingDirectory = null;
+      Path workingDirectory = null;
       if (config.getServices().size() == 1) {
         workingDirectory = config.getServices().get(0);
       }
@@ -211,11 +210,11 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
    * @return {@code false} if there no need to enforce the sandbox restrictions.
    */
   @VisibleForTesting
-  boolean isSandboxEnforced(List<File> services) throws AppEngineException {
+  boolean isSandboxEnforced(List<Path> services) throws AppEngineException {
     boolean relaxSandbox = false;
     boolean enforceSandbox = false;
-    for (File serviceDirectory : services) {
-      Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
+    for (Path serviceDirectory : services) {
+      Path appengineWebXml = serviceDirectory.resolve("WEB-INF/appengine-web.xml");
       try (InputStream is = Files.newInputStream(appengineWebXml)) {
         if (AppEngineDescriptor.parse(is).isSandboxEnforced()) {
           enforceSandbox = true;
@@ -232,11 +231,11 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
     return !relaxSandbox;
   }
 
-  private static Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(List<File> services)
+  private static Map<String, String> getAllAppEngineWebXmlEnvironmentVariables(List<Path> services)
       throws AppEngineException {
     Map<String, String> allAppEngineEnvironment = Maps.newHashMap();
-    for (File serviceDirectory : services) {
-      Path appengineWebXml = serviceDirectory.toPath().resolve("WEB-INF/appengine-web.xml");
+    for (Path serviceDirectory : services) {
+      Path appengineWebXml = serviceDirectory.resolve("WEB-INF/appengine-web.xml");
       try (InputStream is = Files.newInputStream(appengineWebXml)) {
         AppEngineDescriptor appEngineDescriptor = AppEngineDescriptor.parse(is);
         Map<String, String> appEngineEnvironment = appEngineDescriptor.getEnvironment();

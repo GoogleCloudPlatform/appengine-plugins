@@ -23,7 +23,6 @@ import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -55,7 +54,7 @@ public class LocalRunRunnerTest {
   private Path javaExecutablePath;
   private Path appengineToolsJar;
   private Path appengineSdkForJavaPath;
-  private File workingDirectory;
+  private Path workingDirectory;
   private Path javaHomePath;
   @Nullable private Path windowsPythonPath = null;
   private Path devAppServer2Path;
@@ -68,7 +67,7 @@ public class LocalRunRunnerTest {
     appengineSdkForJavaPath = testFolder.getRoot().toPath().resolve("appengine-sdk-root");
     devAppServer2Path = testFolder.getRoot().toPath().resolve("fake-devappserver2.py");
 
-    workingDirectory = testFolder.getRoot();
+    workingDirectory = testFolder.getRoot().toPath();
     when(sdk.getJavaExecutablePath()).thenReturn(javaExecutablePath);
     when(sdk.getAppEngineToolsJar()).thenReturn(appengineToolsJar);
     when(sdk.getAppEngineSdkForJavaPath()).thenReturn(appengineSdkForJavaPath);
@@ -118,7 +117,7 @@ public class LocalRunRunnerTest {
 
     Mockito.verify(processBuilder).environment();
     Mockito.verify(processEnv).putAll(expectedEnv);
-    Mockito.verify(processBuilder).directory(workingDirectory);
+    Mockito.verify(processBuilder).directory(workingDirectory.toFile());
     Mockito.verify(processBuilder).start();
     Mockito.verifyNoMoreInteractions(processBuilder);
 

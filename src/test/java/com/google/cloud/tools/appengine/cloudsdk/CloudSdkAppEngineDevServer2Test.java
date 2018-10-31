@@ -21,12 +21,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.DefaultRunConfiguration;
+import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,6 +47,7 @@ public class CloudSdkAppEngineDevServer2Test {
   @Mock private DevAppServerRunner devAppServerRunner;
   private Path fakeStoragePath = Paths.get("storage/path");
   private Path fakeDatastorePath = Paths.get("datastore/path");
+  private List<Path> fakeExplodedWarService = ImmutableList.of(Paths.get("exploded-war/"));
 
   private CloudSdkAppEngineDevServer2 devServer;
 
@@ -69,34 +69,36 @@ public class CloudSdkAppEngineDevServer2Test {
   @Test
   public void testPrepareCommand_allFlags() throws Exception {
 
-    DefaultRunConfiguration configuration = Mockito.spy(new DefaultRunConfiguration());
-    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
-    configuration.setHost("host");
-    configuration.setPort(8090);
-    configuration.setAdminHost("adminHost");
-    configuration.setAdminPort(8000);
-    configuration.setAuthDomain("example.com");
-    configuration.setStoragePath(fakeStoragePath.toFile());
-    configuration.setLogLevel("debug");
-    configuration.setMaxModuleInstances(3);
-    configuration.setUseMtimeFileWatcher(true);
-    configuration.setThreadsafeOverride("default:False,backend:True");
-    configuration.setPythonStartupScript("script.py");
-    configuration.setPythonStartupArgs("arguments");
-    configuration.setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"));
-    configuration.setCustomEntrypoint("entrypoint");
-    configuration.setRuntime("java");
-    configuration.setAllowSkippedFiles(true);
-    configuration.setApiPort(8091);
-    configuration.setAutomaticRestart(false);
-    configuration.setDevAppserverLogLevel("info");
-    configuration.setSkipSdkUpdateCheck(true);
-    configuration.setDefaultGcsBucketName("buckets");
-    configuration.setClearDatastore(true);
-    configuration.setDatastorePath(fakeDatastorePath.toFile());
-    configuration.setEnvironment(ImmutableMap.of("ENV_NAME", "ENV_VAL"));
-    configuration.setProjectId("my-project");
-    configuration.setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"));
+    RunConfiguration configuration =
+        Mockito.spy(
+            RunConfiguration.builder(fakeExplodedWarService)
+                .setHost("host")
+                .setPort(8090)
+                .setAdminHost("adminHost")
+                .setAdminPort(8000)
+                .setAuthDomain("example.com")
+                .setStoragePath(fakeStoragePath)
+                .setLogLevel("debug")
+                .setMaxModuleInstances(3)
+                .setUseMtimeFileWatcher(true)
+                .setThreadsafeOverride("default:False,backend:True")
+                .setPythonStartupScript("script.py")
+                .setPythonStartupArgs("arguments")
+                .setJvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"))
+                .setCustomEntrypoint("entrypoint")
+                .setRuntime("java")
+                .setAllowSkippedFiles(true)
+                .setApiPort(8091)
+                .setAutomaticRestart(false)
+                .setDevAppserverLogLevel("info")
+                .setSkipSdkUpdateCheck(true)
+                .setDefaultGcsBucketName("buckets")
+                .setClearDatastore(true)
+                .setDatastorePath(fakeDatastorePath)
+                .setEnvironment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
+                .setProjectId("my-project")
+                .setAdditionalArguments(Arrays.asList("--ARG1", "--ARG2"))
+                .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
 
@@ -143,14 +145,14 @@ public class CloudSdkAppEngineDevServer2Test {
   @Test
   public void testPrepareCommand_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-
-    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
-    configuration.setUseMtimeFileWatcher(false);
-    configuration.setAllowSkippedFiles(false);
-    configuration.setAutomaticRestart(false);
-    configuration.setSkipSdkUpdateCheck(false);
-    configuration.setClearDatastore(false);
+    RunConfiguration configuration =
+        RunConfiguration.builder(fakeExplodedWarService)
+            .setUseMtimeFileWatcher(false)
+            .setAllowSkippedFiles(false)
+            .setAutomaticRestart(false)
+            .setSkipSdkUpdateCheck(false)
+            .setClearDatastore(false)
+            .build();
 
     List<String> expected =
         ImmutableList.of(
@@ -169,8 +171,7 @@ public class CloudSdkAppEngineDevServer2Test {
   public void testPrepareCommand_noFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
 
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
+    RunConfiguration configuration = RunConfiguration.builder(fakeExplodedWarService).build();
 
     List<String> expected = ImmutableList.of("exploded-war");
 
@@ -182,11 +183,11 @@ public class CloudSdkAppEngineDevServer2Test {
   @Test
   public void testPrepareCommand_clientEnvVars()
       throws AppEngineException, ProcessHandlerException, IOException {
-    DefaultRunConfiguration configuration = new DefaultRunConfiguration();
-    configuration.setServices(ImmutableList.of(new File("exploded-war/")));
 
     Map<String, String> clientEnvVars = ImmutableMap.of("key1", "val1", "key2", "val2");
-    configuration.setEnvironment(clientEnvVars);
+
+    RunConfiguration configuration =
+        RunConfiguration.builder(fakeExplodedWarService).setEnvironment(clientEnvVars).build();
 
     List<String> expectedArgs =
         ImmutableList.of("exploded-war", "--env_var", "key1=val1", "--env_var", "key2=val2");
