@@ -16,16 +16,65 @@
 
 package com.google.cloud.tools.appengine.api.versions;
 
-import com.google.cloud.tools.appengine.api.Configuration;
+import com.google.common.base.Preconditions;
 import java.util.Collection;
 import javax.annotation.Nullable;
 
-/** Identifies a version or a set of versions for use in {@link AppEngineVersions}. */
-public interface VersionsSelectionConfiguration extends Configuration {
+public class VersionsSelectionConfiguration {
+
+  @Nullable private final String service;
+  @Nullable private final String projectId;
+  private final Collection<String> versions;
+
+  private VersionsSelectionConfiguration(
+      @Nullable String service, @Nullable String projectId, Collection<String> versions) {
+    this.service = service;
+    this.projectId = projectId;
+    this.versions = versions;
+  }
+
+  public Collection<String> getVersions() {
+    return versions;
+  }
 
   @Nullable
-  Collection<String> getVersions();
+  public String getService() {
+    return service;
+  }
 
   @Nullable
-  String getService();
+  public String getProjectId() {
+    return projectId;
+  }
+
+  public static Builder builder(Collection<String> versions) {
+    return new Builder(versions);
+  }
+
+  public static class Builder {
+    @Nullable private String service;
+    @Nullable private String projectId;
+    private final Collection<String> versions;
+
+    private Builder(Collection<String> versions) {
+      Preconditions.checkNotNull(versions);
+      Preconditions.checkArgument(versions.size() != 0);
+
+      this.versions = versions;
+    }
+
+    public Builder setService(@Nullable String service) {
+      this.service = service;
+      return this;
+    }
+
+    public Builder setProjectId(@Nullable String projectId) {
+      this.projectId = projectId;
+      return this;
+    }
+
+    public VersionsSelectionConfiguration build() {
+      return new VersionsSelectionConfiguration(service, projectId, versions);
+    }
+  }
 }

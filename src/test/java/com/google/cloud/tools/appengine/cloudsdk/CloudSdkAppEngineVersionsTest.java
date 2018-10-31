@@ -22,8 +22,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.versions.DefaultVersionsListConfiguration;
-import com.google.cloud.tools.appengine.api.versions.DefaultVersionsSelectionConfiguration;
+import com.google.cloud.tools.appengine.api.versions.VersionsListConfiguration;
+import com.google.cloud.tools.appengine.api.versions.VersionsSelectionConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Unit tests for {@link com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineVersions} */
+/** Unit tests for {@link com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineVersions}. */
 @RunWith(MockitoJUnitRunner.class)
 public class CloudSdkAppEngineVersionsTest {
 
@@ -145,20 +145,18 @@ public class CloudSdkAppEngineVersionsTest {
     verify(gcloudRunner, times(1)).run(eq(args), isNull());
   }
 
-  private static DefaultVersionsSelectionConfiguration getVersionConfig() {
-    DefaultVersionsSelectionConfiguration configuration =
-        new DefaultVersionsSelectionConfiguration();
-    configuration.setVersions(Arrays.asList("v1", "v2"));
-    configuration.setService("myService");
-    configuration.setProjectId("myProject");
-    return configuration;
+  private static VersionsSelectionConfiguration getVersionConfig() {
+    return VersionsSelectionConfiguration.builder(Arrays.asList("v1", "v2"))
+        .setService("myService")
+        .setProjectId("myProject")
+        .build();
   }
 
-  private static DefaultVersionsListConfiguration getListConfig(boolean hideNoTraffic) {
-    DefaultVersionsListConfiguration listConfiguration = new DefaultVersionsListConfiguration();
-    listConfiguration.setService("myService");
-    listConfiguration.setProjectId("myProject");
-    listConfiguration.setHideNoTraffic(hideNoTraffic);
-    return listConfiguration;
+  private static VersionsListConfiguration getListConfig(boolean hideNoTraffic) {
+    return VersionsListConfiguration.builder()
+        .setService("myService")
+        .setProjectId("myProject")
+        .setHideNoTraffic(hideNoTraffic)
+        .build();
   }
 }

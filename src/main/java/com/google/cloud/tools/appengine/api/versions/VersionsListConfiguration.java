@@ -16,15 +16,65 @@
 
 package com.google.cloud.tools.appengine.api.versions;
 
-import com.google.cloud.tools.appengine.api.Configuration;
 import javax.annotation.Nullable;
 
-/** Configuration for {@link AppEngineVersions#list(VersionsListConfiguration)}. */
-public interface VersionsListConfiguration extends Configuration {
+/** Plain Java bean implementation of {@link VersionsListConfiguration}. */
+public class VersionsListConfiguration {
+
+  @Nullable private final Boolean hideNoTraffic;
+  @Nullable private final String projectId;
+  @Nullable private final String service;
+
+  private VersionsListConfiguration(
+      @Nullable Boolean hideNoTraffic, @Nullable String projectId, @Nullable String service) {
+    this.hideNoTraffic = hideNoTraffic;
+    this.projectId = projectId;
+    this.service = service;
+  }
 
   @Nullable
-  String getService();
+  public String getService() {
+    return service;
+  }
 
   @Nullable
-  Boolean getHideNoTraffic();
+  public Boolean getHideNoTraffic() {
+    return hideNoTraffic;
+  }
+
+  @Nullable
+  public String getProjectId() {
+    return projectId;
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+    @Nullable private Boolean hideNoTraffic;
+    @Nullable private String projectId;
+    @Nullable private String service;
+
+    private Builder() {}
+
+    public Builder setHideNoTraffic(@Nullable Boolean hideNoTraffic) {
+      this.hideNoTraffic = hideNoTraffic;
+      return this;
+    }
+
+    public Builder setProjectId(@Nullable String projectId) {
+      this.projectId = projectId;
+      return this;
+    }
+
+    public Builder setService(@Nullable String service) {
+      this.service = service;
+      return this;
+    }
+
+    public VersionsListConfiguration build() {
+      return new VersionsListConfiguration(hideNoTraffic, projectId, service);
+    }
+  }
 }
