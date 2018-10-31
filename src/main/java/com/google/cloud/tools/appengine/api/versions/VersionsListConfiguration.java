@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.api.versions;
 
 import javax.annotation.Nullable;
 
-/** Plain Java bean implementation of {@link VersionsListConfiguration}. */
 public class VersionsListConfiguration {
 
   @Nullable private final Boolean hideNoTraffic;
