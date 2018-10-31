@@ -16,8 +16,6 @@
 
 package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
-import com.google.cloud.tools.appengine.api.Configuration;
-import com.google.common.collect.Lists;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -68,14 +66,5 @@ public class GcloudArgs {
   /** Returns {@code [key1=value1,key2=value2,...]}, {@code []} if keyValueMapping=empty/null. */
   public static List<String> get(@Nullable Map<?, ?> keyValueMapping) {
     return Args.keyValueString(keyValueMapping);
-  }
-
-  /** Returns a list of args for the common arguments in {@link Configuration}. */
-  public static List<String> get(Configuration configuration) {
-    List<String> result = Lists.newArrayList();
-    if (configuration != null) {
-      result.addAll(get("project", configuration.getProjectId()));
-    }
-    return result;
   }
 }

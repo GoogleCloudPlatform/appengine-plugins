@@ -46,12 +46,12 @@ public class StopConfiguration {
     @Nullable private String adminHost;
     @Nullable private Integer adminPort;
 
-    public Builder setAdminHost(@Nullable String adminHost) {
+    public Builder adminHost(@Nullable String adminHost) {
       this.adminHost = adminHost;
       return this;
     }
 
-    public Builder setAdminPort(@Nullable Integer adminPort) {
+    public Builder adminPort(@Nullable Integer adminPort) {
       this.adminPort = adminPort;
       return this;
     }

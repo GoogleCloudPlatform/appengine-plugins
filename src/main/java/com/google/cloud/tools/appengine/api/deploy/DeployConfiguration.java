@@ -119,38 +119,37 @@ public class DeployConfiguration {
       this.deployables = deployables;
     }
 
-    public DeployConfiguration.Builder setBucket(@Nullable String bucket) {
+    public DeployConfiguration.Builder bucket(@Nullable String bucket) {
       this.bucket = bucket;
       return this;
     }
 
-    public DeployConfiguration.Builder setImageUrl(@Nullable String imageUrl) {
+    public DeployConfiguration.Builder imageUrl(@Nullable String imageUrl) {
       this.imageUrl = imageUrl;
       return this;
     }
 
-    public DeployConfiguration.Builder setProjectId(@Nullable String projectId) {
+    public DeployConfiguration.Builder projectId(@Nullable String projectId) {
       this.projectId = projectId;
       return this;
     }
 
-    public DeployConfiguration.Builder setPromote(@Nullable Boolean promote) {
+    public DeployConfiguration.Builder promote(@Nullable Boolean promote) {
       this.promote = promote;
       return this;
     }
 
-    public DeployConfiguration.Builder setServer(@Nullable String server) {
+    public DeployConfiguration.Builder server(@Nullable String server) {
       this.server = server;
       return this;
     }
 
-    public DeployConfiguration.Builder setStopPreviousVersion(
-        @Nullable Boolean stopPreviousVersion) {
+    public DeployConfiguration.Builder stopPreviousVersion(@Nullable Boolean stopPreviousVersion) {
       this.stopPreviousVersion = stopPreviousVersion;
       return this;
     }
 
-    public DeployConfiguration.Builder setVersion(@Nullable String version) {
+    public DeployConfiguration.Builder version(@Nullable String version) {
       this.version = version;
       return this;
     }

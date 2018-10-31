@@ -18,7 +18,6 @@ package com.google.cloud.tools.appengine.cloudsdk.internal.args;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.cloud.tools.appengine.api.DefaultConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -76,18 +75,5 @@ public class GcloudArgsTest {
         GcloudArgs.get(versionToTrafficSplitMapping));
 
     assertEquals(Collections.emptyList(), GcloudArgs.get(Collections.emptyMap()));
-  }
-
-  @Test
-  public void testCommonConfig() {
-    DefaultConfiguration config =
-        new DefaultConfiguration() {
-          @Override
-          public String getProjectId() {
-            return "myProject";
-          }
-        };
-
-    assertEquals(Arrays.asList("--project", "myProject"), GcloudArgs.get(config));
   }
 }

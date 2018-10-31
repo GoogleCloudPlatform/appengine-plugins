@@ -76,16 +76,16 @@ public class CloudSdkAppEngineStandardStagingTest {
   @Test
   public void testCheckFlags_allFlags() throws Exception {
     builder
-        .setDockerfile(dockerfile)
-        .setEnableQuickstart(true)
-        .setDisableUpdateCheck(true)
-        .setEnableJarSplitting(true)
-        .setJarSplittingExcludes("suffix1,suffix2")
-        .setCompileEncoding("UTF8")
-        .setDeleteJsps(true)
-        .setEnableJarClasses(true)
-        .setDisableJarJsps(true)
-        .setRuntime("java");
+        .dockerfile(dockerfile)
+        .enableQuickstart(true)
+        .disableUpdateCheck(true)
+        .enableJarSplitting(true)
+        .jarSplittingExcludes("suffix1,suffix2")
+        .compileEncoding("UTF8")
+        .deleteJsps(true)
+        .enableJarClasses(true)
+        .disableJarJsps(true)
+        .runtime("java");
 
     StageStandardConfiguration configuration = builder.build();
 
@@ -113,12 +113,12 @@ public class CloudSdkAppEngineStandardStagingTest {
   @Test
   public void testCheckFlags_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
-    builder.setEnableQuickstart(false);
-    builder.setDisableUpdateCheck(false);
-    builder.setEnableJarSplitting(false);
-    builder.setDeleteJsps(false);
-    builder.setEnableJarClasses(false);
-    builder.setDisableJarJsps(false);
+    builder.enableQuickstart(false);
+    builder.disableUpdateCheck(false);
+    builder.enableJarSplitting(false);
+    builder.deleteJsps(false);
+    builder.enableJarClasses(false);
+    builder.disableJarJsps(false);
 
     StageStandardConfiguration configuration = builder.build();
 

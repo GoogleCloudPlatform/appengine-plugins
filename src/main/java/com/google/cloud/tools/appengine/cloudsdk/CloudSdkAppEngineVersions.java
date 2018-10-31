@@ -123,7 +123,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     arguments.add("list");
     arguments.addAll(GcloudArgs.get("service", configuration.getService()));
     arguments.addAll(GcloudArgs.get("hide-no-traffic", configuration.getHideNoTraffic()));
-    arguments.addAll(GcloudArgs.get(configuration));
+    arguments.addAll(GcloudArgs.get("project", configuration.getProjectId()));
 
     execute(arguments);
   }
@@ -133,7 +133,7 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
     List<String> arguments = new ArrayList<>();
     arguments.addAll(configuration.getVersions());
     arguments.addAll(GcloudArgs.get("service", configuration.getService()));
-    arguments.addAll(GcloudArgs.get(configuration));
+    arguments.addAll(GcloudArgs.get("project", configuration.getProjectId()));
 
     return arguments;
   }
