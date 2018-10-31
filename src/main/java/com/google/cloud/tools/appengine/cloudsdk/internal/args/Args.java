@@ -89,15 +89,15 @@ class Args {
    */
   static List<String> integerWithEq(String name, @Nullable Integer value) {
     if (value != null) {
-      return Arrays.asList("--" + name + "=" + value.toString());
+      return Collections.singletonList("--" + name + "=" + value.toString());
     }
     return Collections.emptyList();
   }
 
   /**
-   * Produces the flag form of a path object, using {@link Path#toString()}.
+   * Produces the flag form of a path object, using {@link Path#toAbsolutePath()#toString()}}.
    *
-   * @return {@code [--name, path.toString()]} or {@code []} if path is null or not set.
+   * @return {@code [--name, "/absolute/path"]} or {@code []} if path is null or not set.
    */
   static List<String> path(String name, @Nullable Path path) {
     if (path != null && !path.toString().isEmpty()) {

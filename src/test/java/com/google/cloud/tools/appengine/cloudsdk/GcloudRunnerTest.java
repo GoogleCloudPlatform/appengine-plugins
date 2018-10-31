@@ -94,7 +94,7 @@ public class GcloudRunnerTest {
                 "--format",
                 "some-format",
                 "--credential-file-override",
-                credentialFile.toString()));
+                credentialFile.toAbsolutePath().toString()));
     Mockito.verify(processBuilder).start();
     Mockito.verifyNoMoreInteractions(processBuilder);
 
