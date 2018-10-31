@@ -94,7 +94,10 @@ public class CloudSdkAuthTest {
         .run(
             eq(
                 Arrays.asList(
-                    "auth", "activate-service-account", "--key-file", jsonKeyFile.toAbsolutePath().toString())),
+                    "auth",
+                    "activate-service-account",
+                    "--key-file",
+                    jsonKeyFile.toAbsolutePath().toString())),
             isNull());
   }
 

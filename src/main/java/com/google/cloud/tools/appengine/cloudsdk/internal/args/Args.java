@@ -95,7 +95,7 @@ class Args {
   }
 
   /**
-   * Produces the flag form of a path object, using {@link Path#toAbsolutePath()#toString()}}.
+   * Produces the flag form of a path object, using {@link Path#toAbsolutePath()} as a string.
    *
    * @return {@code [--name, "/absolute/path"]} or {@code []} if path is null or not set.
    */
