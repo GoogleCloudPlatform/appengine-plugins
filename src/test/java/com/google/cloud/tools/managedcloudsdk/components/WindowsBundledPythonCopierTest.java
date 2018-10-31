@@ -20,7 +20,6 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.common.collect.ImmutableMap;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -69,35 +68,35 @@ public class WindowsBundledPythonCopierTest {
 
   @Test
   public void testDeleteCopiedPython() throws IOException {
-    File pythonHome = temporaryFolder.newFolder("python");
-    File executable = temporaryFolder.newFile("python/python.exe");
-    Assert.assertTrue(executable.exists());
+    Path pythonHome = temporaryFolder.newFolder("python").toPath();
+    Path executable = temporaryFolder.newFile("python/python.exe").toPath();
+    Assert.assertTrue(Files.exists(executable));
 
     WindowsBundledPythonCopier.deleteCopiedPython(executable.toString());
-    Assert.assertFalse(executable.exists());
-    Assert.assertFalse(pythonHome.exists());
+    Assert.assertFalse(Files.exists(executable));
+    Assert.assertFalse(Files.exists(pythonHome));
   }
 
   @Test
   public void testDeleteCopiedPython_caseInsensitivity() throws IOException {
-    File pythonHome = temporaryFolder.newFolder("python");
-    File executable = temporaryFolder.newFile("python/PyThOn.EXE");
-    Assert.assertTrue(executable.exists());
+    Path pythonHome = temporaryFolder.newFolder("python").toPath();
+    Path executable = temporaryFolder.newFile("python/PyThOn.EXE").toPath();
+    Assert.assertTrue(Files.exists(executable));
     Assert.assertThat(executable.toString(), Matchers.endsWith("PyThOn.EXE"));
 
     WindowsBundledPythonCopier.deleteCopiedPython(executable.toString());
-    Assert.assertFalse(executable.exists());
-    Assert.assertFalse(pythonHome.exists());
+    Assert.assertFalse(Files.exists(executable));
+    Assert.assertFalse(Files.exists(pythonHome));
   }
 
   @Test
   public void testDeleteCopiedPython_unexpectedLocation() throws IOException {
     temporaryFolder.newFolder("unexpected");
-    File unexpected = temporaryFolder.newFile("unexpected/file.ext");
-    Assert.assertTrue(unexpected.exists());
+    Path unexpected = temporaryFolder.newFile("unexpected/file.ext").toPath();
+    Assert.assertTrue(Files.exists(unexpected));
 
     WindowsBundledPythonCopier.deleteCopiedPython(unexpected.toString());
-    Assert.assertTrue(unexpected.exists());
+    Assert.assertTrue(Files.exists(unexpected));
   }
 
   @Test

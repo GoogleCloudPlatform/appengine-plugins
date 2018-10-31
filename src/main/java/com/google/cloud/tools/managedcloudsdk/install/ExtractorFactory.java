@@ -29,7 +29,7 @@ final class ExtractorFactory {
    *
    * @param archive the archive to extract
    * @param destination the destination folder for extracted files
-   * @param messageListener a listener for extraction messages
+   * @param progressListener a listener for progress
    * @return {@link Extractor} with {@link TarGzExtractorProvider} for ".tar.gz", {@link
    *     ZipExtractorProvider} for ".zip"
    * @throws UnknownArchiveTypeException if not ".tar.gz" or ".zip"
