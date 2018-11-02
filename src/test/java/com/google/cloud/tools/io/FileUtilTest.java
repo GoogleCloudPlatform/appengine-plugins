@@ -18,6 +18,7 @@ package com.google.cloud.tools.io;
 
 import static org.junit.Assume.assumeTrue;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -142,5 +143,37 @@ public class FileUtilTest {
     Path src = testDir.newFolder("funny").toPath();
     Path dest = testDir.newFolder("funny2").toPath();
     FileUtil.copyDirectory(src, dest);
+  }
+
+  @Test
+  public void testCopyDirectory_excludes() throws IOException {
+    Path src = testDir.newFolder("src").toPath();
+    Path dest = testDir.newFolder("dest").toPath();
+    Path destExcludes = testDir.newFolder("dest-with-excludes").toPath();
+
+    Path rootFile = Files.createFile(src.resolve("root.file"));
+    Path subDir = Files.createDirectory(src.resolve("sub"));
+    Path subFile = Files.createFile(subDir.resolve("sub.file"));
+    Path excludedFile = Files.createFile(src.resolve("excluded.file"));
+    Path excludedSubDir = Files.createDirectory(src.resolve("excluded"));
+    Path autoExcludedSubFile = Files.createFile(excludedSubDir.resolve("auto.excluded.file"));
+
+    // control group
+    FileUtil.copyDirectory(src, dest);
+    Assert.assertTrue(Files.isRegularFile(dest.resolve(src.relativize(rootFile))));
+    Assert.assertTrue(Files.isDirectory(dest.resolve(src.relativize(subDir))));
+    Assert.assertTrue(Files.isRegularFile(dest.resolve(src.relativize(subFile))));
+    Assert.assertTrue(Files.isRegularFile(dest.resolve(src.relativize(excludedFile))));
+    Assert.assertTrue(Files.isDirectory(dest.resolve(src.relativize(excludedSubDir))));
+    Assert.assertTrue(Files.isRegularFile(dest.resolve(src.relativize(autoExcludedSubFile))));
+
+    // test group
+    FileUtil.copyDirectory(src, destExcludes, ImmutableList.of(excludedSubDir, excludedFile));
+    Assert.assertTrue(Files.isRegularFile(destExcludes.resolve(src.relativize(rootFile))));
+    Assert.assertTrue(Files.isDirectory(destExcludes.resolve(src.relativize(subDir))));
+    Assert.assertTrue(Files.isRegularFile(destExcludes.resolve(src.relativize(subFile))));
+    Assert.assertFalse(Files.exists(destExcludes.resolve(src.relativize(excludedFile))));
+    Assert.assertFalse(Files.exists(destExcludes.resolve(src.relativize(excludedSubDir))));
+    Assert.assertFalse(Files.exists(destExcludes.resolve(src.relativize(autoExcludedSubFile))));
   }
 }

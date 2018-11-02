@@ -26,6 +26,8 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
+import java.util.List;
 
 /** File utilities. */
 @Beta
@@ -40,6 +42,20 @@ public class FileUtil {
    *     source or destination is not a directory, or destination is inside source
    */
   public static void copyDirectory(final Path source, final Path destination) throws IOException {
+    copyDirectory(source, destination, Collections.emptyList());
+  }
+
+  /**
+   * Implementation of recursive directory copy, does NOT overwrite.
+   *
+   * @param source an existing source directory to copy from
+   * @param destination an existing destination directory to copy to
+   * @param excludes a list of paths in "source" to exclude
+   * @throws IllegalArgumentException if source directory is same destination directory, either
+   *     source or destination is not a directory, or destination is inside source
+   */
+  public static void copyDirectory(final Path source, final Path destination, List<Path> excludes)
+      throws IOException {
     Preconditions.checkNotNull(source);
     Preconditions.checkNotNull(destination);
     Preconditions.checkArgument(Files.isDirectory(source), "Source is not a directory");
@@ -63,6 +79,10 @@ public class FileUtil {
               return FileVisitResult.CONTINUE;
             }
 
+            if (excludes.contains(dir)) {
+              return FileVisitResult.SKIP_SUBTREE;
+            }
+
             Files.copy(dir, destination.resolve(source.relativize(dir)), copyOptions);
             return FileVisitResult.CONTINUE;
           }
@@ -70,6 +90,10 @@ public class FileUtil {
           @Override
           public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
               throws IOException {
+
+            if (excludes.contains(file)) {
+              return FileVisitResult.CONTINUE;
+            }
 
             Files.copy(file, destination.resolve(source.relativize(file)), copyOptions);
             return FileVisitResult.CONTINUE;
