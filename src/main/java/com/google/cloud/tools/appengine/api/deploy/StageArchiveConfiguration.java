@@ -20,15 +20,15 @@ import com.google.common.base.Preconditions;
 import java.nio.file.Path;
 import javax.annotation.Nullable;
 
-/** Configuration for {@link AppEngineArtifactStaging#stageFlexible(StageArtifactConfiguration)}. */
-public class StageArtifactConfiguration {
+/** Configuration for {@link AppEngineArchiveStaging#stageArchive(StageArchiveConfiguration)}. */
+public class StageArchiveConfiguration {
 
   private final Path appEngineDirectory;
   @Nullable private final Path dockerDirectory;
   private final Path artifact;
   private final Path stagingDirectory;
 
-  private StageArtifactConfiguration(
+  private StageArchiveConfiguration(
       Path appEngineDirectory,
       @Nullable Path dockerDirectory,
       Path artifact,
@@ -83,14 +83,14 @@ public class StageArtifactConfiguration {
       this.stagingDirectory = stagingDirectory;
     }
 
-    public StageArtifactConfiguration.Builder dockerDirectory(@Nullable Path dockerDirectory) {
+    public StageArchiveConfiguration.Builder dockerDirectory(@Nullable Path dockerDirectory) {
       this.dockerDirectory = dockerDirectory;
       return this;
     }
 
-    /** Build a {@link StageArtifactConfiguration}. */
-    public StageArtifactConfiguration build() {
-      return new StageArtifactConfiguration(
+    /** Build a {@link StageArchiveConfiguration}. */
+    public StageArchiveConfiguration build() {
+      return new StageArchiveConfiguration(
           this.appEngineDirectory, this.dockerDirectory, this.artifact, this.stagingDirectory);
     }
   }

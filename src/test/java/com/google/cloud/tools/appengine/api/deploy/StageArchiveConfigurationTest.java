@@ -23,9 +23,9 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 
-public class StageArtifactConfigurationTest {
+public class StageArchiveConfigurationTest {
 
-  private StageArtifactConfiguration configuration;
+  private StageArchiveConfiguration configuration;
   private Path file = Paths.get("");
 
   @Before
@@ -34,12 +34,12 @@ public class StageArtifactConfigurationTest {
     // files are files and directories are directories?
     // should we use paths instead?
     configuration =
-        StageArtifactConfiguration.builder(file, file, file).dockerDirectory(file).build();
+        StageArchiveConfiguration.builder(file, file, file).dockerDirectory(file).build();
   }
 
   @Test
   public void testDockerNotRequired() {
-    StageArtifactConfiguration.builder(file, file, file).build();
+    StageArchiveConfiguration.builder(file, file, file).build();
   }
 
   @Test
