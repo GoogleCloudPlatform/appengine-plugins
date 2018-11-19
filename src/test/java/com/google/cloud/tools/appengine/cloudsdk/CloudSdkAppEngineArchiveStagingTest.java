@@ -122,6 +122,7 @@ public class CloudSdkAppEngineArchiveStagingTest {
 
     try {
       testStaging.stageArchive(config);
+      fail();
     } catch (AppEngineException ex) {
       Assert.assertEquals("Cannot process application with runtime: moose", ex.getMessage());
     }
