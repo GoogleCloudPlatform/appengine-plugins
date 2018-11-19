@@ -25,16 +25,19 @@ public class StageArchiveConfiguration {
 
   private final Path appEngineDirectory;
   @Nullable private final Path dockerDirectory;
+  @Nullable private final Path extraFilesDirectory;
   private final Path artifact;
   private final Path stagingDirectory;
 
   private StageArchiveConfiguration(
       Path appEngineDirectory,
       @Nullable Path dockerDirectory,
+      @Nullable Path extraFilesDirectory,
       Path artifact,
       Path stagingDirectory) {
     this.appEngineDirectory = appEngineDirectory;
     this.dockerDirectory = dockerDirectory;
+    this.extraFilesDirectory = extraFilesDirectory;
     this.artifact = artifact;
     this.stagingDirectory = stagingDirectory;
   }
@@ -48,6 +51,12 @@ public class StageArchiveConfiguration {
   @Nullable
   public Path getDockerDirectory() {
     return dockerDirectory;
+  }
+
+  /** Directory containing other files to be deployed with the application. */
+  @Nullable
+  public Path getExtraFilesDirectory() {
+    return extraFilesDirectory;
   }
 
   /** Artifact to deploy such as WAR or JAR. */
@@ -70,6 +79,7 @@ public class StageArchiveConfiguration {
   public static final class Builder {
     private Path appEngineDirectory;
     @Nullable private Path dockerDirectory;
+    @Nullable private Path extraFilesDirectory;
     private Path artifact;
     private Path stagingDirectory;
 
@@ -88,10 +98,20 @@ public class StageArchiveConfiguration {
       return this;
     }
 
+    public StageArchiveConfiguration.Builder extraFilesDirectory(
+        @Nullable Path extraFilesDirectory) {
+      this.extraFilesDirectory = extraFilesDirectory;
+      return this;
+    }
+
     /** Build a {@link StageArchiveConfiguration}. */
     public StageArchiveConfiguration build() {
       return new StageArchiveConfiguration(
-          this.appEngineDirectory, this.dockerDirectory, this.artifact, this.stagingDirectory);
+          this.appEngineDirectory,
+          this.dockerDirectory,
+          this.extraFilesDirectory,
+          this.artifact,
+          this.stagingDirectory);
     }
   }
 }

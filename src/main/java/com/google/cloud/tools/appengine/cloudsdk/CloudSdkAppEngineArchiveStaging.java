@@ -34,7 +34,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 /** Cloud SDK based implementation of {@link AppEngineArchiveStaging}. */
@@ -71,6 +70,7 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
     try {
       String env = findEnv(config);
       String runtime = findRuntime(config);
+      CopyService copyService = new CopyService();
       if ("flex".equals(env)) {
         stageFlexibleArchive(config, runtime);
       } else if ("java11".equals(runtime)) {
@@ -92,7 +92,8 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
       throws IOException, AppEngineException {
     CopyService copyService = new CopyService();
     copyDockerContext(config, copyService, runtime);
-    copyAppEngineContextFlex(config, copyService);
+    copyExtraFiles(config, copyService);
+    copyAppEngineContext(config, copyService);
     copyArtifact(config, copyService);
   }
 
@@ -100,7 +101,8 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
   void stageStandardArchive(StageArchiveConfiguration config)
       throws IOException, AppEngineException {
     CopyService copyService = new CopyService();
-    copyAppEngineContextStandard(config, copyService);
+    copyExtraFiles(config, copyService);
+    copyAppEngineContext(config, copyService);
     copyArtifact(config, copyService);
   }
 
@@ -160,7 +162,7 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
   }
 
   @VisibleForTesting
-  static void copyAppEngineContextFlex(StageArchiveConfiguration config, CopyService copyService)
+  static void copyAppEngineContext(StageArchiveConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
     Path appYaml = config.getAppEngineDirectory().resolve(APP_YAML);
     if (!Files.exists(appYaml)) {
@@ -171,18 +173,22 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
   }
 
   @VisibleForTesting
-  static void copyAppEngineContextStandard(
-      StageArchiveConfiguration config, CopyService copyService)
+  static void copyExtraFiles(StageArchiveConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
-    Path appYaml = config.getAppEngineDirectory().resolve(APP_YAML);
-    if (!Files.exists(appYaml)) {
-      throw new AppEngineException(APP_YAML + " not found in the App Engine directory.");
+    Path extraFilesDirectory = config.getExtraFilesDirectory();
+    if (extraFilesDirectory == null) {
+      return;
     }
-    Path appEngineDirectory = config.getAppEngineDirectory();
+    if (!Files.exists(extraFilesDirectory)) {
+      throw new AppEngineException(
+          "Extra files directory does not exist. Location: " + extraFilesDirectory);
+    }
+    if (!Files.isDirectory(extraFilesDirectory)) {
+      throw new AppEngineException(
+          "Extra files location is not a directory. Location: " + extraFilesDirectory);
+    }
     Path stagingDirectory = config.getStagingDirectory();
-    List<Path> ignoredFiles =
-        OTHER_YAMLS.stream().map(appEngineDirectory::resolve).collect(Collectors.toList());
-    copyService.copyDirectory(appEngineDirectory, stagingDirectory, ignoredFiles);
+    copyService.copyDirectory(extraFilesDirectory, stagingDirectory);
   }
 
   private static void copyArtifact(StageArchiveConfiguration config, CopyService copyService)
