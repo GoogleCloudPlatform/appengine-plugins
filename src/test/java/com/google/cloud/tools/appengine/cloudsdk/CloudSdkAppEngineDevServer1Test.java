@@ -62,6 +62,8 @@ public class CloudSdkAppEngineDevServer1Test {
 
   private CloudSdkAppEngineDevServer1 devServer;
 
+  private final Path java11Service =
+      Paths.get("src/test/resources/projects/EmptyStandard11Project");
   private final Path java8Service = Paths.get("src/test/resources/projects/EmptyStandard8Project");
   private final Path java7Service = Paths.get("src/test/resources/projects/EmptyStandard7Project");
 
@@ -202,7 +204,7 @@ public class CloudSdkAppEngineDevServer1Test {
 
     SpyVerifier.newVerifier(configuration)
         .verifyDeclaredGetters(
-            ImmutableMap.of("getServices", 7, "getJavaHomeDir", 2, "getJvmFlags", 2));
+            ImmutableMap.of("getServices", 8, "getJavaHomeDir", 2, "getJvmFlags", 2));
 
     // verify we are checking and ignoring these parameters
     Map<String, Object> paramWarnings = new HashMap<>();
@@ -574,12 +576,24 @@ public class CloudSdkAppEngineDevServer1Test {
   }
 
   @Test
-  public void testGetGaeRuntimeJava_isJava8() {
-    Assert.assertEquals("java8", CloudSdkAppEngineDevServer1.getGaeRuntimeJava(true));
+  public void testGetGaeRuntimeJava_isJava11() throws AppEngineException {
+    Assert.assertEquals(
+        "java11",
+        CloudSdkAppEngineDevServer1.getGaeRuntimeJava(
+            ImmutableList.of(java7Service, java8Service, java11Service)));
   }
 
   @Test
-  public void testGetGaeRuntimeJava_isNotJava8() {
-    Assert.assertEquals("java7", CloudSdkAppEngineDevServer1.getGaeRuntimeJava(false));
+  public void testGetGaeRuntimeJava_isJava8() throws AppEngineException {
+    Assert.assertEquals(
+        "java8",
+        CloudSdkAppEngineDevServer1.getGaeRuntimeJava(
+            ImmutableList.of(java7Service, java8Service)));
+  }
+
+  @Test
+  public void testGetGaeRuntimeJava_isNotJava8() throws AppEngineException {
+    Assert.assertEquals(
+        "java7", CloudSdkAppEngineDevServer1.getGaeRuntimeJava(ImmutableList.of(java7Service)));
   }
 }
