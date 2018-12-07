@@ -21,6 +21,8 @@ env:
     - PATH=$PWD/google-cloud-sdk/bin:$PATH
     - CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
 script:
+  - gcloud info
+  - echo $PATH
   - |
     if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
       mvn clean deploy --settings .travis/settings.xml -B -U
