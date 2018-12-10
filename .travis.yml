@@ -9,7 +9,6 @@ cache:
    - $HOME/google-cloud-sdk
 env:
   global:
-    - PATH=$PWD/google-cloud-sdk/bin:$PATH
     - CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
     - CLOUDSDK_CORE_DISABLE_PROMPTS=true
 install:
