@@ -6,36 +6,30 @@ jdk:
 cache:
   directories:
    - $HOME/.m2
-install:
-  # https://github.com/travis-ci/travis-ci/issues/8408
-  - unset _JAVA_OPTIONS
-  # download Cloud SDK
-  - wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-227.0.0-linux-x86_64.tar.gz
-  - tar -xzf google-cloud-sdk-227.0.0-linux-x86_64.tar.gz -C /home/travis
-  # update all Cloud SDK components
-  - /home/travis/google-cloud-sdk/bin/gcloud components update --quiet
-  # add App Engine component to Cloud SDK
-  - /home/travis/google-cloud-sdk/bin/gcloud components install app-engine-java --quiet
-  # make our installed cloud sdk take precedence
-  - source /home/travis/google-cloud-sdk/path.bash.inc
+   - $HOME/google-cloud-sdk
 env:
   global:
     - PATH=$PWD/google-cloud-sdk/bin:$PATH
     - CLOUDSDK_CORE_DISABLE_USAGE_REPORTING=true
-script:
-  - |
-    if [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
-      mvn clean deploy --settings .travis/settings.xml -B -U
-    else
-      mvn clean install -B -U
-    fi
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=true
+install:
+  # https://github.com/travis-ci/travis-ci/issues/8408
+  - unset _JAVA_OPTIONS
 
-env:
-  global:
-    - secure: "da45ryIB/m37Gkpon/Uy6PPl1AhsUMdxgG7aeQIM1alh3Np4JwqKHobdP8tC0Qc/vb5fqfisEZEGPukh9Kxw95pRATO/QrQrsxYISMXUUc+Dlvo8WLeDq5F2LdUSn3933H9p5Mk8bKrZql+Jb+Il5S+B3Ib8uO+e3L4itrGKu5dw6i8TAxMggUjK8L6RuRYZeXMNiw3iaLjlHhNVEZ7F7RQ/gsHT2LhzybY6gfVJU+8AHhwEv+Tuapz5QCYTah6pwKqP+EQPhFlfrow9zdBfQm7m4h+uU+TB67VzZi46pAx+drC1quW+HZllutMHKM+cR13HsTET9qbFmV00cr2gZ3UXMVPX+PG1johZj0gs8s/S0+MVh6IQ0QLMWSqgJH/ULlyoU9PLE+PMs8A2qprO8NALuS3GXgvMQ8tHGuAzUVht/CxH5WTxW8nGFv8lwCIrT+m0hWi26gXWpNItC4N5GawoJQp+eWW0dO2Uko34kC3CIkLppRGxgzQWQQHkR+Hh+Yi3AzZsUzz30YRezF+G1RuQ68Va9yZ9qgei3h0Ppx2OIZ6fyiGg6Z8MHzOA8AULoe/Sz7CsfCiOyjTWmccRSl79wc0kpZwrF2qLO46LD3DgpGcfcKEB/cqcdwj/SA4QJoRcwUPSqy2eXb6ILhHA9UGlSBwluPZ2tSXDh2zxCL0="
-    - secure: "Z/Haq0MHdfBpJKntdYZFdK3uxUUk+jjiNzuuOt2hLa7P5XxpoHsboRykWSY41tWD5NnXfXoJvcHPASwhz2OesQcyNCCEHxsikkNRk+XUgFjyu8I3Ohm8Fya1k9gn+Xlz9uDBtoGN1e2SHhfEY+a9a5nGvv4aLVblBewt9J14su8fc4WSyDYggoZnUjB69DzIJrBL/ol0VOqlo8/vrcbWRbB/hlJ3QwKsFkehIhx5//GVdEJGqM2CZNJqG/bVLaSIoqQPqd6v3eyemnS2O5bXNIoNEq9yUWGSm1PfnagBYMzkHcqNrg5D1aYI+vFFeZe4PAsBaE6Xw/trCMtdRr5uDKXdNW8s8zwMKfOYru3zY9KTq2N5Fl/HgazGfimpmAjXqpH74+WaITmQmCZ6LuLb7hgltF+f2OY71bHJI7lGeuCraiwb6ECFIZiF9+FA6m0DXU6fCsajoThUtkRSpTMxDTAMzlrH/Kw2SzwEfuGk3evsb937pLUkL1kNxSc6GXhdyRrLTSrYgoqavjtNUN5S7v7MqrmO4R6UF1ZtJOAxWJ1a4W/kQP6S/36u8dZhCWbds78EocOH/+fsJ8vlCmTAnFEbtZkSpmFHjGrpPu0gVYdG+u96eAtKv90p2IF8bwCzFQRh1U25OlcxHKZfDgGzplR1Cy8DdJoNcH3KJKQd1Cw="
+  # travis auto creates cache directories, so remove it
+  # run install script
+  - if [ ! -d $HOME/google-cloud-sdk/bin ]; then
+      rm -rf $HOME/google-cloud-sdk;
+      curl https://sdk.cloud.google.com | bash
+    fi
+  # make our installed cloud sdk take precedence
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  # update gcloud
+  - gcloud components update --quiet
+  # add App Engine component to Cloud SDK
+  - gcloud components install app-engine-java --quiet
+script:
+  - mvn clean install -B -U
 
 after_success:
-  - unset SONATYPE_USERNAME
-  - unset SONATYPE_PASSWORD
   - bash <(curl -s https://codecov.io/bash)
