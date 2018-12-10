@@ -19,8 +19,8 @@ install:
   # travis auto creates cache directories, so remove it
   # run install script
   - if [ ! -d $HOME/google-cloud-sdk/bin ]; then
-      rm -rf $HOME/google-cloud-sdk
-      curl https://sdk.cloud.google.com | bash
+      rm -rf $HOME/google-cloud-sdk;
+      curl https://sdk.cloud.google.com | bash;
     fi
   # make our installed cloud sdk take precedence
   - source $HOME/google-cloud-sdk/path.bash.inc
