@@ -17,8 +17,8 @@ install:
 
   # check if cloud SDK was installed (/bin exists)
   - if [ ! -d $HOME/google-cloud-sdk/bin ]; then
-      # travis auto creates cache directories, so remove it before install
-      # because cloud sdk doesn't install into directories that exist
+  # travis auto creates cache directories, so remove it before install
+  # because cloud sdk doesn't install into directories that exist
       rm -rf $HOME/google-cloud-sdk;
       curl https://sdk.cloud.google.com | bash;
     fi
