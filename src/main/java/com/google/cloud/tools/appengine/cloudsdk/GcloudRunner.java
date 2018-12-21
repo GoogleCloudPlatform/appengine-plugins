@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
-class GcloudRunner {
+public class GcloudRunner {
 
   private static final Logger logger = Logger.getLogger(GcloudRunner.class.getName());
 
@@ -68,7 +68,7 @@ class GcloudRunner {
    *
    * @param workingDirectory if null then the working directory of current Java process
    */
-  void run(List<String> arguments, @Nullable Path workingDirectory)
+  public void run(List<String> arguments, @Nullable Path workingDirectory)
       throws ProcessHandlerException, CloudSdkNotFoundException, CloudSdkOutOfDateException,
           CloudSdkVersionFileException, IOException {
 

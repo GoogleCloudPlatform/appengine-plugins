@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-class AppCfgRunner {
+public class AppCfgRunner {
 
   private static final Logger logger = Logger.getLogger(AppCfgRunner.class.getName());
 
@@ -47,7 +47,7 @@ class AppCfgRunner {
    *     not installed in the Cloud SDK
    * @throws InvalidJavaSdkException java not found
    */
-  void run(List<String> args)
+  public void run(List<String> args)
       throws ProcessHandlerException, AppEngineJavaComponentsNotInstalledException,
           InvalidJavaSdkException, IOException {
     sdk.validateAppEngineJavaComponents();

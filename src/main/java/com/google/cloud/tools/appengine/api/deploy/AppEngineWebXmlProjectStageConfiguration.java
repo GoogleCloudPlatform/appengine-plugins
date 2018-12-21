@@ -21,10 +21,10 @@ import java.nio.file.Path;
 import javax.annotation.Nullable;
 
 /**
- * Arguments needed to stage an App Engine standard environment application. Null return values
+ * Arguments needed to stage an App Engine appengine-web.xml based application. Null return values
  * indicate that the configuration was not set, and thus assumes the tool default value.
  */
-public class StageStandardConfiguration {
+public class AppEngineWebXmlProjectStageConfiguration {
   private final Path sourceDirectory;
   private final Path stagingDirectory;
   @Nullable private final Path dockerfile;
@@ -38,7 +38,7 @@ public class StageStandardConfiguration {
   @Nullable private final Boolean disableJarJsps;
   @Nullable private final String runtime;
 
-  private StageStandardConfiguration(
+  private AppEngineWebXmlProjectStageConfiguration(
       Path sourceDirectory,
       Path stagingDirectory,
       @Nullable Path dockerfile,
@@ -203,9 +203,9 @@ public class StageStandardConfiguration {
       return this;
     }
 
-    /** Build a {@link StageStandardConfiguration}. */
-    public StageStandardConfiguration build() {
-      return new StageStandardConfiguration(
+    /** Build a {@link AppEngineWebXmlProjectStageConfiguration}. */
+    public AppEngineWebXmlProjectStageConfiguration build() {
+      return new AppEngineWebXmlProjectStageConfiguration(
           this.sourceDirectory,
           this.stagingDirectory,
           this.dockerfile,

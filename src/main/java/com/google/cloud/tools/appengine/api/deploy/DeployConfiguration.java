@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/** Configuration for {@link AppEngineDeployment#deploy(DeployConfiguration)}. */
+/** Configuration for {@link Deployment#deploy(DeployConfiguration)}. */
 public class DeployConfiguration {
 
   @Nullable private final String bucket;

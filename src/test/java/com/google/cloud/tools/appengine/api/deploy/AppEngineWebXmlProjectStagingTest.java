@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2018 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.deploy;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.AppCfgRunner;
+import com.google.cloud.tools.appengine.cloudsdk.AppEngineJavaComponentsNotInstalledException;
+import com.google.cloud.tools.appengine.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
@@ -37,9 +39,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Unit tests for {@link CloudSdkAppEngineStandardStaging}. */
+/** Unit tests for {@link AppEngineWebXmlProjectStaging}. */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineStandardStagingTest {
+public class AppEngineWebXmlProjectStagingTest {
 
   @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
@@ -48,8 +50,8 @@ public class CloudSdkAppEngineStandardStagingTest {
   private Path source;
   private Path destination;
   private Path dockerfile;
-  private CloudSdkAppEngineStandardStaging staging;
-  private StageStandardConfiguration.Builder builder;
+  private AppEngineWebXmlProjectStaging staging;
+  private AppEngineWebXmlProjectStageConfiguration.Builder builder;
 
   @Before
   public void setUp()
@@ -59,9 +61,9 @@ public class CloudSdkAppEngineStandardStagingTest {
     destination = tmpDir.newFolder("destination").toPath();
     dockerfile = tmpDir.newFile("dockerfile").toPath();
 
-    staging = new CloudSdkAppEngineStandardStaging(appCfgRunner);
+    staging = new AppEngineWebXmlProjectStaging(appCfgRunner);
 
-    builder = StageStandardConfiguration.builder(source, destination);
+    builder = AppEngineWebXmlProjectStageConfiguration.builder(source, destination);
 
     // create an app.yaml in staging output when we run.
     Mockito.doAnswer(
@@ -87,7 +89,7 @@ public class CloudSdkAppEngineStandardStagingTest {
         .disableJarJsps(true)
         .runtime("java");
 
-    StageStandardConfiguration configuration = builder.build();
+    AppEngineWebXmlProjectStageConfiguration configuration = builder.build();
 
     List<String> expected =
         ImmutableList.of(
@@ -120,7 +122,7 @@ public class CloudSdkAppEngineStandardStagingTest {
     builder.enableJarClasses(false);
     builder.disableJarJsps(false);
 
-    StageStandardConfiguration configuration = builder.build();
+    AppEngineWebXmlProjectStageConfiguration configuration = builder.build();
 
     List<String> expected = ImmutableList.of("stage", source.toString(), destination.toString());
 

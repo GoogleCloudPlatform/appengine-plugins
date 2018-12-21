@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.deploy;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineDeployment;
-import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.cloudsdk.GcloudRunner;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.annotations.VisibleForTesting;
@@ -30,12 +30,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Cloud SDK based implementation of {@link AppEngineDeployment}. */
-public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
+/**
+ * Arguments needed to stage an App Engine app.yaml based application. Null return values indicate
+ * that the configuration was not set, and thus assumes the tool default value.
+ */
+public class Deployment {
 
   private final GcloudRunner runner;
 
-  CloudSdkAppEngineDeployment(GcloudRunner runner) {
+  public Deployment(GcloudRunner runner) {
     this.runner = Preconditions.checkNotNull(runner);
   }
 
@@ -48,7 +51,6 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
    * @throws IllegalArgumentException when a local deployable referenced by the configuration isn't
    *     found
    */
-  @Override
   public void deploy(DeployConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getDeployables());
@@ -89,29 +91,29 @@ public class CloudSdkAppEngineDeployment implements AppEngineDeployment {
     }
   }
 
-  @Override
+  /** Deploy cron.yaml to App Engine. */
   public void deployCron(DeployProjectConfigurationConfiguration config) throws AppEngineException {
     deployConfig("cron.yaml", config);
   }
 
-  @Override
+  /** Deploy cron.yaml to App Engine. */
   public void deployDos(DeployProjectConfigurationConfiguration config) throws AppEngineException {
     deployConfig("dos.yaml", config);
   }
 
-  @Override
+  /** Deploy cron.yaml to App Engine. */
   public void deployDispatch(DeployProjectConfigurationConfiguration config)
       throws AppEngineException {
     deployConfig("dispatch.yaml", config);
   }
 
-  @Override
+  /** Deploy cron.yaml to App Engine. */
   public void deployIndex(DeployProjectConfigurationConfiguration config)
       throws AppEngineException {
     deployConfig("index.yaml", config);
   }
 
-  @Override
+  /** Deploy cron.yaml to App Engine. */
   public void deployQueue(DeployProjectConfigurationConfiguration config)
       throws AppEngineException {
     deployConfig("queue.yaml", config);

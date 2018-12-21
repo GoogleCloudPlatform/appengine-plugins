@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.deploy;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
-import com.google.cloud.tools.appengine.api.deploy.StageStandardConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.AppCfgRunner;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.AppCfgArgs;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Preconditions;
@@ -31,20 +30,24 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * An implementation of {@link AppEngineStandardStaging} that uses App Engine SDK bundled with the
- * Cloud SDK.
- */
-public class CloudSdkAppEngineStandardStaging implements AppEngineStandardStaging {
+/** Application stager for appengine-web.xml based applications before deployment. */
+public class AppEngineWebXmlProjectStaging {
 
   private AppCfgRunner runner;
 
-  public CloudSdkAppEngineStandardStaging(AppCfgRunner runner) {
+  public AppEngineWebXmlProjectStaging(AppCfgRunner runner) {
     this.runner = runner;
   }
 
-  @Override
-  public void stageStandard(StageStandardConfiguration config) throws AppEngineException {
+  /**
+   * Stages an appengine-web.xml based project for deployment. Calls out to appcfg to execute this
+   * staging.
+   *
+   * @param config Specifies source config and staging destination
+   * @throws AppEngineException When staging fails
+   */
+  public void stageStandard(AppEngineWebXmlProjectStageConfiguration config)
+      throws AppEngineException {
     Preconditions.checkNotNull(config);
     Preconditions.checkNotNull(config.getSourceDirectory());
     Preconditions.checkNotNull(config.getStagingDirectory());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.deploy;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -25,8 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.DeployConfiguration;
-import com.google.cloud.tools.appengine.api.deploy.DeployProjectConfigurationConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.GcloudRunner;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
@@ -37,7 +36,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,9 +45,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Unit tests for {@link CloudSdkAppEngineDeployment}. */
+/** Unit tests for {@link Deployment}. */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineDeploymentTest {
+public class DeploymentTest {
 
   @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
@@ -57,9 +55,9 @@ public class CloudSdkAppEngineDeploymentTest {
   private Path appYaml2;
   private Path stagingDirectory;
 
-  private CloudSdkAppEngineDeployment deployment;
+  private Deployment deployment;
 
-  @Mock private CloudSdkAppEngineDeployment mockDeployment;
+  @Mock private Deployment mockDeployment;
   @Mock private DeployProjectConfigurationConfiguration mockProjectConfigurationConfiguration;
   @Mock private GcloudRunner gcloudRunner;
 
@@ -68,17 +66,7 @@ public class CloudSdkAppEngineDeploymentTest {
     appYaml1 = tmpDir.newFile("app1.yaml").toPath();
     appYaml2 = tmpDir.newFile("app2.yaml").toPath();
     stagingDirectory = tmpDir.newFolder("appengine-staging").toPath();
-    deployment = new CloudSdkAppEngineDeployment(gcloudRunner);
-  }
-
-  @Test
-  public void testNullSdk() {
-    try {
-      new CloudSdkAppEngineDeployment(null);
-      Assert.fail("allowed null runner");
-    } catch (NullPointerException expected) {
-      // pass
-    }
+    deployment = new Deployment(gcloudRunner);
   }
 
   @Test

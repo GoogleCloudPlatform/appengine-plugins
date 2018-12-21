@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.deploy;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineAppYamlStaging;
-import com.google.cloud.tools.appengine.api.deploy.StageAppYamlConfiguration;
 import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.MoreFiles;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -36,11 +33,10 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
-/** Cloud SDK based implementation of {@link AppEngineAppYamlStaging}. */
-public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging {
+/** Application stager for app.yaml based applications before deployment. */
+public class AppYamlProjectStaging {
 
-  private static final Logger log =
-      Logger.getLogger(CloudSdkAppEngineAppYamlStaging.class.getName());
+  private static final Logger log = Logger.getLogger(AppYamlProjectStaging.class.getName());
 
   private static final String APP_YAML = "app.yaml";
 
@@ -49,12 +45,14 @@ public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging 
       ImmutableList.of("cron.yaml", "dos.yaml", "dispatch.yaml", "index.yaml", "queue.yaml");
 
   /**
-   * Stages a Java JAR/WAR App Engine application to be deployed.
+   * Stages an appengine app.yaml based project for deployment. Copies app.yaml, the project
+   * artifact and any user defined extra files. Will also copy the Docker directory for flex
+   * projects.
    *
-   * <p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
+   * @param config Specifies artifacts and staging destination
+   * @throws AppEngineException When staging fails
    */
-  @Override
-  public void stageArchive(StageAppYamlConfiguration config) throws AppEngineException {
+  public void stageArchive(AppYamlProjectStageConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Path stagingDirectory = config.getStagingDirectory();
 
@@ -88,7 +86,7 @@ public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging 
   }
 
   @VisibleForTesting
-  void stageFlexibleArchive(StageAppYamlConfiguration config, @Nullable String runtime)
+  void stageFlexibleArchive(AppYamlProjectStageConfiguration config, @Nullable String runtime)
       throws IOException, AppEngineException {
     CopyService copyService = new CopyService();
     copyDockerContext(config, copyService, runtime);
@@ -98,7 +96,7 @@ public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging 
   }
 
   @VisibleForTesting
-  void stageStandardArchive(StageAppYamlConfiguration config)
+  void stageStandardArchive(AppYamlProjectStageConfiguration config)
       throws IOException, AppEngineException {
     CopyService copyService = new CopyService();
     copyExtraFiles(config, copyService);
@@ -108,20 +106,21 @@ public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging 
 
   @VisibleForTesting
   @Nullable
-  static String findEnv(StageAppYamlConfiguration config) throws AppEngineException, IOException {
+  static String findEnv(AppYamlProjectStageConfiguration config)
+      throws AppEngineException, IOException {
     Path appEngineDirectory = config.getAppEngineDirectory();
     if (appEngineDirectory == null) {
       throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
     }
     Path appYaml = appEngineDirectory.resolve(APP_YAML);
-    try (InputStream input = MoreFiles.asByteSource(appYaml).openBufferedStream()) {
+    try (InputStream input = Files.newInputStream(appYaml)) {
       return AppYaml.parse(input).getEnvironmentType();
     }
   }
 
   @VisibleForTesting
   @Nullable
-  static String findRuntime(StageAppYamlConfiguration config)
+  static String findRuntime(AppYamlProjectStageConfiguration config)
       throws IOException, AppEngineException {
     // verify that app.yaml that contains runtime:java
     Path appEngineDirectory = config.getAppEngineDirectory();
@@ -129,14 +128,14 @@ public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging 
       throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
     }
     Path appYaml = appEngineDirectory.resolve(APP_YAML);
-    try (InputStream input = MoreFiles.asByteSource(appYaml).openBufferedStream()) {
+    try (InputStream input = Files.newInputStream(appYaml)) {
       return AppYaml.parse(input).getRuntime();
     }
   }
 
   @VisibleForTesting
   static void copyDockerContext(
-      StageAppYamlConfiguration config, CopyService copyService, @Nullable String runtime)
+      AppYamlProjectStageConfiguration config, CopyService copyService, @Nullable String runtime)
       throws IOException, AppEngineException {
     Path dockerDirectory = config.getDockerDirectory();
     if (dockerDirectory != null) {
@@ -162,7 +161,7 @@ public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging 
   }
 
   @VisibleForTesting
-  static void copyAppEngineContext(StageAppYamlConfiguration config, CopyService copyService)
+  static void copyAppEngineContext(AppYamlProjectStageConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
     Path appYaml = config.getAppEngineDirectory().resolve(APP_YAML);
     if (!Files.exists(appYaml)) {
@@ -173,7 +172,7 @@ public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging 
   }
 
   @VisibleForTesting
-  static void copyExtraFiles(StageAppYamlConfiguration config, CopyService copyService)
+  static void copyExtraFiles(AppYamlProjectStageConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
     List<Path> extraFilesDirectories = config.getExtraFilesDirectory();
     if (extraFilesDirectories == null) {
@@ -193,7 +192,7 @@ public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging 
     }
   }
 
-  private static void copyArtifact(StageAppYamlConfiguration config, CopyService copyService)
+  private static void copyArtifact(AppYamlProjectStageConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
     // Copy the JAR/WAR file to staging.
     Path artifact = config.getArtifact();

@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.appengine.api.deploy.Deployment;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ExitCodeRecorderProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.LegacyProcessHandler;
@@ -60,8 +61,8 @@ public class Gcloud {
     this.showStructuredLogs = showStructuredLogs;
   }
 
-  public CloudSdkAppEngineDeployment newDeployment(ProcessHandler processHandler) {
-    return new CloudSdkAppEngineDeployment(getRunner(processHandler));
+  public Deployment newDeployment(ProcessHandler processHandler) {
+    return new Deployment(getRunner(processHandler));
   }
 
   public CloudSdkAppEngineVersions newVersions(ProcessHandler processHandler) {

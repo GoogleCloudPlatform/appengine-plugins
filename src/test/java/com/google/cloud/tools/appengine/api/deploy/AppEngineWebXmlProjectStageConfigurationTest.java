@@ -24,9 +24,9 @@ import java.nio.file.Path;
 import org.junit.Before;
 import org.junit.Test;
 
-public class StageStandardConfigurationTest {
+public class AppEngineWebXmlProjectStageConfigurationTest {
 
-  private StageStandardConfiguration configuration;
+  private AppEngineWebXmlProjectStageConfiguration configuration;
   private Path stagingDirectory = Files.createTempDir().toPath();
   private Path sourceDirectory = Files.createTempDir().toPath();
 
@@ -35,7 +35,8 @@ public class StageStandardConfigurationTest {
     // todo should we check these are not the same and
     // files are files and directories are directories?
     // should we use paths instead?
-    configuration = StageStandardConfiguration.builder(sourceDirectory, stagingDirectory).build();
+    configuration =
+        AppEngineWebXmlProjectStageConfiguration.builder(sourceDirectory, stagingDirectory).build();
   }
 
   @Test

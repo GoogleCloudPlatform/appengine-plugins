@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
 import java.nio.file.Path;
 import javax.annotation.Nullable;
 
-/** Configuration for {@link AppEngineDeployment} project-level yaml deployments. */
+/** Configuration for {@link Deployment} project-level yaml deployments. */
 public class DeployProjectConfigurationConfiguration {
 
   private final Path appEngineDirectory;

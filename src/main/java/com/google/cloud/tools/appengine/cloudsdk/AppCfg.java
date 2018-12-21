@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import com.google.cloud.tools.appengine.api.deploy.AppEngineStandardStaging;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineWebXmlProjectStaging;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -31,8 +31,8 @@ public class AppCfg {
     this.sdk = sdk;
   }
 
-  public AppEngineStandardStaging newStaging(ProcessHandler processHandler) {
-    return new CloudSdkAppEngineStandardStaging(getRunner(processHandler));
+  public AppEngineWebXmlProjectStaging newStaging(ProcessHandler processHandler) {
+    return new AppEngineWebXmlProjectStaging(getRunner(processHandler));
   }
 
   @VisibleForTesting
