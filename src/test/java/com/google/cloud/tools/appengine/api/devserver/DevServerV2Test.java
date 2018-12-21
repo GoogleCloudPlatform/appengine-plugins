@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.devserver;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.DevAppServerRunner;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.SpyVerifier;
 import com.google.common.collect.ImmutableList;
@@ -40,26 +40,26 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Unit tests for {@link CloudSdkAppEngineDevServer2}. */
+/** Unit tests for {@link DevServerV2}. */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineDevServer2Test {
+public class DevServerV2Test {
 
   @Mock private DevAppServerRunner devAppServerRunner;
   private Path fakeStoragePath = Paths.get("storage/path");
   private Path fakeDatastorePath = Paths.get("datastore/path");
   private List<Path> fakeExplodedWarService = ImmutableList.of(Paths.get("exploded-war/"));
 
-  private CloudSdkAppEngineDevServer2 devServer;
+  private DevServerV2 devServer;
 
   @Before
   public void setUp() {
-    devServer = new CloudSdkAppEngineDevServer2(devAppServerRunner);
+    devServer = new DevServerV2(devAppServerRunner);
   }
 
   @Test
   public void tesNullSdk() {
     try {
-      new CloudSdkAppEngineDevServer2(null);
+      new DevServerV2(null);
       Assert.fail("Allowed null runner");
     } catch (NullPointerException expected) {
       // pass

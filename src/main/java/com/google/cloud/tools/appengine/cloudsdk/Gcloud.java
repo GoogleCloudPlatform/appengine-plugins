@@ -16,7 +16,10 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
+import com.google.cloud.tools.appengine.api.auth.Auth;
+import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFile;
 import com.google.cloud.tools.appengine.api.deploy.Deployment;
+import com.google.cloud.tools.appengine.api.versions.Versions;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.internal.process.ExitCodeRecorderProcessExitListener;
 import com.google.cloud.tools.appengine.cloudsdk.process.LegacyProcessHandler;
@@ -65,16 +68,16 @@ public class Gcloud {
     return new Deployment(getRunner(processHandler));
   }
 
-  public CloudSdkAppEngineVersions newVersions(ProcessHandler processHandler) {
-    return new CloudSdkAppEngineVersions(getRunner(processHandler));
+  public Versions newVersions(ProcessHandler processHandler) {
+    return new Versions(getRunner(processHandler));
   }
 
-  public CloudSdkAuth newAuth(ProcessHandler processHandler) {
-    return new CloudSdkAuth(getRunner(processHandler));
+  public Auth newAuth(ProcessHandler processHandler) {
+    return new Auth(getRunner(processHandler));
   }
 
-  public CloudSdkGenRepoInfoFile newGenRepoInfo(ProcessHandler processHandler) {
-    return new CloudSdkGenRepoInfoFile(getRunner(processHandler));
+  public GenRepoInfoFile newGenRepoInfo(ProcessHandler processHandler) {
+    return new GenRepoInfoFile(getRunner(processHandler));
   }
 
   /**

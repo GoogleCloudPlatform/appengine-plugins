@@ -20,6 +20,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.cloud.tools.appengine.api.auth.Auth;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -35,14 +36,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAuthTest {
+public class AuthTest {
   @Mock private GcloudRunner gcloudRunner;
   @Rule public TemporaryFolder tmpDir = new TemporaryFolder();
 
   @Test
   public void testNullSdk() {
     try {
-      new CloudSdkAuth(null);
+      new Auth(null);
       Assert.fail("allowed null runner");
     } catch (NullPointerException expected) {
       // pass
@@ -52,7 +53,7 @@ public class CloudSdkAuthTest {
   @Test
   public void testLogin_withUser() throws AppEngineException, ProcessHandlerException, IOException {
     String testUsername = "potato@potato.com";
-    new CloudSdkAuth(gcloudRunner).login(testUsername);
+    new Auth(gcloudRunner).login(testUsername);
     Mockito.verify(gcloudRunner).run(eq(Arrays.asList("auth", "login", testUsername)), isNull());
   }
 
@@ -60,7 +61,7 @@ public class CloudSdkAuthTest {
   public void testLogin_withBadUser() {
     String testUsername = "potato@pota@to.com";
     try {
-      new CloudSdkAuth(gcloudRunner).login(testUsername);
+      new Auth(gcloudRunner).login(testUsername);
       Assert.fail("Should have failed with bad user.");
     } catch (AppEngineException e) {
       Assert.assertThat(
@@ -72,7 +73,7 @@ public class CloudSdkAuthTest {
   @Test
   public void testLogin_withNullUser() throws AppEngineException {
     try {
-      new CloudSdkAuth(gcloudRunner).login(null);
+      new Auth(gcloudRunner).login(null);
       Assert.fail("Should have failed with bad user.");
     } catch (NullPointerException npe) {
       // pass
@@ -81,7 +82,7 @@ public class CloudSdkAuthTest {
 
   @Test
   public void testLogin_noUser() throws ProcessHandlerException, AppEngineException, IOException {
-    new CloudSdkAuth(gcloudRunner).login();
+    new Auth(gcloudRunner).login();
     Mockito.verify(gcloudRunner).run(eq(Arrays.asList("auth", "login")), isNull());
   }
 
@@ -89,7 +90,7 @@ public class CloudSdkAuthTest {
   public void testActivateServiceAccount()
       throws ProcessHandlerException, IOException, AppEngineException {
     Path jsonKeyFile = tmpDir.newFile("json-keys").toPath();
-    new CloudSdkAuth(gcloudRunner).activateServiceAccount(jsonKeyFile);
+    new Auth(gcloudRunner).activateServiceAccount(jsonKeyFile);
     Mockito.verify(gcloudRunner)
         .run(
             eq(
@@ -105,7 +106,7 @@ public class CloudSdkAuthTest {
   public void testActivateServiceAccount_badKeyFile() throws AppEngineException {
     Path jsonKeyFile = tmpDir.getRoot().toPath().resolve("non-existant-file");
     try {
-      new CloudSdkAuth(gcloudRunner).activateServiceAccount(jsonKeyFile);
+      new Auth(gcloudRunner).activateServiceAccount(jsonKeyFile);
       Assert.fail("Should have failed with bad keyfile.");
     } catch (IllegalArgumentException e) {
       Assert.assertThat(

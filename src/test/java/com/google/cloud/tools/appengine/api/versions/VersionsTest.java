@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.versions;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -22,8 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.versions.VersionsListConfiguration;
-import com.google.cloud.tools.appengine.api.versions.VersionsSelectionConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.GcloudRunner;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,21 +33,21 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Unit tests for {@link com.google.cloud.tools.appengine.cloudsdk.CloudSdkAppEngineVersions}. */
+/** Unit tests for {@link Versions}. */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineVersionsTest {
+public class VersionsTest {
 
   @Mock private GcloudRunner gcloudRunner;
-  CloudSdkAppEngineVersions appEngineVersion;
+  Versions appEngineVersions;
 
   @Before
   public void setUp() {
-    appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
+    appEngineVersions = new Versions(gcloudRunner);
   }
 
   @Test
   public void startTest() throws ProcessHandlerException, AppEngineException, IOException {
-    appEngineVersion.start(getVersionConfig());
+    appEngineVersions.start(getVersionConfig());
 
     List<String> args =
         Arrays.asList(
@@ -67,7 +66,7 @@ public class CloudSdkAppEngineVersionsTest {
 
   @Test
   public void stopTest() throws ProcessHandlerException, AppEngineException, IOException {
-    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
+    Versions appEngineVersion = new Versions(gcloudRunner);
     appEngineVersion.stop(getVersionConfig());
 
     List<String> args =
@@ -87,7 +86,7 @@ public class CloudSdkAppEngineVersionsTest {
 
   @Test
   public void deleteTest() throws ProcessHandlerException, AppEngineException, IOException {
-    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
+    Versions appEngineVersion = new Versions(gcloudRunner);
     appEngineVersion.delete(getVersionConfig());
 
     List<String> args =
@@ -108,7 +107,7 @@ public class CloudSdkAppEngineVersionsTest {
   @Test
   public void listTest_doHideNoTraffic()
       throws ProcessHandlerException, AppEngineException, IOException {
-    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
+    Versions appEngineVersion = new Versions(gcloudRunner);
     appEngineVersion.list(getListConfig(true));
 
     List<String> args =
@@ -128,7 +127,7 @@ public class CloudSdkAppEngineVersionsTest {
   @Test
   public void listTest_dontHideNoTraffic()
       throws ProcessHandlerException, AppEngineException, IOException {
-    CloudSdkAppEngineVersions appEngineVersion = new CloudSdkAppEngineVersions(gcloudRunner);
+    Versions appEngineVersion = new Versions(gcloudRunner);
     appEngineVersion.list(getListConfig(false));
 
     List<String> args =

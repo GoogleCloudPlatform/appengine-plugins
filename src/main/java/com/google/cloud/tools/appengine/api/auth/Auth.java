@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google Inc.
+ * Copyright 2018 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,73 @@
 package com.google.cloud.tools.appengine.api.auth;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.cloud.tools.appengine.cloudsdk.GcloudRunner;
+import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
+import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
-public interface Auth {
-  void login(String user) throws AppEngineException;
+/** Interface to gcloud auth commands. */
+public class Auth {
+  private static final Pattern emailPattern =
+      Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]+$", Pattern.CASE_INSENSITIVE);
 
-  void login() throws AppEngineException;
+  private final GcloudRunner runner;
 
-  void activateServiceAccount(Path jsonFile) throws AppEngineException;
+  public Auth(GcloudRunner runner) {
+    this.runner = Preconditions.checkNotNull(runner);
+  }
+
+  /**
+   * Logs into the Cloud SDK with a specific user (does not retrigger auth flow if user is already
+   * configured for the system).
+   *
+   * @param user a user email
+   * @throws AppEngineException when there is an issue with the auth flow
+   */
+  public void login(String user) throws AppEngineException {
+    Preconditions.checkNotNull(user);
+    if (!emailPattern.matcher(user).find()) {
+      throw new AppEngineException("Invalid email address: " + user);
+    }
+    try {
+      runner.run(ImmutableList.of("auth", "login", user), null);
+    } catch (ProcessHandlerException | IOException ex) {
+      throw new AppEngineException(ex);
+    }
+  }
+
+  /** Launches the gcloud auth login flow. */
+  public void login() throws AppEngineException {
+    try {
+      runner.run(ImmutableList.of("auth", "login"), null);
+    } catch (ProcessHandlerException | IOException ex) {
+      throw new AppEngineException(ex);
+    }
+  }
+
+  /**
+   * Activates a service account based on a configured json key file.
+   *
+   * @param jsonFile a service account json key file
+   * @throws AppEngineException when there is an issue with the auth flow
+   */
+  public void activateServiceAccount(Path jsonFile) throws AppEngineException {
+    Preconditions.checkArgument(Files.exists(jsonFile), "File does not exist: " + jsonFile);
+    try {
+      List<String> args = new ArrayList<>(3);
+      args.add("auth");
+      args.add("activate-service-account");
+      args.addAll(GcloudArgs.get("key-file", jsonFile));
+      runner.run(args, null);
+    } catch (ProcessHandlerException | IOException ex) {
+      throw new AppEngineException(ex);
+    }
+  }
 }

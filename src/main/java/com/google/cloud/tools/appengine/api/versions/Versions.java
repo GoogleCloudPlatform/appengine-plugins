@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.versions;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.versions.AppEngineVersions;
-import com.google.cloud.tools.appengine.api.versions.VersionsListConfiguration;
-import com.google.cloud.tools.appengine.api.versions.VersionsSelectionConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.cloudsdk.GcloudRunner;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.GcloudArgs;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Preconditions;
@@ -27,12 +27,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Cloud SDK based implementation of {@link AppEngineVersions}. */
-public class CloudSdkAppEngineVersions implements AppEngineVersions {
+/** Interface with gcloud versions command. */
+public class Versions {
 
   private final GcloudRunner runner;
 
-  public CloudSdkAppEngineVersions(GcloudRunner runner) {
+  public Versions(GcloudRunner runner) {
     this.runner = runner;
   }
 
@@ -50,7 +50,6 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
-  @Override
   public void start(VersionsSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
@@ -71,7 +70,6 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
-  @Override
   public void stop(VersionsSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
@@ -92,7 +90,6 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
-  @Override
   public void delete(VersionsSelectionConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
     Preconditions.checkNotNull(configuration.getVersions());
@@ -113,7 +110,6 @@ public class CloudSdkAppEngineVersions implements AppEngineVersions {
    * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
    * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
    */
-  @Override
   public void list(VersionsListConfiguration configuration) throws AppEngineException {
     Preconditions.checkNotNull(configuration);
 

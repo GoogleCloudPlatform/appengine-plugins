@@ -16,7 +16,9 @@
 
 package com.google.cloud.tools.appengine.cloudsdk;
 
-import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
+import com.google.cloud.tools.appengine.api.devserver.DevServer;
+import com.google.cloud.tools.appengine.api.devserver.DevServerV1;
+import com.google.cloud.tools.appengine.api.devserver.DevServerV2;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandler;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -30,12 +32,12 @@ public class LocalRun {
     this.sdk = sdk;
   }
 
-  public AppEngineDevServer newDevAppServer1(ProcessHandler processHandler) {
-    return new CloudSdkAppEngineDevServer1(sdk, getRunner(processHandler));
+  public DevServer newDevAppServer1(ProcessHandler processHandler) {
+    return new DevServerV1(sdk, getRunner(processHandler));
   }
 
-  public AppEngineDevServer newDevAppServer2(ProcessHandler processHandler) {
-    return new CloudSdkAppEngineDevServer2(getRunner(processHandler));
+  public DevServer newDevAppServer2(ProcessHandler processHandler) {
+    return new DevServerV2(getRunner(processHandler));
   }
 
   @VisibleForTesting

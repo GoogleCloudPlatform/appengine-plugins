@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.cloud.tools.appengine.cloudsdk;
+
+package com.google.cloud.tools.appengine.api.devserver;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -21,8 +22,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
-import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
+import com.google.cloud.tools.appengine.cloudsdk.DevAppServerRunner;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.cloud.tools.test.utils.LogStoringHandler;
 import com.google.cloud.tools.test.utils.SpyVerifier;
@@ -47,9 +48,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Unit tests for {@link CloudSdkAppEngineDevServer1}. */
+/** Unit tests for {@link DevServerV1}. */
 @RunWith(MockitoJUnitRunner.class)
-public class CloudSdkAppEngineDevServer1Test {
+public class DevServerV1Test {
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
   private Path fakeJavaSdkHome;
@@ -60,7 +61,7 @@ public class CloudSdkAppEngineDevServer1Test {
   @Mock private CloudSdk sdk;
   @Mock private DevAppServerRunner devAppServerRunner;
 
-  private CloudSdkAppEngineDevServer1 devServer;
+  private DevServerV1 devServer;
 
   private final Path java11Service =
       Paths.get("src/test/resources/projects/EmptyStandard11Project");
@@ -80,14 +81,14 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Before
   public void setUp() throws IOException {
-    devServer = Mockito.spy(new CloudSdkAppEngineDevServer1(sdk, devAppServerRunner));
+    devServer = Mockito.spy(new DevServerV1(sdk, devAppServerRunner));
     fakeJavaSdkHome = temporaryFolder.newFolder("java-sdk").toPath();
     fakeStoragePath = Paths.get("storage/path");
     fakeDatastorePath = temporaryFolder.newFile("datastore.db").toPath();
 
     Mockito.when(sdk.getAppEngineSdkForJavaPath()).thenReturn(fakeJavaSdkHome);
 
-    testHandler = LogStoringHandler.getForLogger(CloudSdkAppEngineDevServer1.class.getName());
+    testHandler = LogStoringHandler.getForLogger(DevServerV1.class.getName());
   }
 
   @Test
@@ -118,13 +119,13 @@ public class CloudSdkAppEngineDevServer1Test {
   @Test
   public void testNullSdk() {
     try {
-      new CloudSdkAppEngineDevServer1(null, devAppServerRunner);
+      new DevServerV1(null, devAppServerRunner);
       Assert.fail("Allowed null SDK");
     } catch (NullPointerException expected) {
     }
 
     try {
-      new CloudSdkAppEngineDevServer1(sdk, null);
+      new DevServerV1(sdk, null);
       Assert.fail("Allowed null runner");
     } catch (NullPointerException expected) {
     }
@@ -554,22 +555,20 @@ public class CloudSdkAppEngineDevServer1Test {
 
   @Test
   public void testGetLocalAppEngineEnvironmentVariables_java7() {
-    Map<String, String> environment =
-        CloudSdkAppEngineDevServer1.getLocalAppEngineEnvironmentVariables("java7");
+    Map<String, String> environment = DevServerV1.getLocalAppEngineEnvironmentVariables("java7");
     Assert.assertEquals(expectedJava7Environment, environment);
   }
 
   @Test
   public void testGetLocalAppEngineEnvironmentVariables_java8() {
-    Map<String, String> environment =
-        CloudSdkAppEngineDevServer1.getLocalAppEngineEnvironmentVariables("java8");
+    Map<String, String> environment = DevServerV1.getLocalAppEngineEnvironmentVariables("java8");
     Assert.assertEquals(expectedJava8Environment, environment);
   }
 
   @Test
   public void testGetLocalAppEngineEnvironmentVariables_other() {
     Map<String, String> environment =
-        CloudSdkAppEngineDevServer1.getLocalAppEngineEnvironmentVariables("some_other_runtime");
+        DevServerV1.getLocalAppEngineEnvironmentVariables("some_other_runtime");
     Map<String, String> expectedEnvironment =
         ImmutableMap.of("GAE_ENV", "localdev", "GAE_RUNTIME", "some_other_runtime");
     Assert.assertEquals(expectedEnvironment, environment);
@@ -579,21 +578,17 @@ public class CloudSdkAppEngineDevServer1Test {
   public void testGetGaeRuntimeJava_isJava11() throws AppEngineException {
     Assert.assertEquals(
         "java11",
-        CloudSdkAppEngineDevServer1.getGaeRuntimeJava(
-            ImmutableList.of(java7Service, java8Service, java11Service)));
+        DevServerV1.getGaeRuntimeJava(ImmutableList.of(java7Service, java8Service, java11Service)));
   }
 
   @Test
   public void testGetGaeRuntimeJava_isJava8() throws AppEngineException {
     Assert.assertEquals(
-        "java8",
-        CloudSdkAppEngineDevServer1.getGaeRuntimeJava(
-            ImmutableList.of(java7Service, java8Service)));
+        "java8", DevServerV1.getGaeRuntimeJava(ImmutableList.of(java7Service, java8Service)));
   }
 
   @Test
   public void testGetGaeRuntimeJava_isNotJava8() throws AppEngineException {
-    Assert.assertEquals(
-        "java7", CloudSdkAppEngineDevServer1.getGaeRuntimeJava(ImmutableList.of(java7Service)));
+    Assert.assertEquals("java7", DevServerV1.getGaeRuntimeJava(ImmutableList.of(java7Service)));
   }
 }

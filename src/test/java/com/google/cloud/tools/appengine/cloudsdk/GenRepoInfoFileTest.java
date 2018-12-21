@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.cloudsdk;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFile;
 import com.google.cloud.tools.appengine.api.debug.GenRepoInfoFileConfiguration;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.collect.ImmutableList;
@@ -27,12 +28,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class CloudSdkGenRepoInfoFileTest {
+public class GenRepoInfoFileTest {
 
   @Test
   public void testNullSdk() {
     try {
-      new CloudSdkGenRepoInfoFile(null);
+      new GenRepoInfoFile(null);
       Assert.fail("allowed null SDK");
     } catch (NullPointerException expected) {
     }
@@ -41,7 +42,7 @@ public class CloudSdkGenRepoInfoFileTest {
   @Test
   public void testGenerate() throws AppEngineException, ProcessHandlerException, IOException {
     GcloudRunner gcloudRunner = Mockito.mock(GcloudRunner.class);
-    CloudSdkGenRepoInfoFile model = new CloudSdkGenRepoInfoFile(gcloudRunner);
+    GenRepoInfoFile model = new GenRepoInfoFile(gcloudRunner);
     GenRepoInfoFileConfiguration configuration =
         GenRepoInfoFileConfiguration.builder()
             .outputDirectory(Paths.get("output"))

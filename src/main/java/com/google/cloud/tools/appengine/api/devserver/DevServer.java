@@ -19,7 +19,7 @@ package com.google.cloud.tools.appengine.api.devserver;
 import com.google.cloud.tools.appengine.api.AppEngineException;
 
 /** Interface for running App Engine Local Development Server. */
-public interface AppEngineDevServer {
+public interface DevServer {
 
   /**
    * Runs the App Engine Development Server synchronously.

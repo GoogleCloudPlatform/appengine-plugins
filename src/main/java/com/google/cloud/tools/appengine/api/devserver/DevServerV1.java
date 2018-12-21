@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google Inc.
+ * Copyright 2017 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.devserver;
 
 import com.google.cloud.tools.appengine.AppEngineDescriptor;
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
-import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
-import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdk;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.cloudsdk.DevAppServerRunner;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.annotations.VisibleForTesting;
@@ -40,10 +41,10 @@ import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import org.xml.sax.SAXException;
 
-/** Classic Java SDK based implementation of {@link AppEngineDevServer}. */
-public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
+/** Classic Java SDK based implementation of {@link DevServer}. */
+public class DevServerV1 implements DevServer {
 
-  private static final Logger log = Logger.getLogger(CloudSdkAppEngineDevServer1.class.getName());
+  private static final Logger log = Logger.getLogger(DevServerV1.class.getName());
 
   private final CloudSdk sdk;
   private final DevAppServerRunner runner;
@@ -51,7 +52,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
   private static final String DEFAULT_HOST = "localhost";
   private static final int DEFAULT_PORT = 8080;
 
-  public CloudSdkAppEngineDevServer1(CloudSdk sdk, DevAppServerRunner runner) {
+  public DevServerV1(CloudSdk sdk, DevAppServerRunner runner) {
     this.sdk = Preconditions.checkNotNull(sdk);
     this.runner = Preconditions.checkNotNull(runner);
   }
@@ -254,7 +255,7 @@ public class CloudSdkAppEngineDevServer1 implements AppEngineDevServer {
 
   /**
    * Gets a {@code Map<String, String>} of the environment variables for running the {@link
-   * AppEngineDevServer}.
+   * DevServer}.
    *
    * @param gaeRuntime the runtime ID to set the environment variable GAE_RUNTIME to
    * @return {@code Map<String, String>} that maps from the environment variable name to its value

@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
-class DevAppServerRunner {
+public class DevAppServerRunner {
   private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
   private static final Logger logger = Logger.getLogger(DevAppServerRunner.class.getName());
 
@@ -99,7 +99,7 @@ class DevAppServerRunner {
    *     components are not
    * @throws InvalidJavaSdkException when the specified JDK does not exist
    */
-  void runV1(
+  public void runV1(
       List<String> jvmArgs,
       List<String> args,
       Map<String, String> environment,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google Inc.
+ * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.cloud.tools.appengine.cloudsdk;
+package com.google.cloud.tools.appengine.api.devserver;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.devserver.AppEngineDevServer;
-import com.google.cloud.tools.appengine.api.devserver.RunConfiguration;
-import com.google.cloud.tools.appengine.api.devserver.StopConfiguration;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkNotFoundException;
+import com.google.cloud.tools.appengine.cloudsdk.CloudSdkOutOfDateException;
+import com.google.cloud.tools.appengine.cloudsdk.DevAppServerRunner;
 import com.google.cloud.tools.appengine.cloudsdk.internal.args.DevAppServerArgs;
 import com.google.cloud.tools.appengine.cloudsdk.process.ProcessHandlerException;
 import com.google.common.base.Preconditions;
@@ -31,15 +31,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Cloud SDK based implementation of {@link AppEngineDevServer}. */
-public class CloudSdkAppEngineDevServer2 implements AppEngineDevServer {
+/** Cloud SDK based implementation of {@link DevServer}. */
+public class DevServerV2 implements DevServer {
 
   private static final String DEFAULT_ADMIN_HOST = "localhost";
   private static final int DEFAULT_ADMIN_PORT = 8000;
 
   private final DevAppServerRunner runner;
 
-  public CloudSdkAppEngineDevServer2(DevAppServerRunner runner) {
+  public DevServerV2(DevAppServerRunner runner) {
     this.runner = Preconditions.checkNotNull(runner);
   }
 
