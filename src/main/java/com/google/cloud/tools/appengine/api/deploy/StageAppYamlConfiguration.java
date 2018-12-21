@@ -17,29 +17,32 @@
 package com.google.cloud.tools.appengine.api.deploy;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
+import java.util.List;
 import javax.annotation.Nullable;
 
-/** Configuration for {@link AppEngineArchiveStaging#stageArchive(StageArchiveConfiguration)}. */
-public class StageArchiveConfiguration {
+/** Configuration for {@link AppEngineAppYamlStaging#stageArchive(StageAppYamlConfiguration)}. */
+public class StageAppYamlConfiguration {
 
   private final Path appEngineDirectory;
   @Nullable private final Path dockerDirectory;
-  @Nullable private final Path extraFilesDirectory;
+  @Nullable private final List<Path> extraFilesDirectories;
   private final Path artifact;
   private final Path stagingDirectory;
 
-  private StageArchiveConfiguration(
+  private StageAppYamlConfiguration(
       Path appEngineDirectory,
       @Nullable Path dockerDirectory,
-      @Nullable Path extraFilesDirectory,
+      @Nullable List<Path> extraFilesDirectories,
       Path artifact,
       Path stagingDirectory) {
     this.appEngineDirectory = appEngineDirectory;
     this.dockerDirectory = dockerDirectory;
-    this.extraFilesDirectory = extraFilesDirectory;
     this.artifact = artifact;
     this.stagingDirectory = stagingDirectory;
+    this.extraFilesDirectories =
+        (extraFilesDirectories == null) ? null : ImmutableList.copyOf(extraFilesDirectories);
   }
 
   /** Directory containing {@code app.yaml}. */
@@ -53,10 +56,10 @@ public class StageArchiveConfiguration {
     return dockerDirectory;
   }
 
-  /** Directory containing other files to be deployed with the application. */
+  /** Directories containing other files to be deployed with the application. */
   @Nullable
-  public Path getExtraFilesDirectory() {
-    return extraFilesDirectory;
+  public List<Path> getExtraFilesDirectory() {
+    return extraFilesDirectories;
   }
 
   /** Artifact to deploy such as WAR or JAR. */
@@ -79,7 +82,7 @@ public class StageArchiveConfiguration {
   public static final class Builder {
     private Path appEngineDirectory;
     @Nullable private Path dockerDirectory;
-    @Nullable private Path extraFilesDirectory;
+    @Nullable private List<Path> extraFilesDirectories;
     private Path artifact;
     private Path stagingDirectory;
 
@@ -93,23 +96,23 @@ public class StageArchiveConfiguration {
       this.stagingDirectory = stagingDirectory;
     }
 
-    public StageArchiveConfiguration.Builder dockerDirectory(@Nullable Path dockerDirectory) {
+    public StageAppYamlConfiguration.Builder dockerDirectory(@Nullable Path dockerDirectory) {
       this.dockerDirectory = dockerDirectory;
       return this;
     }
 
-    public StageArchiveConfiguration.Builder extraFilesDirectory(
-        @Nullable Path extraFilesDirectory) {
-      this.extraFilesDirectory = extraFilesDirectory;
+    public StageAppYamlConfiguration.Builder extraFilesDirectories(
+        @Nullable List<Path> extraFilesDirectories) {
+      this.extraFilesDirectories = extraFilesDirectories;
       return this;
     }
 
-    /** Build a {@link StageArchiveConfiguration}. */
-    public StageArchiveConfiguration build() {
-      return new StageArchiveConfiguration(
+    /** Build a {@link StageAppYamlConfiguration}. */
+    public StageAppYamlConfiguration build() {
+      return new StageAppYamlConfiguration(
           this.appEngineDirectory,
           this.dockerDirectory,
-          this.extraFilesDirectory,
+          this.extraFilesDirectories,
           this.artifact,
           this.stagingDirectory);
     }

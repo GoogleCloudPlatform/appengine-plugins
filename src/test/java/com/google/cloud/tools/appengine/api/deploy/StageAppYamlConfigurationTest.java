@@ -23,9 +23,9 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 
-public class StageArchiveConfigurationTest {
+public class StageAppYamlConfigurationTest {
 
-  private StageArchiveConfiguration configuration;
+  private StageAppYamlConfiguration configuration;
   private Path file = Paths.get("");
 
   @Before
@@ -34,12 +34,12 @@ public class StageArchiveConfigurationTest {
     // files are files and directories are directories?
     // should we use paths instead?
     configuration =
-        StageArchiveConfiguration.builder(file, file, file).dockerDirectory(file).build();
+        StageAppYamlConfiguration.builder(file, file, file).dockerDirectory(file).build();
   }
 
   @Test
   public void testDockerNotRequired() {
-    StageArchiveConfiguration.builder(file, file, file).build();
+    StageAppYamlConfiguration.builder(file, file, file).build();
   }
 
   @Test

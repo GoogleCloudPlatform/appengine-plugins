@@ -19,8 +19,8 @@ package com.google.cloud.tools.appengine.cloudsdk;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import com.google.cloud.tools.appengine.api.AppEngineException;
-import com.google.cloud.tools.appengine.api.deploy.AppEngineArchiveStaging;
-import com.google.cloud.tools.appengine.api.deploy.StageArchiveConfiguration;
+import com.google.cloud.tools.appengine.api.deploy.AppEngineAppYamlStaging;
+import com.google.cloud.tools.appengine.api.deploy.StageAppYamlConfiguration;
 import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
@@ -36,11 +36,11 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
-/** Cloud SDK based implementation of {@link AppEngineArchiveStaging}. */
-public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging {
+/** Cloud SDK based implementation of {@link AppEngineAppYamlStaging}. */
+public class CloudSdkAppEngineAppYamlStaging implements AppEngineAppYamlStaging {
 
   private static final Logger log =
-      Logger.getLogger(CloudSdkAppEngineArchiveStaging.class.getName());
+      Logger.getLogger(CloudSdkAppEngineAppYamlStaging.class.getName());
 
   private static final String APP_YAML = "app.yaml";
 
@@ -54,7 +54,7 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
    * <p>Copies app.yaml, Dockerfile and the application artifact to the staging area.
    */
   @Override
-  public void stageArchive(StageArchiveConfiguration config) throws AppEngineException {
+  public void stageArchive(StageAppYamlConfiguration config) throws AppEngineException {
     Preconditions.checkNotNull(config);
     Path stagingDirectory = config.getStagingDirectory();
 
@@ -88,7 +88,7 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
   }
 
   @VisibleForTesting
-  void stageFlexibleArchive(StageArchiveConfiguration config, @Nullable String runtime)
+  void stageFlexibleArchive(StageAppYamlConfiguration config, @Nullable String runtime)
       throws IOException, AppEngineException {
     CopyService copyService = new CopyService();
     copyDockerContext(config, copyService, runtime);
@@ -98,7 +98,7 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
   }
 
   @VisibleForTesting
-  void stageStandardArchive(StageArchiveConfiguration config)
+  void stageStandardArchive(StageAppYamlConfiguration config)
       throws IOException, AppEngineException {
     CopyService copyService = new CopyService();
     copyExtraFiles(config, copyService);
@@ -108,7 +108,7 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
 
   @VisibleForTesting
   @Nullable
-  static String findEnv(StageArchiveConfiguration config) throws AppEngineException, IOException {
+  static String findEnv(StageAppYamlConfiguration config) throws AppEngineException, IOException {
     Path appEngineDirectory = config.getAppEngineDirectory();
     if (appEngineDirectory == null) {
       throw new AppEngineException("Invalid Staging Configuration: missing App Engine directory");
@@ -121,7 +121,7 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
 
   @VisibleForTesting
   @Nullable
-  static String findRuntime(StageArchiveConfiguration config)
+  static String findRuntime(StageAppYamlConfiguration config)
       throws IOException, AppEngineException {
     // verify that app.yaml that contains runtime:java
     Path appEngineDirectory = config.getAppEngineDirectory();
@@ -136,7 +136,7 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
 
   @VisibleForTesting
   static void copyDockerContext(
-      StageArchiveConfiguration config, CopyService copyService, @Nullable String runtime)
+      StageAppYamlConfiguration config, CopyService copyService, @Nullable String runtime)
       throws IOException, AppEngineException {
     Path dockerDirectory = config.getDockerDirectory();
     if (dockerDirectory != null) {
@@ -162,7 +162,7 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
   }
 
   @VisibleForTesting
-  static void copyAppEngineContext(StageArchiveConfiguration config, CopyService copyService)
+  static void copyAppEngineContext(StageAppYamlConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
     Path appYaml = config.getAppEngineDirectory().resolve(APP_YAML);
     if (!Files.exists(appYaml)) {
@@ -173,25 +173,27 @@ public class CloudSdkAppEngineArchiveStaging implements AppEngineArchiveStaging 
   }
 
   @VisibleForTesting
-  static void copyExtraFiles(StageArchiveConfiguration config, CopyService copyService)
+  static void copyExtraFiles(StageAppYamlConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
-    Path extraFilesDirectory = config.getExtraFilesDirectory();
-    if (extraFilesDirectory == null) {
+    List<Path> extraFilesDirectories = config.getExtraFilesDirectory();
+    if (extraFilesDirectories == null) {
       return;
     }
-    if (!Files.exists(extraFilesDirectory)) {
-      throw new AppEngineException(
-          "Extra files directory does not exist. Location: " + extraFilesDirectory);
+    for (Path extraFilesDirectory : extraFilesDirectories) {
+      if (!Files.exists(extraFilesDirectory)) {
+        throw new AppEngineException(
+            "Extra files directory does not exist. Location: " + extraFilesDirectory);
+      }
+      if (!Files.isDirectory(extraFilesDirectory)) {
+        throw new AppEngineException(
+            "Extra files location is not a directory. Location: " + extraFilesDirectory);
+      }
+      Path stagingDirectory = config.getStagingDirectory();
+      copyService.copyDirectory(extraFilesDirectory, stagingDirectory);
     }
-    if (!Files.isDirectory(extraFilesDirectory)) {
-      throw new AppEngineException(
-          "Extra files location is not a directory. Location: " + extraFilesDirectory);
-    }
-    Path stagingDirectory = config.getStagingDirectory();
-    copyService.copyDirectory(extraFilesDirectory, stagingDirectory);
   }
 
-  private static void copyArtifact(StageArchiveConfiguration config, CopyService copyService)
+  private static void copyArtifact(StageAppYamlConfiguration config, CopyService copyService)
       throws IOException, AppEngineException {
     // Copy the JAR/WAR file to staging.
     Path artifact = config.getArtifact();
