@@ -50,7 +50,7 @@ public class AsyncByteConsumerTest {
         .handleStream(mockInputStream);
 
     Mockito.verify(mockExecutorService).isShutdown();
-    Mockito.verify(mockExecutorService).submit(Mockito.any(Callable.class));
+    Mockito.verify(mockExecutorService).submit(Mockito.<Callable<Object>>any());
     Mockito.verify(mockExecutorService).shutdown();
     Mockito.verifyNoMoreInteractions(mockExecutorService);
   }

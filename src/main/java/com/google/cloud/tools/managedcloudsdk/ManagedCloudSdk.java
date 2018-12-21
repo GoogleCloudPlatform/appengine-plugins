@@ -18,8 +18,8 @@ package com.google.cloud.tools.managedcloudsdk;
 
 import static com.google.cloud.tools.managedcloudsdk.OsInfo.Name.WINDOWS;
 
-import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent;
-import com.google.cloud.tools.appengine.cloudsdk.serialization.CloudSdkComponent.State;
+import com.google.cloud.tools.appengine.operations.cloudsdk.serialization.CloudSdkComponent;
+import com.google.cloud.tools.appengine.operations.cloudsdk.serialization.CloudSdkComponent.State;
 import com.google.cloud.tools.managedcloudsdk.command.CommandCaller;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;

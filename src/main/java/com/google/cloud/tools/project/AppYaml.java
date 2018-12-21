@@ -16,7 +16,7 @@
 
 package com.google.cloud.tools.project;
 
-import com.google.cloud.tools.appengine.api.AppEngineException;
+import com.google.cloud.tools.appengine.AppEngineException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
