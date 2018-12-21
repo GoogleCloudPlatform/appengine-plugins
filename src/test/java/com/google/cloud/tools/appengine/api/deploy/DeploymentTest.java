@@ -36,6 +36,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -67,6 +68,16 @@ public class DeploymentTest {
     appYaml2 = tmpDir.newFile("app2.yaml").toPath();
     stagingDirectory = tmpDir.newFolder("appengine-staging").toPath();
     deployment = new Deployment(gcloudRunner);
+  }
+
+  @Test
+  public void testNullSdk() {
+    try {
+      new Deployment(null);
+      Assert.fail("allowed null runner");
+    } catch (NullPointerException expected) {
+      // pass
+    }
   }
 
   @Test
