@@ -44,9 +44,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- * Test the {@link com.google.cloud.tools.appengine.api.deploy.AppYamlProjectStaging} functionality.
- */
+/** Test the {@link AppYamlProjectStaging} functionality. */
 @RunWith(MockitoJUnitRunner.class)
 public class AppYamlProjectStagingTest {
 

@@ -30,10 +30,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Arguments needed to stage an App Engine app.yaml based application. Null return values indicate
- * that the configuration was not set, and thus assumes the tool default value.
- */
+/** Deploy staged application and project configuration. */
 public class Deployment {
 
   private final GcloudRunner runner;
@@ -96,24 +93,24 @@ public class Deployment {
     deployConfig("cron.yaml", config);
   }
 
-  /** Deploy cron.yaml to App Engine. */
+  /** Deploy dos.yaml to App Engine. */
   public void deployDos(DeployProjectConfigurationConfiguration config) throws AppEngineException {
     deployConfig("dos.yaml", config);
   }
 
-  /** Deploy cron.yaml to App Engine. */
+  /** Deploy dispatch.yaml to App Engine. */
   public void deployDispatch(DeployProjectConfigurationConfiguration config)
       throws AppEngineException {
     deployConfig("dispatch.yaml", config);
   }
 
-  /** Deploy cron.yaml to App Engine. */
+  /** Deploy index.yaml to App Engine. */
   public void deployIndex(DeployProjectConfigurationConfiguration config)
       throws AppEngineException {
     deployConfig("index.yaml", config);
   }
 
-  /** Deploy cron.yaml to App Engine. */
+  /** Deploy queue.yaml to App Engine. */
   public void deployQueue(DeployProjectConfigurationConfiguration config)
       throws AppEngineException {
     deployConfig("queue.yaml", config);

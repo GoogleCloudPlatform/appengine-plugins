@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.List;
 import javax.annotation.Nullable;
 
-/** Application stager for appengine-web.xml based applications before deployment. */
+/** Application stager for app.yaml based applications before deployment. */
 public class AppYamlProjectStageConfiguration {
 
   private final Path appEngineDirectory;

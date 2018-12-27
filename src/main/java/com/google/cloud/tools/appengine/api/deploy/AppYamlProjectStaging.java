@@ -45,7 +45,7 @@ public class AppYamlProjectStaging {
       ImmutableList.of("cron.yaml", "dos.yaml", "dispatch.yaml", "index.yaml", "queue.yaml");
 
   /**
-   * Stages an appengine app.yaml based project for deployment. Copies app.yaml, the project
+   * Stages an app.yaml based App Engine project for deployment. Copies app.yaml, the project
    * artifact and any user defined extra files. Will also copy the Docker directory for flex
    * projects.
    *
