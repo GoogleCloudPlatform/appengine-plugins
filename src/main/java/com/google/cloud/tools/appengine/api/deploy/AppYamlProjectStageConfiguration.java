@@ -23,8 +23,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 /**
- * Arguments needed to stage an App Engine app.yaml based application. Null return values
- * indicate that the configuration was not set, and thus assumes the tool default value.
+ * Arguments needed to stage an App Engine app.yaml based application. Null return values indicate
+ * that the configuration was not set, and thus assumes the tool default value.
  */
 public class AppYamlProjectStageConfiguration {
 
