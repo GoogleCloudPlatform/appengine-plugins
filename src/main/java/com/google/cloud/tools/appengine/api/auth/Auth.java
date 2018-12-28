@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/** Interface to gcloud auth commands. */
+/** Run various gcloud auth commands. */
 public class Auth {
-  private static final Pattern emailPattern =
+  private static final Pattern EMAIL_PATTERN =
       Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]+$", Pattern.CASE_INSENSITIVE);
 
   private final GcloudRunner runner;
@@ -49,7 +49,7 @@ public class Auth {
    */
   public void login(String user) throws AppEngineException {
     Preconditions.checkNotNull(user);
-    if (!emailPattern.matcher(user).find()) {
+    if (!EMAIL_PATTERN.matcher(user).find()) {
       throw new AppEngineException("Invalid email address: " + user);
     }
     try {

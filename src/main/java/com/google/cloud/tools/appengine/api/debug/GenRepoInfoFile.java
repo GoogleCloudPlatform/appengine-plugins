@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Interface for generating source context files using gcloud, needed by the Cloud Debugger. */
+/** Generate source context files using gcloud, needed by the Cloud Debugger. */
 public class GenRepoInfoFile {
 
   private final GcloudRunner runner;
