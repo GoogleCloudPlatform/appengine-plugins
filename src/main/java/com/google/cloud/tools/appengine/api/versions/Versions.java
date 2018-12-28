@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Interface with gcloud versions command. */
+/** Run various gcloud versions commands. */
 public class Versions {
 
   private final GcloudRunner runner;
