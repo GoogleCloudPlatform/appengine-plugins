@@ -20,11 +20,11 @@ import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandl
 import com.google.common.annotations.VisibleForTesting;
 
 /** Create Dev App Servers. */
-public class LocalRun {
+public class DevServers {
   private final CloudSdk sdk;
   private final DevAppServerRunner.Factory devAppServerRunnerFactory;
 
-  private LocalRun(CloudSdk sdk, DevAppServerRunner.Factory devAppServerRunnerFactory) {
+  private DevServers(CloudSdk sdk, DevAppServerRunner.Factory devAppServerRunnerFactory) {
     this.devAppServerRunnerFactory = devAppServerRunnerFactory;
     this.sdk = sdk;
   }
@@ -56,9 +56,9 @@ public class LocalRun {
       this.runnerFactory = runnerFactory;
     }
 
-    /** Build an immutable LocalRun instance. */
-    public LocalRun build() {
-      return new LocalRun(sdk, runnerFactory);
+    /** Build an immutable DevServers instance. */
+    public DevServers build() {
+      return new DevServers(sdk, runnerFactory);
     }
   }
 }
