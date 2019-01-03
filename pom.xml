@@ -131,8 +131,8 @@
         <version>3.8.0</version>
         <configuration>
           <!-- Use <release> instead when migrating to JDK 11. -->
-          <source>8</source>
-          <target>8</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
           <annotationProcessorPaths>
