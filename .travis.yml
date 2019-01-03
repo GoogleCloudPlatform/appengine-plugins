@@ -1,8 +1,12 @@
 sudo: false
 language: java
-jdk:
-  # no openjdk8 yet on travis without special configuration
-  - oraclejdk8
+matrix:
+  include:
+    - name: Oracle JDK 8
+      # no openjdk8 yet on travis without special configuration
+      jdk: oraclejdk8
+    - name: OpenJDK 11
+      jdk: openjdk11
 cache:
   directories:
    - $HOME/.m2
