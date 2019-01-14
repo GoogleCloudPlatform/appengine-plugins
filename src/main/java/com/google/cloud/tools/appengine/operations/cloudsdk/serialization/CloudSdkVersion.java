@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Version of the Cloud SDK, which follows the <a href="http://semver.org/spec/v2.0.0.html">Semantic
  * Version 2.0.0 spec</a>.
  */
-public class CloudSdkVersion implements Comparable<CloudSdkVersion> {
+public final class CloudSdkVersion implements Comparable<CloudSdkVersion> {
 
   private static final Pattern SEMVER_PATTERN = Pattern.compile(getSemVerRegex());
 
