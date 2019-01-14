@@ -172,7 +172,7 @@ public final class CloudSdkVersion implements Comparable<CloudSdkVersion> {
     if (obj == this) {
       return true;
     }
-    if (this.getClass() != obj.getClass()) {
+    if (!(obj instanceof CloudSdkVersion)) {
       return false;
     }
     CloudSdkVersion otherVersion = (CloudSdkVersion) obj;

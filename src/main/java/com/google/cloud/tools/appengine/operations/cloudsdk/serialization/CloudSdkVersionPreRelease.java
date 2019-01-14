@@ -37,7 +37,7 @@ final class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRe
   private final String preRelease;
 
   /** Constructs a new CloudSdkVersionPreRelease from a string representation. */
-  public CloudSdkVersionPreRelease(String preRelease) {
+  CloudSdkVersionPreRelease(String preRelease) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(preRelease));
 
     this.segments = new ArrayList<>();
@@ -90,7 +90,7 @@ final class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRe
     if (obj == this) {
       return true;
     }
-    if (this.getClass() != obj.getClass()) {
+    if (!(obj instanceof CloudSdkVersionPreRelease)) {
       return false;
     }
     CloudSdkVersionPreRelease other = (CloudSdkVersionPreRelease) obj;
@@ -145,7 +145,7 @@ final class CloudSdkVersionPreRelease implements Comparable<CloudSdkVersionPreRe
       if (obj == this) {
         return true;
       }
-      if (this.getClass() != obj.getClass()) {
+      if (!(obj instanceof PreReleaseSegment)) {
         return false;
       }
       PreReleaseSegment other = (PreReleaseSegment) obj;
