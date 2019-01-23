@@ -138,7 +138,7 @@ public class DevServerV1 implements DevServer {
               + Joiner.on(",").withKeyValueSeparator("=").join(appEngineEnvironment));
     }
 
-    String gaeRuntime = getGaeRuntimeJava(config.getServices());
+    String gaeRuntime = getGaeRuntimeJava(!isSandboxEnforced);
     appEngineEnvironment.putAll(getLocalAppEngineEnvironmentVariables(gaeRuntime));
 
     Map<String, String> configEnvironment = config.getEnvironment();
@@ -272,29 +272,14 @@ public class DevServerV1 implements DevServer {
   }
 
   /**
-   * Gets the App Engine runtime ID for Java runtimes. Order of precedence is 11 > 8 > 7. With
-   * default being 7.
+   * Gets the App Engine runtime ID for Java runtimes.
+   *
+   * @param isSandboxEnforced if {@code true}, use Java 8; otherwise, use Java 7
+   * @return "java8" if {@code isJava8} is true; otherwise, returns "java7"
    */
   @VisibleForTesting
-  static String getGaeRuntimeJava(List<Path> services) throws AppEngineException {
-    boolean hasJava8 = false;
-    for (Path serviceDirectory : services) {
-      Path appengineWebXml = serviceDirectory.resolve("WEB-INF/appengine-web.xml");
-      try (InputStream is = Files.newInputStream(appengineWebXml)) {
-        String serviceRuntime = AppEngineDescriptor.parse(is).getRuntime();
-        if (serviceRuntime.startsWith("java11")) {
-          return "java11";
-        } else if (serviceRuntime.startsWith("java8")) {
-          hasJava8 = true;
-        }
-      } catch (IOException | SAXException ex) {
-        throw new AppEngineException(ex);
-      }
-    }
-    if (hasJava8) {
-      return "java8";
-    }
-    return "java7";
+  static String getGaeRuntimeJava(boolean isSandboxEnforced) {
+    return isSandboxEnforced ? "java8" : "java7";
   }
 
   private static void checkAndWarnDuplicateEnvironmentVariables(
