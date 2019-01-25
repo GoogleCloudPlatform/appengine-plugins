@@ -18,6 +18,7 @@ package com.google.cloud.tools.appengine.configuration;
 
 import com.google.common.base.Preconditions;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -37,7 +38,7 @@ public class RunConfiguration {
   @Nullable private final String threadsafeOverride;
   @Nullable private final String pythonStartupScript;
   @Nullable private final String pythonStartupArgs;
-  @Nullable private final List<String> jvmFlags;
+  private List<String> jvmFlags = new ArrayList<>();
   @Nullable private final String customEntrypoint;
   @Nullable private final String runtime;
   @Nullable private final Boolean allowSkippedFiles;
@@ -93,7 +94,7 @@ public class RunConfiguration {
     this.threadsafeOverride = threadsafeOverride;
     this.pythonStartupScript = pythonStartupScript;
     this.pythonStartupArgs = pythonStartupArgs;
-    this.jvmFlags = jvmFlags;
+    this.jvmFlags.addAll(jvmFlags);
     this.customEntrypoint = customEntrypoint;
     this.runtime = runtime;
     this.allowSkippedFiles = allowSkippedFiles;
@@ -179,7 +180,9 @@ public class RunConfiguration {
     return pythonStartupArgs;
   }
 
-  @Nullable
+  /**
+   * @return a mutable list that exposes the internal state
+   */
   public List<String> getJvmFlags() {
     return jvmFlags;
   }
@@ -272,7 +275,7 @@ public class RunConfiguration {
     @Nullable private String threadsafeOverride;
     @Nullable private String pythonStartupScript;
     @Nullable private String pythonStartupArgs;
-    @Nullable private List<String> jvmFlags;
+    private List<String> jvmFlags = new ArrayList<>();
     @Nullable private String customEntrypoint;
     @Nullable private String runtime;
     @Nullable private Boolean allowSkippedFiles;
@@ -289,7 +292,6 @@ public class RunConfiguration {
 
     private Builder(List<Path> services) {
       Preconditions.checkNotNull(services);
-      Preconditions.checkArgument(services.size() != 0);
       this.services = services;
     }
 
@@ -354,7 +356,9 @@ public class RunConfiguration {
     }
 
     public Builder jvmFlags(@Nullable List<String> jvmFlags) {
-      this.jvmFlags = jvmFlags;
+      if (jvmFlags != null) {
+        this.jvmFlags = jvmFlags;
+      }
       return this;
     }
 
