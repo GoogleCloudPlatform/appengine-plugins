@@ -38,7 +38,7 @@ public class RunConfiguration {
   @Nullable private final String threadsafeOverride;
   @Nullable private final String pythonStartupScript;
   @Nullable private final String pythonStartupArgs;
-  private List<String> jvmFlags = new ArrayList<>();
+  private final List<String> jvmFlags;
   @Nullable private final String customEntrypoint;
   @Nullable private final String runtime;
   @Nullable private final Boolean allowSkippedFiles;
@@ -94,7 +94,7 @@ public class RunConfiguration {
     this.threadsafeOverride = threadsafeOverride;
     this.pythonStartupScript = pythonStartupScript;
     this.pythonStartupArgs = pythonStartupArgs;
-    this.jvmFlags.addAll(jvmFlags);
+    this.jvmFlags = jvmFlags;
     this.customEntrypoint = customEntrypoint;
     this.runtime = runtime;
     this.allowSkippedFiles = allowSkippedFiles;
