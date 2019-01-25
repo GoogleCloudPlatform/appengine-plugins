@@ -27,11 +27,34 @@ public class RunConfigurationTest {
   @Test
   public void testJvmFlags() {
     List<Path> services = new ArrayList<>();
-    RunConfiguration configuration = RunConfiguration.builder(services).build();
-    Assert.assertTrue(configuration.getJvmFlags().isEmpty());
+    List<String> inputFlags = new ArrayList<>();
+    inputFlags.add("foo");
+    inputFlags.add("bar");
+    
+    RunConfiguration configuration = RunConfiguration
+            .builder(services)
+            .jvmFlags(inputFlags)
+            .build();
+            
+    inputFlags.add("baz");
+             
     List<String> flags = configuration.getJvmFlags();
-    flags.add("foo");
-    Assert.assertFalse(configuration.getJvmFlags().isEmpty());
+    Assert.assertEquals(2, flags.size());
+    Assert.assertEquals("foo", flags.get(0));
+    
+    flags.set(0, "baz");
     Assert.assertEquals("foo", configuration.getJvmFlags().get(0));
+  }
+  
+  @Test
+  public void testJvmFlags_unset() {
+    List<Path> services = new ArrayList<>();
+    
+    RunConfiguration configuration = RunConfiguration
+            .builder(services)
+            .build();
+
+    List<String> flags = configuration.getJvmFlags();
+    Assert.assertEquals(0, flags.size());
   }
 }
