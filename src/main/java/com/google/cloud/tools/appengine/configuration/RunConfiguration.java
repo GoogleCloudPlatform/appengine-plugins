@@ -180,9 +180,7 @@ public class RunConfiguration {
     return pythonStartupArgs;
   }
 
-  /**
-   * @return a mutable list that exposes the internal state
-   */
+  /** @return a mutable list that exposes the internal state */
   public List<String> getJvmFlags() {
     return jvmFlags;
   }

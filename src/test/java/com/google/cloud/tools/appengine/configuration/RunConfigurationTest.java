@@ -19,12 +19,11 @@ package com.google.cloud.tools.appengine.configuration;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 public class RunConfigurationTest {
-  
+
   @Test
   public void testJvmFlags() {
     List<Path> services = new ArrayList<>();
@@ -35,5 +34,4 @@ public class RunConfigurationTest {
     Assert.assertFalse(configuration.getJvmFlags().isEmpty());
     Assert.assertEquals("foo", configuration.getJvmFlags().get(0));
   }
-
 }
