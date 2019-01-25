@@ -182,7 +182,8 @@ public class RunConfiguration {
 
   /** @return a mutable list that exposes the internal state */
   public List<String> getJvmFlags() {
-    return jvmFlags;
+    ArrayList<String> copy = new ArrayList<>(jvmFlags);
+    return copy;
   }
 
   @Nullable
@@ -355,7 +356,8 @@ public class RunConfiguration {
 
     public Builder jvmFlags(@Nullable List<String> jvmFlags) {
       if (jvmFlags != null) {
-        this.jvmFlags = jvmFlags;
+        this.jvmFlags.clear();
+        this.jvmFlags.addAll(jvmFlags);
       }
       return this;
     }
