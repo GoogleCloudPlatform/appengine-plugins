@@ -459,4 +459,37 @@ public class RunConfiguration {
           projectId);
     }
   }
+
+  /** @return a mutable builder initialized with the values of this runtime configuration */
+  public Builder toBuilder() {
+    Builder builder = builder(this.getServices());
+    builder
+        .additionalArguments(this.getAdditionalArguments())
+        .adminHost(adminHost)
+        .adminPort(adminPort)
+        .allowSkippedFiles(allowSkippedFiles)
+        .apiPort(apiPort)
+        .authDomain(authDomain)
+        .automaticRestart(automaticRestart)
+        .clearDatastore(clearDatastore)
+        .customEntrypoint(customEntrypoint)
+        .datastorePath(datastorePath)
+        .defaultGcsBucketName(defaultGcsBucketName)
+        .devAppserverLogLevel(devAppserverLogLevel)
+        .environment(getEnvironment())
+        .host(host)
+        .jvmFlags(getJvmFlags())
+        .logLevel(logLevel)
+        .maxModuleInstances(maxModuleInstances)
+        .port(port)
+        .projectId(projectId)
+        .pythonStartupArgs(pythonStartupArgs)
+        .pythonStartupScript(pythonStartupScript)
+        .runtime(runtime)
+        .skipSdkUpdateCheck(skipSdkUpdateCheck)
+        .storagePath(storagePath)
+        .threadsafeOverride(threadsafeOverride)
+        .useMtimeFileWatcher(useMtimeFileWatcher);
+    return builder;
+  }
 }
