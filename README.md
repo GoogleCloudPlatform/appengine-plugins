@@ -44,7 +44,7 @@ Gcloud gcloud = Gcloud.builder(sdk).setMetricsEnvironment("asdf","12").setCreden
 
 // Similarly for AppCfg and the DevAppServer
 AppCfg appcfg = AppCfg.builder(sdk).build()
-LocalRun localRun = LocalRun.builder(sdk).build()
+DevServers localRun = DevServers.builder(sdk).build()
 
 // Operations are started as processes, access to these processes is handled
 // by implementations of ProcessHandler. To continue to interface with processes
@@ -55,7 +55,7 @@ gcloud.newDeployment(handler).deploy(myDeployConfiguration);
 
 ## SDK Manager
 
-This library provides a mechanism for installing, adding components and updating the Cloud SDK. The operations are intended to run asynchronously, either on an executor or through mechanisms provided by an IDE.
+This library provides a mechanism for installing, adding components to, and updating the Cloud SDK. The operations are intended to run asynchronously, either on an executor or through mechanisms provided by an IDE.
 
 ```java
 // Create a new Managed SDK instance
