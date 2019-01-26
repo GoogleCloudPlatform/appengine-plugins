@@ -357,9 +357,7 @@ public class RunConfiguration {
       return this;
     }
 
-    /**
-     * Sets extra flags to be passed to the Java vortual machine.
-     */
+    /** Sets extra flags to be passed to the Java vortual machine. */
     public Builder jvmFlags(@Nullable List<String> jvmFlags) {
       this.jvmFlags.clear();
       if (jvmFlags != null) {
