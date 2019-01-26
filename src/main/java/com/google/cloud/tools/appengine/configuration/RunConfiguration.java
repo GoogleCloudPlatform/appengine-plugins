@@ -179,7 +179,11 @@ public class RunConfiguration {
     return pythonStartupArgs;
   }
 
-  /** @return a mutable list that exposes the internal state */
+  /**
+   * Returns a mutable list that exposes the internal state.
+   *
+   * @return a mutable list that exposes the internal state
+   */
   public List<String> getJvmFlags() {
     ArrayList<String> copy = new ArrayList<>(jvmFlags);
     return copy;
@@ -459,7 +463,11 @@ public class RunConfiguration {
     }
   }
 
-  /** @return a mutable builder initialized with the values of this runtime configuration */
+  /**
+   * Returns a mutable builder initialized with the values of this runtime configuration.
+   *
+   * @return a mutable builder initialized with the values of this runtime configuration
+   */
   public Builder toBuilder() {
     Builder builder =
         builder(this.getServices())
