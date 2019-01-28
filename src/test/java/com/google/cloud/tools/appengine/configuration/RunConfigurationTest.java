@@ -108,8 +108,8 @@ public class RunConfigurationTest {
     Assert.assertEquals("projectId", configuration.getProjectId());
 
     Assert.assertEquals(File.separator + "storagePath", configuration.getStoragePath().toString());
-    Assert.assertEquals(File.separator + "datastorepath",
-        configuration.getDatastorePath().toString());
+    Assert.assertEquals(
+        File.separator + "datastorepath", configuration.getDatastorePath().toString());
 
     Assert.assertTrue(configuration.getUseMtimeFileWatcher());
     Assert.assertTrue(configuration.getSkipSdkUpdateCheck());
@@ -142,8 +142,8 @@ public class RunConfigurationTest {
     Assert.assertEquals("projectId", configuration.getProjectId());
 
     Assert.assertEquals(File.separator + "storagePath", configuration.getStoragePath().toString());
-    Assert.assertEquals(File.separator + "datastorepath",
-        configuration.getDatastorePath().toString());
+    Assert.assertEquals(
+        File.separator + "datastorepath", configuration.getDatastorePath().toString());
 
     Assert.assertTrue(configuration.getUseMtimeFileWatcher());
     Assert.assertTrue(configuration.getSkipSdkUpdateCheck());
