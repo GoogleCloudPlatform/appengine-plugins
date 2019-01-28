@@ -30,13 +30,13 @@ import org.junit.Test;
 public class RunConfigurationTest {
 
   private RunConfiguration configuration;
-  private List<String> inputFlags = new ArrayList<>();
-  private List<Path> services = new ArrayList<>();
+  private final List<String> jvmFlags = new ArrayList<>();
+  private final List<Path> services = new ArrayList<>();
 
   @Before
   public void setUp() {
-    inputFlags.add("foo");
-    inputFlags.add("bar");
+    jvmFlags.add("foo");
+    jvmFlags.add("bar");
     List<String> additionalArguments = new ArrayList<>();
     Map<String, String> environment = new HashMap<>();
     configuration =
@@ -55,7 +55,7 @@ public class RunConfigurationTest {
             .devAppserverLogLevel("devAppserverLogLevel")
             .environment(environment)
             .host("host")
-            .jvmFlags(inputFlags)
+            .jvmFlags(jvmFlags)
             .logLevel("logLevel")
             .maxModuleInstances(54)
             .port(999)
@@ -72,7 +72,7 @@ public class RunConfigurationTest {
 
   @Test
   public void testJvmFlags() {
-    inputFlags.add("baz");
+    jvmFlags.add("baz");
 
     List<String> flags = configuration.getJvmFlags();
     Assert.assertEquals(2, flags.size());

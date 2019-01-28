@@ -356,7 +356,7 @@ public class RunConfiguration {
       return this;
     }
 
-    /** Sets extra flags to be passed to the Java vortual machine. */
+    /** Sets extra flags to be passed to the Java virtual machine. */
     public Builder jvmFlags(@Nullable List<String> jvmFlags) {
       this.jvmFlags.clear();
       if (jvmFlags != null) {
@@ -465,34 +465,33 @@ public class RunConfiguration {
 
   /** Returns a mutable builder initialized with the values of this runtime configuration. */
   public Builder toBuilder() {
-    Builder builder =
-        builder(this.getServices())
-            .additionalArguments(this.getAdditionalArguments())
-            .adminHost(adminHost)
-            .adminPort(adminPort)
-            .allowSkippedFiles(allowSkippedFiles)
-            .apiPort(apiPort)
-            .authDomain(authDomain)
-            .automaticRestart(automaticRestart)
-            .clearDatastore(clearDatastore)
-            .customEntrypoint(customEntrypoint)
-            .datastorePath(datastorePath)
-            .defaultGcsBucketName(defaultGcsBucketName)
-            .devAppserverLogLevel(devAppserverLogLevel)
-            .environment(getEnvironment())
-            .host(host)
-            .jvmFlags(getJvmFlags())
-            .logLevel(logLevel)
-            .maxModuleInstances(maxModuleInstances)
-            .port(port)
-            .projectId(projectId)
-            .pythonStartupArgs(pythonStartupArgs)
-            .pythonStartupScript(pythonStartupScript)
-            .runtime(runtime)
-            .skipSdkUpdateCheck(skipSdkUpdateCheck)
-            .storagePath(storagePath)
-            .threadsafeOverride(threadsafeOverride)
-            .useMtimeFileWatcher(useMtimeFileWatcher);
+    Builder builder = builder(getServices())
+        .additionalArguments(getAdditionalArguments())
+        .adminHost(adminHost)
+        .adminPort(adminPort)
+        .allowSkippedFiles(allowSkippedFiles)
+        .apiPort(apiPort)
+        .authDomain(authDomain)
+        .automaticRestart(automaticRestart)
+        .clearDatastore(clearDatastore)
+        .customEntrypoint(customEntrypoint)
+        .datastorePath(datastorePath)
+        .defaultGcsBucketName(defaultGcsBucketName)
+        .devAppserverLogLevel(devAppserverLogLevel)
+        .environment(getEnvironment())
+        .host(host)
+        .jvmFlags(getJvmFlags())
+        .logLevel(logLevel)
+        .maxModuleInstances(maxModuleInstances)
+        .port(port)
+        .projectId(projectId)
+        .pythonStartupArgs(pythonStartupArgs)
+        .pythonStartupScript(pythonStartupScript)
+        .runtime(runtime)
+        .skipSdkUpdateCheck(skipSdkUpdateCheck)
+        .storagePath(storagePath)
+        .threadsafeOverride(threadsafeOverride)
+        .useMtimeFileWatcher(useMtimeFileWatcher);
     return builder;
   }
 }
