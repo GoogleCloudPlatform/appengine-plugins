@@ -73,8 +73,6 @@ public class SpyVerifier {
    * @param overrides Override default counts in the style ["getterName" : count]
    */
   public SpyVerifier verifyDeclaredGetters(Map<String, Integer> overrides) throws Exception {
-    Method[] methods = classToInspectAs.getDeclaredMethods();
-
     // extract all invocations of getters by inspecting the spy
     List<Method> knownGetters = Arrays.asList(classToInspectAs.getDeclaredMethods());
 
