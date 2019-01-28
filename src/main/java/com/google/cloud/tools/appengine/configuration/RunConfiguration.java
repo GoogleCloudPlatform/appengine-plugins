@@ -180,9 +180,8 @@ public class RunConfiguration {
   }
 
   /**
-   * Returns a mutable list that exposes the internal state.
-   *
-   * @return a mutable list that exposes the internal state
+   * Returns command line flags that will be passed to the Java virtual machine that runs the local
+   * development server.
    */
   public List<String> getJvmFlags() {
     ArrayList<String> copy = new ArrayList<>(jvmFlags);
@@ -245,8 +244,8 @@ public class RunConfiguration {
   }
 
   /**
-   * Any additional arguments to be passed to the appserver. These arguments are neither parsed nor
-   * validated.
+   * Any additional arguments to be passed to the local development server. These arguments are
+   * neither parsed nor validated.
    */
   @Nullable
   public List<String> getAdditionalArguments() {
@@ -464,11 +463,7 @@ public class RunConfiguration {
     }
   }
 
-  /**
-   * Returns a mutable builder initialized with the values of this runtime configuration.
-   *
-   * @return a mutable builder initialized with the values of this runtime configuration
-   */
+  /** Returns a mutable builder initialized with the values of this runtime configuration. */
   public Builder toBuilder() {
     Builder builder =
         builder(this.getServices())
