@@ -69,7 +69,6 @@ public class AppYamlProjectStaging {
     try {
       String env = findEnv(config);
       String runtime = findRuntime(config);
-      CopyService copyService = new CopyService();
       if ("flex".equals(env)) {
         stageFlexibleArchive(config, runtime);
       } else if ("java11".equals(runtime)) {
