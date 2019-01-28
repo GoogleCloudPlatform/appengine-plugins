@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.configuration;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class RunConfigurationTest {
             .automaticRestart(true)
             .clearDatastore(true)
             .customEntrypoint("customEntrypoint")
-            .datastorePath(Paths.get("/datastorepath"))
+            .datastorePath(Paths.get(File.separator + "datastorepath"))
             .defaultGcsBucketName("defaultGcsBucketName")
             .devAppserverLogLevel("devAppserverLogLevel")
             .environment(environment)
@@ -63,7 +64,7 @@ public class RunConfigurationTest {
             .pythonStartupScript("pythonStartupScript")
             .runtime("runtime")
             .skipSdkUpdateCheck(true)
-            .storagePath(Paths.get("/storagePath"))
+            .storagePath(Paths.get(File.separator + "storagePath"))
             .threadsafeOverride("threadsafeOverride")
             .useMtimeFileWatcher(true)
             .build();
@@ -106,8 +107,9 @@ public class RunConfigurationTest {
     Assert.assertEquals("pythonStartupScript", configuration.getPythonStartupScript());
     Assert.assertEquals("projectId", configuration.getProjectId());
 
-    Assert.assertEquals("/storagePath", configuration.getStoragePath().toString());
-    Assert.assertEquals("/datastorepath", configuration.getDatastorePath().toString());
+    Assert.assertEquals(File.separator + "storagePath", configuration.getStoragePath().toString());
+    Assert.assertEquals(File.separator + "datastorepath",
+        configuration.getDatastorePath().toString());
 
     Assert.assertTrue(configuration.getUseMtimeFileWatcher());
     Assert.assertTrue(configuration.getSkipSdkUpdateCheck());
@@ -139,8 +141,9 @@ public class RunConfigurationTest {
     Assert.assertEquals("pythonStartupScript", configuration.getPythonStartupScript());
     Assert.assertEquals("projectId", configuration.getProjectId());
 
-    Assert.assertEquals("/storagePath", configuration.getStoragePath().toString());
-    Assert.assertEquals("/datastorepath", configuration.getDatastorePath().toString());
+    Assert.assertEquals(File.separator + "storagePath", configuration.getStoragePath().toString());
+    Assert.assertEquals(File.separator + "datastorepath",
+        configuration.getDatastorePath().toString());
 
     Assert.assertTrue(configuration.getUseMtimeFileWatcher());
     Assert.assertTrue(configuration.getSkipSdkUpdateCheck());
