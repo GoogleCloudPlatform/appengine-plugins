@@ -19,9 +19,6 @@ package com.google.cloud.tools.appengine.operations;
 import static org.mockito.Mockito.when;
 
 import com.google.cloud.tools.appengine.operations.cloudsdk.AppEngineJavaComponentsNotInstalledException;
-import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
-import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkOutOfDateException;
-import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkVersionFileException;
 import com.google.cloud.tools.appengine.operations.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.appengine.operations.cloudsdk.internal.process.ProcessBuilderFactory;
 import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandler;
@@ -31,7 +28,6 @@ import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.junit.Before;
@@ -62,7 +58,6 @@ public class DevServersRunnerTest {
   private Path workingDirectory;
   private Path javaHomePath;
   @Nullable private Path windowsPythonPath = null;
-  private Path devAppServer2Path;
 
   @Before
   public void setUp() throws IOException {
@@ -70,14 +65,12 @@ public class DevServersRunnerTest {
     javaHomePath = testFolder.getRoot().toPath().resolve("java-sdk-root");
     appengineToolsJar = testFolder.getRoot().toPath().resolve("appengine.tools");
     appengineSdkForJavaPath = testFolder.getRoot().toPath().resolve("appengine-sdk-root");
-    devAppServer2Path = testFolder.getRoot().toPath().resolve("fake-devappserver2.py");
 
     workingDirectory = testFolder.getRoot().toPath();
     when(sdk.getJavaExecutablePath()).thenReturn(javaExecutablePath);
     when(sdk.getAppEngineToolsJar()).thenReturn(appengineToolsJar);
     when(sdk.getAppEngineSdkForJavaPath()).thenReturn(appengineSdkForJavaPath);
     when(sdk.getJavaHomePath()).thenReturn(javaHomePath);
-    when(sdk.getDevAppServerPath()).thenReturn(devAppServer2Path);
 
     if (IS_WINDOWS) {
       windowsPythonPath = testFolder.getRoot().toPath().resolve("windows-python");
@@ -123,36 +116,6 @@ public class DevServersRunnerTest {
     Mockito.verify(processBuilder).environment();
     Mockito.verify(processEnv).putAll(expectedEnv);
     Mockito.verify(processBuilder).directory(workingDirectory.toFile());
-    Mockito.verify(processBuilder).start();
-    Mockito.verifyNoMoreInteractions(processBuilder);
-
-    Mockito.verify(processHandler).handleProcess(process);
-  }
-
-  @Test
-  public void testRunV2()
-      throws CloudSdkNotFoundException, ProcessHandlerException, CloudSdkOutOfDateException,
-          CloudSdkVersionFileException, InvalidJavaSdkException, IOException {
-
-    DevAppServerRunner devAppServerRunner =
-        new DevAppServerRunner.Factory(processBuilderFactory).newRunner(sdk, processHandler);
-
-    List<String> inputArgs = ImmutableList.of("args1", "args2");
-    devAppServerRunner.runV2(inputArgs);
-
-    ImmutableList.Builder<String> expected = ImmutableList.builder();
-    if (windowsPythonPath != null) {
-      expected.add(windowsPythonPath.toString());
-    }
-    expected.add(devAppServer2Path.toString()).addAll(inputArgs);
-    Mockito.verify(processBuilder).command(expected.build());
-
-    Map<String, String> expectedEnv = new HashMap<>();
-    expectedEnv.put("JAVA_HOME", javaHomePath.toAbsolutePath().toString());
-    expectedEnv.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
-
-    Mockito.verify(processBuilder).environment();
-    Mockito.verify(processEnv).putAll(expectedEnv);
     Mockito.verify(processBuilder).start();
     Mockito.verifyNoMoreInteractions(processBuilder);
 

@@ -17,9 +17,6 @@
 package com.google.cloud.tools.appengine.operations;
 
 import com.google.cloud.tools.appengine.operations.cloudsdk.AppEngineJavaComponentsNotInstalledException;
-import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
-import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkOutOfDateException;
-import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkVersionFileException;
 import com.google.cloud.tools.appengine.operations.cloudsdk.InvalidJavaSdkException;
 import com.google.cloud.tools.appengine.operations.cloudsdk.internal.process.ProcessBuilderFactory;
 import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandler;
@@ -27,7 +24,6 @@ import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandl
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import java.io.IOException;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,48 +44,6 @@ public class DevAppServerRunner {
     this.sdk = sdk;
     this.processBuilderFactory = processBuilderFactory;
     this.processHandler = processHandler;
-  }
-
-  /**
-   * Uses the process runner to execute a dev_appserver.py command.
-   *
-   * @param args arguments to pass to the devappserver
-   * @throws InvalidPathException when Python can't be located
-   * @throws ProcessHandlerException when process runner encounters an error
-   * @throws CloudSdkNotFoundException when the Cloud SDK is not installed where expected
-   * @throws CloudSdkOutOfDateException when the installed Cloud SDK is too old
-   * @throws CloudSdkVersionFileException when the Cloud SDK does not have a version file
-   * @throws InvalidJavaSdkException when the specified JDK does not exist
-   * @throws ProcessHandlerException when the process runner encounters and error
-   * @throws IOException when the process encounters an IOException
-   */
-  public void runV2(List<String> args)
-      throws CloudSdkNotFoundException, CloudSdkOutOfDateException, CloudSdkVersionFileException,
-          InvalidJavaSdkException, IOException, ProcessHandlerException {
-    sdk.validateCloudSdk();
-
-    List<String> command = new ArrayList<>();
-
-    if (IS_WINDOWS) {
-      command.add(sdk.getWindowsPythonPath().toAbsolutePath().toString());
-    }
-
-    command.add(sdk.getDevAppServerPath().toAbsolutePath().toString());
-    command.addAll(args);
-
-    logger.info("submitting command: " + Joiner.on(" ").join(command));
-
-    Map<String, String> environment = Maps.newHashMap();
-    environment.put("JAVA_HOME", sdk.getJavaHomePath().toAbsolutePath().toString());
-    // set quiet mode and consequently auto-install of app-engine-java component
-    environment.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
-
-    ProcessBuilder processbuilder = processBuilderFactory.newProcessBuilder();
-    processbuilder.command(command);
-    processbuilder.environment().putAll(environment);
-    Process process = processbuilder.start();
-
-    processHandler.handleProcess(process);
   }
 
   /**

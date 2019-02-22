@@ -33,10 +33,6 @@ public class DevServers {
     return new DevServerV1(sdk, getRunner(processHandler));
   }
 
-  public DevServer newDevAppServer2(ProcessHandler processHandler) {
-    return new DevServerV2(getRunner(processHandler));
-  }
-
   @VisibleForTesting
   DevAppServerRunner getRunner(ProcessHandler processHandler) {
     return devAppServerRunnerFactory.newRunner(sdk, processHandler);
