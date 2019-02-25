@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,8 +40,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DevServersRunnerTest {
-
-  private final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
 
   @Rule public TemporaryFolder testFolder = new TemporaryFolder();
 
@@ -57,7 +54,6 @@ public class DevServersRunnerTest {
   private Path appengineSdkForJavaPath;
   private Path workingDirectory;
   private Path javaHomePath;
-  @Nullable private Path windowsPythonPath = null;
 
   @Before
   public void setUp() throws IOException {
@@ -71,11 +67,6 @@ public class DevServersRunnerTest {
     when(sdk.getAppEngineToolsJar()).thenReturn(appengineToolsJar);
     when(sdk.getAppEngineSdkForJavaPath()).thenReturn(appengineSdkForJavaPath);
     when(sdk.getJavaHomePath()).thenReturn(javaHomePath);
-
-    if (IS_WINDOWS) {
-      windowsPythonPath = testFolder.getRoot().toPath().resolve("windows-python");
-      when(sdk.getWindowsPythonPath()).thenReturn(windowsPythonPath);
-    }
 
     when(processBuilderFactory.newProcessBuilder()).thenReturn(processBuilder);
     when(processBuilder.start()).thenReturn(process);
