@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
 public class DevAppServerRunner {
-  private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("Windows");
   private static final Logger logger = Logger.getLogger(DevAppServerRunner.class.getName());
 
   private final CloudSdk sdk;

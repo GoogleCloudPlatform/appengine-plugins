@@ -114,7 +114,7 @@ public class AppYamlProjectStagingTest {
   }
 
   @Test
-  public void testStageArchive_unknown() throws IOException, AppEngineException {
+  public void testStageArchive_unknown() throws IOException {
     Files.write(
         appEngineDirectory.resolve("app.yaml"),
         "runtime: moose\n".getBytes(StandardCharsets.UTF_8),
