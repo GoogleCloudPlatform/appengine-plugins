@@ -29,8 +29,8 @@ public class DevServers {
     this.sdk = sdk;
   }
 
-  public DevServer newDevAppServer1(ProcessHandler processHandler) {
-    return new DevServerV1(sdk, getRunner(processHandler));
+  public DevServer newDevAppServer(ProcessHandler processHandler) {
+    return new DevServer(sdk, getRunner(processHandler));
   }
 
   @VisibleForTesting

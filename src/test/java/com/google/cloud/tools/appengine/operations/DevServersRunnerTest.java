@@ -74,7 +74,7 @@ public class DevServersRunnerTest {
   }
 
   @Test
-  public void testRunV1()
+  public void testRun()
       throws InvalidJavaSdkException, ProcessHandlerException,
           AppEngineJavaComponentsNotInstalledException, IOException {
 
@@ -83,7 +83,7 @@ public class DevServersRunnerTest {
 
     Map<String, String> inputMap = ImmutableMap.of("ENV_KEY", "somevalue");
 
-    devAppServerRunner.runV1(
+    devAppServerRunner.run(
         ImmutableList.of("-XsomeArg"),
         ImmutableList.of("args1", "args2"),
         inputMap,

@@ -20,22 +20,22 @@ import javax.annotation.Nullable;
 
 public class StopConfiguration {
 
-  @Nullable private final String adminHost;
-  @Nullable private final Integer adminPort;
+  @Nullable private final String host;
+  @Nullable private final Integer port;
 
-  public StopConfiguration(@Nullable String adminHost, @Nullable Integer adminPort) {
-    this.adminHost = adminHost;
-    this.adminPort = adminPort;
+  public StopConfiguration(@Nullable String host, @Nullable Integer port) {
+    this.host = host;
+    this.port = port;
   }
 
   @Nullable
-  public String getAdminHost() {
-    return adminHost;
+  public String getHost() {
+    return host;
   }
 
   @Nullable
-  public Integer getAdminPort() {
-    return adminPort;
+  public Integer getPort() {
+    return port;
   }
 
   public static Builder builder() {
@@ -43,21 +43,21 @@ public class StopConfiguration {
   }
 
   public static final class Builder {
-    @Nullable private String adminHost;
-    @Nullable private Integer adminPort;
+    @Nullable private String host;
+    @Nullable private Integer port;
 
-    public Builder adminHost(@Nullable String adminHost) {
-      this.adminHost = adminHost;
+    public Builder host(@Nullable String host) {
+      this.host = host;
       return this;
     }
 
-    public Builder adminPort(@Nullable Integer adminPort) {
-      this.adminPort = adminPort;
+    public Builder port(@Nullable Integer port) {
+      this.port = port;
       return this;
     }
 
     public StopConfiguration build() {
-      return new StopConfiguration(adminHost, adminPort);
+      return new StopConfiguration(host, port);
     }
   }
 }

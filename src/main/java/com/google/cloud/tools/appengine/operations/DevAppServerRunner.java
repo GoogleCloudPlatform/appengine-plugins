@@ -57,7 +57,7 @@ public class DevAppServerRunner {
    *     components are not
    * @throws InvalidJavaSdkException when the specified JDK does not exist
    */
-  public void runV1(
+  public void run(
       List<String> jvmArgs,
       List<String> args,
       Map<String, String> environment,

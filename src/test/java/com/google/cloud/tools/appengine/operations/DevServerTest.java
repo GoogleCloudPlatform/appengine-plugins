@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -48,9 +47,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/** Unit tests for {@link DevServerV1}. */
+/** Unit tests for {@link DevServer}. */
 @RunWith(MockitoJUnitRunner.class)
-public class DevServerV1Test {
+public class DevServerTest {
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
   private Path fakeJavaSdkHome;
@@ -61,7 +60,7 @@ public class DevServerV1Test {
   @Mock private CloudSdk sdk;
   @Mock private DevAppServerRunner devAppServerRunner;
 
-  private DevServerV1 devServer;
+  private DevServer devServer;
 
   private final Path java8Service = Paths.get("src/test/resources/projects/EmptyStandard8Project");
   private final Path java7Service = Paths.get("src/test/resources/projects/EmptyStandard7Project");
@@ -79,20 +78,20 @@ public class DevServerV1Test {
 
   @Before
   public void setUp() throws IOException {
-    devServer = Mockito.spy(new DevServerV1(sdk, devAppServerRunner));
+    devServer = Mockito.spy(new DevServer(sdk, devAppServerRunner));
     fakeJavaSdkHome = temporaryFolder.newFolder("java-sdk").toPath();
     fakeStoragePath = Paths.get("storage/path");
     fakeDatastorePath = temporaryFolder.newFile("datastore.db").toPath();
 
     Mockito.when(sdk.getAppEngineSdkForJavaPath()).thenReturn(fakeJavaSdkHome);
 
-    testHandler = LogStoringHandler.getForLogger(DevServerV1.class.getName());
+    testHandler = LogStoringHandler.getForLogger(DevServer.class.getName());
   }
 
   @Test
   public void testStop_allFlags() {
     StopConfiguration configuration =
-        StopConfiguration.builder().adminHost("alt-local-host").adminPort(7777).build();
+        StopConfiguration.builder().host("alt-local-host").port(7777).build();
     try {
       devServer.stop(configuration);
       Assert.fail();
@@ -104,7 +103,7 @@ public class DevServerV1Test {
 
   @Test
   public void testStop_defaultAdminHost() {
-    StopConfiguration configuration = StopConfiguration.builder().adminPort(7777).build();
+    StopConfiguration configuration = StopConfiguration.builder().port(7777).build();
     try {
       devServer.stop(configuration);
       Assert.fail();
@@ -117,13 +116,13 @@ public class DevServerV1Test {
   @Test
   public void testNullSdk() {
     try {
-      new DevServerV1(null, devAppServerRunner);
+      new DevServer(null, devAppServerRunner);
       Assert.fail("Allowed null SDK");
     } catch (NullPointerException expected) {
     }
 
     try {
-      new DevServerV1(sdk, null);
+      new DevServer(sdk, null);
       Assert.fail("Allowed null runner");
     } catch (NullPointerException expected) {
     }
@@ -142,28 +141,8 @@ public class DevServerV1Test {
                 .environment(null)
                 .automaticRestart(true)
                 .projectId("my-project")
-
-                // these params are not used by devappserver1 and will log warnings
-                .adminHost("adminHost")
-                .adminPort(8000)
-                .authDomain("example.com")
-                .allowSkippedFiles(true)
-                .apiPort(8091)
-                .clearDatastore(true)
-                .customEntrypoint("entrypoint")
-                .datastorePath(fakeDatastorePath)
-                .devAppserverLogLevel("info")
                 .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
-                .logLevel("debug")
-                .maxModuleInstances(3)
-                .pythonStartupScript("script.py")
-                .pythonStartupArgs("arguments")
-                .runtime("someRuntime")
-                .storagePath(fakeStoragePath)
-                .skipSdkUpdateCheck(true)
-                .threadsafeOverride("default:False,backend:True")
-                .useMtimeFileWatcher(true)
-                .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
+                .additionalArguments(Arrays.asList("--ARG1", "--ARG3"))
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
@@ -192,7 +171,7 @@ public class DevServerV1Test {
     devServer.run(configuration);
 
     verify(devAppServerRunner, times(1))
-        .runV1(
+        .run(
             expectedJvmArgs,
             expectedFlags,
             ImmutableMap.<String, String>builder()
@@ -204,34 +183,6 @@ public class DevServerV1Test {
     SpyVerifier.newVerifier(configuration)
         .verifyDeclaredGetters(
             ImmutableMap.of("getServices", 7, "getJavaHomeDir", 2, "getJvmFlags", 2));
-
-    // verify we are checking and ignoring these parameters
-    Map<String, Object> paramWarnings = new HashMap<>();
-    paramWarnings.put("adminHost", configuration.getAdminHost());
-    paramWarnings.put("adminPort", configuration.getAdminPort());
-    paramWarnings.put("allowSkippedFiles", configuration.getAllowSkippedFiles());
-    paramWarnings.put("apiPort", configuration.getApiPort());
-    paramWarnings.put("authDomain", configuration.getAuthDomain());
-    paramWarnings.put("clearDatastore", configuration.getClearDatastore());
-    paramWarnings.put("customEntrypoint", configuration.getCustomEntrypoint());
-    paramWarnings.put("datastorePath", configuration.getDatastorePath());
-    paramWarnings.put("devAppserverLogLevel", configuration.getDevAppserverLogLevel());
-    paramWarnings.put("logLevel", configuration.getLogLevel());
-    paramWarnings.put("maxModuleInstances", configuration.getMaxModuleInstances());
-    paramWarnings.put("pythonStartupArgs", configuration.getPythonStartupArgs());
-    paramWarnings.put("pythonStartupScript", configuration.getPythonStartupScript());
-    paramWarnings.put("runtime", configuration.getRuntime());
-    paramWarnings.put("skipSdkUpdateCheck", configuration.getSkipSdkUpdateCheck());
-    paramWarnings.put("storagePath", configuration.getStoragePath());
-    paramWarnings.put("threadsafeOverride", configuration.getThreadsafeOverride());
-    paramWarnings.put("useMtimeFileWatcher", configuration.getUseMtimeFileWatcher());
-
-    for (String key : paramWarnings.keySet()) {
-      verify(devServer).checkAndWarnIgnored(paramWarnings.get(key), key);
-    }
-
-    // verify that we're verifying all the ignored parameters (by counting)
-    verify(devServer, times(paramWarnings.size())).checkAndWarnIgnored(any(), Mockito.anyString());
   }
 
   @Test
@@ -250,7 +201,7 @@ public class DevServerV1Test {
         ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
     devServer.run(configuration);
     verify(devAppServerRunner, times(1))
-        .runV1(
+        .run(
             expectedJvmArgs,
             expectedFlags,
             expectedJava8Environment,
@@ -277,7 +228,7 @@ public class DevServerV1Test {
     devServer.run(configuration);
 
     verify(devAppServerRunner, times(1))
-        .runV1(
+        .run(
             expectedJvmArgs,
             expectedFlags,
             expectedJava8Environment,
@@ -302,7 +253,7 @@ public class DevServerV1Test {
     devServer.run(configuration);
 
     verify(devAppServerRunner, times(1))
-        .runV1(
+        .run(
             expectedJvmArgs,
             expectedFlags,
             expectedJava7Environment,
@@ -330,8 +281,7 @@ public class DevServerV1Test {
     devServer.run(configuration);
 
     verify(devAppServerRunner, times(1))
-        .runV1(
-            expectedJvmArgs, expectedFlags, expectedJava8Environment, null /* workingDirectory */);
+        .run(expectedJvmArgs, expectedFlags, expectedJava8Environment, null /* workingDirectory */);
   }
 
   @Test
@@ -361,7 +311,7 @@ public class DevServerV1Test {
     devServer.run(configuration);
 
     verify(devAppServerRunner, times(1))
-        .runV1(
+        .run(
             expectedJvmArgs,
             expectedFlags,
             expectedEnvironment,
@@ -397,7 +347,7 @@ public class DevServerV1Test {
     devServer.run(configuration);
 
     verify(devAppServerRunner, times(1))
-        .runV1(expectedJvmArgs, expectedFlags, expectedEnvironment, null /* workingDirectory */);
+        .run(expectedJvmArgs, expectedFlags, expectedEnvironment, null /* workingDirectory */);
   }
 
   @Test
@@ -427,7 +377,7 @@ public class DevServerV1Test {
     devServer.run(configuration);
 
     verify(devAppServerRunner, times(1))
-        .runV1(
+        .run(
             expectedJvmArgs,
             expectedFlags,
             expectedEnvironment,
@@ -466,7 +416,7 @@ public class DevServerV1Test {
     devServer.run(configuration);
 
     verify(devAppServerRunner, times(1))
-        .runV1(
+        .run(
             expectedJvmArgs,
             expectedFlags,
             expectedEnvironment,
@@ -537,7 +487,7 @@ public class DevServerV1Test {
 
     devServer.run(configuration);
 
-    verify(devAppServerRunner).runV1(any(), any(), any(), eq(java8Service) /* workingDirectory */);
+    verify(devAppServerRunner).run(any(), any(), any(), eq(java8Service) /* workingDirectory */);
   }
 
   @Test
@@ -548,25 +498,25 @@ public class DevServerV1Test {
 
     devServer.run(configuration);
 
-    verify(devAppServerRunner).runV1(any(), any(), any(), eq(null) /* workingDirectory */);
+    verify(devAppServerRunner).run(any(), any(), any(), eq(null) /* workingDirectory */);
   }
 
   @Test
   public void testGetLocalAppEngineEnvironmentVariables_java7() {
-    Map<String, String> environment = DevServerV1.getLocalAppEngineEnvironmentVariables("java7");
+    Map<String, String> environment = DevServer.getLocalAppEngineEnvironmentVariables("java7");
     Assert.assertEquals(expectedJava7Environment, environment);
   }
 
   @Test
   public void testGetLocalAppEngineEnvironmentVariables_java8() {
-    Map<String, String> environment = DevServerV1.getLocalAppEngineEnvironmentVariables("java8");
+    Map<String, String> environment = DevServer.getLocalAppEngineEnvironmentVariables("java8");
     Assert.assertEquals(expectedJava8Environment, environment);
   }
 
   @Test
   public void testGetLocalAppEngineEnvironmentVariables_other() {
     Map<String, String> environment =
-        DevServerV1.getLocalAppEngineEnvironmentVariables("some_other_runtime");
+        DevServer.getLocalAppEngineEnvironmentVariables("some_other_runtime");
     Map<String, String> expectedEnvironment =
         ImmutableMap.of("GAE_ENV", "localdev", "GAE_RUNTIME", "some_other_runtime");
     Assert.assertEquals(expectedEnvironment, environment);
@@ -574,11 +524,11 @@ public class DevServerV1Test {
 
   @Test
   public void testGetGaeRuntimeJava_isJava8() {
-    Assert.assertEquals("java8", DevServerV1.getGaeRuntimeJava(true));
+    Assert.assertEquals("java8", DevServer.getGaeRuntimeJava(true));
   }
 
   @Test
   public void testGetGaeRuntimeJava_isNotJava8() {
-    Assert.assertEquals("java7", DevServerV1.getGaeRuntimeJava(false));
+    Assert.assertEquals("java7", DevServer.getGaeRuntimeJava(false));
   }
 }
