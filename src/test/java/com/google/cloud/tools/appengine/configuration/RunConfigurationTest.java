@@ -16,9 +16,7 @@
 
 package com.google.cloud.tools.appengine.configuration;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,54 +30,28 @@ public class RunConfigurationTest {
   private RunConfiguration configuration;
   private final List<String> jvmFlags = new ArrayList<>();
   private final List<Path> services = new ArrayList<>();
+  private List<String> additionalArguments = new ArrayList<>();
+  private Map<String, String> environment = new HashMap<>();
 
   @Before
   public void setUp() {
     jvmFlags.add("foo");
     jvmFlags.add("bar");
-    List<String> additionalArguments = new ArrayList<>();
-    Map<String, String> environment = new HashMap<>();
+    additionalArguments.add("foo");
+    additionalArguments.add("bar");
+    environment.put("foo", "fooval");
+    environment.put("bar", "barval");
     configuration =
         RunConfiguration.builder(services)
             .additionalArguments(additionalArguments)
-            .adminHost("adminHost")
-            .adminPort(87)
-            .allowSkippedFiles(true)
-            .apiPort(88)
-            .authDomain("authDomain")
             .automaticRestart(true)
-            .clearDatastore(true)
-            .customEntrypoint("customEntrypoint")
-            .datastorePath(Paths.get(File.separator + "datastorepath"))
             .defaultGcsBucketName("defaultGcsBucketName")
-            .devAppserverLogLevel("devAppserverLogLevel")
             .environment(environment)
             .host("host")
             .jvmFlags(jvmFlags)
-            .logLevel("logLevel")
-            .maxModuleInstances(54)
             .port(999)
             .projectId("projectId")
-            .pythonStartupArgs("pythonStartupArgs")
-            .pythonStartupScript("pythonStartupScript")
-            .runtime("runtime")
-            .skipSdkUpdateCheck(true)
-            .storagePath(Paths.get(File.separator + "storagePath"))
-            .threadsafeOverride("threadsafeOverride")
-            .useMtimeFileWatcher(true)
             .build();
-  }
-
-  @Test
-  public void testJvmFlags() {
-    jvmFlags.add("baz");
-
-    List<String> flags = configuration.getJvmFlags();
-    Assert.assertEquals(2, flags.size());
-    Assert.assertEquals("foo", flags.get(0));
-
-    flags.set(0, "baz");
-    Assert.assertEquals("foo", configuration.getJvmFlags().get(0));
   }
 
   @Test
@@ -90,32 +62,7 @@ public class RunConfigurationTest {
 
   @Test
   public void testBuilder() {
-    Assert.assertEquals(87, configuration.getAdminPort().intValue());
-    Assert.assertEquals(88, configuration.getApiPort().intValue());
-    Assert.assertEquals(999, configuration.getPort().intValue());
-    Assert.assertEquals(54, configuration.getMaxModuleInstances().intValue());
-
-    Assert.assertEquals("adminHost", configuration.getAdminHost());
-    Assert.assertEquals("authDomain", configuration.getAuthDomain());
-    Assert.assertEquals("customEntrypoint", configuration.getCustomEntrypoint());
-    Assert.assertEquals("host", configuration.getHost());
-    Assert.assertEquals("logLevel", configuration.getLogLevel());
-    Assert.assertEquals("devAppserverLogLevel", configuration.getDevAppserverLogLevel());
-    Assert.assertEquals("defaultGcsBucketName", configuration.getDefaultGcsBucketName());
-    Assert.assertEquals("runtime", configuration.getRuntime());
-    Assert.assertEquals("pythonStartupArgs", configuration.getPythonStartupArgs());
-    Assert.assertEquals("pythonStartupScript", configuration.getPythonStartupScript());
-    Assert.assertEquals("projectId", configuration.getProjectId());
-
-    Assert.assertEquals(File.separator + "storagePath", configuration.getStoragePath().toString());
-    Assert.assertEquals(
-        File.separator + "datastorepath", configuration.getDatastorePath().toString());
-
-    Assert.assertTrue(configuration.getUseMtimeFileWatcher());
-    Assert.assertTrue(configuration.getSkipSdkUpdateCheck());
-    Assert.assertTrue(configuration.getClearDatastore());
-    Assert.assertTrue(configuration.getAutomaticRestart());
-    Assert.assertTrue(configuration.getAllowSkippedFiles());
+    testConfigValues();
   }
 
   @Test
@@ -124,31 +71,17 @@ public class RunConfigurationTest {
     RunConfiguration.Builder builder = configuration.toBuilder();
     configuration = builder.build();
 
-    Assert.assertEquals(87, configuration.getAdminPort().intValue());
-    Assert.assertEquals(88, configuration.getApiPort().intValue());
-    Assert.assertEquals(999, configuration.getPort().intValue());
-    Assert.assertEquals(54, configuration.getMaxModuleInstances().intValue());
+    testConfigValues();
+  }
 
-    Assert.assertEquals("adminHost", configuration.getAdminHost());
-    Assert.assertEquals("authDomain", configuration.getAuthDomain());
-    Assert.assertEquals("customEntrypoint", configuration.getCustomEntrypoint());
+  private void testConfigValues() {
+    Assert.assertEquals(jvmFlags, configuration.getJvmFlags());
+    Assert.assertEquals(Integer.valueOf(999), configuration.getPort());
+    Assert.assertEquals(additionalArguments, configuration.getAdditionalArguments());
+    Assert.assertEquals(environment, configuration.getEnvironment());
     Assert.assertEquals("host", configuration.getHost());
-    Assert.assertEquals("logLevel", configuration.getLogLevel());
-    Assert.assertEquals("devAppserverLogLevel", configuration.getDevAppserverLogLevel());
     Assert.assertEquals("defaultGcsBucketName", configuration.getDefaultGcsBucketName());
-    Assert.assertEquals("runtime", configuration.getRuntime());
-    Assert.assertEquals("pythonStartupArgs", configuration.getPythonStartupArgs());
-    Assert.assertEquals("pythonStartupScript", configuration.getPythonStartupScript());
     Assert.assertEquals("projectId", configuration.getProjectId());
-
-    Assert.assertEquals(File.separator + "storagePath", configuration.getStoragePath().toString());
-    Assert.assertEquals(
-        File.separator + "datastorepath", configuration.getDatastorePath().toString());
-
-    Assert.assertTrue(configuration.getUseMtimeFileWatcher());
-    Assert.assertTrue(configuration.getSkipSdkUpdateCheck());
-    Assert.assertTrue(configuration.getClearDatastore());
-    Assert.assertTrue(configuration.getAutomaticRestart());
-    Assert.assertTrue(configuration.getAllowSkippedFiles());
+    Assert.assertEquals(Boolean.TRUE, configuration.getAutomaticRestart());
   }
 }

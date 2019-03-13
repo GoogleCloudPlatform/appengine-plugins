@@ -144,6 +144,7 @@ public class RunConfiguration {
       return this;
     }
 
+    /** Sets extra flags to be passed to the Java virtual machine. */
     public Builder jvmFlags(@Nullable List<String> jvmFlags) {
       this.jvmFlags.clear();
       if (jvmFlags != null) {

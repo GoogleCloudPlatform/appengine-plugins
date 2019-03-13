@@ -53,8 +53,6 @@ public class DevServerTest {
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
   private Path fakeJavaSdkHome;
-  private Path fakeStoragePath;
-  private Path fakeDatastorePath;
 
   private LogStoringHandler testHandler;
   @Mock private CloudSdk sdk;
@@ -80,8 +78,6 @@ public class DevServerTest {
   public void setUp() throws IOException {
     devServer = Mockito.spy(new DevServer(sdk, devAppServerRunner));
     fakeJavaSdkHome = temporaryFolder.newFolder("java-sdk").toPath();
-    fakeStoragePath = Paths.get("storage/path");
-    fakeDatastorePath = temporaryFolder.newFile("datastore.db").toPath();
 
     Mockito.when(sdk.getAppEngineSdkForJavaPath()).thenReturn(fakeJavaSdkHome);
 
@@ -142,7 +138,7 @@ public class DevServerTest {
                 .automaticRestart(true)
                 .projectId("my-project")
                 .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
-                .additionalArguments(Arrays.asList("--ARG1", "--ARG3"))
+                .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
@@ -168,16 +164,20 @@ public class DevServerTest {
             "-Duse_jetty9_runtime=true",
             "-D--enable_all_permissions=true");
 
+    // Not us immutable map, it enforces order
+    Map<String, String> expectedEnvironment =
+        ImmutableMap.<String, String>builder()
+            .putAll(expectedJava8Environment)
+            .put("ENV_NAME", "ENV_VAL")
+            .build();
+
     devServer.run(configuration);
 
     verify(devAppServerRunner, times(1))
         .run(
             expectedJvmArgs,
             expectedFlags,
-            ImmutableMap.<String, String>builder()
-                .putAll(expectedJava8Environment)
-                .put("ENV_NAME", "ENV_VAL")
-                .build(),
+            expectedEnvironment,
             java8Service /* workingDirectory */);
 
     SpyVerifier.newVerifier(configuration)
