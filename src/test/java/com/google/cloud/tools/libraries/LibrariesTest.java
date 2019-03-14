@@ -98,9 +98,7 @@ public class LibrariesTest {
       JsonObject mavenCoordinates = client.getJsonObject("mavenCoordinates");
       String version = mavenCoordinates.getString("version");
       Assert.assertFalse(version.isEmpty());
-      if ("beta".equals(launchStage) || "alpha".equals(launchStage)) {
-        Assert.assertTrue(version.endsWith(launchStage));
-      } else {
+      if (!version.endsWith(launchStage)) {
         Assert.assertTrue(version.matches("\\d+\\.\\d+\\.\\d+"));
       }
       Assert.assertFalse(mavenCoordinates.getString("artifactId").isEmpty());
