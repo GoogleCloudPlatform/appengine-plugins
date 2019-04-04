@@ -326,7 +326,9 @@
             <configuration>
               <rules>
                 <LinkageCheckerRule
-                    implementation="com.google.cloud.tools.dependencies.enforcer.LinkageCheckerRule"/>
+                    implementation="com.google.cloud.tools.dependencies.enforcer.LinkageCheckerRule">
+                  <level>WARN</level>
+                </LinkageCheckerRule>
               </rules>
             </configuration>
           </execution>
