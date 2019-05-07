@@ -27,6 +27,7 @@ public class DeployConfiguration {
 
   @Nullable private final String bucket;
   private final List<Path> deployables;
+  @Nullable private final String gcloudMode;
   @Nullable private final String imageUrl;
   @Nullable private final String projectId;
   @Nullable private final Boolean promote;
@@ -37,6 +38,7 @@ public class DeployConfiguration {
   private DeployConfiguration(
       @Nullable String bucket,
       List<Path> deployables,
+      @Nullable String gcloudMode,
       @Nullable String imageUrl,
       @Nullable String projectId,
       @Nullable Boolean promote,
@@ -45,6 +47,7 @@ public class DeployConfiguration {
       @Nullable String version) {
     this.bucket = bucket;
     this.deployables = deployables;
+    this.gcloudMode = gcloudMode;
     this.imageUrl = imageUrl;
     this.projectId = projectId;
     this.promote = promote;
@@ -57,6 +60,12 @@ public class DeployConfiguration {
   @Nullable
   public String getBucket() {
     return bucket;
+  }
+
+  /** Gcloud pre-release mode: like alpha or beta. */
+  @Nullable
+  public String getGcloudMode() {
+    return gcloudMode;
   }
 
   /** List of deployable target directories or yaml files. */
@@ -107,6 +116,7 @@ public class DeployConfiguration {
   public static final class Builder {
     @Nullable private String bucket;
     private List<Path> deployables;
+    @Nullable private String gcloudMode;
     @Nullable private String imageUrl;
     @Nullable private String projectId;
     @Nullable private Boolean promote;
@@ -123,6 +133,11 @@ public class DeployConfiguration {
 
     public DeployConfiguration.Builder bucket(@Nullable String bucket) {
       this.bucket = bucket;
+      return this;
+    }
+
+    public DeployConfiguration.Builder gcloudMode(@Nullable String gcloudMode) {
+      this.gcloudMode = gcloudMode;
       return this;
     }
 
@@ -161,6 +176,7 @@ public class DeployConfiguration {
       return new DeployConfiguration(
           this.bucket,
           this.deployables,
+          this.gcloudMode,
           this.imageUrl,
           this.projectId,
           this.promote,

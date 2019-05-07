@@ -25,14 +25,20 @@ import com.google.cloud.tools.appengine.operations.cloudsdk.internal.args.Gcloud
 import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandlerException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nullable;
 
 /** Deploy staged application and project configuration. */
 public class Deployment {
+
+  // optional gcloud modes
+  static final List<String> GCLOUD_MODES = ImmutableList.of("alpha", "beta");
 
   private final GcloudRunner runner;
 
@@ -56,6 +62,10 @@ public class Deployment {
     Path workingDirectory = null;
 
     List<String> arguments = new ArrayList<>();
+    String mode = processMode(config.getGcloudMode());
+    if (mode != null) {
+      arguments.add(mode);
+    }
     arguments.add("app");
     arguments.add("deploy");
 
@@ -145,5 +155,21 @@ public class Deployment {
     } catch (ProcessHandlerException | IOException ex) {
       throw new AppEngineException(ex);
     }
+  }
+
+  @VisibleForTesting
+  @Nullable
+  String processMode(@Nullable String modeFromConfig) throws AppEngineException {
+    if (modeFromConfig == null) {
+      return null;
+    }
+    String trimmedModeFromConfig = modeFromConfig.trim();
+    Optional<String> matchingMode =
+        GCLOUD_MODES
+            .stream()
+            .filter(mode -> mode.equalsIgnoreCase(trimmedModeFromConfig))
+            .findFirst();
+    return matchingMode.orElseThrow(
+        () -> new AppEngineException("Invalid gcloud mode: " + modeFromConfig));
   }
 }

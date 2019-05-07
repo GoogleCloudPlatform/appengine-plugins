@@ -88,6 +88,7 @@ public class DeploymentTest {
         Mockito.spy(
             DeployConfiguration.builder(Collections.singletonList(appYaml1))
                 .bucket("gs://a-bucket")
+                .gcloudMode("alpha")
                 .imageUrl("imageUrl")
                 .projectId("project")
                 .promote(true)
@@ -102,6 +103,7 @@ public class DeploymentTest {
 
     List<String> expectedCommand =
         ImmutableList.of(
+            "alpha",
             "app",
             "deploy",
             appYaml1.toString(),
@@ -267,6 +269,31 @@ public class DeploymentTest {
       fail();
     } catch (IllegalArgumentException ex) {
       assertEquals(testConfigYaml.toString() + " does not exist.", ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testGetMode_valid() throws AppEngineException {
+    Assert.assertNull(deployment.processMode(null));
+
+    Assert.assertEquals("alpha", deployment.processMode("alpha"));
+    Assert.assertEquals("alpha", deployment.processMode("ALPHA"));
+    Assert.assertEquals("alpha", deployment.processMode("  AlPhA  "));
+
+    Assert.assertEquals("beta", deployment.processMode("beta"));
+    Assert.assertEquals("beta", deployment.processMode("BETA"));
+    Assert.assertEquals("beta", deployment.processMode("  BeTA  "));
+  }
+
+  @Test
+  public void testGetMode_throwsException() {
+    for (String badString : ImmutableList.of("   ", "", "be ta", "alfa")) {
+      try {
+        deployment.processMode(badString);
+        fail();
+      } catch (AppEngineException e) {
+        Assert.assertEquals("Invalid gcloud mode: " + badString, e.getMessage());
+      }
     }
   }
 }
