@@ -43,6 +43,7 @@ public class Gcloud {
   @Nullable private final String metricsEnvironment;
   @Nullable private final String metricsEnvironmentVersion;
   @Nullable private final Path credentialFile;
+  @Nullable private final List<Path> flagsFiles;
   @Nullable private final String outputFormat;
   @Nullable private final String showStructuredLogs;
 
@@ -52,6 +53,7 @@ public class Gcloud {
       @Nullable String metricsEnvironment,
       @Nullable String metricsEnvironmentVersion,
       @Nullable Path credentialFile,
+      @Nullable List<Path> flagsFiles,
       @Nullable String outputFormat,
       @Nullable String showStructuredLogs) {
     this.gcloudRunnerFactory = gcloudRunnerFactory;
@@ -59,6 +61,7 @@ public class Gcloud {
     this.metricsEnvironment = metricsEnvironment;
     this.metricsEnvironmentVersion = metricsEnvironmentVersion;
     this.credentialFile = credentialFile;
+    this.flagsFiles = flagsFiles;
     this.outputFormat = outputFormat;
     this.showStructuredLogs = showStructuredLogs;
   }
@@ -173,6 +176,7 @@ public class Gcloud {
         metricsEnvironment,
         metricsEnvironmentVersion,
         credentialFile,
+        flagsFiles, // this is the only consumer of flagsFiles
         outputFormat,
         showStructuredLogs,
         processHandler);
@@ -190,6 +194,7 @@ public class Gcloud {
     @Nullable private String metricsEnvironment;
     @Nullable private String metricsEnvironmentVersion;
     @Nullable private Path credentialFile;
+    @Nullable private List<Path> flagsFiles;
     @Nullable private String outputFormat;
     @Nullable private String showStructuredLogs;
 
@@ -227,6 +232,12 @@ public class Gcloud {
       return this;
     }
 
+    /** Allow use of flags file for gcloud commands. */
+    public Builder setFlagsFiles(List<Path> flagsFiles) {
+      this.flagsFiles = ImmutableList.copyOf(flagsFiles);
+      return this;
+    }
+
     /**
      * Sets structured JSON logs for the stderr output. Supported values include 'never' (default),
      * 'always', 'terminal', etc.
@@ -244,6 +255,7 @@ public class Gcloud {
           metricsEnvironment,
           metricsEnvironmentVersion,
           credentialFile,
+          flagsFiles,
           outputFormat,
           showStructuredLogs);
     }
