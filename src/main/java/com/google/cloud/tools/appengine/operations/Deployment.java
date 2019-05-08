@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
 public class Deployment {
 
   // optional gcloud modes
-  static final List<String> GCLOUD_MODES = ImmutableList.of("alpha", "beta");
+  private static final ImmutableList<String> GCLOUD_MODES = ImmutableList.of("alpha", "beta");
 
   private final GcloudRunner runner;
 
@@ -165,10 +165,7 @@ public class Deployment {
     }
     String trimmedModeFromConfig = modeFromConfig.trim();
     Optional<String> matchingMode =
-        GCLOUD_MODES
-            .stream()
-            .filter(mode -> mode.equalsIgnoreCase(trimmedModeFromConfig))
-            .findFirst();
+        GCLOUD_MODES.stream().filter(trimmedModeFromConfig::equalsIgnoreCase).findFirst();
     return matchingMode.orElseThrow(
         () -> new AppEngineException("Invalid gcloud mode: " + modeFromConfig));
   }
