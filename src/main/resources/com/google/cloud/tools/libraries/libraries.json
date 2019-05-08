@@ -263,7 +263,7 @@
     "serviceName": "cloudtasks.googleapis.com",
     "serviceRoles": [
       "roles/cloudtasks.admin",
-      "roles/cloudtasks.queueAdmin",,
+      "roles/cloudtasks.queueAdmin",
       "roles/cloudtasks.viewer",
       "roles/cloudtasks.enqueuer",
       "roles/cloudtasks.taskRunner",
