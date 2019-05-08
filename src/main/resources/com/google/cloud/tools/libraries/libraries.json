@@ -750,7 +750,7 @@
     ]
   },
 {
-    "name": "Phishing Protection=",
+    "name": "Phishing Protection",
     "id": "phishingprotection",
     "serviceName": "phishingprotection.googleapis.com",
     "serviceRoles": [
