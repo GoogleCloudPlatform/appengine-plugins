@@ -441,7 +441,7 @@
     "name": "Cloud Scheduler",
     "id": "cloudscheduler",
     "serviceName": "cloudscheduler.googleapis.com",
-    "documentation": "https://cloud.google.com/security-scanner/docs/",
+    "documentation": "https://cloud.google.com/scheduler/docs/",
     "description": "Cloud Scheduler is a fully managed cron job scheduler that enables you to schedule virtually any job, including batch, big data jobs, cloud infrastructure operations, and more.",
     "transports": ["grpc"],
     "clients": [
