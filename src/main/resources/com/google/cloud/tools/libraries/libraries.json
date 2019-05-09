@@ -438,6 +438,30 @@
     ]
   },
 {
+    "name": "Cloud Scheduler",
+    "id": "cloudscheduler",
+    "serviceName": "cloudscheduler.googleapis.com",
+    "documentation": "https://cloud.google.com/security-scanner/docs/",
+    "description": "Cloud Scheduler is a fully managed cron job scheduler that enables you to schedule virtually any job, including batch, big data jobs, cloud infrastructure operations, and more.",
+    "transports": ["grpc"],
+    "clients": [
+      {
+      "name": "Java Client Libraries for Cloud Scheduler",
+      "language": "java",
+      "apireference": "https://googleapis.github.io/google-cloud-java/google-cloud-clients/apidocs/index.html?com/google/cloud/scheduler/v1/package-summary.html",
+      "infotip": "The com.google.cloud.websecurityscanner.v1alpha packages",
+      "launchStage": "beta",
+      "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-scheduler",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+         "groupId": "com.google.cloud",
+         "artifactId": "google-cloud-scheduler",
+         "version": "0.91.0"
+       }
+      }
+    ]
+  },
+{
     "name": "Cloud Security Scanner",
     "id": "cloudsecurityscanner",
     "serviceName": "websecurityscanner.googleapis.com",
