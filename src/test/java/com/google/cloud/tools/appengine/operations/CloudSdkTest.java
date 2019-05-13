@@ -81,7 +81,7 @@ public class CloudSdkTest {
   @Test
   public void testMinimumCloudSdkVersion() {
     // 160.0 through 170.0 have serious bugs on Windows
-    assertTrue(CloudSdk.MINIMUM_VERSION.compareTo(new CloudSdkVersion("170.0.0")) > 0);
+    assertTrue(CloudSdk.MINIMUM_VERSION.compareTo(new CloudSdkVersion("181.0.0")) > 0);
   }
 
   @Test
