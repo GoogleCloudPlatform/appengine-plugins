@@ -5,6 +5,7 @@ matrix:
     - name: Oracle JDK 8
       # no openjdk8 yet on travis without special configuration
       jdk: oraclejdk8
+      dist: trusty
     - name: OpenJDK 11
       jdk: openjdk11
 cache:
