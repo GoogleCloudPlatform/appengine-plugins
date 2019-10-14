@@ -17,7 +17,10 @@
 package com.google.cloud.tools.appengine.operations;
 
 import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandler;
+import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -38,10 +41,12 @@ public class GcloudTest {
     String metricsEnvironmentVersion = "ver123";
     String outputFormat = "format123";
     String showStructuredLogs = "logs123";
+    List<Path> flagsFiles = ImmutableList.of(Paths.get("abc/file123"));
     new Gcloud.Builder(sdk, gcloudRunnerFactory)
         .setCredentialFile(credentialFile)
         .setMetricsEnvironment(metricsEnvironment, metricsEnvironmentVersion)
         .setOutputFormat(outputFormat)
+        .setFlagsFiles(flagsFiles)
         .setShowStructuredLogs(showStructuredLogs)
         .build()
         .getRunner(processHandler);
@@ -52,6 +57,7 @@ public class GcloudTest {
             metricsEnvironment,
             metricsEnvironmentVersion,
             credentialFile,
+            flagsFiles,
             outputFormat,
             showStructuredLogs,
             processHandler);

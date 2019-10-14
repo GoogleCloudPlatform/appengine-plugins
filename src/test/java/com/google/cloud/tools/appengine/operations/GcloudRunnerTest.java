@@ -29,6 +29,7 @@ import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandl
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Rule;
@@ -47,6 +48,7 @@ public class GcloudRunnerTest {
   @Mock private CloudSdk sdk;
   private Path gcloudPath;
   private Path credentialFile;
+  private List<Path> flagsFiles;
   private Path workingDirectory;
   @Mock private ProcessHandler processHandler;
   @Mock private ProcessBuilderFactory processBuilderFactory;
@@ -57,6 +59,10 @@ public class GcloudRunnerTest {
   @Before
   public void setUp() throws IOException {
     credentialFile = testFolder.newFile("credential.file").toPath();
+    flagsFiles =
+        ImmutableList.of(
+            testFolder.newFile("gcloud1.yaml").toPath(),
+            testFolder.newFile("gcloud2.yaml").toPath());
     gcloudPath = testFolder.getRoot().toPath().resolve("gcloud");
     workingDirectory = testFolder.getRoot().toPath();
     when(sdk.getGCloudPath()).thenReturn(gcloudPath);
@@ -77,6 +83,7 @@ public class GcloudRunnerTest {
                 "intellij", // metrics env
                 "99", // metrics env version
                 credentialFile, // credential file
+                flagsFiles, // gcloud flags file(s)
                 "some-format", // output format
                 "always", // show structured logs
                 processHandler);
@@ -97,7 +104,11 @@ public class GcloudRunnerTest {
                 "--format",
                 "some-format",
                 "--credential-file-override",
-                credentialFile.toAbsolutePath().toString()));
+                credentialFile.toAbsolutePath().toString(),
+                "--flags-file",
+                flagsFiles.get(0).toAbsolutePath().toString(),
+                "--flags-file",
+                flagsFiles.get(1).toAbsolutePath().toString()));
     Mockito.verify(processBuilder).start();
     Mockito.verifyNoMoreInteractions(processBuilder);
 
@@ -112,6 +123,7 @@ public class GcloudRunnerTest {
             "intellij", // metrics env
             "99", // metrics env version
             mock(Path.class), // credential file
+            null, // irrelevant to test
             "irrelevant-to-test", // output format
             "always", // show structured logs
             mock(ProcessBuilderFactory.class),

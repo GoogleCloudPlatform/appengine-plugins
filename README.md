@@ -14,7 +14,7 @@ on Google supported clients for App Engine administration.
 This library requires Java 1.8 or higher to run.
 This library requires Maven and Java 1.8 or higher to build.
 
-You must also install the Cloud SDK command line interface (CLI), if it isn't installed yet, following the [instructions](https://cloud.google.com/sdk/).
+You must also install the Cloud SDK command line interface (gcloud). If it isn't installed yet, follow [these instructions](https://cloud.google.com/sdk/).
 
 You must also install the app-engine-java component:
 
