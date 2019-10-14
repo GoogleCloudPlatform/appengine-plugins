@@ -1,5 +1,6 @@
 sudo: false
 language: java
+dist: trusty
 matrix:
   include:
     - name: Oracle JDK 8
