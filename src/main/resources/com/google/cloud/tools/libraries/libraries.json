@@ -825,13 +825,11 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-phishingprotection",
-         "version": "0.2.0"
+         "version": "0.25.0"
        }
       }
     ]
   },
-<<<<<<< HEAD
-=======
 {
     "name": "reCAPTCHA Enterprise",
     "id": "recaptcha",
@@ -852,7 +850,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-recaptchaenterprise",
-         "version": "0.2.0"
+         "version": "0.25.0"
        }
       }
     ]
