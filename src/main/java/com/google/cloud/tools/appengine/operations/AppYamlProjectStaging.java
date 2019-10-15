@@ -24,6 +24,7 @@ import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
@@ -31,7 +32,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
@@ -226,9 +226,8 @@ public class AppYamlProjectStaging {
     if (jarClassPath == null) {
       return;
     }
-    StringTokenizer classpathEntries = new StringTokenizer(jarClassPath);
-    while (classpathEntries.hasMoreTokens()) {
-      String classpathEntry = classpathEntries.nextToken();
+    Iterable<String> classpathEntries = Splitter.onPattern("\\s+").split(jarClassPath.trim());
+    for (String classpathEntry : classpathEntries) {
       // classpath entries are relative to artifact's position and relativeness should be preserved
       // in the target directory
       Path jarSrc = artifact.getParent().resolve(classpathEntry);
