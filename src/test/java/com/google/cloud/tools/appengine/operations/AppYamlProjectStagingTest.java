@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.logging.LogRecord;
@@ -356,5 +357,55 @@ public class AppYamlProjectStagingTest {
     } catch (AppEngineException ex) {
       assertEquals("Malformed 'app.yaml'.", ex.getMessage());
     }
+  }
+
+  private static final Path complexLib = Paths.get("src/test/resources/jars/complexLib.jar");
+  private static final Path simpleLib = Paths.get("src/test/resources/jars/libs/simpleLib.jar");
+  private static final Path complexLibBadManifest =
+      Paths.get("src/test/resources/jars/complexLibBadManifest.jar");
+  private static final Path missingLib = Paths.get("src/test/resources/jars/libs/missing.jar");
+
+  @Test
+  public void testCopyArtifactJarClasspath_noClasspath() throws IOException, AppEngineException {
+    artifact = simpleLib;
+    config =
+        AppYamlProjectStageConfiguration.builder(appEngineDirectory, artifact, stagingDirectory)
+            .build();
+    AppYamlProjectStaging.copyArtifactJarClasspath(config, copyService);
+
+    verifyZeroInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyArtifactJarClasspath_withClasspathEntries()
+      throws IOException, AppEngineException {
+    artifact = complexLib;
+    config =
+        AppYamlProjectStageConfiguration.builder(appEngineDirectory, artifact, stagingDirectory)
+            .build();
+    AppYamlProjectStaging.copyArtifactJarClasspath(config, copyService);
+
+    verify(copyService)
+        .copyFileAndReplace(simpleLib, stagingDirectory.resolve("libs/simpleLib.jar"));
+    verifyNoMoreInteractions(copyService);
+  }
+
+  @Test
+  public void testCopyArtifactJarClasspath_withBadClasspathEntries() throws IOException {
+    artifact = complexLibBadManifest;
+    config =
+        AppYamlProjectStageConfiguration.builder(appEngineDirectory, artifact, stagingDirectory)
+            .build();
+    try {
+      AppYamlProjectStaging.copyArtifactJarClasspath(config, copyService);
+      fail();
+    } catch (AppEngineException ex) {
+      Assert.assertEquals(
+          "Could not copy " + missingLib + " referenced in MANIFEST.MF", ex.getMessage());
+    }
+
+    verify(copyService)
+        .copyFileAndReplace(simpleLib, stagingDirectory.resolve("libs/simpleLib.jar"));
+    verifyNoMoreInteractions(copyService);
   }
 }

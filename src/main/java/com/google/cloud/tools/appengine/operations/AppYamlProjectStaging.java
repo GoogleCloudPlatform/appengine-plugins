@@ -31,6 +31,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
@@ -102,6 +105,7 @@ public class AppYamlProjectStaging {
     copyExtraFiles(config, copyService);
     copyAppEngineContext(config, copyService);
     copyArtifact(config, copyService);
+    copyArtifactJarClasspath(config, copyService);
   }
 
   @VisibleForTesting
@@ -202,6 +206,37 @@ public class AppYamlProjectStaging {
       copyService.copyFileAndReplace(artifact, destination);
     } else {
       throw new AppEngineException("Artifact doesn't exist at '" + artifact + "'.");
+    }
+  }
+
+  @VisibleForTesting
+  // Copies files referenced in "Class-Path" of Jar's MANIFEST.MF to the target directory. Assumes
+  // files are present at relative paths and that relative path should be preserved in the staged
+  // directory.
+  static void copyArtifactJarClasspath(
+      AppYamlProjectStageConfiguration config, CopyService copyService)
+      throws IOException, AppEngineException {
+    Path artifact = config.getArtifact();
+    Path targetDirectory = config.getStagingDirectory();
+    String jarClassPath =
+        new JarFile(artifact.toFile())
+            .getManifest()
+            .getMainAttributes()
+            .getValue(Attributes.Name.CLASS_PATH);
+    if (jarClassPath == null) {
+      return;
+    }
+    StringTokenizer classpathEntries = new StringTokenizer(jarClassPath);
+    while (classpathEntries.hasMoreTokens()) {
+      String classpathEntry = classpathEntries.nextToken();
+      // classpath entries are relative to artifact's position and relativeness should be preserved
+      // in the target directory
+      Path jarSrc = artifact.getParent().resolve(classpathEntry);
+      if (!Files.isRegularFile(jarSrc)) {
+        throw new AppEngineException("Could not copy " + jarSrc + " referenced in MANIFEST.MF");
+      }
+      Path jarTarget = targetDirectory.resolve(classpathEntry);
+      copyService.copyFileAndReplace(jarSrc, jarTarget);
     }
   }
 
