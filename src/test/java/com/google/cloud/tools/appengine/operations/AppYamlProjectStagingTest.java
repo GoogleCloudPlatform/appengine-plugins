@@ -359,16 +359,13 @@ public class AppYamlProjectStagingTest {
     }
   }
 
-  private static final Path complexLib = Paths.get("src/test/resources/jars/complexLib.jar");
-  private static final Path simpleLib = Paths.get("src/test/resources/jars/libs/simpleLib.jar");
-  private static final Path complexLibBadManifest =
-      Paths.get("src/test/resources/jars/complexLibBadManifest.jar");
-  private static final Path missingLib = Paths.get("src/test/resources/jars/libs/missing.jar");
-
   @Test
   public void testCopyArtifactJarClasspath_noClasspath() throws IOException, AppEngineException {
     AppYamlProjectStaging.copyArtifactJarClasspath(
-        AppYamlProjectStageConfiguration.builder(appEngineDirectory, simpleLib, stagingDirectory)
+        AppYamlProjectStageConfiguration.builder(
+                appEngineDirectory,
+                Paths.get("src/test/resources/jars/libs/simpleLib.jar"),
+                stagingDirectory)
             .build(),
         copyService);
 
@@ -379,12 +376,17 @@ public class AppYamlProjectStagingTest {
   public void testCopyArtifactJarClasspath_withClasspathEntries()
       throws IOException, AppEngineException {
     AppYamlProjectStaging.copyArtifactJarClasspath(
-        AppYamlProjectStageConfiguration.builder(appEngineDirectory, complexLib, stagingDirectory)
+        AppYamlProjectStageConfiguration.builder(
+                appEngineDirectory,
+                Paths.get("src/test/resources/jars/complexLib.jar"),
+                stagingDirectory)
             .build(),
         copyService);
 
     verify(copyService)
-        .copyFileAndReplace(simpleLib, stagingDirectory.resolve("libs/simpleLib.jar"));
+        .copyFileAndReplace(
+            Paths.get("src/test/resources/jars/libs/simpleLib.jar"),
+            stagingDirectory.resolve("libs/simpleLib.jar"));
     verifyNoMoreInteractions(copyService);
   }
 
@@ -393,17 +395,24 @@ public class AppYamlProjectStagingTest {
     try {
       AppYamlProjectStaging.copyArtifactJarClasspath(
           AppYamlProjectStageConfiguration.builder(
-                  appEngineDirectory, complexLibBadManifest, stagingDirectory)
+                  appEngineDirectory,
+                  Paths.get("src/test/resources/jars/complexLibBadManifest.jar"),
+                  stagingDirectory)
               .build(),
           copyService);
       fail();
     } catch (AppEngineException ex) {
       Assert.assertEquals(
-          "Could not copy " + missingLib + " referenced in MANIFEST.MF", ex.getMessage());
+          "Could not copy "
+              + Paths.get("src/test/resources/jars/libs/missing.jar")
+              + " referenced in MANIFEST.MF",
+          ex.getMessage());
     }
 
     verify(copyService)
-        .copyFileAndReplace(simpleLib, stagingDirectory.resolve("libs/simpleLib.jar"));
+        .copyFileAndReplace(
+            Paths.get("src/test/resources/jars/libs/simpleLib.jar"),
+            stagingDirectory.resolve("libs/simpleLib.jar"));
     verifyNoMoreInteractions(copyService);
   }
 }
