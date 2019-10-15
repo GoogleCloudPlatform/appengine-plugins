@@ -367,11 +367,10 @@ public class AppYamlProjectStagingTest {
 
   @Test
   public void testCopyArtifactJarClasspath_noClasspath() throws IOException, AppEngineException {
-    artifact = simpleLib;
-    config =
-        AppYamlProjectStageConfiguration.builder(appEngineDirectory, artifact, stagingDirectory)
-            .build();
-    AppYamlProjectStaging.copyArtifactJarClasspath(config, copyService);
+    AppYamlProjectStaging.copyArtifactJarClasspath(
+        AppYamlProjectStageConfiguration.builder(appEngineDirectory, simpleLib, stagingDirectory)
+            .build(),
+        copyService);
 
     verifyZeroInteractions(copyService);
   }
@@ -379,11 +378,10 @@ public class AppYamlProjectStagingTest {
   @Test
   public void testCopyArtifactJarClasspath_withClasspathEntries()
       throws IOException, AppEngineException {
-    artifact = complexLib;
-    config =
-        AppYamlProjectStageConfiguration.builder(appEngineDirectory, artifact, stagingDirectory)
-            .build();
-    AppYamlProjectStaging.copyArtifactJarClasspath(config, copyService);
+    AppYamlProjectStaging.copyArtifactJarClasspath(
+        AppYamlProjectStageConfiguration.builder(appEngineDirectory, complexLib, stagingDirectory)
+            .build(),
+        copyService);
 
     verify(copyService)
         .copyFileAndReplace(simpleLib, stagingDirectory.resolve("libs/simpleLib.jar"));
@@ -392,12 +390,12 @@ public class AppYamlProjectStagingTest {
 
   @Test
   public void testCopyArtifactJarClasspath_withBadClasspathEntries() throws IOException {
-    artifact = complexLibBadManifest;
-    config =
-        AppYamlProjectStageConfiguration.builder(appEngineDirectory, artifact, stagingDirectory)
-            .build();
     try {
-      AppYamlProjectStaging.copyArtifactJarClasspath(config, copyService);
+      AppYamlProjectStaging.copyArtifactJarClasspath(
+          AppYamlProjectStageConfiguration.builder(
+                  appEngineDirectory, complexLibBadManifest, stagingDirectory)
+              .build(),
+          copyService);
       fail();
     } catch (AppEngineException ex) {
       Assert.assertEquals(
