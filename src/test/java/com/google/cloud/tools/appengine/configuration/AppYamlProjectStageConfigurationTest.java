@@ -30,16 +30,15 @@ public class AppYamlProjectStageConfigurationTest {
 
   @Before
   public void setUp() {
-    // todo should we check these are not the same and
+    // todo should the constructor check these are not the same and
     // files are files and directories are directories?
-    // should we use paths instead?
     configuration =
-        AppYamlProjectStageConfiguration.builder(file, file, file).dockerDirectory(file).build();
-  }
-
-  @Test
-  public void testDockerNotRequired() {
-    AppYamlProjectStageConfiguration.builder(file, file, file).build();
+        AppYamlProjectStageConfiguration.builder()
+            .appEngineDirectory(file)
+            .artifact(file)
+            .stagingDirectory(file)
+            .dockerDirectory(file)
+            .build();
   }
 
   @Test

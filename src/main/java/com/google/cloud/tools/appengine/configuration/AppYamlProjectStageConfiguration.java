@@ -16,7 +16,6 @@
 
 package com.google.cloud.tools.appengine.configuration;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
 import java.util.List;
@@ -78,8 +77,21 @@ public class AppYamlProjectStageConfiguration {
     return stagingDirectory;
   }
 
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  /**
+   * @deprecated Use
+   *     newBuilder().appEngineDirectory(appEngineDirectory).artifact(artifact).stagingDirectory(stagingDirectory)
+   *     instead.
+   */
+  @Deprecated
   public static Builder builder(Path appEngineDirectory, Path artifact, Path stagingDirectory) {
-    return new Builder(appEngineDirectory, artifact, stagingDirectory);
+    return new Builder()
+        .appEngineDirectory(appEngineDirectory)
+        .artifact(artifact)
+        .stagingDirectory(stagingDirectory);
   }
 
   public static final class Builder {
@@ -89,14 +101,21 @@ public class AppYamlProjectStageConfiguration {
     private Path artifact;
     private Path stagingDirectory;
 
-    Builder(Path appEngineDirectory, Path artifact, Path stagingDirectory) {
-      Preconditions.checkNotNull(appEngineDirectory);
-      Preconditions.checkNotNull(artifact);
-      Preconditions.checkNotNull(stagingDirectory);
+    private Builder() {}
 
+    public Builder appEngineDirectory(Path appEngineDirectory) {
       this.appEngineDirectory = appEngineDirectory;
+      return this;
+    }
+
+    public Builder artifact(Path artifact) {
       this.artifact = artifact;
+      return this;
+    }
+
+    public Builder stagingDirectory(Path stagingDirectory) {
       this.stagingDirectory = stagingDirectory;
+      return this;
     }
 
     public AppYamlProjectStageConfiguration.Builder dockerDirectory(

@@ -53,7 +53,7 @@ public class DeployProjectConfigurationConfiguration {
   }
 
   public static Builder builder(Path appEngineDirectory) {
-    return new Builder(appEngineDirectory);
+    return new Builder(Preconditions.checkNotNull(appEngineDirectory));
   }
 
   public static final class Builder {
@@ -62,8 +62,6 @@ public class DeployProjectConfigurationConfiguration {
     @Nullable private String server;
 
     private Builder(Path appEngineDirectory) {
-      Preconditions.checkNotNull(appEngineDirectory);
-
       this.appEngineDirectory = appEngineDirectory;
     }
 

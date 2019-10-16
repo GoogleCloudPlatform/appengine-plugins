@@ -127,8 +127,20 @@ public class AppEngineWebXmlProjectStageConfiguration {
     return runtime;
   }
 
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  /**
+   * @deprecated Use
+   *     newBuilder().sourceDirectory(sourceDirectory).stagingDirectory(stagingDirectory) instead.
+   */
+  @Deprecated
   public static Builder builder(Path sourceDirectory, Path stagingDirectory) {
-    return new Builder(sourceDirectory, stagingDirectory);
+    Builder builder = new Builder();
+    builder.sourceDirectory(sourceDirectory);
+    builder.stagingDirectory(stagingDirectory);
+    return builder;
   }
 
   public static final class Builder {
@@ -144,14 +156,6 @@ public class AppEngineWebXmlProjectStageConfiguration {
     @Nullable private Boolean enableJarClasses;
     @Nullable private Boolean disableJarJsps;
     @Nullable private String runtime;
-
-    Builder(Path sourceDirectory, Path stagingDirectory) {
-      Preconditions.checkNotNull(sourceDirectory);
-      Preconditions.checkNotNull(stagingDirectory);
-
-      this.sourceDirectory = sourceDirectory;
-      this.stagingDirectory = stagingDirectory;
-    }
 
     public Builder dockerfile(@Nullable Path dockerfile) {
       this.dockerfile = dockerfile;
@@ -200,6 +204,16 @@ public class AppEngineWebXmlProjectStageConfiguration {
 
     public Builder runtime(@Nullable String runtime) {
       this.runtime = runtime;
+      return this;
+    }
+
+    public Builder sourceDirectory(Path sourceDirectory) {
+      this.sourceDirectory = Preconditions.checkNotNull(sourceDirectory);
+      return this;
+    }
+
+    public Builder stagingDirectory(Path stagingDirectory) {
+      this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
       return this;
     }
 

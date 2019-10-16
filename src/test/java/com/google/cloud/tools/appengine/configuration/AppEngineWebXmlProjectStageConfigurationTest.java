@@ -32,11 +32,11 @@ public class AppEngineWebXmlProjectStageConfigurationTest {
 
   @Before
   public void setUp() {
-    // todo should we check these are not the same and
-    // files are files and directories are directories?
-    // should we use paths instead?
     configuration =
-        AppEngineWebXmlProjectStageConfiguration.builder(sourceDirectory, stagingDirectory).build();
+        AppEngineWebXmlProjectStageConfiguration.builder()
+            .sourceDirectory(sourceDirectory)
+            .stagingDirectory(stagingDirectory)
+            .build();
   }
 
   @Test
