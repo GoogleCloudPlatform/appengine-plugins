@@ -77,6 +77,8 @@ public class DeployProjectConfigurationConfiguration {
 
     /** Build a {@link DeployProjectConfigurationConfiguration}. */
     public DeployProjectConfigurationConfiguration build() {
+      Preconditions.checkState(appEngineDirectory != null, "No AppEngine directory supplied");
+
       return new DeployProjectConfigurationConfiguration(
           this.appEngineDirectory, this.projectId, this.server);
     }

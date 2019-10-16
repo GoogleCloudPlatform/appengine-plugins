@@ -80,6 +80,7 @@ public class AppYamlProjectStageConfigurationTest {
       Assert.assertEquals("No AppEngine directory supplied", ex.getMessage());
     }
   }
+
   @Test
   public void testGetAppEngineDirectory() {
     assertEquals(file, configuration.getAppEngineDirectory());
