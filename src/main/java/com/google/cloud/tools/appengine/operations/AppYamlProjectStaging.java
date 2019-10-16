@@ -214,8 +214,7 @@ public class AppYamlProjectStaging {
   // files are present at relative paths and that relative path should be preserved in the staged
   // directory.
   static void copyArtifactJarClasspath(
-      AppYamlProjectStageConfiguration config, CopyService copyService)
-      throws IOException, AppEngineException {
+      AppYamlProjectStageConfiguration config, CopyService copyService) throws IOException {
     Path artifact = config.getArtifact();
     Path targetDirectory = config.getStagingDirectory();
     String jarClassPath =
@@ -232,9 +231,18 @@ public class AppYamlProjectStaging {
       // in the target directory
       Path jarSrc = artifact.getParent().resolve(classpathEntry);
       if (!Files.isRegularFile(jarSrc)) {
-        throw new AppEngineException("Could not copy " + jarSrc + " referenced in MANIFEST.MF");
+        log.warning("Could not copy 'Class-Path' jar: " + jarSrc + " referenced in MANIFEST.MF");
+        continue;
       }
       Path jarTarget = targetDirectory.resolve(classpathEntry);
+      if (Files.exists(jarTarget)) {
+        log.warning(
+            "Overwriting 'Class-Path' jar: "
+                + jarTarget
+                + " with "
+                + jarSrc
+                + " referenced in MANIFEST.MF");
+      }
       copyService.copyFileAndReplace(jarSrc, jarTarget);
     }
   }
