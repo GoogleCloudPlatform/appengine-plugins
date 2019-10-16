@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +41,45 @@ public class AppYamlProjectStageConfigurationTest {
             .dockerDirectory(file)
             .build();
   }
+  
+  @Test
+  public void testArtifactRequired() {
+    try {
+      AppYamlProjectStageConfiguration.builder()
+         .appEngineDirectory(file)
+         .stagingDirectory(file)
+         .build(); 
+      Assert.fail("allowed missing artifact path");
+    } catch (IllegalStateException ex) {
+      Assert.assertEquals("No artifact supplied", ex.getMessage());
+    }
+  }
+  
+  @Test
+  public void testStagingDirectoryRequired() {
+    try {
+      AppYamlProjectStageConfiguration.builder()
+         .appEngineDirectory(file)
+         .artifact(file)
+         .build(); 
+      Assert.fail("allowed missing artifact path");
+    } catch (IllegalStateException ex) {
+      Assert.assertEquals("No staging directory supplied", ex.getMessage());
+    }
+  }
 
+  @Test
+  public void testAppEngineDirectoryRequired() {
+    try {
+      AppYamlProjectStageConfiguration.builder()
+         .stagingDirectory(file)
+         .artifact(file)
+         .build(); 
+      Assert.fail("allowed missing artifact path");
+    } catch (IllegalStateException ex) {
+      Assert.assertEquals("No AppEngine directory supplied", ex.getMessage());
+    }
+  }
   @Test
   public void testGetAppEngineDirectory() {
     assertEquals(file, configuration.getAppEngineDirectory());

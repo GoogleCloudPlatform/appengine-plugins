@@ -16,6 +16,7 @@
 
 package com.google.cloud.tools.appengine.configuration;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
 import java.util.List;
@@ -132,6 +133,11 @@ public class AppYamlProjectStageConfiguration {
 
     /** Build a {@link AppYamlProjectStageConfiguration}. */
     public AppYamlProjectStageConfiguration build() {
+      
+      Preconditions.checkState( appEngineDirectory != null, "No AppEngine directory supplied");
+      Preconditions.checkState(stagingDirectory != null, "No staging directory supplied");
+      Preconditions.checkState(artifact != null, "No artifact supplied");
+      
       return new AppYamlProjectStageConfiguration(
           this.appEngineDirectory,
           this.dockerDirectory,
