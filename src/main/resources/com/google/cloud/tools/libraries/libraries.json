@@ -22,7 +22,7 @@
       "site": "https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/com/google/cloud/bigquery/package-summary.html",
       "infotip": "The com.google.cloud.bigquery packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-bigquery",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -191,7 +191,7 @@
       "site": "https://cloud.google.com/datastore/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/datastore/package-summary.html",
       "infotip": "The com.google.cloud.datastore packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-datastore",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -246,7 +246,7 @@
       "language": "java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/firestore/package-summary.html",
       "infotip": "The com.google.cloud.firestore packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-firestore",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -307,7 +307,7 @@
       "site": "https://cloud.google.com/natural-language/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/com/google/cloud/language/v1/package-summary.html",
       "infotip": "The com.google.cloud.language.v1 packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-language",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -365,7 +365,7 @@
       "site": "https://cloud.google.com/pubsub/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/com/google/cloud/pubsub/v1/package-summary.html",
       "infotip": "The com.google.cloud.pubsub.v1 packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-pubsub",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -507,7 +507,7 @@
       "site": "https://cloud.google.com/spanner/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/com/google/cloud/spanner/package-summary.html",
       "infotip": "The com.google.cloud.spanner packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-spanner",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -532,7 +532,7 @@
       "site": "https://cloud.google.com/speech/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/speech/v1beta1/package-summary.html",
       "infotip": "The com.google.cloud.speech.v1 packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-speech",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -564,7 +564,7 @@
       "site": "https://cloud.google.com/storage/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/storage/package-summary.html",
       "infotip": "The com.google.cloud.storage packages for client side access to GCS",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-storage",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -622,7 +622,7 @@
       "site": "https://cloud.google.com/kms/docs/accessing-the-api",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/tasks/v2/package-summary.html",
       "infotip": "The com.google.cloud.tasks.v2 packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-tasks",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -647,7 +647,7 @@
       "site": "https://cloud.google.com/translate/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/translate/package-summary.html",
       "infotip": "The com.google.cloud.translate packages for client side access to the Cloud Translation API",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-translate",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -696,7 +696,7 @@
       "site": "https://cloud.google.com/vision/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/vision/v1/package-summary.html",
       "infotip": "The com.google.cloud.vision.v1 packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-vision",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -908,7 +908,7 @@
       "site": "https://cloud.google.com/logging/docs/reference/libraries#client-libraries-install-java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/logging/package-summary.html",
       "infotip": "The com.google.cloud.logging packages for controlling Stackdriver logging",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-logging",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {
@@ -941,7 +941,7 @@
       "language": "java",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/com/google/cloud/monitoring/v3/package-summary.html",
       "infotip": "The com.google.cloud.monitoring.v3 packages",
-      "launchStage": "Stable",
+      "launchStage": "stable",
       "source": "https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-monitoring",
       "languageLevel": "1.7.0",
       "mavenCoordinates": {

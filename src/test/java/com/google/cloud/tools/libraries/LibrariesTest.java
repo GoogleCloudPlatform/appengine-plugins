@@ -59,7 +59,9 @@ public class LibrariesTest {
     }
   }
 
-  private static final String[] statuses = {"early access", "alpha", "beta", "GA", "deprecated"};
+  private static final String[] statuses = {
+    "early access", "alpha", "beta", "stable", "deprecated"
+  };
 
   private static void assertApi(JsonObject api) throws IOException {
     String id = api.getString("id");
