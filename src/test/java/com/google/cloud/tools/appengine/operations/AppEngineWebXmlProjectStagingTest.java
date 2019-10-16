@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,7 +64,10 @@ public class AppEngineWebXmlProjectStagingTest {
 
     staging = new AppEngineWebXmlProjectStaging(appCfgRunner);
 
-    builder = AppEngineWebXmlProjectStageConfiguration.builder(source, destination);
+    builder =
+        AppEngineWebXmlProjectStageConfiguration.builder()
+            .sourceDirectory(source)
+            .stagingDirectory(destination);
 
     // create an app.yaml in staging output when we run.
     Mockito.doAnswer(
@@ -75,6 +79,27 @@ public class AppEngineWebXmlProjectStagingTest {
         .run(Mockito.anyList());
   }
 
+  
+  @Test
+  public void testSourceDirectoryRequired() {
+    try {
+      AppEngineWebXmlProjectStageConfiguration.builder().stagingDirectory(destination).build();
+      Assert.fail("allowed missing source directory");
+    } catch (IllegalStateException ex) {
+      Assert.assertEquals("No source directory supplied", ex.getMessage());
+    }
+  }
+  
+  @Test
+  public void testStagingDirectoryRequired() {
+    try {
+      AppEngineWebXmlProjectStageConfiguration.builder().sourceDirectory(destination).build();
+      Assert.fail("allowed missing staging directory");
+    } catch (IllegalStateException ex) {
+      Assert.assertEquals("No staging directory supplied", ex.getMessage());
+    }
+  }
+  
   @Test
   public void testCheckFlags_allFlags() throws Exception {
     builder
