@@ -235,8 +235,9 @@ public class AppYamlProjectStaging {
         continue;
       }
       Path jarTarget = targetDirectory.resolve(classpathEntry);
+
       if (Files.exists(jarTarget)) {
-        log.warning(
+        log.fine(
             "Overwriting 'Class-Path' jar: "
                 + jarTarget
                 + " with "

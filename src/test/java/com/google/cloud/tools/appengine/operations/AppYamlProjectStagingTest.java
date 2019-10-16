@@ -443,7 +443,7 @@ public class AppYamlProjectStagingTest {
     // check for warning about overwriting jars
     List<LogRecord> logs = handler.getLogs();
     Assert.assertEquals(1, logs.size());
-    Assert.assertEquals(Level.WARNING, logs.get(0).getLevel());
+    Assert.assertEquals(Level.FINE, logs.get(0).getLevel());
     Assert.assertEquals(
         "Overwriting 'Class-Path' jar: "
             + simpleLibTarget
