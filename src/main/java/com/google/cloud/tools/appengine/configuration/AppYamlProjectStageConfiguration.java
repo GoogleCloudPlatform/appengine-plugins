@@ -133,6 +133,7 @@ public class AppYamlProjectStageConfiguration {
     }
 
     /** Build a {@link AppYamlProjectStageConfiguration}. */
+    @SuppressWarnings("NullAway")
     public AppYamlProjectStageConfiguration build() {
       Preconditions.checkState(appEngineDirectory != null, "No AppEngine directory supplied");
       Preconditions.checkState(stagingDirectory != null, "No staging directory supplied");
