@@ -32,8 +32,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import org.junit.Assert;
 import org.junit.Before;
@@ -356,5 +358,98 @@ public class AppYamlProjectStagingTest {
     } catch (AppEngineException ex) {
       assertEquals("Malformed 'app.yaml'.", ex.getMessage());
     }
+  }
+
+  @Test
+  public void testCopyArtifactJarClasspath_noClasspath() throws IOException {
+    AppYamlProjectStaging.copyArtifactJarClasspath(
+        AppYamlProjectStageConfiguration.builder(
+                appEngineDirectory,
+                Paths.get("src/test/resources/jars/libs/simpleLib.jar"),
+                stagingDirectory)
+            .build(),
+        copyService);
+
+    verifyZeroInteractions(copyService);
+
+    Assert.assertEquals(0, handler.getLogs().size());
+  }
+
+  @Test
+  public void testCopyArtifactJarClasspath_withClasspathEntries() throws IOException {
+    AppYamlProjectStaging.copyArtifactJarClasspath(
+        AppYamlProjectStageConfiguration.builder(
+                appEngineDirectory,
+                Paths.get("src/test/resources/jars/complexLib.jar"),
+                stagingDirectory)
+            .build(),
+        copyService);
+
+    verify(copyService)
+        .copyFileAndReplace(
+            Paths.get("src/test/resources/jars/libs/simpleLib.jar"),
+            stagingDirectory.resolve("libs/simpleLib.jar"));
+    verifyNoMoreInteractions(copyService);
+
+    Assert.assertEquals(0, handler.getLogs().size());
+  }
+
+  @Test
+  public void testCopyArtifactJarClasspath_withMissingClasspathEntries() throws IOException {
+    AppYamlProjectStaging.copyArtifactJarClasspath(
+        AppYamlProjectStageConfiguration.builder(
+                appEngineDirectory,
+                Paths.get("src/test/resources/jars/complexLibMissingEntryManifest.jar"),
+                stagingDirectory)
+            .build(),
+        copyService);
+
+    verify(copyService)
+        .copyFileAndReplace(
+            Paths.get("src/test/resources/jars/libs/simpleLib.jar"),
+            stagingDirectory.resolve("libs/simpleLib.jar"));
+    verifyNoMoreInteractions(copyService);
+
+    // check for warning about missing jars
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(1, logs.size());
+    Assert.assertEquals(Level.WARNING, logs.get(0).getLevel());
+    Assert.assertEquals(
+        "Could not copy 'Class-Path' jar: "
+            + Paths.get("src/test/resources/jars/libs/missing.jar")
+            + " referenced in MANIFEST.MF",
+        logs.get(0).getMessage());
+  }
+
+  @Test
+  public void testCopyArtifactJarClasspath_targetAlreadyExists() throws IOException {
+
+    Path simpleLib = Paths.get("src/test/resources/jars/libs/simpleLib.jar");
+    Path simpleLibTarget = stagingDirectory.resolve("libs/simpleLib.jar");
+    Files.createDirectories(simpleLibTarget.getParent());
+    Files.createFile(simpleLibTarget);
+
+    AppYamlProjectStaging.copyArtifactJarClasspath(
+        AppYamlProjectStageConfiguration.builder(
+                appEngineDirectory,
+                Paths.get("src/test/resources/jars/complexLib.jar"),
+                stagingDirectory)
+            .build(),
+        copyService);
+
+    verify(copyService).copyFileAndReplace(simpleLib, simpleLibTarget);
+    verifyNoMoreInteractions(copyService);
+
+    // check for warning about overwriting jars
+    List<LogRecord> logs = handler.getLogs();
+    Assert.assertEquals(1, logs.size());
+    Assert.assertEquals(Level.FINE, logs.get(0).getLevel());
+    Assert.assertEquals(
+        "Overwriting 'Class-Path' jar: "
+            + simpleLibTarget
+            + " with "
+            + simpleLib
+            + " referenced in MANIFEST.MF",
+        logs.get(0).getMessage());
   }
 }

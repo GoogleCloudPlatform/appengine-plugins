@@ -24,6 +24,7 @@ import com.google.cloud.tools.io.FileUtil;
 import com.google.cloud.tools.project.AppYaml;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
@@ -31,6 +32,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
@@ -102,6 +105,7 @@ public class AppYamlProjectStaging {
     copyExtraFiles(config, copyService);
     copyAppEngineContext(config, copyService);
     copyArtifact(config, copyService);
+    copyArtifactJarClasspath(config, copyService);
   }
 
   @VisibleForTesting
@@ -202,6 +206,45 @@ public class AppYamlProjectStaging {
       copyService.copyFileAndReplace(artifact, destination);
     } else {
       throw new AppEngineException("Artifact doesn't exist at '" + artifact + "'.");
+    }
+  }
+
+  @VisibleForTesting
+  // Copies files referenced in "Class-Path" of Jar's MANIFEST.MF to the target directory. Assumes
+  // files are present at relative paths and that relative path should be preserved in the staged
+  // directory.
+  static void copyArtifactJarClasspath(
+      AppYamlProjectStageConfiguration config, CopyService copyService) throws IOException {
+    Path artifact = config.getArtifact();
+    Path targetDirectory = config.getStagingDirectory();
+    String jarClassPath =
+        new JarFile(artifact.toFile())
+            .getManifest()
+            .getMainAttributes()
+            .getValue(Attributes.Name.CLASS_PATH);
+    if (jarClassPath == null) {
+      return;
+    }
+    Iterable<String> classpathEntries = Splitter.onPattern("\\s+").split(jarClassPath.trim());
+    for (String classpathEntry : classpathEntries) {
+      // classpath entries are relative to artifact's position and relativeness should be preserved
+      // in the target directory
+      Path jarSrc = artifact.getParent().resolve(classpathEntry);
+      if (!Files.isRegularFile(jarSrc)) {
+        log.warning("Could not copy 'Class-Path' jar: " + jarSrc + " referenced in MANIFEST.MF");
+        continue;
+      }
+      Path jarTarget = targetDirectory.resolve(classpathEntry);
+
+      if (Files.exists(jarTarget)) {
+        log.fine(
+            "Overwriting 'Class-Path' jar: "
+                + jarTarget
+                + " with "
+                + jarSrc
+                + " referenced in MANIFEST.MF");
+      }
+      copyService.copyFileAndReplace(jarSrc, jarTarget);
     }
   }
 
