@@ -85,7 +85,7 @@ public class AppYamlProjectStageConfiguration {
   /**
    * Create a new builder for AppYamlProjectStageConfiguration.
    *
-   * @deprecated Use newBuilder() .appEngineDirectory(appEngineDirectory) .artifact(artifact)
+   * @deprecated Use newBuilder().appEngineDirectory(appEngineDirectory).artifact(artifact)
    *     .stagingDirectory(stagingDirectory) instead.
    */
   @Deprecated
