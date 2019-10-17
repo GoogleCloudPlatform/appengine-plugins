@@ -132,6 +132,9 @@ public class AppEngineWebXmlProjectStageConfiguration {
   }
 
   /**
+   * 
+   * Create a new builder for AppEngineWebXmlProjectStageConfiguration.
+   * 
    * @deprecated Use
    *     newBuilder().sourceDirectory(sourceDirectory).stagingDirectory(stagingDirectory) instead.
    */
