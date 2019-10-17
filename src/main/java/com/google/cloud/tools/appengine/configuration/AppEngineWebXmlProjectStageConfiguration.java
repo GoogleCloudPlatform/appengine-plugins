@@ -137,10 +137,7 @@ public class AppEngineWebXmlProjectStageConfiguration {
    */
   @Deprecated
   public static Builder builder(Path sourceDirectory, Path stagingDirectory) {
-    Builder builder = new Builder();
-    builder.sourceDirectory(sourceDirectory);
-    builder.stagingDirectory(stagingDirectory);
-    return builder;
+    return new Builder().sourceDirectory(sourceDirectory).stagingDirectory(stagingDirectory);
   }
 
   public static final class Builder {
