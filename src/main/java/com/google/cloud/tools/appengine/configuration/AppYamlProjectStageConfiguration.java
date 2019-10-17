@@ -105,17 +105,17 @@ public class AppYamlProjectStageConfiguration {
     private Builder() {}
 
     public Builder appEngineDirectory(Path appEngineDirectory) {
-      this.appEngineDirectory = appEngineDirectory;
+      this.appEngineDirectory = Preconditions.checkNotNull(appEngineDirectory);
       return this;
     }
 
     public Builder artifact(Path artifact) {
-      this.artifact = artifact;
+      this.artifact = Preconditions.checkNotNull(artifact);
       return this;
     }
 
     public Builder stagingDirectory(Path stagingDirectory) {
-      this.stagingDirectory = stagingDirectory;
+      this.stagingDirectory = Preconditions.checkNotNull(stagingDirectory);
       return this;
     }
 

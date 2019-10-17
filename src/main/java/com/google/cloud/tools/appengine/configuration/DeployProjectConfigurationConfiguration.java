@@ -62,7 +62,7 @@ public class DeployProjectConfigurationConfiguration {
     @Nullable private String server;
 
     private Builder(Path appEngineDirectory) {
-      this.appEngineDirectory = appEngineDirectory;
+      this.appEngineDirectory = Preconditions.checkNotNull(appEngineDirectory);
     }
 
     public DeployProjectConfigurationConfiguration.Builder projectId(@Nullable String projectId) {
