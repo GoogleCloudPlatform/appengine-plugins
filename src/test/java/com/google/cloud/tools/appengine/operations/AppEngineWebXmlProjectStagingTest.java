@@ -79,7 +79,6 @@ public class AppEngineWebXmlProjectStagingTest {
         .run(Mockito.anyList());
   }
 
-  
   @Test
   public void testSourceDirectoryRequired() {
     try {
@@ -89,7 +88,7 @@ public class AppEngineWebXmlProjectStagingTest {
       Assert.assertEquals("No source directory supplied", ex.getMessage());
     }
   }
-  
+
   @Test
   public void testStagingDirectoryRequired() {
     try {
@@ -99,7 +98,7 @@ public class AppEngineWebXmlProjectStagingTest {
       Assert.assertEquals("No staging directory supplied", ex.getMessage());
     }
   }
-  
+
   @Test
   public void testCheckFlags_allFlags() throws Exception {
     builder

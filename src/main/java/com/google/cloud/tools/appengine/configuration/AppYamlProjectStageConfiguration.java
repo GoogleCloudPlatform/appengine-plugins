@@ -132,11 +132,11 @@ public class AppYamlProjectStageConfiguration {
     }
 
     /** Build a {@link AppYamlProjectStageConfiguration}. */
-    public AppYamlProjectStageConfiguration build() {      
+    public AppYamlProjectStageConfiguration build() {
       Preconditions.checkState(appEngineDirectory != null, "No AppEngine directory supplied");
       Preconditions.checkState(stagingDirectory != null, "No staging directory supplied");
       Preconditions.checkState(artifact != null, "No artifact supplied");
-      
+
       return new AppYamlProjectStageConfiguration(
           this.appEngineDirectory,
           this.dockerDirectory,

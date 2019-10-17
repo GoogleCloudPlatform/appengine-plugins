@@ -221,7 +221,7 @@ public class AppEngineWebXmlProjectStageConfiguration {
     public AppEngineWebXmlProjectStageConfiguration build() {
       Preconditions.checkState(sourceDirectory != null, "No source directory supplied");
       Preconditions.checkState(stagingDirectory != null, "No staging directory supplied");
-      
+
       return new AppEngineWebXmlProjectStageConfiguration(
           this.sourceDirectory,
           this.stagingDirectory,
