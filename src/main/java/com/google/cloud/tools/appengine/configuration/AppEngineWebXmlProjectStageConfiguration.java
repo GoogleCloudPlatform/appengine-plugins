@@ -143,8 +143,8 @@ public class AppEngineWebXmlProjectStageConfiguration {
   }
 
   public static final class Builder {
-    private Path sourceDirectory;
-    private Path stagingDirectory;
+    @Nullable private Path sourceDirectory;
+    @Nullable private Path stagingDirectory;
     @Nullable private Path dockerfile;
     @Nullable private Boolean enableQuickstart;
     @Nullable private Boolean disableUpdateCheck;
@@ -217,6 +217,7 @@ public class AppEngineWebXmlProjectStageConfiguration {
     }
 
     /** Build a {@link AppEngineWebXmlProjectStageConfiguration}. */
+    @SuppressWarnings("NullAway")
     public AppEngineWebXmlProjectStageConfiguration build() {
       Preconditions.checkState(sourceDirectory != null, "No source directory supplied");
       Preconditions.checkState(stagingDirectory != null, "No staging directory supplied");

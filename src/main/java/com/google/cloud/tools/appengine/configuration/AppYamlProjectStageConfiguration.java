@@ -97,11 +97,11 @@ public class AppYamlProjectStageConfiguration {
   }
 
   public static final class Builder {
-    private Path appEngineDirectory;
+    @Nullable private Path appEngineDirectory;
     @Nullable private Path dockerDirectory;
     @Nullable private List<Path> extraFilesDirectories;
-    private Path artifact;
-    private Path stagingDirectory;
+    @Nullable private Path artifact;
+    @Nullable private Path stagingDirectory;
 
     private Builder() {}
 
