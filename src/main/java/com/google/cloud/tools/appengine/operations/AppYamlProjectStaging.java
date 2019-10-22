@@ -259,6 +259,9 @@ public class AppYamlProjectStaging {
     }
 
     void copyFileAndReplace(Path src, Path dest) throws IOException {
+      if (!Files.exists(dest.getParent())) {
+        Files.createDirectories(dest.getParent());
+      }
       Files.copy(src, dest, REPLACE_EXISTING);
     }
   }
