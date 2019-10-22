@@ -25,8 +25,6 @@ import javax.annotation.Nullable;
  * href='https://support.google.com/cloud/answer/6158840?hl=en'>Google Cloud Platform Project
  * ID</a>. Source: com.google.apphosting.base.AppId
  *
- * <p>
- *
  * <pre>
  * project-id ::= [(partition)~][(domain):](display-project-id)
  * partition ::= [a-z\d\-\.]{1,100}
