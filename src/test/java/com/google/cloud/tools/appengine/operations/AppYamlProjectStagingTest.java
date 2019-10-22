@@ -452,4 +452,50 @@ public class AppYamlProjectStagingTest {
             + " referenced in MANIFEST.MF",
         logs.get(0).getMessage());
   }
+
+  @Test
+  public void testCopyService_copiesToExistingFile() throws IOException {
+    AppYamlProjectStaging.CopyService copier = new AppYamlProjectStaging.CopyService();
+    Path root = temporaryFolder.getRoot().toPath();
+
+    Path srcDir = root.resolve("srcDir");
+    Files.createDirectory(srcDir);
+    Path srcFile = srcDir.resolve("srcFile");
+    Files.createFile(srcFile);
+    Files.write(srcFile, "some content".getBytes(StandardCharsets.UTF_8));
+
+    Path destDir = root.resolve("destDir");
+    Files.createDirectory(destDir);
+    Path destFile = destDir.resolve("destFile");
+    Files.createFile(destFile);
+
+    Assert.assertTrue(Files.exists(destDir));
+    Assert.assertTrue(Files.exists(destFile));
+
+    copier.copyFileAndReplace(srcFile, destFile);
+
+    Assert.assertArrayEquals(Files.readAllBytes(srcFile), Files.readAllBytes(destFile));
+  }
+
+  @Test
+  public void testCopyService_createsParentsWhenNecessary() throws IOException {
+    AppYamlProjectStaging.CopyService copier = new AppYamlProjectStaging.CopyService();
+    Path root = temporaryFolder.getRoot().toPath();
+
+    Path srcDir = root.resolve("srcDir");
+    Files.createDirectory(srcDir);
+    Path srcFile = srcDir.resolve("srcFile");
+    Files.createFile(srcFile);
+    Files.write(srcFile, "some content".getBytes(StandardCharsets.UTF_8));
+
+    Path destDir = root.resolve("destDir");
+    Path destFile = destDir.resolve("destFile");
+
+    Assert.assertFalse(Files.exists(destDir));
+    Assert.assertFalse(Files.exists(destFile));
+
+    copier.copyFileAndReplace(srcFile, destFile);
+
+    Assert.assertArrayEquals(Files.readAllBytes(srcFile), Files.readAllBytes(destFile));
+  }
 }
