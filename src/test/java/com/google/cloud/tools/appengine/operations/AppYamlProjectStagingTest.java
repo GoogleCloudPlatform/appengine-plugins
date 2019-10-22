@@ -473,6 +473,8 @@ public class AppYamlProjectStagingTest {
     Assert.assertTrue(Files.exists(destFile));
 
     copier.copyFileAndReplace(srcFile, destFile);
+
+    Assert.assertArrayEquals(Files.readAllBytes(srcFile), Files.readAllBytes(destFile));
   }
 
   @Test
@@ -493,5 +495,7 @@ public class AppYamlProjectStagingTest {
     Assert.assertFalse(Files.exists(destFile));
 
     copier.copyFileAndReplace(srcFile, destFile);
+
+    Assert.assertArrayEquals(Files.readAllBytes(srcFile), Files.readAllBytes(destFile));
   }
 }
