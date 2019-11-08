@@ -637,14 +637,14 @@
     "name": "Cloud Translation",
     "id": "cloudtranslation",
     "serviceName": "translate.googleapis.com",
-    "documentation": "https://cloud.google.com/translate/docs/reference/libraries",
+    "documentation": "https://cloud.google.com/translate/docs/apis/",
     "description": "A simple programmatic interface for detecting the language of arbitrary strings and translating them into dozens of languages using Neural Machine Translation.",
     "transports": ["http"],
     "clients": [
       {
       "name": "Cloud Translation Client Library for Java",
       "language": "java",
-      "site": "https://cloud.google.com/translate/docs/reference/libraries#client-libraries-install-java",
+      "site": "https://cloud.google.com/translate/docs/reference/libraries/v2/overview-v2",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/translate/package-summary.html",
       "infotip": "The com.google.cloud.translate packages for client side access to the Cloud Translation API",
       "launchStage": "stable",
@@ -653,7 +653,7 @@
       "mavenCoordinates": {
          "groupId": "com.google.cloud",
          "artifactId": "google-cloud-translate",
-         "version": "1.93.0"
+         "version": "1.94.0"
        }
       }
     ]
