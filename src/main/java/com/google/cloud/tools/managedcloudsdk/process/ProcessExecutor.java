@@ -79,19 +79,16 @@ public class ProcessExecutor {
     if (environment != null) {
       processBuilder.environment().putAll(environment);
     }
-    final Process process = processBuilder.start();
+    Process process = processBuilder.start();
 
     stdout.handleStream(process.getInputStream());
     stderr.handleStream(process.getErrorStream());
 
-    int exitCode;
     try {
-      exitCode = process.waitFor();
+      return process.waitFor();
     } catch (InterruptedException ex) {
       process.destroy();
       throw ex; // rethrow after cleanup
     }
-
-    return exitCode;
   }
 }

@@ -69,7 +69,19 @@ public class CommandCaller {
       }
       return stdOutSaver.getResult().get();
     } catch (IOException | ExecutionException ex) {
-      throw new CommandExecutionException(ex);
+      String stdOut;
+      String stdErr;
+      try {
+        stdOut = stdOutSaver.getResult().get();
+      } catch (InterruptedException | ExecutionException ignored) {
+        stdOut = "stdout collection interrupted";
+      }
+      try {
+        stdErr = stdErrSaver.getResult().get();
+      } catch (InterruptedException | ExecutionException ignored) {
+        stdErr = "stderr collection interrupted";
+      }
+      throw new CommandExecutionException(stdOut + "\n" + stdErr, ex);
     }
   }
 

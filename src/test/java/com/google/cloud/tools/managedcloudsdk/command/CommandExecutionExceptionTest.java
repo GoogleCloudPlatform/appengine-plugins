@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Google LLC.
+ * Copyright 2019 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
 
 package com.google.cloud.tools.managedcloudsdk.command;
 
-/** Exception thrown when a command failed to execute completely. */
-public class CommandExecutionException extends Exception {
-  public CommandExecutionException(Throwable cause) {
-    super(cause);
-  }
+import org.junit.Assert;
+import org.junit.Test;
 
-  /**
-   * @param message failure details; typically output of stderr
-   * @param cause root exception
-   */
-  public CommandExecutionException(String message, Throwable cause) {
-    super(message, cause);
+public class CommandExecutionExceptionTest {
+
+  @Test
+  public void testStdErr() {
+    String stderr = "bad result";
+    Throwable cause = new RuntimeException();
+    CommandExecutionException ex = new CommandExecutionException(stderr, cause);
+    Assert.assertEquals("bad result", ex.getMessage());
   }
 }
