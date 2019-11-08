@@ -644,7 +644,7 @@
       {
       "name": "Cloud Translation Client Library for Java",
       "language": "java",
-      "site": "https://cloud.google.com/translate/docs/reference/libraries/v2/overview-v2",
+      "site": "https://cloud.google.com/translate/docs/apis/",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/translate/package-summary.html",
       "infotip": "The com.google.cloud.translate packages for client side access to the Cloud Translation API",
       "launchStage": "stable",
