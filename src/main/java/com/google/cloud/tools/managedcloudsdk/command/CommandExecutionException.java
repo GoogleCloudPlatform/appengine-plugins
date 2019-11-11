@@ -23,6 +23,8 @@ public class CommandExecutionException extends Exception {
   }
 
   /**
+   * Creates a new command execution exception.
+   * 
    * @param message failure details; typically output of stderr
    * @param cause root exception
    */
