@@ -50,6 +50,7 @@ public class LibrariesTest {
   @Before
   public void parseJson() {
     oldCookieHandler = CookieHandler.getDefault();
+    // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/822
     CookieHandler.setDefault(new CookieManager());
 
     JsonReaderFactory factory = Json.createReaderFactory(null);
