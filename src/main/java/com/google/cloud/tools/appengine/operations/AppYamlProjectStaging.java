@@ -217,34 +217,34 @@ public class AppYamlProjectStaging {
       AppYamlProjectStageConfiguration config, CopyService copyService) throws IOException {
     Path artifact = config.getArtifact();
     Path targetDirectory = config.getStagingDirectory();
-    String jarClassPath =
-        new JarFile(artifact.toFile())
-            .getManifest()
-            .getMainAttributes()
-            .getValue(Attributes.Name.CLASS_PATH);
-    if (jarClassPath == null) {
-      return;
-    }
-    Iterable<String> classpathEntries = Splitter.onPattern("\\s+").split(jarClassPath.trim());
-    for (String classpathEntry : classpathEntries) {
-      // classpath entries are relative to artifact's position and relativeness should be preserved
-      // in the target directory
-      Path jarSrc = artifact.getParent().resolve(classpathEntry);
-      if (!Files.isRegularFile(jarSrc)) {
-        log.warning("Could not copy 'Class-Path' jar: " + jarSrc + " referenced in MANIFEST.MF");
-        continue;
+    try (JarFile jarFile = new JarFile(artifact.toFile())) {
+      String jarClassPath =
+          jarFile.getManifest().getMainAttributes().getValue(Attributes.Name.CLASS_PATH);
+      if (jarClassPath == null) {
+        return;
       }
-      Path jarTarget = targetDirectory.resolve(classpathEntry);
+      Iterable<String> classpathEntries = Splitter.onPattern("\\s+").split(jarClassPath.trim());
+      for (String classpathEntry : classpathEntries) {
+        // classpath entries are relative to artifact's position and relativeness should be
+        // preserved
+        // in the target directory
+        Path jarSrc = artifact.getParent().resolve(classpathEntry);
+        if (!Files.isRegularFile(jarSrc)) {
+          log.warning("Could not copy 'Class-Path' jar: " + jarSrc + " referenced in MANIFEST.MF");
+          continue;
+        }
+        Path jarTarget = targetDirectory.resolve(classpathEntry);
 
-      if (Files.exists(jarTarget)) {
-        log.fine(
-            "Overwriting 'Class-Path' jar: "
-                + jarTarget
-                + " with "
-                + jarSrc
-                + " referenced in MANIFEST.MF");
+        if (Files.exists(jarTarget)) {
+          log.fine(
+              "Overwriting 'Class-Path' jar: "
+                  + jarTarget
+                  + " with "
+                  + jarSrc
+                  + " referenced in MANIFEST.MF");
+        }
+        copyService.copyFileAndReplace(jarSrc, jarTarget);
       }
-      copyService.copyFileAndReplace(jarSrc, jarTarget);
     }
   }
 
