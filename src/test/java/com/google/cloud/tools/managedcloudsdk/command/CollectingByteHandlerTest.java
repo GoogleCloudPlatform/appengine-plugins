@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Assert;
 import org.junit.Test;
 
-/** Tests for {@link CollectingByteHandler}. */
+/** Tests for {@link AsyncStreamSaverFactory.CollectingByteHandler}. */
 public class CollectingByteHandlerTest {
 
   @Test
