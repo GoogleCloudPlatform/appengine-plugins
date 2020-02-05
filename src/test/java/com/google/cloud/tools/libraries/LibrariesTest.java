@@ -37,6 +37,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonReaderFactory;
 import javax.json.JsonString;
+import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -98,7 +99,7 @@ public class LibrariesTest {
     for (int i = 0; i < clients.size(); i++) {
       JsonObject client = (JsonObject) clients.get(i);
       String launchStage = client.getString("launchStage");
-      Assert.assertThat(statuses, hasItemInArray(launchStage));
+      MatcherAssert.assertThat(statuses, hasItemInArray(launchStage));
       try {
         assertReachable(client.getString("site"));
       } catch (NullPointerException ex) {
