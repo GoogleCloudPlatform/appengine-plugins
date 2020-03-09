@@ -36,7 +36,9 @@ public enum SdkComponent {
   GCD_EMULATOR("gcd-emulator"),
   GSUTIL("gsutil"),
   KUBECTL("kubectl"),
-  PUBSUB_EMULATOR("pubsub-emulator");
+  PUBSUB_EMULATOR("pubsub-emulator"),
+  MINIKUBE("minikube"),
+  SKAFFOLD("skaffold");
 
   private final String value;
 

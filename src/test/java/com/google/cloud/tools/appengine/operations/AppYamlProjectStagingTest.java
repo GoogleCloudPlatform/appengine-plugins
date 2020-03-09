@@ -21,8 +21,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.AppYamlProjectStageConfiguration;
@@ -152,7 +152,7 @@ public class AppYamlProjectStagingTest {
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
 
-    verifyZeroInteractions(copyService);
+    verifyNoInteractions(copyService);
   }
 
   @Test
@@ -168,7 +168,7 @@ public class AppYamlProjectStagingTest {
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
 
-    verifyZeroInteractions(copyService);
+    verifyNoInteractions(copyService);
   }
 
   @Test
@@ -186,7 +186,7 @@ public class AppYamlProjectStagingTest {
             + " will be ignored. If you wish to specify "
             + "a docker configuration, please use 'runtime: custom'.");
 
-    verifyZeroInteractions(copyService);
+    verifyNoInteractions(copyService);
   }
 
   @Test
@@ -205,7 +205,7 @@ public class AppYamlProjectStagingTest {
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
 
-    verifyZeroInteractions(copyService);
+    verifyNoInteractions(copyService);
   }
 
   @Test
@@ -234,7 +234,7 @@ public class AppYamlProjectStagingTest {
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
 
-    verifyZeroInteractions(copyService);
+    verifyNoInteractions(copyService);
   }
 
   @Test
@@ -335,7 +335,7 @@ public class AppYamlProjectStagingTest {
     }
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
-    verifyZeroInteractions(copyService);
+    verifyNoInteractions(copyService);
   }
 
   @Test
@@ -348,7 +348,7 @@ public class AppYamlProjectStagingTest {
     }
     List<LogRecord> logs = handler.getLogs();
     assertEquals(0, logs.size());
-    verifyZeroInteractions(copyService);
+    verifyNoInteractions(copyService);
   }
 
   @Test
@@ -391,7 +391,7 @@ public class AppYamlProjectStagingTest {
             .build(),
         copyService);
 
-    verifyZeroInteractions(copyService);
+    verifyNoInteractions(copyService);
 
     Assert.assertEquals(0, handler.getLogs().size());
   }

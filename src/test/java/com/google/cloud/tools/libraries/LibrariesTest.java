@@ -22,6 +22,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,6 +37,8 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonReaderFactory;
 import javax.json.JsonString;
+import org.hamcrest.MatcherAssert;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,13 +46,23 @@ import org.junit.Test;
 public class LibrariesTest {
 
   private JsonObject[] apis;
+  private CookieHandler oldCookieHandler;
 
   @Before
   public void parseJson() {
+    oldCookieHandler = CookieHandler.getDefault();
+    // https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/822
+    CookieHandler.setDefault(new CookieManager());
+
     JsonReaderFactory factory = Json.createReaderFactory(null);
     InputStream in = LibrariesTest.class.getResourceAsStream("libraries.json");
     JsonReader reader = factory.createReader(in);
     apis = reader.readArray().toArray(new JsonObject[0]);
+  }
+
+  @After
+  public void tearDown() {
+    CookieHandler.setDefault(oldCookieHandler);
   }
 
   @Test
@@ -85,7 +99,7 @@ public class LibrariesTest {
     for (int i = 0; i < clients.size(); i++) {
       JsonObject client = (JsonObject) clients.get(i);
       String launchStage = client.getString("launchStage");
-      Assert.assertThat(statuses, hasItemInArray(launchStage));
+      MatcherAssert.assertThat(statuses, hasItemInArray(launchStage));
       try {
         assertReachable(client.getString("site"));
       } catch (NullPointerException ex) {
