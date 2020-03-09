@@ -24,6 +24,8 @@ import com.google.cloud.tools.appengine.operations.cloudsdk.process.ProcessHandl
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,8 +63,10 @@ public class AuthTest {
     try {
       new Auth(gcloudRunner).login(testUsername);
       Assert.fail("Should have failed with bad user.");
-    } catch (AppEngineException e) {
-      Assert.assertTrue(e.getMessage().contains("Invalid email address: " + testUsername));
+    } catch (AppEngineException expected) {
+      MatcherAssert.assertThat(
+          expected.getMessage(),
+          CoreMatchers.containsString("Invalid email address: " + testUsername));
     }
   }
 
@@ -104,8 +108,10 @@ public class AuthTest {
     try {
       new Auth(gcloudRunner).activateServiceAccount(jsonKeyFile);
       Assert.fail("Should have failed with bad keyfile.");
-    } catch (IllegalArgumentException e) {
-      Assert.assertTrue(e.getMessage().contains("File does not exist: " + jsonKeyFile));
+    } catch (IllegalArgumentException expected) {
+      MatcherAssert.assertThat(
+          expected.getMessage(),
+          CoreMatchers.containsString("File does not exist: " + jsonKeyFile));
     }
   }
 }
