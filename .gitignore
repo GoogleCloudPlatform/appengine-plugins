@@ -13,3 +13,5 @@ target/
 .settings/*
 .metadata/*
 .DS_Store
+.checkstyle
+
