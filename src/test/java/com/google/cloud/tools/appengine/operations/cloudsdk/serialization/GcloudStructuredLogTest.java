@@ -98,8 +98,10 @@ public class GcloudStructuredLogTest {
     try {
       GcloudStructuredLog.parse("non-JSON");
       fail();
-    } catch (JsonParseException e) {
-      assertTrue(e.getMessage().contains("JsonSyntaxException"));
+    } catch (JsonParseException expected) {
+      String message = expected.getMessage();
+      Assert.assertNotNull(message);
+      assertTrue(message.contains("JsonSyntaxException"));
     }
   }
 

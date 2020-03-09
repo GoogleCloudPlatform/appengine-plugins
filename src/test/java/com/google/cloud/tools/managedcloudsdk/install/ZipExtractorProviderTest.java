@@ -67,8 +67,9 @@ public class ZipExtractorProviderTest {
       zipExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
       Assert.fail("IOException expected");
     } catch (IOException ex) {
-      Assert.assertTrue(
-          ex.getMessage().startsWith("Blocked unzipping files outside destination: "));
+      String message = ex.getMessage();
+      Assert.assertNotNull(message);
+      Assert.assertTrue(message.startsWith("Blocked unzipping files outside destination: "));
     }
   }
 
@@ -82,8 +83,9 @@ public class ZipExtractorProviderTest {
       zipExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
       Assert.fail("IOException expected");
     } catch (IOException ex) {
-      Assert.assertTrue(
-          ex.getMessage().startsWith("Blocked unzipping files outside destination: "));
+      String message = ex.getMessage();
+      Assert.assertNotNull(message);
+      Assert.assertTrue(message.startsWith("Blocked unzipping files outside destination: "));
     }
   }
 

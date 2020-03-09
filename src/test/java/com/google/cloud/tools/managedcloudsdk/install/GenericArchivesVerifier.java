@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 
@@ -44,7 +45,7 @@ public class GenericArchivesVerifier {
     Path file1 = testRoot.resolve(FILE_1); // mode 664
     PosixFileAttributeView allAttributesFile1 =
         Files.getFileAttributeView(file1, PosixFileAttributeView.class);
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         allAttributesFile1.readAttributes().permissions(),
         Matchers.containsInAnyOrder(
             PosixFilePermission.OWNER_READ,
@@ -54,7 +55,7 @@ public class GenericArchivesVerifier {
     Path file2 = testRoot.resolve(FILE_2); // mode 777
     PosixFileAttributeView allAttributesFile2 =
         Files.getFileAttributeView(file2, PosixFileAttributeView.class);
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         allAttributesFile2.readAttributes().permissions(),
         Matchers.containsInAnyOrder(PosixFilePermission.values()));
   }
