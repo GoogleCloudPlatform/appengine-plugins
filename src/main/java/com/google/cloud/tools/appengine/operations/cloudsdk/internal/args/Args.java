@@ -107,8 +107,8 @@ class Args {
   }
 
   /**
-   * Produces an immutable single element list with a key/value pair
-   * comma separated string from a {@link Map}.
+   * Produces an immutable single element list with a key/value pair comma separated string from a
+   * {@link Map}.
    *
    * @return {@code ["key1=value1,key2=value2,..."]} or {@code []} if keyValueMapping=empty/null
    */
