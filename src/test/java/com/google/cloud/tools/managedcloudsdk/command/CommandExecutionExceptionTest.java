@@ -25,7 +25,16 @@ public class CommandExecutionExceptionTest {
   public void testStdErr() {
     String stderr = "bad result";
     Throwable cause = new RuntimeException();
-    CommandExecutionException ex = new CommandExecutionException(stderr, cause);
-    Assert.assertEquals("bad result", ex.getMessage());
+    CommandExecutionException ex = new CommandExecutionException("a message", cause, stderr);
+    Assert.assertEquals("a message", ex.getMessage());
+    Assert.assertEquals("bad result", ex.getErrorLog());
   }
+  
+  @Test
+  public void testConstructor() {
+    Throwable cause = new RuntimeException();
+    CommandExecutionException ex = new CommandExecutionException(cause);
+    Assert.assertNull(ex.getErrorLog());
+  }
+
 }
