@@ -25,7 +25,7 @@ public class CommandExecutionException extends Exception {
   /**
    * Creates a new command execution exception.
    *
-   * @param message failure details; typically output of stderr
+   * @param message failure details; typically output of stdout and stderr
    * @param cause root exception
    */
   public CommandExecutionException(String message, Throwable cause) {

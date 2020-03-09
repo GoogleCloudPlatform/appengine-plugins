@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 /** Exception when sdk command fails. */
 public class CommandExitException extends Exception {
   private final int exitCode;
-  @Nullable private String errorLog;
+  @Nullable private final String errorLog;
 
   /**
    * Create a new exception.
@@ -41,8 +41,7 @@ public class CommandExitException extends Exception {
    * @param exitCode the process exit code
    */
   public CommandExitException(int exitCode) {
-    super("Process failed with exit code: " + exitCode);
-    this.exitCode = exitCode;
+    this(exitCode, null);
   }
 
   public int getExitCode() {
