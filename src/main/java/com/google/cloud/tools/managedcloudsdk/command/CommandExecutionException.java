@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 /** Exception thrown when a command failed to execute completely. */
 public class CommandExecutionException extends Exception {
-  
+
   @Nullable private final String errorLog;
 
   public CommandExecutionException(Throwable cause) {
@@ -36,9 +36,9 @@ public class CommandExecutionException extends Exception {
    */
   public CommandExecutionException(String message, Throwable cause) {
     super(message, cause);
-    this.errorLog = null;  
+    this.errorLog = null;
   }
- 
+
   /**
    * Creates a new command execution exception.
    *
@@ -48,9 +48,9 @@ public class CommandExecutionException extends Exception {
    */
   public CommandExecutionException(String message, Throwable cause, String errorLog) {
     super(message, cause);
-    this.errorLog = errorLog;  
+    this.errorLog = errorLog;
   }
-  
+
   @Nullable
   public String getErrorLog() {
     return errorLog;

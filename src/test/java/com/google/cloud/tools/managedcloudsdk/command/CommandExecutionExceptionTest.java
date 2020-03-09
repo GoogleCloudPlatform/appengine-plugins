@@ -29,12 +29,11 @@ public class CommandExecutionExceptionTest {
     Assert.assertEquals("a message", ex.getMessage());
     Assert.assertEquals("bad result", ex.getErrorLog());
   }
-  
+
   @Test
   public void testConstructor() {
     Throwable cause = new RuntimeException();
     CommandExecutionException ex = new CommandExecutionException(cause);
     Assert.assertNull(ex.getErrorLog());
   }
-
 }
