@@ -26,7 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -82,7 +81,7 @@ public class WindowsBundledPythonCopierTest {
     Path pythonHome = temporaryFolder.newFolder("python").toPath();
     Path executable = temporaryFolder.newFile("python/PyThOn.EXE").toPath();
     Assert.assertTrue(Files.exists(executable));
-    Assert.assertThat(executable.toString(), Matchers.endsWith("PyThOn.EXE"));
+    Assert.assertTrue(executable.toString().endsWith("PyThOn.EXE"));
 
     WindowsBundledPythonCopier.deleteCopiedPython(executable.toString());
     Assert.assertFalse(Files.exists(executable));

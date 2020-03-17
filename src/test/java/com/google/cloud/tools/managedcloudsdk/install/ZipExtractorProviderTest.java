@@ -23,7 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
-import org.hamcrest.Matchers;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Rule;
@@ -67,9 +68,10 @@ public class ZipExtractorProviderTest {
     try {
       zipExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
       Assert.fail("IOException expected");
-    } catch (IOException ex) {
-      Assert.assertThat(
-          ex.getMessage(), Matchers.startsWith("Blocked unzipping files outside destination: "));
+    } catch (IOException expected) {
+      MatcherAssert.assertThat(
+          expected.getMessage(),
+          CoreMatchers.startsWith("Blocked unzipping files outside destination: "));
     }
   }
 
@@ -82,9 +84,10 @@ public class ZipExtractorProviderTest {
     try {
       zipExtractorProvider.extract(testArchive, extractionRoot, mockProgressListener);
       Assert.fail("IOException expected");
-    } catch (IOException ex) {
-      Assert.assertThat(
-          ex.getMessage(), Matchers.startsWith("Blocked unzipping files outside destination: "));
+    } catch (IOException expected) {
+      MatcherAssert.assertThat(
+          expected.getMessage(),
+          CoreMatchers.startsWith("Blocked unzipping files outside destination: "));
     }
   }
 
