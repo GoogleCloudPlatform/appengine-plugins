@@ -19,7 +19,8 @@ package com.google.cloud.tools.managedcloudsdk.command;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.AbstractFuture;
+import com.google.common.util.concurrent.SettableFuture;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -47,9 +48,9 @@ public class CommandCallerTest {
   @Mock private AsyncStreamSaver mockStdoutSaver;
   @Mock private AsyncStreamSaver mockStderrSaver;
   @Mock private AsyncStreamSaverFactory mockStreamSaverFactory;
-  @Mock private ListenableFuture<String> mockStdout;
-  @Mock private ListenableFuture<String> mockStderr;
 
+  private final SettableFuture<String> mockStdout = SettableFuture.create();
+  private final SettableFuture<String> mockStderr = SettableFuture.create();
   private List<String> fakeCommand;
   private Path fakeWorkingDirectory;
   private Map<String, String> fakeEnvironment;
@@ -76,8 +77,9 @@ public class CommandCallerTest {
         .thenReturn(0);
     Mockito.when(mockStdoutSaver.getResult()).thenReturn(mockStdout);
     Mockito.when(mockStderrSaver.getResult()).thenReturn(mockStderr);
-    Mockito.when(mockStdout.get()).thenReturn("stdout");
-    Mockito.when(mockStderr.get()).thenReturn("stderr");
+
+    mockStdout.set("stdout");
+    mockStderr.set("stderr");
 
     testCommandCaller = new CommandCaller(mockProcessExecutorFactory, mockStreamSaverFactory);
   }
@@ -148,7 +150,15 @@ public class CommandCallerTest {
   public void testCall_interruptedExceptionPassthrough()
       throws CommandExecutionException, CommandExitException, ExecutionException,
           InterruptedException, IOException {
-    Mockito.when(mockStdout.get()).thenThrow(InterruptedException.class);
+
+    AbstractFuture<String> future =
+        new AbstractFuture<String>() {
+          @Override
+          public String get() throws InterruptedException {
+            throw new InterruptedException();
+          }
+        };
+    Mockito.when(mockStdoutSaver.getResult()).thenReturn(future);
 
     try {
       testCommandCaller.call(fakeCommand, fakeWorkingDirectory, fakeEnvironment);

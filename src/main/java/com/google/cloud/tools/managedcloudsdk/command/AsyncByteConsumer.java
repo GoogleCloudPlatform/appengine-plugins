@@ -59,9 +59,10 @@ class AsyncByteConsumer implements AsyncStreamSaver {
   @Override
   public void handleStream(final InputStream inputStream) {
     if (executorService.isShutdown()) {
-      throw new IllegalStateException("Cannot re-use " + this.getClass().getName());
+      throw new IllegalStateException("Cannot reuse " + this.getClass().getName());
     }
-    result.setFuture(executorService.submit(() -> consumeBytes(inputStream)));
+    ListenableFuture<String> submit = executorService.submit(() -> consumeBytes(inputStream));
+    result.setFuture(submit);
     executorService.shutdown();
   }
 
