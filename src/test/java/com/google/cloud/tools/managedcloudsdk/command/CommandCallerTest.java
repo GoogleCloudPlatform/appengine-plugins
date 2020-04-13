@@ -17,7 +17,6 @@
 package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
-import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.io.IOException;
@@ -42,7 +41,6 @@ public class CommandCallerTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private ProcessExecutorFactory mockProcessExecutorFactory;
   @Mock private ProcessExecutor mockProcessExecutor;
   @Mock private AsyncStreamSaver mockStdoutSaver;
   @Mock private AsyncStreamSaver mockStderrSaver;
@@ -62,7 +60,6 @@ public class CommandCallerTest {
     fakeWorkingDirectory = testDir.getRoot().toPath();
     fakeEnvironment = ImmutableMap.of("testKey", "testValue");
 
-    Mockito.when(mockProcessExecutorFactory.newProcessExecutor()).thenReturn(mockProcessExecutor);
     Mockito.when(mockStreamSaverFactory.newSaver())
         .thenReturn(mockStdoutSaver)
         .thenReturn(mockStderrSaver);
@@ -79,7 +76,7 @@ public class CommandCallerTest {
     Mockito.when(mockStdout.get()).thenReturn("stdout");
     Mockito.when(mockStderr.get()).thenReturn("stderr");
 
-    testCommandCaller = new CommandCaller(mockProcessExecutorFactory, mockStreamSaverFactory);
+    testCommandCaller = new CommandCaller(() -> mockProcessExecutor, mockStreamSaverFactory);
   }
 
   private void verifyCommandExecution() throws IOException, InterruptedException {
@@ -121,9 +118,7 @@ public class CommandCallerTest {
 
   @Test
   public void testCall_ioException()
-      throws CommandExecutionException, CommandExitException, ExecutionException,
-          InterruptedException, IOException {
-
+      throws CommandExitException, InterruptedException, IOException {
     Throwable cause = new IOException("oops");
     Mockito.when(
             mockProcessExecutor.run(

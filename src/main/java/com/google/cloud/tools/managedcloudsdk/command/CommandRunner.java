@@ -18,24 +18,24 @@ package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
-import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 /** Execute a command and redirect output to handlers. */
 public class CommandRunner {
-  private final ProcessExecutorFactory processExecutorFactory;
+  private final Supplier<ProcessExecutor> processExecutorSupplier;
   private final AsyncStreamHandlerFactory streamHandlerFactory;
 
   @VisibleForTesting
   CommandRunner(
-      ProcessExecutorFactory processExecutorFactory,
+      Supplier<ProcessExecutor> processExecutorSupplier,
       AsyncStreamHandlerFactory streamHandlerFactory) {
-    this.processExecutorFactory = processExecutorFactory;
+    this.processExecutorSupplier = processExecutorSupplier;
     this.streamHandlerFactory = streamHandlerFactory;
   }
 
@@ -46,7 +46,7 @@ public class CommandRunner {
       @Nullable Map<String, String> environment,
       ConsoleListener consoleListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
-    ProcessExecutor processExecutor = processExecutorFactory.newProcessExecutor();
+    ProcessExecutor processExecutor = processExecutorSupplier.get();
     try {
       int exitCode =
           processExecutor.run(
@@ -64,6 +64,6 @@ public class CommandRunner {
   }
 
   public static CommandRunner newRunner() {
-    return new CommandRunner(new ProcessExecutorFactory(), new AsyncStreamHandlerFactory());
+    return new CommandRunner(ProcessExecutor::new, new AsyncStreamHandlerFactory());
   }
 }

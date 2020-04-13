@@ -19,7 +19,6 @@ package com.google.cloud.tools.managedcloudsdk.command;
 import com.google.cloud.tools.managedcloudsdk.ConsoleListener;
 import com.google.cloud.tools.managedcloudsdk.process.AsyncStreamHandler;
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
-import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -42,7 +41,6 @@ public class CommandRunnerTest {
 
   @Rule public TemporaryFolder testDir = new TemporaryFolder();
 
-  @Mock private ProcessExecutorFactory mockProcessExecutorFactory;
   @Mock private ProcessExecutor mockProcessExecutor;
   @Mock private ConsoleListener mockConsoleListener;
   @Mock private AsyncStreamHandler mockStreamHandler;
@@ -60,7 +58,6 @@ public class CommandRunnerTest {
     fakeWorkingDirectory = testDir.getRoot().toPath();
     fakeEnvironment = ImmutableMap.of("testKey", "testValue");
 
-    Mockito.when(mockProcessExecutorFactory.newProcessExecutor()).thenReturn(mockProcessExecutor);
     Mockito.when(mockStreamHandlerFactory.newHandler(mockConsoleListener))
         .thenReturn(mockStreamHandler);
     Mockito.when(
@@ -72,7 +69,7 @@ public class CommandRunnerTest {
                 mockStreamHandler))
         .thenReturn(0);
 
-    testCommandRunner = new CommandRunner(mockProcessExecutorFactory, mockStreamHandlerFactory);
+    testCommandRunner = new CommandRunner(() -> mockProcessExecutor, mockStreamHandlerFactory);
   }
 
   private void verifyCommandExecution() throws IOException, InterruptedException {
