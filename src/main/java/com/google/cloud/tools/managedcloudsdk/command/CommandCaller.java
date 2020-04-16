@@ -17,24 +17,26 @@
 package com.google.cloud.tools.managedcloudsdk.command;
 
 import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutor;
-import com.google.cloud.tools.managedcloudsdk.process.ProcessExecutorFactory;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 import javax.annotation.Nullable;
 
 /** Execute a command synchronously and save and return stdout. */
 public class CommandCaller {
-  private final ProcessExecutorFactory processExecutorFactory;
+  private final Supplier<ProcessExecutor> processExecutorSupplier;
   private final AsyncStreamSaverFactory streamSaverFactory;
 
   @VisibleForTesting
   CommandCaller(
-      ProcessExecutorFactory processExecutorFactory, AsyncStreamSaverFactory streamSaverFactory) {
-    this.processExecutorFactory = processExecutorFactory;
+      Supplier<ProcessExecutor> processExecutorSupplier,
+      AsyncStreamSaverFactory streamSaverFactory) {
+
+    this.processExecutorSupplier = processExecutorSupplier;
     this.streamSaverFactory = streamSaverFactory;
   }
 
@@ -44,7 +46,7 @@ public class CommandCaller {
       @Nullable Path workingDirectory,
       @Nullable Map<String, String> environment)
       throws CommandExitException, CommandExecutionException, InterruptedException {
-    ProcessExecutor processExecutor = processExecutorFactory.newProcessExecutor();
+    ProcessExecutor processExecutor = processExecutorSupplier.get();
 
     AsyncStreamSaver stdOutSaver = streamSaverFactory.newSaver();
     AsyncStreamSaver stdErrSaver = streamSaverFactory.newSaver();
@@ -86,6 +88,6 @@ public class CommandCaller {
   }
 
   public static CommandCaller newCaller() {
-    return new CommandCaller(new ProcessExecutorFactory(), new AsyncStreamSaverFactory());
+    return new CommandCaller(ProcessExecutor::new, new AsyncStreamSaverFactory());
   }
 }
