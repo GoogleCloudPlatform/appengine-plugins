@@ -30,6 +30,7 @@ public class AppYaml {
 
   private static final String ENVIRONMENT_TYPE_KEY = "env";
   private static final String RUNTIME_KEY = "runtime";
+  private static final String ENTRYPOINT = "entrypoint";
   private static final String API_VERSION_KEY = "api_version";
   private static final String APPLICATION_KEY = "application";
   private static final String VERSION_KEY = "version";
@@ -75,6 +76,12 @@ public class AppYaml {
   @Nullable
   public String getRuntime() {
     return getString(RUNTIME_KEY);
+  }
+
+  /** Return the content of the {@code entrypoint} field, which defines this app's entrypoint. */
+  @Nullable
+  public String getEntrypoint() {
+    return getString(ENTRYPOINT);
   }
 
   /**
