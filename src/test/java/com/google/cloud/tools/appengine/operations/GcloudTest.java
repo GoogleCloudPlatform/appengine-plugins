@@ -42,12 +42,14 @@ public class GcloudTest {
     String outputFormat = "format123";
     String showStructuredLogs = "logs123";
     List<Path> flagsFiles = ImmutableList.of(Paths.get("abc/file123"));
+    String verbosity = "verbosity123";
     new Gcloud.Builder(sdk, gcloudRunnerFactory)
         .setCredentialFile(credentialFile)
         .setMetricsEnvironment(metricsEnvironment, metricsEnvironmentVersion)
         .setOutputFormat(outputFormat)
         .setFlagsFiles(flagsFiles)
         .setShowStructuredLogs(showStructuredLogs)
+        .setVerbosity(verbosity)
         .build()
         .getRunner(processHandler);
 
@@ -60,6 +62,7 @@ public class GcloudTest {
             flagsFiles,
             outputFormat,
             showStructuredLogs,
+            verbosity,
             processHandler);
   }
 }

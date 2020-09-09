@@ -86,6 +86,7 @@ public class GcloudRunnerTest {
                 flagsFiles, // gcloud flags file(s)
                 "some-format", // output format
                 "always", // show structured logs
+                "some-verbosity", // verbosity
                 processHandler);
 
     gcloudRunner.run(ImmutableList.of("some", "command"), workingDirectory);
@@ -103,6 +104,8 @@ public class GcloudRunnerTest {
                 "command",
                 "--format",
                 "some-format",
+                "--verbosity",
+                "some-verbosity",
                 "--credential-file-override",
                 credentialFile.toAbsolutePath().toString(),
                 "--flags-file",
@@ -126,6 +129,7 @@ public class GcloudRunnerTest {
             null, // irrelevant to test
             "irrelevant-to-test", // output format
             "always", // show structured logs
+            "irrelevant-to-test", // verbosity
             mock(ProcessBuilderFactory.class),
             mock(ProcessHandler.class));
 

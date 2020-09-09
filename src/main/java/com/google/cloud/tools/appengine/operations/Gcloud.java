@@ -46,6 +46,7 @@ public class Gcloud {
   @Nullable private final List<Path> flagsFiles;
   @Nullable private final String outputFormat;
   @Nullable private final String showStructuredLogs;
+  @Nullable private final String verbosity;
 
   private Gcloud(
       CloudSdk sdk,
@@ -55,7 +56,8 @@ public class Gcloud {
       @Nullable Path credentialFile,
       @Nullable List<Path> flagsFiles,
       @Nullable String outputFormat,
-      @Nullable String showStructuredLogs) {
+      @Nullable String showStructuredLogs,
+      @Nullable String verbosity) {
     this.gcloudRunnerFactory = gcloudRunnerFactory;
     this.sdk = sdk;
     this.metricsEnvironment = metricsEnvironment;
@@ -64,6 +66,7 @@ public class Gcloud {
     this.flagsFiles = flagsFiles;
     this.outputFormat = outputFormat;
     this.showStructuredLogs = showStructuredLogs;
+    this.verbosity = verbosity;
   }
 
   public Deployment newDeployment(ProcessHandler processHandler) {
@@ -179,6 +182,7 @@ public class Gcloud {
         flagsFiles, // this is the only consumer of flagsFiles
         outputFormat,
         showStructuredLogs,
+        verbosity,
         processHandler);
   }
 
@@ -197,6 +201,7 @@ public class Gcloud {
     @Nullable private List<Path> flagsFiles;
     @Nullable private String outputFormat;
     @Nullable private String showStructuredLogs;
+    @Nullable private String verbosity;
 
     private Builder(CloudSdk sdk) {
       this(sdk, new GcloudRunner.Factory());
@@ -247,6 +252,15 @@ public class Gcloud {
       return this;
     }
 
+    /**
+     * Sets the verbosity of output for gcloud. @see <a
+     * href="https://cloud.google.com/sdk/gcloud/reference#--verbosity">gcloud docs</a>
+     */
+    public Builder setVerbosity(String verbosity) {
+      this.verbosity = verbosity;
+      return this;
+    }
+
     /** Build an immutable Gcloud instance. */
     public Gcloud build() {
       return new Gcloud(
@@ -257,7 +271,8 @@ public class Gcloud {
           credentialFile,
           flagsFiles,
           outputFormat,
-          showStructuredLogs);
+          showStructuredLogs,
+          verbosity);
     }
   }
 }

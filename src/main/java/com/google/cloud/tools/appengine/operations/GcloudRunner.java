@@ -45,6 +45,7 @@ public class GcloudRunner {
   @Nullable private final List<Path> flagsFiles;
   @Nullable private final String outputFormat;
   @Nullable private final String showStructuredLogs;
+  @Nullable private final String verbosity;
   private final ProcessBuilderFactory processBuilderFactory;
   private final ProcessHandler processHandler;
 
@@ -56,6 +57,7 @@ public class GcloudRunner {
       @Nullable List<Path> flagsFiles,
       @Nullable String outputFormat,
       @Nullable String showStructuredLogs,
+      @Nullable String verbosity,
       ProcessBuilderFactory processBuilderFactory,
       ProcessHandler processHandler) {
     this.sdk = sdk;
@@ -65,6 +67,7 @@ public class GcloudRunner {
     this.flagsFiles = flagsFiles;
     this.outputFormat = outputFormat;
     this.showStructuredLogs = showStructuredLogs;
+    this.verbosity = verbosity;
     this.processBuilderFactory = processBuilderFactory;
     this.processHandler = processHandler;
   }
@@ -86,6 +89,10 @@ public class GcloudRunner {
     command.addAll(arguments);
     if (outputFormat != null) {
       command.addAll(GcloudArgs.get("format", outputFormat));
+    }
+
+    if (verbosity != null) {
+      command.addAll(GcloudArgs.get("verbosity", verbosity));
     }
 
     if (credentialFile != null) {
@@ -156,6 +163,7 @@ public class GcloudRunner {
         @Nullable List<Path> flagsFiles,
         @Nullable String outputFormat,
         @Nullable String showStructuredLogs,
+        @Nullable String verbosity,
         ProcessHandler processHandler) {
       return new GcloudRunner(
           sdk,
@@ -165,6 +173,7 @@ public class GcloudRunner {
           flagsFiles,
           outputFormat,
           showStructuredLogs,
+          verbosity,
           processBuilderFactory,
           processHandler);
     }
