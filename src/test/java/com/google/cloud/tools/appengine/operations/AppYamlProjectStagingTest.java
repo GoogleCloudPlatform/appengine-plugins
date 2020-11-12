@@ -144,8 +144,7 @@ public class AppYamlProjectStagingTest {
   }
 
   @Test
-  public void testStageArchive_java11BinaryWithoutEntrypoint()
-      throws IOException, AppEngineException {
+  public void testStageArchive_java11BinaryWithoutEntrypoint() throws IOException {
     Path nonJarArtifact = temporaryFolder.newFile("myscript.sh").toPath();
     config =
         AppYamlProjectStageConfiguration.builder()

@@ -25,7 +25,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -56,7 +55,7 @@ public class CommandCallerTest {
   private CommandCaller testCommandCaller;
 
   @Before
-  public void setUp() throws IOException, InterruptedException, ExecutionException {
+  public void setUp() throws IOException, InterruptedException {
     fakeCommand = Arrays.asList("gcloud", "test", "--option");
     fakeWorkingDirectory = testDir.getRoot().toPath();
     fakeEnvironment = ImmutableMap.of("testKey", "testValue");
@@ -143,8 +142,7 @@ public class CommandCallerTest {
 
   @Test
   public void testCall_interruptedExceptionPassthrough()
-      throws CommandExecutionException, CommandExitException, ExecutionException,
-          InterruptedException, IOException {
+      throws CommandExecutionException, CommandExitException, InterruptedException, IOException {
 
     AbstractFuture<String> future =
         new AbstractFuture<String>() {
