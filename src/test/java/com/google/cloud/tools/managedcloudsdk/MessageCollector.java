@@ -17,7 +17,7 @@
 package com.google.cloud.tools.managedcloudsdk;
 
 public class MessageCollector implements ConsoleListener {
-  StringBuilder output = new StringBuilder("");
+  private final StringBuilder output = new StringBuilder("");
 
   @Override
   public void console(String rawString) {
