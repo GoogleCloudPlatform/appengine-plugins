@@ -27,7 +27,7 @@ import java.util.Map;
 /** {@link InstallScriptProvider} for windows. */
 final class WindowsInstallScriptProvider implements InstallScriptProvider {
 
-  private Map<String, String> additionalEnvVariables;
+  private final Map<String, String> additionalEnvVariables;
 
   /** Instantiated by {@link InstallerFactory}. */
   WindowsInstallScriptProvider(Map<String, String> additionalEnvVariables) {
