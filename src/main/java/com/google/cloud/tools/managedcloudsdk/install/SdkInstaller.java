@@ -41,7 +41,7 @@ public class SdkInstaller {
   private final ExtractorFactory extractorFactory;
   private final DownloaderFactory downloaderFactory;
   @Nullable private final InstallerFactory installerFactory;
-  private Map<String, String> environmentVariables = Collections.emptyMap();
+  private final Map<String, String> environmentVariables;
 
   /** Use {@link #newInstaller} to instantiate. */
   SdkInstaller(
@@ -49,10 +49,12 @@ public class SdkInstaller {
       DownloaderFactory downloaderFactory,
       ExtractorFactory extractorFactory,
       @Nullable InstallerFactory installerFactory) {
-    this.fileResourceProviderFactory = fileResourceProviderFactory;
-    this.downloaderFactory = downloaderFactory;
-    this.extractorFactory = extractorFactory;
-    this.installerFactory = installerFactory;
+    this(
+        fileResourceProviderFactory,
+        downloaderFactory,
+        extractorFactory,
+        installerFactory,
+        Collections.emptyMap());
   }
 
   /** Use {@link #newInstaller} to instantiate. */
