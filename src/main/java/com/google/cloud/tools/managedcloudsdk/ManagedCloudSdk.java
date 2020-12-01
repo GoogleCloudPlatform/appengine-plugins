@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 
 /** A manager for installing, configuring and updating the Cloud SDK. */
 public class ManagedCloudSdk {
+  public static final String USER_AGENT_STRING = "google-cloud-tools-java";
 
   private static final Logger logger = Logger.getLogger(ManagedCloudSdk.class.getName());
 
@@ -167,15 +168,13 @@ public class ManagedCloudSdk {
 
   // TODO : fix passthrough for useragent and client side usage reporting
   public SdkInstaller newInstaller() {
-    String userAgentString = "google-cloud-tools-java";
     return SdkInstaller.newInstaller(
-        managedSdkDirectory, version, osInfo, userAgentString, false, Collections.emptyMap());
+        managedSdkDirectory, version, osInfo, USER_AGENT_STRING, false, Collections.emptyMap());
   }
 
   public SdkInstaller newInstaller(Map<String, String> environmentVariables) {
-    String userAgentString = "google-cloud-tools-java";
     return SdkInstaller.newInstaller(
-        managedSdkDirectory, version, osInfo, userAgentString, false, environmentVariables);
+        managedSdkDirectory, version, osInfo, USER_AGENT_STRING, false, environmentVariables);
   }
 
   public SdkComponentInstaller newComponentInstaller() {
