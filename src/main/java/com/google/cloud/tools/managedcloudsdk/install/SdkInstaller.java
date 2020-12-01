@@ -27,6 +27,8 @@ import com.google.common.io.RecursiveDeleteOption;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Map;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
@@ -39,6 +41,7 @@ public class SdkInstaller {
   private final ExtractorFactory extractorFactory;
   private final DownloaderFactory downloaderFactory;
   @Nullable private final InstallerFactory installerFactory;
+  private Map<String, String> environmentVariables = Collections.emptyMap();
 
   /** Use {@link #newInstaller} to instantiate. */
   SdkInstaller(
@@ -50,6 +53,20 @@ public class SdkInstaller {
     this.downloaderFactory = downloaderFactory;
     this.extractorFactory = extractorFactory;
     this.installerFactory = installerFactory;
+  }
+
+  /** Use {@link #newInstaller} to instantiate. */
+  SdkInstaller(
+      FileResourceProviderFactory fileResourceProviderFactory,
+      DownloaderFactory downloaderFactory,
+      ExtractorFactory extractorFactory,
+      @Nullable InstallerFactory installerFactory,
+      Map<String, String> environmentVariables) {
+    this.fileResourceProviderFactory = fileResourceProviderFactory;
+    this.downloaderFactory = downloaderFactory;
+    this.extractorFactory = extractorFactory;
+    this.installerFactory = installerFactory;
+    this.environmentVariables = environmentVariables;
   }
 
   /** Download and install a new Cloud SDK. */
@@ -117,7 +134,8 @@ public class SdkInstaller {
           .newInstaller(
               fileResourceProvider.getExtractedSdkHome(),
               progressListener.newChild(100),
-              consoleListener)
+              consoleListener,
+              environmentVariables)
           .install();
     }
 
@@ -140,6 +158,8 @@ public class SdkInstaller {
    * @param osInfo target operating system for installation
    * @param userAgentString user agent string for https requests
    * @param usageReporting enable client side usage reporting on gcloud
+   * @param environmentVariables Map of additional environment variables to be passed on to the
+   *     installer process (proxy settings, etc.)
    * @return a new configured Cloud SDK Installer
    */
   public static SdkInstaller newInstaller(
@@ -147,7 +167,8 @@ public class SdkInstaller {
       Version version,
       OsInfo osInfo,
       String userAgentString,
-      boolean usageReporting) {
+      boolean usageReporting,
+      Map<String, String> environmentVariables) {
     DownloaderFactory downloaderFactory = new DownloaderFactory(userAgentString);
     ExtractorFactory extractorFactory = new ExtractorFactory();
 
@@ -158,6 +179,10 @@ public class SdkInstaller {
         new FileResourceProviderFactory(version, osInfo, managedSdkDirectory);
 
     return new SdkInstaller(
-        fileResourceProviderFactory, downloaderFactory, extractorFactory, installerFactory);
+        fileResourceProviderFactory,
+        downloaderFactory,
+        extractorFactory,
+        installerFactory,
+        environmentVariables);
   }
 }

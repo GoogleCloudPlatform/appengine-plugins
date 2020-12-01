@@ -26,8 +26,12 @@ import javax.annotation.Nullable;
 /** {@link InstallScriptProvider} for Mac and Linux. */
 final class UnixInstallScriptProvider implements InstallScriptProvider {
 
+  private Map<String, String> additionalEnvVariables;
+
   /** Instantiated by {@link InstallerFactory}. */
-  UnixInstallScriptProvider() {}
+  UnixInstallScriptProvider(Map<String, String> additionalEnvVariables) {
+    this.additionalEnvVariables = additionalEnvVariables;
+  }
 
   @Override
   public List<String> getScriptCommandLine(Path installedSdkRoot) {
@@ -38,10 +42,9 @@ final class UnixInstallScriptProvider implements InstallScriptProvider {
     return script;
   }
 
-  // todo should probably return an empty map
   @Override
   @Nullable
   public Map<String, String> getScriptEnvironment() {
-    return null;
+    return additionalEnvVariables;
   }
 }

@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -167,7 +168,14 @@ public class ManagedCloudSdk {
   // TODO : fix passthrough for useragent and client side usage reporting
   public SdkInstaller newInstaller() {
     String userAgentString = "google-cloud-tools-java";
-    return SdkInstaller.newInstaller(managedSdkDirectory, version, osInfo, userAgentString, false);
+    return SdkInstaller.newInstaller(
+        managedSdkDirectory, version, osInfo, userAgentString, false, Collections.emptyMap());
+  }
+
+  public SdkInstaller newInstaller(Map<String, String> environmentVariables) {
+    String userAgentString = "google-cloud-tools-java";
+    return SdkInstaller.newInstaller(
+        managedSdkDirectory, version, osInfo, userAgentString, false, environmentVariables);
   }
 
   public SdkComponentInstaller newComponentInstaller() {

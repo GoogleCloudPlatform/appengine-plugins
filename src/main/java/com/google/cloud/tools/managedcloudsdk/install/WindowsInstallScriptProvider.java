@@ -20,14 +20,19 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /** {@link InstallScriptProvider} for windows. */
 final class WindowsInstallScriptProvider implements InstallScriptProvider {
 
+  private Map<String, String> additionalEnvVariables;
+
   /** Instantiated by {@link InstallerFactory}. */
-  WindowsInstallScriptProvider() {}
+  WindowsInstallScriptProvider(Map<String, String> additionalEnvVariables) {
+    this.additionalEnvVariables = additionalEnvVariables;
+  }
 
   @Override
   public List<String> getScriptCommandLine(Path installedSdkRoot) {
@@ -42,6 +47,11 @@ final class WindowsInstallScriptProvider implements InstallScriptProvider {
 
   @Override
   public Map<String, String> getScriptEnvironment() {
-    return ImmutableMap.of("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
+    Map<String, String> environment = new HashMap<>();
+    if (additionalEnvVariables != null) {
+      environment.putAll(additionalEnvVariables);
+    }
+    environment.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
+    return ImmutableMap.copyOf(environment);
   }
 }
