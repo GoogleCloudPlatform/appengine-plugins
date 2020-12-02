@@ -27,11 +27,11 @@ import java.util.Map;
 /** {@link InstallScriptProvider} for windows. */
 final class WindowsInstallScriptProvider implements InstallScriptProvider {
 
-  private final Map<String, String> additionalEnvVariables;
+  private final Map<String, String> additionalEnvironmentVariables;
 
   /** Instantiated by {@link InstallerFactory}. */
-  WindowsInstallScriptProvider(Map<String, String> additionalEnvVariables) {
-    this.additionalEnvVariables = additionalEnvVariables;
+  WindowsInstallScriptProvider(Map<String, String> additionalEnvironmentVariables) {
+    this.additionalEnvironmentVariables = additionalEnvironmentVariables;
   }
 
   @Override
@@ -48,8 +48,8 @@ final class WindowsInstallScriptProvider implements InstallScriptProvider {
   @Override
   public Map<String, String> getScriptEnvironment() {
     Map<String, String> environment = new HashMap<>();
-    if (additionalEnvVariables != null) {
-      environment.putAll(additionalEnvVariables);
+    if (additionalEnvironmentVariables != null) {
+      environment.putAll(additionalEnvironmentVariables);
     }
     environment.put("CLOUDSDK_CORE_DISABLE_PROMPTS", "1");
     return ImmutableMap.copyOf(environment);

@@ -26,11 +26,11 @@ import javax.annotation.Nullable;
 /** {@link InstallScriptProvider} for Mac and Linux. */
 final class UnixInstallScriptProvider implements InstallScriptProvider {
 
-  private final Map<String, String> additionalEnvVariables;
+  private final Map<String, String> additionalEnvironmentVariables;
 
   /** Instantiated by {@link InstallerFactory}. */
-  UnixInstallScriptProvider(Map<String, String> additionalEnvVariables) {
-    this.additionalEnvVariables = additionalEnvVariables;
+  UnixInstallScriptProvider(Map<String, String> additionalEnvironmentVariables) {
+    this.additionalEnvironmentVariables = additionalEnvironmentVariables;
   }
 
   @Override
@@ -45,6 +45,6 @@ final class UnixInstallScriptProvider implements InstallScriptProvider {
   @Override
   @Nullable
   public Map<String, String> getScriptEnvironment() {
-    return additionalEnvVariables;
+    return additionalEnvironmentVariables;
   }
 }
