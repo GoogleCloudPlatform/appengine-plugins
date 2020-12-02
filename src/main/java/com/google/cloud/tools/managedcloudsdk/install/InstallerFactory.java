@@ -47,8 +47,8 @@ final class InstallerFactory {
    *
    * @param installedSdkRoot path to the Cloud SDK directory
    * @param progressListener listener on installer script output
-   * @param environmentVariables Map of additional environment variables to be passed on to the
-   *     installer process (proxy settings, etc.)
+   * @param environmentVariables Additional environment variables to be passed on to the installer
+   *     process (proxy settings, etc.)
    * @return a {@link Installer} instance.
    */
   Installer newInstaller(
