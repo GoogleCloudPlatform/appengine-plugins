@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -119,7 +120,7 @@ public class SdkInstallerTest {
 
     Mockito.doReturn(successfulInstaller)
         .when(successfulInstallerFactory)
-        .newInstaller(fakeSdkHome, progressListener, consoleListener);
+        .newInstaller(fakeSdkHome, progressListener, consoleListener, Collections.emptyMap());
     Mockito.doAnswer(createPathAnswer(fakeGcloud, false)).when(successfulInstaller).install();
 
     // FAIL (NO-OP) MOCKS
@@ -133,7 +134,7 @@ public class SdkInstallerTest {
 
     Mockito.doReturn(Mockito.mock(Installer.class))
         .when(failureInstallerFactory)
-        .newInstaller(fakeSdkHome, progressListener, consoleListener);
+        .newInstaller(fakeSdkHome, progressListener, consoleListener, Collections.emptyMap());
   }
 
   private Answer<Void> createPathAnswer(Path pathToCreate, boolean isDirectory) {

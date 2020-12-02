@@ -16,9 +16,12 @@
 
 package com.google.cloud.tools.managedcloudsdk.install;
 
+import com.google.common.collect.ImmutableMap;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -28,7 +31,8 @@ public class WindowsInstallScriptProviderTest {
   @Test
   public void testGetScriptCommandLine_nonAbsoluteSdkRoot() {
     try {
-      new UnixInstallScriptProvider().getScriptCommandLine(Paths.get("relative/path"));
+      new UnixInstallScriptProvider(Collections.emptyMap())
+          .getScriptCommandLine(Paths.get("relative/path"));
       Assert.fail();
     } catch (IllegalArgumentException e) {
       Assert.assertEquals("non-absolute SDK path", e.getMessage());
@@ -40,7 +44,8 @@ public class WindowsInstallScriptProviderTest {
     Assume.assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
     Path sdkRoot = Paths.get("C:\\path\\to\\sdk");
-    List<String> commandLine = new WindowsInstallScriptProvider().getScriptCommandLine(sdkRoot);
+    List<String> commandLine =
+        new WindowsInstallScriptProvider(Collections.emptyMap()).getScriptCommandLine(sdkRoot);
 
     Assert.assertEquals(3, commandLine.size());
     Assert.assertEquals("cmd.exe", commandLine.get(0));
@@ -49,5 +54,16 @@ public class WindowsInstallScriptProviderTest {
     Path scriptPath = Paths.get(commandLine.get(2));
     Assert.assertTrue(scriptPath.isAbsolute());
     Assert.assertEquals(Paths.get("C:\\path\\to\\sdk\\install.bat"), scriptPath);
+  }
+
+  @Test
+  public void testEnvironmentVariblesPickedUp() {
+    Map<String, String> proxyVariable = ImmutableMap.of("http_proxy", "test-proxy:8080");
+    Map<String, String> environment =
+        new WindowsInstallScriptProvider(proxyVariable).getScriptEnvironment();
+
+    Assert.assertEquals(
+        environment,
+        ImmutableMap.of("CLOUDSDK_CORE_DISABLE_PROMPTS", "1", "http_proxy", "test-proxy:8080"));
   }
 }

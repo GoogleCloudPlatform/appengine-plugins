@@ -21,6 +21,8 @@ import com.google.cloud.tools.managedcloudsdk.OsInfo;
 import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Map;
 
 /** {@link Installer} Factory. */
 final class InstallerFactory {
@@ -45,28 +47,39 @@ final class InstallerFactory {
    *
    * @param installedSdkRoot path to the Cloud SDK directory
    * @param progressListener listener on installer script output
+   * @param environmentVariables Additional environment variables to be passed on to the installer
+   *     process (proxy settings, etc.)
    * @return a {@link Installer} instance.
    */
   Installer newInstaller(
-      Path installedSdkRoot, ProgressListener progressListener, ConsoleListener consoleListener) {
+      Path installedSdkRoot,
+      ProgressListener progressListener,
+      ConsoleListener consoleListener,
+      Map<String, String> environmentVariables) {
 
     return new Installer(
         installedSdkRoot,
-        getInstallScriptProvider(),
+        getInstallScriptProvider(environmentVariables),
         usageReporting,
         progressListener,
         consoleListener,
         CommandRunner.newRunner());
   }
 
-  private InstallScriptProvider getInstallScriptProvider() {
+  Installer newInstaller(
+      Path installedSdkRoot, ProgressListener progressListener, ConsoleListener consoleListener) {
+    return newInstaller(
+        installedSdkRoot, progressListener, consoleListener, Collections.emptyMap());
+  }
+
+  private InstallScriptProvider getInstallScriptProvider(Map<String, String> environmentVariables) {
     switch (osInfo.name()) {
       case WINDOWS:
-        return new WindowsInstallScriptProvider();
+        return new WindowsInstallScriptProvider(environmentVariables);
       case MAC:
       case LINUX:
       default:
-        return new UnixInstallScriptProvider();
+        return new UnixInstallScriptProvider(environmentVariables);
     }
   }
 }
