@@ -62,11 +62,6 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testDiscover() throws CloudSdkNotFoundException {
-    System.out.println(new CloudSdk.Builder().sdkPath(null).build().getGCloudPath());
-  }
-
-  @Test
   public void testGetSdkPath() {
     assertEquals(root, sdk.getPath());
   }
