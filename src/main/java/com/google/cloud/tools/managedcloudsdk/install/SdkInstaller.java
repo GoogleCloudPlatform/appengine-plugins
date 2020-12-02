@@ -22,6 +22,7 @@ import com.google.cloud.tools.managedcloudsdk.ProgressListener;
 import com.google.cloud.tools.managedcloudsdk.Version;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
 import java.io.IOException;
@@ -58,6 +59,7 @@ public class SdkInstaller {
   }
 
   /** Use {@link #newInstaller} to instantiate. */
+  @VisibleForTesting
   SdkInstaller(
       FileResourceProviderFactory fileResourceProviderFactory,
       DownloaderFactory downloaderFactory,
