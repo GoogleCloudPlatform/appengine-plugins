@@ -111,7 +111,7 @@ public class AppEngineDescriptor {
   }
 
   /**
-   * Returns true if the runtime needs to enforce the Java white list and other original sandbox
+   * Returns true if the runtime needs to enforce the Java safelist and other original sandbox
    * restrictions (for example, the Java7 runtime).
    */
   public boolean isSandboxEnforced() throws AppEngineException {
