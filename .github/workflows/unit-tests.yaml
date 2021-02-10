@@ -42,7 +42,7 @@ jobs:
           export PATH="${HOME}/google-cloud-sdk/bin:${PATH}"
 
           gcloud components install app-engine-java --quiet
-          mvn -B -U --fail-at-end clean verify
+          ./mvnw -B -U --fail-at-end clean verify
       - name: Test Coverage
         uses: codecov/codecov-action@v1
         with:
