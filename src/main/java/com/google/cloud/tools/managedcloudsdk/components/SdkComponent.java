@@ -38,7 +38,8 @@ public enum SdkComponent {
   KUBECTL("kubectl"),
   PUBSUB_EMULATOR("pubsub-emulator"),
   MINIKUBE("minikube"),
-  SKAFFOLD("skaffold");
+  SKAFFOLD("skaffold"),
+  KPT("kpt");
 
   private final String value;
 
