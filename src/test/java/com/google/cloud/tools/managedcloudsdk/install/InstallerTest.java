@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -94,12 +96,42 @@ public class InstallerTest {
     Mockito.verifyNoMoreInteractions(mockCommandRunner);
   }
 
+  @Test
+  public void testCall_withOverrideComponents() throws Exception {
+    String[] overrides = new String[] {"mycomponent", "myothercomponent"};
+
+    new Installer(
+            fakeSdkRoot,
+            mockInstallScriptProvider,
+            true,
+            overrides,
+            mockProgressListener,
+            mockConsoleListener,
+            mockCommandRunner)
+        .install();
+
+    Mockito.verify(mockCommandRunner)
+        .run(expectedCommand(true, overrides), sdkParentDirectory, fakeEnv, mockConsoleListener);
+    Mockito.verifyNoMoreInteractions(mockCommandRunner);
+  }
+
   private List<String> expectedCommand(boolean usageReporting) {
+    return expectedCommand(usageReporting, null);
+  }
+
+  private List<String> expectedCommand(
+      boolean usageReporting, @Nullable String[] overrideComponents) {
     List<String> command = new ArrayList<>(fakeCommand);
     command.add("--path-update=false");
     command.add("--command-completion=false");
     command.add("--quiet");
     command.add("--usage-reporting=" + usageReporting);
+
+    if (overrideComponents != null) {
+      command.add("--override-components");
+
+      Collections.addAll(command, overrideComponents);
+    }
 
     return command;
   }

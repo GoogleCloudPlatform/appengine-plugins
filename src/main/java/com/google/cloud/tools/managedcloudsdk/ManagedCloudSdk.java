@@ -177,6 +177,17 @@ public class ManagedCloudSdk {
         managedSdkDirectory, version, osInfo, USER_AGENT_STRING, false, environmentVariables);
   }
 
+  public SdkInstaller newInstaller(String[] overrideComponents) {
+    return SdkInstaller.newInstaller(
+        managedSdkDirectory,
+        version,
+        osInfo,
+        USER_AGENT_STRING,
+        false,
+        overrideComponents,
+        Collections.emptyMap());
+  }
+
   public SdkComponentInstaller newComponentInstaller() {
     return SdkComponentInstaller.newComponentInstaller(osInfo.name(), getGcloudPath());
   }

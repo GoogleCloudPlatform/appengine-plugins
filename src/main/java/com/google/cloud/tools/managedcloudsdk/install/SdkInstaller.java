@@ -173,11 +173,44 @@ public class SdkInstaller {
       String userAgentString,
       boolean usageReporting,
       Map<String, String> environmentVariables) {
+    return SdkInstaller.newInstaller(
+        managedSdkDirectory,
+        version,
+        osInfo,
+        userAgentString,
+        usageReporting,
+        null,
+        environmentVariables);
+  }
+
+  /**
+   * Configure and create a new Installer instance.
+   *
+   * @param managedSdkDirectory home directory of google cloud java managed cloud SDKs
+   * @param version version of the Cloud SDK we want to install
+   * @param osInfo target operating system for installation
+   * @param userAgentString user agent string for https requests
+   * @param usageReporting enable client side usage reporting on gcloud
+   * @param environmentVariables Map of additional environment variables to be passed on to the
+   *     installer process (proxy settings, etc.)
+   * @param overrideComponents array of gcloud components to install instead of the defaults
+   * @return a new configured Cloud SDK Installer
+   */
+  public static SdkInstaller newInstaller(
+      Path managedSdkDirectory,
+      Version version,
+      OsInfo osInfo,
+      String userAgentString,
+      boolean usageReporting,
+      @Nullable String[] overrideComponents,
+      Map<String, String> environmentVariables) {
     DownloaderFactory downloaderFactory = new DownloaderFactory(userAgentString);
     ExtractorFactory extractorFactory = new ExtractorFactory();
 
     InstallerFactory installerFactory =
-        version == Version.LATEST ? new InstallerFactory(osInfo, usageReporting) : null;
+        version == Version.LATEST
+            ? new InstallerFactory(osInfo, usageReporting, overrideComponents)
+            : null;
 
     FileResourceProviderFactory fileResourceProviderFactory =
         new FileResourceProviderFactory(version, osInfo, managedSdkDirectory);
