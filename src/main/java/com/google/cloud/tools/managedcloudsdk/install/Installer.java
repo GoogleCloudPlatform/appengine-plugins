@@ -24,9 +24,9 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import com.google.common.annotations.VisibleForTesting;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 
 /** Installer for running install scripts in a Cloud SDK download. */
@@ -39,7 +39,7 @@ final class Installer {
   private final ConsoleListener consoleListener;
   private final CommandRunner commandRunner;
 
-  private @Nullable String[] overrideComponents = null;
+  @Nullable private final Set<String> overrideComponents;
 
   /** Instantiated by {@link InstallerFactory}. */
   Installer(
@@ -64,7 +64,7 @@ final class Installer {
       Path installedSdkRoot,
       InstallScriptProvider installScriptProvider,
       boolean usageReporting,
-      @Nullable String[] overrideComponents,
+      @Nullable Set<String> overrideComponents,
       ProgressListener progressListener,
       ConsoleListener consoleListener,
       CommandRunner commandRunner) {
@@ -89,8 +89,7 @@ final class Installer {
 
     if (overrideComponents != null) {
       command.add("--override-components");
-
-      Collections.addAll(command, overrideComponents);
+      command.addAll(overrideComponents);
     }
 
     Path workingDirectory = installedSdkRoot.getParent();

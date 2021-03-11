@@ -24,9 +24,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Rule;
@@ -98,7 +99,7 @@ public class InstallerTest {
 
   @Test
   public void testCall_withOverrideComponents() throws Exception {
-    String[] overrides = new String[] {"mycomponent", "myothercomponent"};
+    Set<String> overrides = new HashSet<>(Arrays.asList("mycomponent", "myothercomponent"));
 
     new Installer(
             fakeSdkRoot,
@@ -120,7 +121,7 @@ public class InstallerTest {
   }
 
   private List<String> expectedCommand(
-      boolean usageReporting, @Nullable String[] overrideComponents) {
+      boolean usageReporting, @Nullable Set<String> overrideComponents) {
     List<String> command = new ArrayList<>(fakeCommand);
     command.add("--path-update=false");
     command.add("--command-completion=false");
@@ -129,8 +130,7 @@ public class InstallerTest {
 
     if (overrideComponents != null) {
       command.add("--override-components");
-
-      Collections.addAll(command, overrideComponents);
+      command.addAll(overrideComponents);
     }
 
     return command;

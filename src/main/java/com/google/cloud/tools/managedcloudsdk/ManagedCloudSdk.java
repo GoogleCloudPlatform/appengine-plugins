@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /** A manager for installing, configuring and updating the Cloud SDK. */
@@ -181,12 +182,12 @@ public class ManagedCloudSdk {
    * Create a new {@link SdkInstaller} with an array corresponding to the --override-components flag
    * of the installer script.
    *
-   * @param overrideComponents array of gcloud components to install instead of the defaults
+   * @param overrideComponents gcloud components to install instead of the defaults
    * @param environmentVariables environment variables used during installation script run
-   * @return A {@link SdkInstaller}
+   * @return a {@link SdkInstaller}
    */
   public SdkInstaller newInstaller(
-      String[] overrideComponents, Map<String, String> environmentVariables) {
+      Set<String> overrideComponents, Map<String, String> environmentVariables) {
     return SdkInstaller.newInstaller(
         managedSdkDirectory,
         version,

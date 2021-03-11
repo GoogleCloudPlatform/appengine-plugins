@@ -23,6 +23,7 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 
 /** {@link Installer} Factory. */
@@ -30,17 +31,18 @@ final class InstallerFactory {
 
   private final OsInfo osInfo;
   private final boolean usageReporting;
-  private final @Nullable String[] overrideComponents;
+  private final @Nullable Set<String> overrideComponents;
 
   /**
    * Creates a new factory.
    *
    * @param osInfo the operating system of the computer this script is running on
-   * @param usageReporting enable or disable client side usage reporting {@code true} is enabled,
+   * @param usageReporting enable or disable client side usage reporting. {@code true} is enabled,
    *     {@code false} is disabled
-   * @param overrideComponents array of gcloud components to install instead of the defaults
+   * @param overrideComponents gcloud components to install instead of the defaults
    */
-  InstallerFactory(OsInfo osInfo, boolean usageReporting, @Nullable String[] overrideComponents) {
+  InstallerFactory(
+      OsInfo osInfo, boolean usageReporting, @Nullable Set<String> overrideComponents) {
     this.osInfo = osInfo;
     this.usageReporting = usageReporting;
     this.overrideComponents = overrideComponents;
@@ -50,7 +52,7 @@ final class InstallerFactory {
    * Creates a new factory.
    *
    * @param osInfo the operating system of the computer this script is running on
-   * @param usageReporting enable or disable client side usage reporting {@code true} is enabled,
+   * @param usageReporting enable or disable client side usage reporting. {@code true} is enabled,
    *     {@code false} is disabled
    */
   InstallerFactory(OsInfo osInfo, boolean usageReporting) {

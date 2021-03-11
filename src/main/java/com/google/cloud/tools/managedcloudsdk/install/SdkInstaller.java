@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
@@ -158,11 +159,11 @@ public class SdkInstaller {
    * Configure and create a new Installer instance.
    *
    * @param managedSdkDirectory home directory of google cloud java managed cloud SDKs
-   * @param version version of the Cloud SDK we want to install
+   * @param version version of the Cloud SDK to install
    * @param osInfo target operating system for installation
    * @param userAgentString user agent string for https requests
    * @param usageReporting enable client side usage reporting on gcloud
-   * @param environmentVariables Map of additional environment variables to be passed on to the
+   * @param environmentVariables map of additional environment variables to be passed to the
    *     installer process (proxy settings, etc.)
    * @return a new configured Cloud SDK Installer
    */
@@ -187,13 +188,13 @@ public class SdkInstaller {
    * Configure and create a new Installer instance.
    *
    * @param managedSdkDirectory home directory of google cloud java managed cloud SDKs
-   * @param version version of the Cloud SDK we want to install
+   * @param version version of the Cloud SDK to install
    * @param osInfo target operating system for installation
    * @param userAgentString user agent string for https requests
    * @param usageReporting enable client side usage reporting on gcloud
-   * @param environmentVariables Map of additional environment variables to be passed on to the
+   * @param environmentVariables map of additional environment variables to be passed to the
    *     installer process (proxy settings, etc.)
-   * @param overrideComponents array of gcloud components to install instead of the defaults
+   * @param overrideComponents gcloud components to install instead of the defaults
    * @return a new configured Cloud SDK Installer
    */
   public static SdkInstaller newInstaller(
@@ -202,7 +203,7 @@ public class SdkInstaller {
       OsInfo osInfo,
       String userAgentString,
       boolean usageReporting,
-      @Nullable String[] overrideComponents,
+      @Nullable Set<String> overrideComponents,
       Map<String, String> environmentVariables) {
     DownloaderFactory downloaderFactory = new DownloaderFactory(userAgentString);
     ExtractorFactory extractorFactory = new ExtractorFactory();
