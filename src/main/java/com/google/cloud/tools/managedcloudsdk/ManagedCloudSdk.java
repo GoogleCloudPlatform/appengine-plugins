@@ -40,6 +40,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 /** A manager for installing, configuring and updating the Cloud SDK. */
 public class ManagedCloudSdk {
@@ -187,7 +188,7 @@ public class ManagedCloudSdk {
    * @return a {@link SdkInstaller}
    */
   public SdkInstaller newInstaller(
-      Set<String> overrideComponents, Map<String, String> environmentVariables) {
+      @Nullable Set<String> overrideComponents, Map<String, String> environmentVariables) {
     return SdkInstaller.newInstaller(
         managedSdkDirectory,
         version,
