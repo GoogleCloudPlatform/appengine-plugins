@@ -143,17 +143,17 @@ public class ManagedCloudSdkTest {
   @Test
   public void testManagedCloudSdk_latestWithOverrides()
       throws UnsupportedOsException, ManagedSdkVerificationException,
-      ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
-      CommandExitException, IOException, SdkInstallerException {
+          ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
+          CommandExitException, IOException, SdkInstallerException {
     ManagedCloudSdk testSdk =
         new ManagedCloudSdk(Version.LATEST, userHome, OsInfo.getSystemOsInfo());
 
     Assert.assertFalse(testSdk.isInstalled());
     Assert.assertFalse(testSdk.isUpToDate());
 
-    testSdk.newInstaller(
-        new String[]{"app-engine-java"}, Collections.emptyMap()
-    ).install(testProgressListener, testListener);
+    testSdk
+        .newInstaller(new String[] {"app-engine-java"}, Collections.emptyMap())
+        .install(testProgressListener, testListener);
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.isUpToDate());
