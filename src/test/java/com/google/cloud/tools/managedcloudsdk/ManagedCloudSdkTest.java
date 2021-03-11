@@ -157,6 +157,7 @@ public class ManagedCloudSdkTest {
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.isUpToDate());
+    Assert.assertTrue(testSdk.hasComponent(testComponent));
   }
 
   private static final Path CLOUD_SDK_PARTIAL_PATH =
