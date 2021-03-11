@@ -177,6 +177,13 @@ public class ManagedCloudSdk {
         managedSdkDirectory, version, osInfo, USER_AGENT_STRING, false, environmentVariables);
   }
 
+  /**
+   * Create a new {@link SdkInstaller} with an array corresponding to the --override-components
+   * flag of the installer script.
+   *
+   * @param overrideComponents array of gcloud components to install instead of the defaults
+   * @return A {@link SdkInstaller}
+   */
   public SdkInstaller newInstaller(String[] overrideComponents) {
     return SdkInstaller.newInstaller(
         managedSdkDirectory,
