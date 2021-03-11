@@ -157,26 +157,6 @@ public class ManagedCloudSdkTest {
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.isUpToDate());
-
-    // Forcibly downgrade the cloud SDK so we can test updating.
-    downgradeCloudSdk(testSdk);
-
-    Assert.assertTrue(testSdk.isInstalled());
-    Assert.assertFalse(testSdk.isUpToDate());
-
-    testSdk.newUpdater().update(testProgressListener, testListener);
-
-    Assert.assertTrue(testSdk.isInstalled());
-    Assert.assertTrue(testSdk.hasComponent(testComponent));
-    Assert.assertTrue(testSdk.isUpToDate());
-
-    testSdk
-        .newComponentInstaller()
-        .installComponent(testComponent, testProgressListener, testListener);
-
-    Assert.assertTrue(testSdk.isInstalled());
-    Assert.assertTrue(testSdk.hasComponent(testComponent));
-    Assert.assertTrue(testSdk.isUpToDate());
   }
 
   private static final Path CLOUD_SDK_PARTIAL_PATH =
