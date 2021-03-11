@@ -140,6 +140,45 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.isUpToDate());
   }
 
+  @Test
+  public void testManagedCloudSdk_latestWithOverrides()
+      throws UnsupportedOsException, ManagedSdkVerificationException,
+      ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
+      CommandExitException, IOException, SdkInstallerException {
+    ManagedCloudSdk testSdk =
+        new ManagedCloudSdk(Version.LATEST, userHome, OsInfo.getSystemOsInfo());
+
+    Assert.assertFalse(testSdk.isInstalled());
+    Assert.assertFalse(testSdk.isUpToDate());
+
+    testSdk.newInstaller(
+        new String[]{"app-engine-java"}, Collections.emptyMap()
+    ).install(testProgressListener, testListener);
+
+    Assert.assertTrue(testSdk.isInstalled());
+    Assert.assertTrue(testSdk.isUpToDate());
+
+    // Forcibly downgrade the cloud SDK so we can test updating.
+    downgradeCloudSdk(testSdk);
+
+    Assert.assertTrue(testSdk.isInstalled());
+    Assert.assertFalse(testSdk.isUpToDate());
+
+    testSdk.newUpdater().update(testProgressListener, testListener);
+
+    Assert.assertTrue(testSdk.isInstalled());
+    Assert.assertTrue(testSdk.hasComponent(testComponent));
+    Assert.assertTrue(testSdk.isUpToDate());
+
+    testSdk
+        .newComponentInstaller()
+        .installComponent(testComponent, testProgressListener, testListener);
+
+    Assert.assertTrue(testSdk.isInstalled());
+    Assert.assertTrue(testSdk.hasComponent(testComponent));
+    Assert.assertTrue(testSdk.isUpToDate());
+  }
+
   private static final Path CLOUD_SDK_PARTIAL_PATH =
       Paths.get("google-cloud-tools-java/managed-cloud-sdk");
   private static final Path CLOUD_SDK_PARTIAL_PATH_WINDOWS = Paths.get("google/ct4j-cloud-sdk");
