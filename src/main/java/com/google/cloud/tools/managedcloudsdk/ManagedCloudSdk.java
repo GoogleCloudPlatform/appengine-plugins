@@ -182,9 +182,11 @@ public class ManagedCloudSdk {
    * of the installer script.
    *
    * @param overrideComponents array of gcloud components to install instead of the defaults
+   * @param environmentVariables environment variables used during installation script run
    * @return A {@link SdkInstaller}
    */
-  public SdkInstaller newInstaller(String[] overrideComponents) {
+  public SdkInstaller newInstaller(
+      String[] overrideComponents, Map<String, String> environmentVariables) {
     return SdkInstaller.newInstaller(
         managedSdkDirectory,
         version,
@@ -192,7 +194,7 @@ public class ManagedCloudSdk {
         USER_AGENT_STRING,
         false,
         overrideComponents,
-        Collections.emptyMap());
+        environmentVariables);
   }
 
   public SdkComponentInstaller newComponentInstaller() {
