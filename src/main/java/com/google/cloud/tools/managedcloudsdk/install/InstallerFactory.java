@@ -31,7 +31,7 @@ final class InstallerFactory {
 
   private final OsInfo osInfo;
   private final boolean usageReporting;
-  private final @Nullable Set<String> overrideComponents;
+  @Nullable private final Set<String> overrideComponents;
 
   /**
    * Creates a new factory.
