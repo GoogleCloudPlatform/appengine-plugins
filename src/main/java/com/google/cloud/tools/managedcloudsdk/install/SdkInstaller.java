@@ -158,7 +158,7 @@ public class SdkInstaller {
   /**
    * Configure and create a new Installer instance.
    *
-   * @param managedSdkDirectory home directory of google cloud java managed cloud SDKs
+   * @param managedSdkDirectory directory where the Cloud SDK will be installed
    * @param version version of the Cloud SDK to install
    * @param osInfo target operating system for installation
    * @param userAgentString user agent string for https requests
@@ -187,7 +187,7 @@ public class SdkInstaller {
   /**
    * Configure and create a new Installer instance.
    *
-   * @param managedSdkDirectory home directory of google cloud java managed cloud SDKs
+   * @param managedSdkDirectory directory where the Cloud SDK will be installed
    * @param version version of the Cloud SDK to install
    * @param osInfo target operating system for installation
    * @param userAgentString user agent string for https requests
