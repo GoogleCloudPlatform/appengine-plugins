@@ -38,7 +38,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 
 /** A manager for installing, configuring and updating the Cloud SDK. */
 public class ManagedCloudSdk {
@@ -175,6 +177,26 @@ public class ManagedCloudSdk {
   public SdkInstaller newInstaller(Map<String, String> environmentVariables) {
     return SdkInstaller.newInstaller(
         managedSdkDirectory, version, osInfo, USER_AGENT_STRING, false, environmentVariables);
+  }
+
+  /**
+   * Create a new {@link SdkInstaller} with gcloud components to install (override) and environment
+   * variables to use while running the installer script.
+   *
+   * @param overrideComponents gcloud components to install instead of the defaults
+   * @param environmentVariables environment variables used during installation script run
+   * @return a {@link SdkInstaller}
+   */
+  public SdkInstaller newInstaller(
+      @Nullable Set<String> overrideComponents, Map<String, String> environmentVariables) {
+    return SdkInstaller.newInstaller(
+        managedSdkDirectory,
+        version,
+        osInfo,
+        USER_AGENT_STRING,
+        false,
+        overrideComponents,
+        environmentVariables);
   }
 
   public SdkComponentInstaller newComponentInstaller() {

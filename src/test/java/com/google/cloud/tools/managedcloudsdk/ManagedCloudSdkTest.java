@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import org.junit.Assert;
@@ -138,6 +139,26 @@ public class ManagedCloudSdkTest {
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.hasComponent(testComponent));
     Assert.assertTrue(testSdk.isUpToDate());
+  }
+
+  @Test
+  public void testManagedCloudSdk_latestWithOverrides()
+      throws UnsupportedOsException, ManagedSdkVerificationException,
+          ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
+          CommandExitException, IOException, SdkInstallerException {
+    ManagedCloudSdk testSdk =
+        new ManagedCloudSdk(Version.LATEST, userHome, OsInfo.getSystemOsInfo());
+
+    Assert.assertFalse(testSdk.isInstalled());
+    Assert.assertFalse(testSdk.isUpToDate());
+
+    testSdk
+        .newInstaller(new HashSet<>(Arrays.asList("app-engine-java")), Collections.emptyMap())
+        .install(testProgressListener, testListener);
+
+    Assert.assertTrue(testSdk.isInstalled());
+    Assert.assertTrue(testSdk.isUpToDate());
+    Assert.assertTrue(testSdk.hasComponent(testComponent));
   }
 
   private static final Path CLOUD_SDK_PARTIAL_PATH =

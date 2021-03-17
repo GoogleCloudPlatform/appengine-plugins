@@ -26,6 +26,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nullable;
 
 /** Installer for running install scripts in a Cloud SDK download. */
 final class Installer {
@@ -37,6 +39,8 @@ final class Installer {
   private final ConsoleListener consoleListener;
   private final CommandRunner commandRunner;
 
+  @Nullable private final Set<String> overrideComponents;
+
   /** Instantiated by {@link InstallerFactory}. */
   Installer(
       Path installedSdkRoot,
@@ -45,9 +49,29 @@ final class Installer {
       ProgressListener progressListener,
       ConsoleListener consoleListener,
       CommandRunner commandRunner) {
+    this(
+        installedSdkRoot,
+        installScriptProvider,
+        usageReporting,
+        null,
+        progressListener,
+        consoleListener,
+        commandRunner);
+  }
+
+  /** Instantiated by {@link InstallerFactory}. */
+  Installer(
+      Path installedSdkRoot,
+      InstallScriptProvider installScriptProvider,
+      boolean usageReporting,
+      @Nullable Set<String> overrideComponents,
+      ProgressListener progressListener,
+      ConsoleListener consoleListener,
+      CommandRunner commandRunner) {
     this.installedSdkRoot = installedSdkRoot;
     this.installScriptProvider = installScriptProvider;
     this.usageReporting = usageReporting;
+    this.overrideComponents = overrideComponents;
     this.progressListener = progressListener;
     this.consoleListener = consoleListener;
     this.commandRunner = commandRunner;
@@ -62,6 +86,11 @@ final class Installer {
     command.add("--command-completion=false"); // don't add command completion
     command.add("--quiet"); // don't accept user input during install
     command.add("--usage-reporting=" + usageReporting); // usage reporting passthrough
+
+    if (overrideComponents != null) {
+      command.add("--override-components");
+      command.addAll(overrideComponents);
+    }
 
     Path workingDirectory = installedSdkRoot.getParent();
     Map<String, String> installerEnvironment = installScriptProvider.getScriptEnvironment();
