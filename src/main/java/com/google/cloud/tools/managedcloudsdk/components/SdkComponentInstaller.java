@@ -26,7 +26,7 @@ import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +88,14 @@ public class SdkComponentInstaller {
 
     Path workingDirectory = gcloudPath.getRoot();
 
-    List<String> command = Arrays.asList(gcloudPath.toString(), "components", "install");
+    List<String> command =
+        new ArrayList<String>() {
+          {
+            add(gcloudPath.toString());
+            add("components");
+            add("install");
+          }
+        };
     components.forEach(component -> command.add(component.toString()));
     command.add("--quiet");
 
