@@ -180,8 +180,8 @@ public class ManagedCloudSdk {
   }
 
   /**
-   * Create a new {@link SdkInstaller} with an array corresponding to the --override-components flag
-   * of the installer script.
+   * Create a new {@link SdkInstaller} with gcloud components to install (override) and
+   * environment variables to use while running the installer script.
    *
    * @param overrideComponents gcloud components to install instead of the defaults
    * @param environmentVariables environment variables used during installation script run
