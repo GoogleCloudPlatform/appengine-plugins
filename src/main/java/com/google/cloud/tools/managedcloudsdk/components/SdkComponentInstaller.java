@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 /** Install an SDK component. */
@@ -75,13 +76,9 @@ public class SdkComponentInstaller {
       ConsoleListener consoleListener)
       throws InterruptedException, CommandExitException, CommandExecutionException {
 
-    String message;
-    if (components.size() == 1) {
-      message = "Installing " + components.get(0).toString();
-    } else {
-      message = "Installing components";
-    }
-
+    String message =
+        "Installing "
+            + components.stream().map(SdkComponent::toString).collect(Collectors.joining(", "));
     progressListener.start(message, ProgressListener.UNKNOWN);
 
     Map<String, String> environment = null;
