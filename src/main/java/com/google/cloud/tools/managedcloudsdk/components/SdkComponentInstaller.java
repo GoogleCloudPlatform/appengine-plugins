@@ -88,14 +88,8 @@ public class SdkComponentInstaller {
 
     Path workingDirectory = gcloudPath.getRoot();
 
-    List<String> command =
-        new ArrayList<String>() {
-          {
-            add(gcloudPath.toString());
-            add("components");
-            add("install");
-          }
-        };
+    List<String> command = new ArrayList<>();
+    Collections.addAll(command, gcloudPath.toString(), "components", "install");
     components.forEach(component -> command.add(component.toString()));
     command.add("--quiet");
 
