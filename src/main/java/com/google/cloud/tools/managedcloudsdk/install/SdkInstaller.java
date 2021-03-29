@@ -99,7 +99,7 @@ public class SdkInstaller {
           RecursiveDeleteOption.ALLOW_INSECURE);
     }
 
-    progressListener.start("Installing Cloud SDK", installerFactory != null ? 300 : 200);
+    progressListener.start("Installing Cloud SDK", ProgressListener.UNKNOWN);
 
     // download and verify
     Downloader downloader =
