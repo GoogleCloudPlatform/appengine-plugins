@@ -106,7 +106,7 @@ public class SdkInstaller {
         downloaderFactory.newDownloader(
             fileResourceProvider.getArchiveSource(),
             fileResourceProvider.getArchiveDestination(),
-            progressListener.newChild(100));
+            progressListener);
     downloader.download();
     if (!Files.isRegularFile(fileResourceProvider.getArchiveDestination())) {
       throw new SdkInstallerException(
@@ -120,7 +120,7 @@ public class SdkInstaller {
           .newExtractor(
               fileResourceProvider.getArchiveDestination(),
               fileResourceProvider.getArchiveExtractionDestination(),
-              progressListener.newChild(100))
+              progressListener)
           .extract();
       if (!Files.isDirectory(fileResourceProvider.getExtractedSdkHome())) {
         throw new SdkInstallerException(
@@ -138,7 +138,7 @@ public class SdkInstaller {
       installerFactory
           .newInstaller(
               fileResourceProvider.getExtractedSdkHome(),
-              progressListener.newChild(100),
+              progressListener,
               consoleListener,
               environmentVariables)
           .install();
