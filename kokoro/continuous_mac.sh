@@ -10,4 +10,3 @@ gcloud components install app-engine-java
 
 cd github/appengine-plugins-core
 ./mvnw clean install cobertura:cobertura -B -U
-# bash <(curl -s https://codecov.io/bash)
