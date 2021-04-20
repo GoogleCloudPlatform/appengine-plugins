@@ -1,5 +1,4 @@
 ![experimental](https://img.shields.io/badge/stability-experimental-red.svg)
-[![Build Status](https://travis-ci.org/GoogleCloudPlatform/appengine-plugins-core.svg?branch=master)](https://travis-ci.org/GoogleCloudPlatform/appengine-plugins-core)
 
 # Google App Engine Plugins Core Library
 
