@@ -22,7 +22,7 @@ jobs:
             exit 1
           fi
           if [[ $( git ls-remote --tags origin refs/tags/v${{ github.event.inputs.release_version }} ) ]]; then
-            echo 'Tag "v${{ github.event.inputs.release_version }}" already exists.'
+            echo 'Tag "v${{ github.event.inputs.release_version }}" already exists. Double-check the version to release!'
             exit 1
           fi
 
