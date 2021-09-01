@@ -36,7 +36,7 @@ jobs:
           git commit -am "preparing release ${{ github.event.inputs.release_version }}"
           git tag v${{ github.event.inputs.release_version }}
 
-          ./mvnw --batch-mode release:update-versions
+          ./mvnw --batch-mode org.apache.maven.plugins:maven-release-plugin:2.5.3:update-versions
           git commit -am "next development version"
 
           git push origin v${{ github.event.inputs.release_version }}
