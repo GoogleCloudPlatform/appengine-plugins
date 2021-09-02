@@ -1,4 +1,4 @@
-name: Prepare Jib extension release
+name: Prepare release
 on:
   workflow_dispatch:
     inputs:
@@ -50,6 +50,6 @@ jobs:
           # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token;
           github_token: ${{ secrets.GA_RELEASE_PR_PERSONAL_TOKEN }}
           source_branch: release-v${{ github.event.inputs.release_version }}
-          pr_title: "${{ github.event.inputs.jib_extension }} release v${{ github.event.inputs.release_version }}"
+          pr_title: "release v${{ github.event.inputs.release_version }}"
           pr_body: "To be merged after the release is complete."
           pr_label: "PR: Merge After Release"
