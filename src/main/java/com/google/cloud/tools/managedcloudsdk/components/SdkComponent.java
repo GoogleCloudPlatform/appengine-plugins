@@ -39,7 +39,8 @@ public enum SdkComponent {
   PUBSUB_EMULATOR("pubsub-emulator"),
   MINIKUBE("minikube"),
   SKAFFOLD("skaffold"),
-  KPT("kpt");
+  KPT("kpt"),
+  GKE_GCLOUD_AUTH_PLUGIN("gke-gcloud-auth-plugin");
 
   private final String value;
 
