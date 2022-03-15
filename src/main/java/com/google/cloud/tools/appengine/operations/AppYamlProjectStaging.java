@@ -27,6 +27,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -43,6 +44,7 @@ public class AppYamlProjectStaging {
   private static final Logger log = Logger.getLogger(AppYamlProjectStaging.class.getName());
 
   private static final String APP_YAML = "app.yaml";
+  private static final ImmutableSet<String> GEN2_RUNTIMES = ImmutableSet.of("java11", "java17");
 
   @VisibleForTesting
   static final ImmutableList<String> OTHER_YAMLS =
@@ -76,7 +78,7 @@ public class AppYamlProjectStaging {
         stageFlexibleArchive(config, runtime);
         return;
       }
-      if ("java11".equals(runtime)) {
+      if (GEN2_RUNTIMES.contains(runtime)) {
         boolean isJar = config.getArtifact().getFileName().toString().endsWith(".jar");
         if (isJar) {
           stageStandardArchive(config);
@@ -88,7 +90,9 @@ public class AppYamlProjectStaging {
         }
         // I cannot deploy non-jars without custom entrypoints
         throw new AppEngineException(
-            "Cannot process application with runtime: java11."
+            "Cannot process application with runtime: "
+                + runtime
+                + "."
                 + " A custom entrypoint must be defined in your app.yaml for non-jar artifact: "
                 + config.getArtifact().toString());
       }
