@@ -76,7 +76,7 @@ public class AppYamlProjectStaging {
         stageFlexibleArchive(config, runtime);
         return;
       }
-      if ("java11".equals(runtime)) {
+      if ("java11".equals(runtime) || "java17".equals(runtime)) {
         boolean isJar = config.getArtifact().getFileName().toString().endsWith(".jar");
         if (isJar) {
           stageStandardArchive(config);
@@ -88,7 +88,7 @@ public class AppYamlProjectStaging {
         }
         // I cannot deploy non-jars without custom entrypoints
         throw new AppEngineException(
-            "Cannot process application with runtime: java11."
+            "Cannot process application with runtime: java11/java17."
                 + " A custom entrypoint must be defined in your app.yaml for non-jar artifact: "
                 + config.getArtifact().toString());
       }
