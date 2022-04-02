@@ -166,7 +166,7 @@ public class AppYamlProjectStagingTest {
       fail();
     } catch (AppEngineException ex) {
       assertEquals(
-          "Cannot process application with runtime: java11. A custom entrypoint must be defined in your app.yaml for non-jar artifact: "
+          "Cannot process application with runtime: java11/java17. A custom entrypoint must be defined in your app.yaml for non-jar artifact: "
               + nonJarArtifact.toString(),
           ex.getMessage());
     }
