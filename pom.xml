@@ -58,6 +58,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Errorprone check exclusions; see https://errorprone.info/docs/flags -->
+    <errorprone_exclusions>com.google.cloud.tools.appengine.operations.DevServerTest,com.google.cloud.tools.appengine.operations.cloudsdk.serialization.AppEngineDeployResult,com.google.cloud.tools.io.FilePermissionsTest,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest,com.google.cloud.tools.appengine.operations.cloudsdk.serialization.CloudSdkVersionTest,com.google.cloud.tools.appengine.operations.GenRepoInfoFileTest,com.google.cloud.tools.appengine.operations.DeploymentTest,com.google.cloud.tools.appengine.operations.AuthTest,com.google.cloud.tools.appengine.configuration.RunConfigurationTest</errorprone_exclusions>
   </properties>
 
   <dependencies>
@@ -318,7 +320,7 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.10.1</version>
             <configuration>
-              <!-- For Java 8, the plugin is overridden below -->
+              <!-- For Java 8, the plugin is overridden below, without errorprone -->
               <release>11</release>
               <showDeprecation>true</showDeprecation>
               <showWarnings>true</showWarnings>
@@ -337,7 +339,10 @@
               <fork>true</fork>
               <compilerArgs>
                 <arg>-XDcompilePolicy=simple</arg>
-                <arg>-Xplugin:ErrorProne -Xep:NullAway:ERROR -XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools -XepOpt:NullAway:KnownInitializers=com.google.gson.Gson.fromJson -XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock,org.junit.runners.Parameterized -XepOpt:NullAway:ExcludedClasses=com.google.cloud.tools.appengine.operations.DevServerTest,com.google.cloud.tools.appengine.operations.cloudsdk.serialization.AppEngineDeployResult,com.google.cloud.tools.io.FilePermissionsTest,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest,com.google.cloud.tools.appengine.operations.cloudsdk.serialization.CloudSdkVersionTest,com.google.cloud.tools.appengine.operations.GenRepoInfoFileTest,com.google.cloud.tools.appengine.operations.DeploymentTest,com.google.cloud.tools.appengine.operations.AuthTest,com.google.cloud.tools.appengine.configuration.RunConfigurationTest</arg>
+                <arg>-Xplugin:ErrorProne -Xep:NullAway:ERROR -XepOpt:NullAway:AnnotatedPackages=com.google.cloud.tools -XepOpt:NullAway:KnownInitializers=com.google.gson.Gson.fromJson -XepOpt:NullAway:ExcludedFieldAnnotations=org.mockito.Mock,org.junit.runners.Parameterized -XepOpt:NullAway:ExcludedClasses=${errorprone_exclusions}</arg>
+                <!-- Errorprone requires opening up some JDK modules.
+                     See https://errorprone.info/docs/installation#maven for details
+                -->
                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
                 <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
@@ -409,18 +414,11 @@
       </build>
     </profile>
 
-    <!--
-      Using github.com/google/error-prone-javac is required when running on
-      JDK 8. Remove when migrating to JDK 11.
-    -->
     <profile>
       <id>jdk8</id>
       <activation>
         <jdk>1.8</jdk>
       </activation>
-      <properties>
-        <javac.version>9+181-r4173-1</javac.version>
-      </properties>
       <build>
         <plugins>
           <plugin>
@@ -429,10 +427,6 @@
             <configuration>
               <source>1.8</source>
               <target>1.8</target>
-              <fork>true</fork>
-              <compilerArgs combine.children="append">
-                <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</arg>
-              </compilerArgs>
             </configuration>
           </plugin>
         </plugins>
