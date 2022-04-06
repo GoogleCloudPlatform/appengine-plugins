@@ -321,7 +321,8 @@
             <version>3.10.1</version>
             <configuration>
               <!-- For Java 8, the plugin is overridden below, without errorprone -->
-              <release>11</release>
+              <source>1.8</source>
+              <target>1.8</target>
               <showDeprecation>true</showDeprecation>
               <showWarnings>true</showWarnings>
               <annotationProcessorPaths>
