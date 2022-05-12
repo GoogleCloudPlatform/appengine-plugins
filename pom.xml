@@ -320,9 +320,8 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.10.1</version>
             <configuration>
-              <!-- For Java 8, the plugin is overridden below, without errorprone -->
-              <source>1.8</source>
-              <target>1.8</target>
+              <!-- For running with Java 8, the plugin is overridden below, without errorprone -->
+              <release>8</release>
               <showDeprecation>true</showDeprecation>
               <showWarnings>true</showWarnings>
               <annotationProcessorPaths>
