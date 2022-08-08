@@ -59,7 +59,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Errorprone check exclusions; see https://errorprone.info/docs/flags -->
-    <errorprone_exclusions>com.google.cloud.tools.appengine.operations.DevServerTest,com.google.cloud.tools.appengine.operations.cloudsdk.serialization.AppEngineDeployResult,com.google.cloud.tools.io.FilePermissionsTest,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest,com.google.cloud.tools.appengine.operations.cloudsdk.serialization.CloudSdkVersionTest,com.google.cloud.tools.appengine.operations.GenRepoInfoFileTest,com.google.cloud.tools.appengine.operations.DeploymentTest,com.google.cloud.tools.appengine.operations.AuthTest,com.google.cloud.tools.appengine.configuration.RunConfigurationTest</errorprone_exclusions>
+    <errorprone_exclusions>com.google.cloud.tools.appengine.operations.DevServerJava8Test,com.google.cloud.tools.appengine.operations.DevServerJava9OrAboveTest,com.google.cloud.tools.appengine.operations.cloudsdk.serialization.AppEngineDeployResult,com.google.cloud.tools.io.FilePermissionsTest,com.google.cloud.tools.managedcloudsdk.install.InstallerFactoryTest,com.google.cloud.tools.appengine.AppEngineDescriptorTest,com.google.cloud.tools.appengine.operations.cloudsdk.serialization.CloudSdkVersionTest,com.google.cloud.tools.appengine.operations.GenRepoInfoFileTest,com.google.cloud.tools.appengine.operations.DeploymentTest,com.google.cloud.tools.appengine.operations.AuthTest,com.google.cloud.tools.appengine.configuration.RunConfigurationTest</errorprone_exclusions>
   </properties>
 
   <dependencies>

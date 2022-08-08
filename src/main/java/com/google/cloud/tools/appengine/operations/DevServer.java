@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.appengine.operations;
 
+import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
+
 import com.google.cloud.tools.appengine.AppEngineDescriptor;
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.RunConfiguration;
@@ -78,6 +80,16 @@ public class DevServer {
     }
     if (config.getJvmFlags() != null) {
       jvmArguments.addAll(config.getJvmFlags());
+    }
+
+    if (!JAVA_SPECIFICATION_VERSION.value().equals("1.8")) {
+      // Due to JPMS restrictions, Java11 or later need more flags:
+      jvmArguments.add("--add-opens");
+      jvmArguments.add("java.base/java.net=ALL-UNNAMED");
+      jvmArguments.add("--add-opens");
+      jvmArguments.add("java.base/sun.net.www.protocol.http=ALL-UNNAMED");
+      jvmArguments.add("--add-opens");
+      jvmArguments.add("java.base/sun.net.www.protocol.https=ALL-UNNAMED");
     }
 
     arguments.addAll(DevAppServerArgs.get("default_gcs_bucket", config.getDefaultGcsBucketName()));

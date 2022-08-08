@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Google LLC.
+ * Copyright 2016-2022 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.appengine.operations;
 
+import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
+import static org.junit.Assume.assumeTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -39,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -49,7 +52,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 /** Unit tests for {@link DevServer}. */
 @RunWith(MockitoJUnitRunner.class)
-public class DevServerTest {
+public class DevServerJava9OrAboveTest {
 
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
   private Path fakeJavaSdkHome;
@@ -73,6 +76,14 @@ public class DevServerTest {
       ImmutableMap.of("GAE_ENV", "localdev", "GAE_RUNTIME", "java7");
   private final Map<String, String> expectedJava8Environment =
       ImmutableMap.of("GAE_ENV", "localdev", "GAE_RUNTIME", "java8");
+
+  @BeforeClass
+  public static void disableIfJavaVersion8() {
+    // CI does not run with anything below 8, so equals is safe.
+    assumeTrue(
+        "DevServerTestJava8 requires Java 9 or above",
+        !JAVA_SPECIFICATION_VERSION.value().equals("1.8"));
+  }
 
   @Before
   public void setUp() throws IOException {
@@ -161,6 +172,12 @@ public class DevServerTest {
             "-Dappengine.fullscan.seconds=1",
             "-Dflag1",
             "-Dflag2",
+            "--add-opens",
+            "java.base/java.net=ALL-UNNAMED",
+            "--add-opens",
+            "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
+            "--add-opens",
+            "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
             "-Duse_jetty9_runtime=true",
             "-D--enable_all_permissions=true");
 
@@ -198,7 +215,11 @@ public class DevServerTest {
             "--no_java_agent",
             java8Service.toString());
     List<String> expectedJvmArgs =
-        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+        ImmutableList.of(
+            "--add-opens", "java.base/java.net=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
+            "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
     devServer.run(configuration);
     verify(devAppServerRunner, times(1))
         .run(
@@ -223,7 +244,11 @@ public class DevServerTest {
             java8Service.toString());
 
     List<String> expectedJvmArgs =
-        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+        ImmutableList.of(
+            "--add-opens", "java.base/java.net=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
+            "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     devServer.run(configuration);
 
@@ -247,6 +272,12 @@ public class DevServerTest {
             "--allow_remote_shutdown", "--disable_update_check", java7Service.toString());
     List<String> expectedJvmArgs =
         ImmutableList.of(
+            "--add-opens",
+            "java.base/java.net=ALL-UNNAMED",
+            "--add-opens",
+            "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
+            "--add-opens",
+            "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
             "-javaagent:"
                 + fakeJavaSdkHome.resolve("agent/appengine-agent.jar").toAbsolutePath().toString());
 
@@ -276,7 +307,11 @@ public class DevServerTest {
             java8Service.toString());
 
     List<String> expectedJvmArgs =
-        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+        ImmutableList.of(
+            "--add-opens", "java.base/java.net=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
+            "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     devServer.run(configuration);
 
@@ -298,7 +333,11 @@ public class DevServerTest {
             java8Service1EnvVars.toString());
 
     List<String> expectedJvmArgs =
-        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+        ImmutableList.of(
+            "--add-opens", "java.base/java.net=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
+            "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     Map<String, String> expectedConfigurationEnvironment =
         ImmutableMap.of("key1", "val1", "key2", "val2");
@@ -334,7 +373,11 @@ public class DevServerTest {
             java8Service2EnvVars.toString());
 
     List<String> expectedJvmArgs =
-        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+        ImmutableList.of(
+            "--add-opens", "java.base/java.net=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
+            "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     Map<String, String> expectedConfigurationEnvironment =
         ImmutableMap.of("key1", "val1", "keya", "vala", "key2", "duplicated-key", "keyc", "valc");
@@ -371,6 +414,12 @@ public class DevServerTest {
             "--allow_remote_shutdown", "--disable_update_check", java7Service.toString());
     List<String> expectedJvmArgs =
         ImmutableList.of(
+            "--add-opens",
+            "java.base/java.net=ALL-UNNAMED",
+            "--add-opens",
+            "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
+            "--add-opens",
+            "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
             "-javaagent:"
                 + fakeJavaSdkHome.resolve("agent/appengine-agent.jar").toAbsolutePath().toString());
 
@@ -403,7 +452,11 @@ public class DevServerTest {
             java8Service1EnvVars.toString());
 
     List<String> expectedJvmArgs =
-        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+        ImmutableList.of(
+            "--add-opens", "java.base/java.net=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
+            "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
+            "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     Map<String, String> appEngineEnvironment = ImmutableMap.of("key1", "val1", "key2", "val2");
     Map<String, String> expectedEnvironment =
