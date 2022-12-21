@@ -11,6 +11,7 @@ sudo /opt/google-cloud-sdk/bin/gcloud components install app-engine-java
 cd github/appengine-plugins-core
 
 if [ "$EUID" -ne 0 ]
+then
   # not running as root
   ./mvnw clean install cobertura:cobertura -B -U
 else
