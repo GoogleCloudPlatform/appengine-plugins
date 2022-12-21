@@ -700,14 +700,14 @@
     "name": "Dialogflow",
     "id": "dialogflow",
     "serviceName": "dialogflow.googleapis.com",
-    "documentation": "https://dialogflow.com/",
+    "documentation": "https://cloud.google.com/dialogflow/docs/",
     "description": "An NLU platform for designing and integrating conversational user interfaces into mobile apps, web applications, devices, and bots.",
     "transports": ["grpc"],
     "clients": [
       {
       "name": "Java Client Libraries for the Dialogflow API",
       "language": "java",
-      "site": "https://dialogflow.com/",
+      "site": "https://cloud.google.com/dialogflow/docs/",
       "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/dialogflow/v2beta1/package-summary.html",
       "infotip": "The com.google.cloud.dialogflow.v2beta1 packages",
       "launchStage": "alpha",
