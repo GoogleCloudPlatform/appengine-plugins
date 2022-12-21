@@ -127,6 +127,7 @@ public class LibrariesTest {
 
   private static void assertReachable(String url) throws IOException {
     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+    connection.setConnectTimeout(10000);
     connection.setRequestMethod("HEAD");
     Assert.assertEquals("Could not reach " + url, 200, connection.getResponseCode());
   }
