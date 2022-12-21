@@ -133,7 +133,7 @@ public class LibrariesTest {
     try {
       Assert.assertEquals("Could not reach " + url, 200, connection.getResponseCode());
     } catch (SocketTimeoutException e) {
-      Assert.fail("Connection timed out to: " + url);
+      Assert.fail("Connection to '" + url + "' timed out.");
     }
   }
 
