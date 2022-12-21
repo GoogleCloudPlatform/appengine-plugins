@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +130,11 @@ public class LibrariesTest {
     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
     connection.setConnectTimeout(10000);
     connection.setRequestMethod("HEAD");
-    Assert.assertEquals("Could not reach " + url, 200, connection.getResponseCode());
+    try {
+      Assert.assertEquals("Could not reach " + url, 200, connection.getResponseCode());
+    } catch (SocketTimeoutException e) {
+      Assert.fail("Connection timed out to: " + url);
+    }
   }
 
   @Test
