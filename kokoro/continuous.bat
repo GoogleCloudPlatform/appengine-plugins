@@ -1,10 +1,6 @@
 @echo on
 
-REM Java 9 does not work with our builds right now, force java 8
-REM set JAVA_HOME=c:\program files\java\jdk1.8.0_152
-REM set PATH=%JAVA_HOME%\bin;%PATH%
-
-REM Java 8 - JAVA_HOME C:\Program Files\Java\jdk1.8.0_211
+REM Use Java 8 for build
 echo %JAVA_HOME%
 
 cd github/appengine-plugins-core
