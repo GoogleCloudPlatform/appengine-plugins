@@ -116,7 +116,7 @@ public class PathResolver implements CloudSdkResolver {
   @VisibleForTesting
   static String unquote(String path) {
     if (path.startsWith("\"")) {
-      path = path.substring(1, path.length() - 1);
+      path = path.substring(1);
     }
     if (path.endsWith("\"")) {
       path = path.substring(0, path.length() - 1);
