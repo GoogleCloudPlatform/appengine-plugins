@@ -82,14 +82,14 @@ public class DevServer {
       jvmArguments.addAll(config.getJvmFlags());
     }
 
-    if (!JAVA_SPECIFICATION_VERSION.value().equals("1.8")) {
-      // Due to JPMS restrictions, Java11 or later need more flags:
-      jvmArguments.add("--add-opens");
-      jvmArguments.add("java.base/java.net=ALL-UNNAMED");
-      jvmArguments.add("--add-opens");
-      jvmArguments.add("java.base/sun.net.www.protocol.http=ALL-UNNAMED");
-      jvmArguments.add("--add-opens");
-      jvmArguments.add("java.base/sun.net.www.protocol.https=ALL-UNNAMED");
+    // Check if the RunConfiguration has the Project JDK Version defined first
+    // The custom value takes priority over the System Property
+    String jdkVersion = config.getProjectJDKVersion();
+    if (jdkVersion == null) {
+      jdkVersion = JAVA_SPECIFICATION_VERSION.value();
+    }
+    if (!jdkVersion.equals("1.8")) {
+      addJPMSRestrictionArguments(jvmArguments);
     }
 
     arguments.addAll(DevAppServerArgs.get("default_gcs_bucket", config.getDefaultGcsBucketName()));
@@ -146,6 +146,16 @@ public class DevServer {
     } catch (ProcessHandlerException | IOException ex) {
       throw new AppEngineException(ex);
     }
+  }
+
+  private void addJPMSRestrictionArguments(List<String> jvmArguments) {
+    // Due to JPMS restrictions, Java11 or later need more flags:
+    jvmArguments.add("--add-opens");
+    jvmArguments.add("java.base/java.net=ALL-UNNAMED");
+    jvmArguments.add("--add-opens");
+    jvmArguments.add("java.base/sun.net.www.protocol.http=ALL-UNNAMED");
+    jvmArguments.add("--add-opens");
+    jvmArguments.add("java.base/sun.net.www.protocol.https=ALL-UNNAMED");
   }
 
   /** Stops the local development server. */
