@@ -35,7 +35,7 @@ public class RunConfiguration {
   @Nullable private final List<String> additionalArguments;
   @Nullable private final String projectId;
   // Allow custom JDK version to be set
-  @Nullable private final String projectJDKVersion;
+  @Nullable private final String projectJdkVersion;
 
   private RunConfiguration(
       List<Path> services,
@@ -47,7 +47,7 @@ public class RunConfiguration {
       @Nullable Map<String, String> environment,
       @Nullable List<String> additionalArguments,
       @Nullable String projectId,
-      @Nullable String projectJDKVersion) {
+      @Nullable String projectJdkVersion) {
     this.services = services;
     this.host = host;
     this.port = port;
@@ -57,7 +57,7 @@ public class RunConfiguration {
     this.environment = environment;
     this.additionalArguments = additionalArguments;
     this.projectId = projectId;
-    this.projectJDKVersion = projectJDKVersion;
+    this.projectJdkVersion = projectJdkVersion;
   }
 
   /**
@@ -123,8 +123,8 @@ public class RunConfiguration {
    * `java.specification.version`'s System Property
    */
   @Nullable
-  public String getProjectJDKVersion() {
-    return projectJDKVersion;
+  public String getProjectJdkVersion() {
+    return projectJdkVersion;
   }
 
   public static Builder builder(List<Path> services) {
@@ -141,7 +141,7 @@ public class RunConfiguration {
     @Nullable private Map<String, String> environment;
     @Nullable private List<String> additionalArguments;
     @Nullable private String projectId;
-    @Nullable private String projectJDKVersion;
+    @Nullable private String projectJdkVersion;
 
     private Builder(List<Path> services) {
       Preconditions.checkNotNull(services);
@@ -192,8 +192,8 @@ public class RunConfiguration {
       return this;
     }
 
-    public Builder projectJDKVersion(@Nullable String projectJDKVersion) {
-      this.projectJDKVersion = projectJDKVersion;
+    public Builder projectJdkVersion(@Nullable String projectJdkVersion) {
+      this.projectJdkVersion = projectJdkVersion;
       return this;
     }
 
@@ -209,7 +209,7 @@ public class RunConfiguration {
           environment,
           additionalArguments,
           projectId,
-          projectJDKVersion);
+          projectJdkVersion);
     }
   }
 
@@ -225,7 +225,7 @@ public class RunConfiguration {
             .jvmFlags(getJvmFlags())
             .port(port)
             .projectId(projectId)
-            .projectJDKVersion(projectJDKVersion);
+            .projectJdkVersion(projectJdkVersion);
     return builder;
   }
 }

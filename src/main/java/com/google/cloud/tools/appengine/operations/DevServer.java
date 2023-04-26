@@ -84,12 +84,13 @@ public class DevServer {
 
     // Check if the RunConfiguration has the Project JDK Version defined first
     // The custom value takes priority over the System Property
-    String jdkVersion = config.getProjectJDKVersion();
-    if (jdkVersion == null) {
-      jdkVersion = JAVA_SPECIFICATION_VERSION.value();
+    String jdkString = config.getProjectJdkVersion();
+    if (jdkString == null) {
+      jdkString = JAVA_SPECIFICATION_VERSION.value();
     }
-    if (!jdkVersion.equals("1.8")) {
-      addJPMSRestrictionArguments(jvmArguments);
+    int jdkVersion = getJdkVersion(jdkString);
+    if (jdkVersion > 8) {
+      addJpmsRestrictionArguments(jvmArguments);
     }
 
     arguments.addAll(DevAppServerArgs.get("default_gcs_bucket", config.getDefaultGcsBucketName()));
@@ -148,7 +149,28 @@ public class DevServer {
     }
   }
 
-  private void addJPMSRestrictionArguments(List<String> jvmArguments) {
+  // Simple helper function to try and extract the version specified.
+  // Very limited validation done to ensure that the projectJdkVersion is set
+  // properly by the customer and the value is decoded with best effort.
+  // Expected values should follow the `java.specification.version` syntax
+  private int getJdkVersion(String projectJdkVersion) {
+    String version = null;
+    if (projectJdkVersion.startsWith("1.")) {
+      version = projectJdkVersion.substring(2, 3);
+    } else {
+      int dot = projectJdkVersion.indexOf(".");
+      if (dot != -1) {
+        version = projectJdkVersion.substring(0, dot);
+      }
+    }
+    try {
+      return Integer.parseInt(version);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Unable to parse JDK Version: " + projectJdkVersion);
+    }
+  }
+
+  private void addJpmsRestrictionArguments(List<String> jvmArguments) {
     // Due to JPMS restrictions, Java11 or later need more flags:
     jvmArguments.add("--add-opens");
     jvmArguments.add("java.base/java.net=ALL-UNNAMED");

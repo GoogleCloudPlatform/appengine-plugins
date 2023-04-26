@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.operations;
 
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assume.assumeTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -135,7 +136,6 @@ public class DevServerJava8Test {
 
   @Test
   public void testPrepareCommand_allFlags() throws Exception {
-
     RunConfiguration configuration =
         Mockito.spy(
             RunConfiguration.builder(ImmutableList.of(java8Service))
@@ -148,7 +148,7 @@ public class DevServerJava8Test {
                 .projectId("my-project")
                 .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
                 .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
-                .projectJDKVersion("11")
+                .projectJdkVersion("1.8")
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
@@ -540,5 +540,18 @@ public class DevServerJava8Test {
   @Test
   public void testGetGaeRuntimeJava_isNotJava8() {
     Assert.assertEquals("java7", DevServer.getGaeRuntimeJava(false));
+  }
+
+  @Test
+  public void testInvalidJDKVersion_throwsIllegalArgumentException() {
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service)).projectJdkVersion("abc").build();
+    assertThrows(IllegalArgumentException.class, () -> devServer.run(configuration));
+
+    RunConfiguration configuration1 = configuration.toBuilder().projectJdkVersion("as37.5").build();
+    assertThrows(IllegalArgumentException.class, () -> devServer.run(configuration1));
+
+    RunConfiguration configuration2 = configuration.toBuilder().projectJdkVersion("1.b8c").build();
+    assertThrows(IllegalArgumentException.class, () -> devServer.run(configuration2));
   }
 }

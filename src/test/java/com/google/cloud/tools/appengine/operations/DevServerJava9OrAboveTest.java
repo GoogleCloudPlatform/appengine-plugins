@@ -149,7 +149,7 @@ public class DevServerJava9OrAboveTest {
                 .projectId("my-project")
                 .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
                 .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
-                .projectJDKVersion("11")
+                .projectJdkVersion("11")
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
@@ -216,7 +216,7 @@ public class DevServerJava9OrAboveTest {
                 .projectId("my-project")
                 .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
                 .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
-                .projectJDKVersion("1.8")
+                .projectJdkVersion("1.8")
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
@@ -294,7 +294,7 @@ public class DevServerJava9OrAboveTest {
   public void testPrepareCommand_booleanFlags_projectJDKVersionJava8()
       throws AppEngineException, ProcessHandlerException, IOException {
     RunConfiguration configuration =
-        RunConfiguration.builder(ImmutableList.of(java8Service)).projectJDKVersion("1.8").build();
+        RunConfiguration.builder(ImmutableList.of(java8Service)).projectJdkVersion("1.8").build();
 
     List<String> expectedFlags =
         ImmutableList.of(
@@ -349,7 +349,7 @@ public class DevServerJava9OrAboveTest {
       throws AppEngineException, ProcessHandlerException, IOException {
 
     RunConfiguration configuration =
-        RunConfiguration.builder(ImmutableList.of(java8Service)).projectJDKVersion("1.8").build();
+        RunConfiguration.builder(ImmutableList.of(java8Service)).projectJdkVersion("1.8").build();
 
     List<String> expectedFlags =
         ImmutableList.of(
@@ -407,7 +407,7 @@ public class DevServerJava9OrAboveTest {
       throws AppEngineException, ProcessHandlerException, IOException {
 
     RunConfiguration configuration =
-        RunConfiguration.builder(ImmutableList.of(java7Service)).projectJDKVersion("1.8").build();
+        RunConfiguration.builder(ImmutableList.of(java7Service)).projectJdkVersion("1.8").build();
 
     List<String> expectedFlags =
         ImmutableList.of(
@@ -461,7 +461,7 @@ public class DevServerJava9OrAboveTest {
 
     RunConfiguration configuration =
         RunConfiguration.builder(ImmutableList.of(java7Service, java8Service))
-            .projectJDKVersion("1.8")
+            .projectJdkVersion("1.8")
             .build();
 
     List<String> expectedFlags =
@@ -524,7 +524,7 @@ public class DevServerJava9OrAboveTest {
       throws AppEngineException, ProcessHandlerException, IOException {
     RunConfiguration configuration =
         RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars))
-            .projectJDKVersion("1.8")
+            .projectJdkVersion("1.8")
             .build();
 
     List<String> expectedFlags =
@@ -597,7 +597,7 @@ public class DevServerJava9OrAboveTest {
           throws AppEngineException, ProcessHandlerException, IOException {
     RunConfiguration configuration =
         RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars, java8Service2EnvVars))
-            .projectJDKVersion("1.8")
+            .projectJdkVersion("1.8")
             .build();
 
     List<String> expectedFlags =
@@ -673,7 +673,7 @@ public class DevServerJava9OrAboveTest {
 
     RunConfiguration configuration =
         RunConfiguration.builder(ImmutableList.of(java7Service))
-            .projectJDKVersion("1.8")
+            .projectJdkVersion("1.8")
             .environment(clientEnvironmentVariables)
             .build();
 
@@ -752,7 +752,7 @@ public class DevServerJava9OrAboveTest {
 
     RunConfiguration configuration =
         RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars))
-            .projectJDKVersion("1.8")
+            .projectJdkVersion("1.8")
             .environment(clientEnvironmentVariables)
             .build();
 
