@@ -119,8 +119,8 @@ public class RunConfiguration {
   }
 
   /**
-   * Gets the Custom Project JDK Version users set. This is in the format of
-   * `java.specification.version`'s System Property
+   * Gets the Custom Project JDK Version users set. This value is expected to be in the format of
+   * `java.specification.version`'s System Property.
    */
   @Nullable
   public String getProjectJdkVersion() {

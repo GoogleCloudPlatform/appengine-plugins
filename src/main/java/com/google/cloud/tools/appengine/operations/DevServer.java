@@ -84,11 +84,11 @@ public class DevServer {
 
     // Check if the RunConfiguration has the Project JDK Version defined first
     // The custom value takes priority over the System Property
-    String jdkString = config.getProjectJdkVersion();
-    if (jdkString == null) {
-      jdkString = JAVA_SPECIFICATION_VERSION.value();
+    String jdkVersionString = config.getProjectJdkVersion();
+    if (jdkVersionString == null) {
+      jdkVersionString = JAVA_SPECIFICATION_VERSION.value();
     }
-    int jdkVersion = getJdkVersion(jdkString);
+    int jdkVersion = getJdkVersion(jdkVersionString);
     if (jdkVersion > 8) {
       addJpmsRestrictionArguments(jvmArguments);
     }
@@ -154,7 +154,8 @@ public class DevServer {
   // properly by the customer and the value is decoded with best effort.
   // Expected values should follow the `java.specification.version` syntax
   private int getJdkVersion(String projectJdkVersion) {
-    String version = null;
+    // Format may be 1.x, 9.x.x, or 12
+    String version = projectJdkVersion;
     if (projectJdkVersion.startsWith("1.")) {
       version = projectJdkVersion.substring(2, 3);
     } else {
