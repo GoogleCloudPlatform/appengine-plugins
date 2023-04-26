@@ -148,6 +148,7 @@ public class DevServerJava8Test {
                 .projectId("my-project")
                 .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
                 .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
+                .projectJDKVersion("11")
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
