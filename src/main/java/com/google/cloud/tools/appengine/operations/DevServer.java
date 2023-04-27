@@ -152,18 +152,22 @@ public class DevServer {
   }
 
   /**
-   * Simple helper function to try and extract the version specified. Very limited validation done
-   * to ensure that the projectJdkVersion is set properly and the value is decoded with best effort.
-   * Expected values should follow the `java.specification.version` syntax.
+   * Simple helper function to try and extract the major version specified. Very limited validation
+   * done to ensure that the projectJdkVersion is set properly and the value is decoded with best
+   * effort. Expected values should follow the {@code java.specification.version} System Property
+   * syntax.
    *
-   * <p>Format should be 1.8 or 9+ as the project's min version is Java 8
+   * <p>Value should be 1.8 or 9+ as the project's minimum supported version is Java 8. The
+   * difference in format is due the specification format changing between after Java 8. Java 8 and
+   * below is represented as 1.x and Java 9+ is represented as "x" (i.e. 9, 11, 17, 21...).
    *
-   * @param projectJdkVersion String version of JDK Version
-   * @return Integer value of JDK version
+   * @param projectJdkVersion String value of JDK Version
+   * @return the major version of JDK version
    */
   @VisibleForTesting
-  public static int getJdkMajorVersion(String projectJdkVersion) {
+  static int getJdkMajorVersion(String projectJdkVersion) {
     String version = projectJdkVersion;
+    // If it starts with `1.`, expect it to be `1.8`
     if (projectJdkVersion.startsWith("1.")) {
       version = projectJdkVersion.substring(2, 3);
     }

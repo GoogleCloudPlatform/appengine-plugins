@@ -911,7 +911,7 @@ public class DevServerJava9OrAboveTest {
   public void testGetJdkVersion_isInvalid_throwsIllegalArgumentException() {
     // May be valid JDK versions names, but should expect them in `java.specification.version`
     // syntax
-    assertThrows(IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("11.0.6"));
+    assertThrows(IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("11.0.0"));
     assertThrows(IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("17.0.11"));
     assertThrows(
         IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("11.0.0_181-google-v7"));
