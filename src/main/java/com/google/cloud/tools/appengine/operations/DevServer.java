@@ -154,15 +154,10 @@ public class DevServer {
   // properly by the customer and the value is decoded with best effort.
   // Expected values should follow the `java.specification.version` syntax
   private int getJdkVersion(String projectJdkVersion) {
-    // Format may be 1.x, 9.x.x, or 12
+    // Format should be 1.8 or 9+ as the project's min version is Java 8
     String version = projectJdkVersion;
     if (projectJdkVersion.startsWith("1.")) {
       version = projectJdkVersion.substring(2, 3);
-    } else {
-      int dot = projectJdkVersion.indexOf(".");
-      if (dot != -1) {
-        version = projectJdkVersion.substring(0, dot);
-      }
     }
     try {
       return Integer.parseInt(version);
