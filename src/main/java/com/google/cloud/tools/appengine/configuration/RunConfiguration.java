@@ -119,8 +119,8 @@ public class RunConfiguration {
   }
 
   /**
-   * Gets the Custom Project JDK Version users set. This value is expected to be in the format of
-   * `java.specification.version`'s System Property.
+   * Returns the Custom Project JDK Version users set. This value is expected to be in the format of
+   * {@code java.specification.version} system property.
    */
   @Nullable
   public String getProjectJdkVersion() {
@@ -192,6 +192,17 @@ public class RunConfiguration {
       return this;
     }
 
+    /**
+     * Allows setting a custom JDK Version. This may be needed when the app engine runtime differs
+     * from runtime in JAVA_HOME. If not set, the Dev Server will use the JDK version found in the
+     * JAVA_HOME.
+     *
+     * <p>See https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/916 for an
+     * example use case
+     *
+     * @param projectJdkVersion JDK Versions in format of 1.8 or 9+
+     * @return RunConfigurations Builder
+     */
     public Builder projectJdkVersion(@Nullable String projectJdkVersion) {
       this.projectJdkVersion = projectJdkVersion;
       return this;

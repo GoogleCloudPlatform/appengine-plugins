@@ -88,7 +88,9 @@ public class DevServer {
     if (jdkVersionString == null) {
       jdkVersionString = JAVA_SPECIFICATION_VERSION.value();
     }
-    int jdkVersion = getJdkVersion(jdkVersionString);
+    int jdkVersion = getJdkMajorVersion(jdkVersionString);
+    log.config(
+        String.format("JDK Version found: %s, Parsed to be %d", jdkVersionString, jdkVersion));
     if (jdkVersion > 8) {
       addJpmsRestrictionArguments(jvmArguments);
     }
@@ -149,12 +151,18 @@ public class DevServer {
     }
   }
 
-  // Simple helper function to try and extract the version specified.
-  // Very limited validation done to ensure that the projectJdkVersion is set
-  // properly by the customer and the value is decoded with best effort.
-  // Expected values should follow the `java.specification.version` syntax
-  private int getJdkVersion(String projectJdkVersion) {
-    // Format should be 1.8 or 9+ as the project's min version is Java 8
+  /**
+   * Simple helper function to try and extract the version specified. Very limited validation done
+   * to ensure that the projectJdkVersion is set properly and the value is decoded with best effort.
+   * Expected values should follow the `java.specification.version` syntax.
+   *
+   * <p>Format should be 1.8 or 9+ as the project's min version is Java 8
+   *
+   * @param projectJdkVersion String version of JDK Version
+   * @return Integer value of JDK version
+   */
+  @VisibleForTesting
+  public static int getJdkMajorVersion(String projectJdkVersion) {
     String version = projectJdkVersion;
     if (projectJdkVersion.startsWith("1.")) {
       version = projectJdkVersion.substring(2, 3);
@@ -167,7 +175,7 @@ public class DevServer {
   }
 
   private void addJpmsRestrictionArguments(List<String> jvmArguments) {
-    // Due to JPMS restrictions, Java11 or later need more flags:
+    // Due to JPMS restrictions, Java 9 or later need more flags:
     jvmArguments.add("--add-opens");
     jvmArguments.add("java.base/java.net=ALL-UNNAMED");
     jvmArguments.add("--add-opens");
