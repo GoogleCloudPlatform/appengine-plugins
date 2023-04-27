@@ -902,9 +902,10 @@ public class DevServerJava9OrAboveTest {
     Assert.assertEquals(17, DevServer.getJdkMajorVersion("17"));
     Assert.assertEquals(21, DevServer.getJdkMajorVersion("21"));
 
-    // This would be accepted for Java 8, but should expect them to be in
+    // These would be accepted for Java 8, but should expect them to be in
     // `java.specification.version` syntax
     Assert.assertEquals(8, DevServer.getJdkMajorVersion("1.8.0_181-google-v7"));
+    Assert.assertEquals(1, DevServer.getJdkMajorVersion("1.11"));
   }
 
   @Test

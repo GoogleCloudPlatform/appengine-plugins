@@ -153,13 +153,17 @@ public class DevServer {
 
   /**
    * Simple helper function to try and extract the major version specified. Very limited validation
-   * done to ensure that the projectJdkVersion is set properly and the value is decoded with best
+   * is done to ensure that the projectJdkVersion is set properly and the value is decoded with best
    * effort. Expected values should follow the {@code java.specification.version} System Property
    * syntax.
    *
    * <p>Value should be 1.8 or 9+ as the project's minimum supported version is Java 8. The
    * difference in format is due the specification format changing between after Java 8. Java 8 and
    * below is represented as 1.x and Java 9+ is represented as "x" (i.e. 9, 11, 17, 21...).
+   *
+   * <p>Note: Since very minimal validate is done to ensure a proper version is set, some JDK
+   * version values may pass (i.e. 1.8.0_181 -> 8, 1.11.0_181 -> 11, 1.11 -> 1) even if that is not
+   * an expected value.
    *
    * @param projectJdkVersion String value of JDK Version
    * @return the major version of JDK version
