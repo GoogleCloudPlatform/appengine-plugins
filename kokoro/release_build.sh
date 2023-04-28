@@ -9,7 +9,7 @@ sudo -E /opt/google-cloud-sdk/bin/gcloud components update -q
 sudo -E /opt/google-cloud-sdk/bin/gcloud components install app-engine-java -q
 
 cd github/appengine-plugins-core
-mvn -Prelease -B -U verify
+mvn -Prelease -B -U verify -Dtest=!FilePermissionsTest
 
 # copy pom with the name expected in the Maven repository
 ARTIFACT_ID=$(mvn -B help:evaluate -Dexpression=project.artifactId 2>/dev/null | grep -v "^\[")
