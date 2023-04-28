@@ -5,6 +5,8 @@ set -e
 # Display commands to stderr.
 set -x
 
+printenv
+
 sudo /opt/google-cloud-sdk/bin/gcloud components update
 sudo /opt/google-cloud-sdk/bin/gcloud components install app-engine-java
 
