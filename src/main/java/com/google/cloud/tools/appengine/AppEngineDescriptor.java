@@ -41,7 +41,7 @@ public class AppEngineDescriptor {
   private final Document document;
 
   // private to force use of parse method
-  private AppEngineDescriptor(Document document) {
+  protected AppEngineDescriptor(Document document) {
     this.document = document;
   }
 
