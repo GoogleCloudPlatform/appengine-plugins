@@ -275,7 +275,7 @@ public class AppEngineDescriptorTest {
       try {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
-        return new AppEngineDescriptor(documentBuilderFactory.newDocumentBuilder().parse(in));
+        return new UnsafeAppEngineDescriptor(documentBuilderFactory.newDocumentBuilder().parse(in));
       } catch (ParserConfigurationException exception) {
         throw new SAXException("Cannot parse appengine-web.xml", exception);
       }
