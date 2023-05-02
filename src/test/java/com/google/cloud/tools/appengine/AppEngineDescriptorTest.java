@@ -53,6 +53,12 @@ public class AppEngineDescriptorTest {
   private static final String RUNTIME = "<runtime>" + RUNTIME_ID + "</runtime>";
   private static final String ENVIRONMENT =
       "<env-variables><env-var name='keya' value='vala' /><env-var name='key2' value='val2' /><env-var name='keyc' value='valc' /></env-variables>";
+  private static final String DOCTYPE_TAG_WITHOUT_ENTITIES =
+      "<!DOCTYPE test [<!ELEMENT appengine-web-app ANY> ]>
+  private static final String DOCTYPE_TAG_WITH_ENTITIES =
+      "<!DOCTYPE test [<!ELEMENT appengine-web-app ANY> <!ENTITY suffix=\"-unwanted\" > ]>";
+  private static final String PROJECT_ID_WITH_ENTITY =
+      "<application>" + TEST_ID + "&suffix;" + "</application>"
 
   private static final String XML_WITHOUT_PROJECT_ID = ROOT_START_TAG + ROOT_END_TAG;
   private static final String XML_WITHOUT_VERSION = ROOT_START_TAG + PROJECT_ID + ROOT_END_TAG;
@@ -64,6 +70,12 @@ public class AppEngineDescriptorTest {
       ROOT_START_TAG + PROJECT_ID + COMMENT_AFTER_VERSION + ROOT_END_TAG;
   private static final String XML_WITH_VERSION_AND_PROJECT_ID_WRONG_NS =
       ROOT_START_TAG_WITH_INVALID_NS + PROJECT_ID + VERSION + ROOT_END_TAG;
+
+  private static final String XML_WITH_SAFE_DOCTYPE =
+      DOCTYPE_TAG_WITHOUT_ENTITIES + ROOT_START_TAG + PROJECT_ID_WITH_ENTITY + ROOT_END_TAG;
+  private static final String XML_WITH_UNSAFE_DOCTYPE =
+      DOCTYPE_TAG_WITH_ENTITIES + ROOT_START_TAG + PROJECT_ID_WITH_ENTITY + ROOT_END_TAG;
+
 
   @Test
   public void testParse_noProjectId() throws IOException, SAXException, AppEngineException {
@@ -217,6 +229,14 @@ public class AppEngineDescriptorTest {
         ImmutableMap.of("keya", "vala", "key2", "val2", "keyc", "valc");
 
     assertEquals(expectedEnvironment, environment);
+  }
+
+  @Test
+  public void testParse_documentWithEntities() throws IOException, SAXException, AppEngineException {
+    AppEngineDescriptor safeXmlDescriptor = parse(XML_WITH_SAFE_DOCTYPE);
+    AppEngineDescriptor unsafeXmlDescriptor = parse(XML_WITH_UNSAFE_DOCTYPE);
+
+    assertNull(descriptor.getProjectId());
   }
 
   private static AppEngineDescriptor parse(String xmlString) throws IOException, SAXException {

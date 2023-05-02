@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.DOMException;
@@ -35,6 +36,8 @@ import org.xml.sax.SAXException;
 public class AppEngineDescriptor {
 
   private static final String APP_ENGINE_NAMESPACE = "http://appengine.google.com/ns/1.0";
+  private static final String DISALLOW_DOCTYPE_DECLARATIONS =
+      "http://apache.org/xml/features/disallow-doctype-decl";
   private final Document document;
 
   // private to force use of parse method
@@ -55,6 +58,8 @@ public class AppEngineDescriptor {
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilderFactory.setNamespaceAware(true);
+      documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+      documentBuilderFactory.setFeature(DISALLOW_DOCTYPE_DECLARATIONS, true);
       return new AppEngineDescriptor(documentBuilderFactory.newDocumentBuilder().parse(in));
     } catch (ParserConfigurationException exception) {
       throw new SAXException("Cannot parse appengine-web.xml", exception);
