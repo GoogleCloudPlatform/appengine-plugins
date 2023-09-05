@@ -34,6 +34,8 @@ public class RunConfiguration {
   @Nullable private final Map<String, String> environment;
   @Nullable private final List<String> additionalArguments;
   @Nullable private final String projectId;
+  // Allow custom JDK version to be set
+  @Nullable private final String projectJdkVersion;
 
   private RunConfiguration(
       List<Path> services,
@@ -44,7 +46,8 @@ public class RunConfiguration {
       @Nullable String defaultGcsBucketName,
       @Nullable Map<String, String> environment,
       @Nullable List<String> additionalArguments,
-      @Nullable String projectId) {
+      @Nullable String projectId,
+      @Nullable String projectJdkVersion) {
     this.services = services;
     this.host = host;
     this.port = port;
@@ -54,6 +57,7 @@ public class RunConfiguration {
     this.environment = environment;
     this.additionalArguments = additionalArguments;
     this.projectId = projectId;
+    this.projectJdkVersion = projectJdkVersion;
   }
 
   /**
@@ -114,6 +118,15 @@ public class RunConfiguration {
     return projectId;
   }
 
+  /**
+   * Returns the Custom Project JDK Version users set. This value is expected to be in the format of
+   * {@code java.specification.version} system property.
+   */
+  @Nullable
+  public String getProjectJdkVersion() {
+    return projectJdkVersion;
+  }
+
   public static Builder builder(List<Path> services) {
     return new Builder(services);
   }
@@ -128,6 +141,7 @@ public class RunConfiguration {
     @Nullable private Map<String, String> environment;
     @Nullable private List<String> additionalArguments;
     @Nullable private String projectId;
+    @Nullable private String projectJdkVersion;
 
     private Builder(List<Path> services) {
       Preconditions.checkNotNull(services);
@@ -178,6 +192,22 @@ public class RunConfiguration {
       return this;
     }
 
+    /**
+     * Allows setting a custom JDK Version. This may be needed when the app engine runtime differs
+     * from runtime in JAVA_HOME. If not set, the Dev Server will use the JDK version found in the
+     * JAVA_HOME.
+     *
+     * <p>See https://github.com/GoogleCloudPlatform/appengine-plugins-core/issues/916 for an
+     * example use case
+     *
+     * @param projectJdkVersion JDK Versions in format of 1.8 or 9+
+     * @return RunConfigurations Builder
+     */
+    public Builder projectJdkVersion(@Nullable String projectJdkVersion) {
+      this.projectJdkVersion = projectJdkVersion;
+      return this;
+    }
+
     /** Build a {@link RunConfiguration}. */
     public RunConfiguration build() {
       return new RunConfiguration(
@@ -189,7 +219,8 @@ public class RunConfiguration {
           defaultGcsBucketName,
           environment,
           additionalArguments,
-          projectId);
+          projectId,
+          projectJdkVersion);
     }
   }
 
@@ -204,7 +235,8 @@ public class RunConfiguration {
             .host(host)
             .jvmFlags(getJvmFlags())
             .port(port)
-            .projectId(projectId);
+            .projectId(projectId)
+            .projectJdkVersion(projectJdkVersion);
     return builder;
   }
 }

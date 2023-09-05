@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 import javax.annotation.Nullable;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -51,7 +52,7 @@ public class AppYaml {
   public static AppYaml parse(InputStream input) throws AppEngineException {
     try {
       // our needs are simple so just load using primitive objects
-      Yaml yaml = new Yaml(new SafeConstructor());
+      Yaml yaml = new Yaml(new SafeConstructor(new LoaderOptions()));
       Map<String, ?> contents = (Map<String, ?>) yaml.load(input);
       return new AppYaml(contents);
     } catch (YAMLException ex) {

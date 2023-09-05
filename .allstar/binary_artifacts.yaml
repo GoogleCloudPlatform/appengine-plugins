@@ -1,0 +1,5 @@
+# Ignore reason: These artifacts are used in integration tests.
+ignorePaths:
+- src/test/resources/jars/complexLib.jar
+- src/test/resources/jars/complexLibMissingEntryManifest.jar
+- src/test/resources/jars/libs/simpleLib.jar

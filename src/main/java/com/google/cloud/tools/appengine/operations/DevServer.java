@@ -16,6 +16,8 @@
 
 package com.google.cloud.tools.appengine.operations;
 
+import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
+
 import com.google.cloud.tools.appengine.AppEngineDescriptor;
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.RunConfiguration;
@@ -80,6 +82,19 @@ public class DevServer {
       jvmArguments.addAll(config.getJvmFlags());
     }
 
+    // Check if the RunConfiguration has the Project JDK Version defined first
+    // The custom value takes priority over the System Property
+    String jdkVersionString = config.getProjectJdkVersion();
+    if (jdkVersionString == null) {
+      jdkVersionString = JAVA_SPECIFICATION_VERSION.value();
+    }
+    int jdkVersion = getJdkMajorVersion(jdkVersionString);
+    log.config(
+        String.format("JDK Version found: %s, Parsed to be %d", jdkVersionString, jdkVersion));
+    if (jdkVersion > 8) {
+      addJpmsRestrictionArguments(jvmArguments);
+    }
+
     arguments.addAll(DevAppServerArgs.get("default_gcs_bucket", config.getDefaultGcsBucketName()));
     arguments.addAll(DevAppServerArgs.get("application", config.getProjectId()));
 
@@ -134,6 +149,47 @@ public class DevServer {
     } catch (ProcessHandlerException | IOException ex) {
       throw new AppEngineException(ex);
     }
+  }
+
+  /**
+   * Simple helper function to try and extract the major version specified. Very limited validation
+   * is done to ensure that the projectJdkVersion is set properly and the value is decoded with best
+   * effort. Expected values should follow the {@code java.specification.version} System Property
+   * syntax.
+   *
+   * <p>Value should be 1.8 or 9+ as the project's minimum supported version is Java 8. The
+   * difference in format is due the specification format changing between after Java 8. Java 8 and
+   * below is represented as 1.x and Java 9+ is represented as "x" (i.e. 9, 11, 17, 21...).
+   *
+   * <p>Note: Since very minimal validate is done to ensure a proper version is set, some JDK
+   * version values may pass (i.e. 1.8.0_181 -> 8, 1.11.0_181 -> 11, 1.11 -> 1) even if that is not
+   * an expected value.
+   *
+   * @param projectJdkVersion String value of JDK Version
+   * @return the major version of JDK version
+   */
+  @VisibleForTesting
+  static int getJdkMajorVersion(String projectJdkVersion) {
+    String version = projectJdkVersion;
+    // If it starts with `1.`, expect it to be `1.8`
+    if (projectJdkVersion.startsWith("1.")) {
+      version = projectJdkVersion.substring(2, 3);
+    }
+    try {
+      return Integer.parseInt(version);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Unable to parse JDK Version: " + projectJdkVersion);
+    }
+  }
+
+  private void addJpmsRestrictionArguments(List<String> jvmArguments) {
+    // Due to JPMS restrictions, Java 9 or later need more flags:
+    jvmArguments.add("--add-opens");
+    jvmArguments.add("java.base/java.net=ALL-UNNAMED");
+    jvmArguments.add("--add-opens");
+    jvmArguments.add("java.base/sun.net.www.protocol.http=ALL-UNNAMED");
+    jvmArguments.add("--add-opens");
+    jvmArguments.add("java.base/sun.net.www.protocol.https=ALL-UNNAMED");
   }
 
   /** Stops the local development server. */

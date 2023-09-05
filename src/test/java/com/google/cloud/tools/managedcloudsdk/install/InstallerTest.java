@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -99,7 +99,7 @@ public class InstallerTest {
 
   @Test
   public void testCall_withOverrideComponents() throws Exception {
-    Set<String> overrides = new HashSet<>(Arrays.asList("mycomponent", "myothercomponent"));
+    Set<String> overrides = new LinkedHashSet<>(Arrays.asList("mycomponent", "myothercomponent"));
 
     new Installer(
             fakeSdkRoot,
