@@ -135,7 +135,6 @@ public class DevServerJava8Test {
 
   @Test
   public void testPrepareCommand_allFlags() throws Exception {
-
     RunConfiguration configuration =
         Mockito.spy(
             RunConfiguration.builder(ImmutableList.of(java8Service))
@@ -148,6 +147,7 @@ public class DevServerJava8Test {
                 .projectId("my-project")
                 .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
                 .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
+                .projectJdkVersion("1.8")
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();

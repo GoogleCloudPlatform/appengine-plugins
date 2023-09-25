@@ -17,6 +17,7 @@
 package com.google.cloud.tools.appengine.operations;
 
 import static com.google.common.base.StandardSystemProperty.JAVA_SPECIFICATION_VERSION;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assume.assumeTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -137,7 +138,6 @@ public class DevServerJava9OrAboveTest {
 
   @Test
   public void testPrepareCommand_allFlags() throws Exception {
-
     RunConfiguration configuration =
         Mockito.spy(
             RunConfiguration.builder(ImmutableList.of(java8Service))
@@ -150,6 +150,7 @@ public class DevServerJava9OrAboveTest {
                 .projectId("my-project")
                 .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
                 .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
+                .projectJdkVersion("11")
                 .build());
 
     SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
@@ -203,6 +204,67 @@ public class DevServerJava9OrAboveTest {
   }
 
   @Test
+  public void testPrepareCommand_allFlags_projectJDKVersionJava8() throws Exception {
+    RunConfiguration configuration =
+        Mockito.spy(
+            RunConfiguration.builder(ImmutableList.of(java8Service))
+                .host("host")
+                .port(8090)
+                .jvmFlags(ImmutableList.of("-Dflag1", "-Dflag2"))
+                .defaultGcsBucketName("buckets")
+                .environment(null)
+                .automaticRestart(true)
+                .projectId("my-project")
+                .environment(ImmutableMap.of("ENV_NAME", "ENV_VAL"))
+                .additionalArguments(Arrays.asList("--ARG1", "--ARG2"))
+                .projectJdkVersion("1.8")
+                .build());
+
+    SpyVerifier.newVerifier(configuration).verifyAllValuesNotNull();
+
+    List<String> expectedFlags =
+        ImmutableList.of(
+            "--address=host",
+            "--port=8090",
+            "--default_gcs_bucket=buckets",
+            "--application=my-project",
+            "--allow_remote_shutdown",
+            "--disable_update_check",
+            "--ARG1",
+            "--ARG2",
+            "--no_java_agent",
+            java8Service.toString());
+
+    List<String> expectedJvmArgs =
+        ImmutableList.of(
+            "-Dappengine.fullscan.seconds=1",
+            "-Dflag1",
+            "-Dflag2",
+            "-Duse_jetty9_runtime=true",
+            "-D--enable_all_permissions=true");
+
+    // Not us immutable map, it enforces order
+    Map<String, String> expectedEnvironment =
+        ImmutableMap.<String, String>builder()
+            .putAll(expectedJava8Environment)
+            .put("ENV_NAME", "ENV_VAL")
+            .build();
+
+    devServer.run(configuration);
+
+    verify(devAppServerRunner, times(1))
+        .run(
+            expectedJvmArgs,
+            expectedFlags,
+            expectedEnvironment,
+            java8Service /* workingDirectory */);
+
+    SpyVerifier.newVerifier(configuration)
+        .verifyDeclaredGetters(
+            ImmutableMap.of("getServices", 7, "getJavaHomeDir", 2, "getJvmFlags", 2));
+  }
+
+  @Test
   public void testPrepareCommand_booleanFlags()
       throws AppEngineException, ProcessHandlerException, IOException {
     RunConfiguration configuration =
@@ -220,6 +282,29 @@ public class DevServerJava9OrAboveTest {
             "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
             "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
             "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+    devServer.run(configuration);
+    verify(devAppServerRunner, times(1))
+        .run(
+            expectedJvmArgs,
+            expectedFlags,
+            expectedJava8Environment,
+            java8Service /* workingDirectory */);
+  }
+
+  @Test
+  public void testPrepareCommand_booleanFlags_projectJDKVersionJava8()
+      throws AppEngineException, ProcessHandlerException, IOException {
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service)).projectJdkVersion("1.8").build();
+
+    List<String> expectedFlags =
+        ImmutableList.of(
+            "--allow_remote_shutdown",
+            "--disable_update_check",
+            "--no_java_agent",
+            java8Service.toString());
+    List<String> expectedJvmArgs =
+        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
     devServer.run(configuration);
     verify(devAppServerRunner, times(1))
         .run(
@@ -249,6 +334,33 @@ public class DevServerJava9OrAboveTest {
             "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
             "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
             "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+
+    devServer.run(configuration);
+
+    verify(devAppServerRunner, times(1))
+        .run(
+            expectedJvmArgs,
+            expectedFlags,
+            expectedJava8Environment,
+            java8Service /* workingDirectory */);
+  }
+
+  @Test
+  public void testPrepareCommand_noFlags_projectJDKVersionJava8()
+      throws AppEngineException, ProcessHandlerException, IOException {
+
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service)).projectJdkVersion("1.8").build();
+
+    List<String> expectedFlags =
+        ImmutableList.of(
+            "--allow_remote_shutdown",
+            "--disable_update_check",
+            "--no_java_agent",
+            java8Service.toString());
+
+    List<String> expectedJvmArgs =
+        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     devServer.run(configuration);
 
@@ -292,6 +404,31 @@ public class DevServerJava9OrAboveTest {
   }
 
   @Test
+  public void testPrepareCommand_noFlagsJava7_projectJDKVersionJava8()
+      throws AppEngineException, ProcessHandlerException, IOException {
+
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java7Service)).projectJdkVersion("1.8").build();
+
+    List<String> expectedFlags =
+        ImmutableList.of(
+            "--allow_remote_shutdown", "--disable_update_check", java7Service.toString());
+    List<String> expectedJvmArgs =
+        ImmutableList.of(
+            "-javaagent:"
+                + fakeJavaSdkHome.resolve("agent/appengine-agent.jar").toAbsolutePath().toString());
+
+    devServer.run(configuration);
+
+    verify(devAppServerRunner, times(1))
+        .run(
+            expectedJvmArgs,
+            expectedFlags,
+            expectedJava7Environment,
+            java7Service /* workingDirectory */);
+  }
+
+  @Test
   public void testPrepareCommand_noFlagsMultiModule()
       throws AppEngineException, ProcessHandlerException, IOException {
 
@@ -320,6 +457,32 @@ public class DevServerJava9OrAboveTest {
   }
 
   @Test
+  public void testPrepareCommand_noFlagsMultiModule_projectJDKVersionJava8()
+      throws AppEngineException, ProcessHandlerException, IOException {
+
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java7Service, java8Service))
+            .projectJdkVersion("1.8")
+            .build();
+
+    List<String> expectedFlags =
+        ImmutableList.of(
+            "--allow_remote_shutdown",
+            "--disable_update_check",
+            "--no_java_agent",
+            java7Service.toString(),
+            java8Service.toString());
+
+    List<String> expectedJvmArgs =
+        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+
+    devServer.run(configuration);
+
+    verify(devAppServerRunner, times(1))
+        .run(expectedJvmArgs, expectedFlags, expectedJava8Environment, null /* workingDirectory */);
+  }
+
+  @Test
   public void testPrepareCommand_appEngineWebXmlEnvironmentVariables()
       throws AppEngineException, ProcessHandlerException, IOException {
     RunConfiguration configuration =
@@ -338,6 +501,42 @@ public class DevServerJava9OrAboveTest {
             "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
             "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
             "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+
+    Map<String, String> expectedConfigurationEnvironment =
+        ImmutableMap.of("key1", "val1", "key2", "val2");
+    Map<String, String> expectedEnvironment =
+        ImmutableMap.<String, String>builder()
+            .putAll(expectedConfigurationEnvironment)
+            .putAll(expectedJava8Environment)
+            .build();
+
+    devServer.run(configuration);
+
+    verify(devAppServerRunner, times(1))
+        .run(
+            expectedJvmArgs,
+            expectedFlags,
+            expectedEnvironment,
+            java8Service1EnvVars /* workingDirectory */);
+  }
+
+  @Test
+  public void testPrepareCommand_appEngineWebXmlEnvironmentVariables_projectJDKVersionJava8()
+      throws AppEngineException, ProcessHandlerException, IOException {
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars))
+            .projectJdkVersion("1.8")
+            .build();
+
+    List<String> expectedFlags =
+        ImmutableList.of(
+            "--allow_remote_shutdown",
+            "--disable_update_check",
+            "--no_java_agent",
+            java8Service1EnvVars.toString());
+
+    List<String> expectedJvmArgs =
+        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     Map<String, String> expectedConfigurationEnvironment =
         ImmutableMap.of("key1", "val1", "key2", "val2");
@@ -394,6 +593,40 @@ public class DevServerJava9OrAboveTest {
   }
 
   @Test
+  public void
+      testPrepareCommand_multipleServicesDuplicateAppEngineWebXmlEnvironmentVariables_projectJDKVersionJava8()
+          throws AppEngineException, ProcessHandlerException, IOException {
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars, java8Service2EnvVars))
+            .projectJdkVersion("1.8")
+            .build();
+
+    List<String> expectedFlags =
+        ImmutableList.of(
+            "--allow_remote_shutdown",
+            "--disable_update_check",
+            "--no_java_agent",
+            java8Service1EnvVars.toString(),
+            java8Service2EnvVars.toString());
+
+    List<String> expectedJvmArgs =
+        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+
+    Map<String, String> expectedConfigurationEnvironment =
+        ImmutableMap.of("key1", "val1", "keya", "vala", "key2", "duplicated-key", "keyc", "valc");
+    Map<String, String> expectedEnvironment =
+        ImmutableMap.<String, String>builder()
+            .putAll(expectedConfigurationEnvironment)
+            .putAll(expectedJava8Environment)
+            .build();
+
+    devServer.run(configuration);
+
+    verify(devAppServerRunner, times(1))
+        .run(expectedJvmArgs, expectedFlags, expectedEnvironment, null /* workingDirectory */);
+  }
+
+  @Test
   public void testPrepareCommand_clientSuppliedEnvironmentVariables()
       throws AppEngineException, ProcessHandlerException, IOException {
     Map<String, String> clientEnvironmentVariables =
@@ -434,6 +667,41 @@ public class DevServerJava9OrAboveTest {
   }
 
   @Test
+  public void testPrepareCommand_clientSuppliedEnvironmentVariables_projectJDKVersionJava8()
+      throws AppEngineException, ProcessHandlerException, IOException {
+    Map<String, String> clientEnvironmentVariables =
+        ImmutableMap.of("mykey1", "myval1", "mykey2", "myval2");
+
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java7Service))
+            .projectJdkVersion("1.8")
+            .environment(clientEnvironmentVariables)
+            .build();
+
+    Map<String, String> expectedEnvironment =
+        ImmutableMap.<String, String>builder()
+            .putAll(expectedJava7Environment)
+            .putAll(clientEnvironmentVariables)
+            .build();
+    List<String> expectedFlags =
+        ImmutableList.of(
+            "--allow_remote_shutdown", "--disable_update_check", java7Service.toString());
+    List<String> expectedJvmArgs =
+        ImmutableList.of(
+            "-javaagent:"
+                + fakeJavaSdkHome.resolve("agent/appengine-agent.jar").toAbsolutePath().toString());
+
+    devServer.run(configuration);
+
+    verify(devAppServerRunner, times(1))
+        .run(
+            expectedJvmArgs,
+            expectedFlags,
+            expectedEnvironment,
+            java7Service /* workingDirectory */);
+  }
+
+  @Test
   public void testPrepareCommand_clientSuppliedAndAppEngineWebXmlEnvironmentVariables()
       throws AppEngineException, ProcessHandlerException, IOException {
     Map<String, String> clientEnvironmentVariables =
@@ -457,6 +725,47 @@ public class DevServerJava9OrAboveTest {
             "--add-opens", "java.base/sun.net.www.protocol.http=ALL-UNNAMED",
             "--add-opens", "java.base/sun.net.www.protocol.https=ALL-UNNAMED",
             "-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
+
+    Map<String, String> appEngineEnvironment = ImmutableMap.of("key1", "val1", "key2", "val2");
+    Map<String, String> expectedEnvironment =
+        ImmutableMap.<String, String>builder()
+            .putAll(appEngineEnvironment)
+            .putAll(expectedJava8Environment)
+            .putAll(clientEnvironmentVariables)
+            .build();
+
+    devServer.run(configuration);
+
+    verify(devAppServerRunner, times(1))
+        .run(
+            expectedJvmArgs,
+            expectedFlags,
+            expectedEnvironment,
+            java8Service1EnvVars /* workingDirectory */);
+  }
+
+  @Test
+  public void
+      testPrepareCommand_clientSuppliedAndAppEngineWebXmlEnvironmentVariables_projectJDKVersionJava8()
+          throws AppEngineException, ProcessHandlerException, IOException {
+    Map<String, String> clientEnvironmentVariables =
+        ImmutableMap.of("mykey1", "myval1", "mykey2", "myval2");
+
+    RunConfiguration configuration =
+        RunConfiguration.builder(ImmutableList.of(java8Service1EnvVars))
+            .projectJdkVersion("1.8")
+            .environment(clientEnvironmentVariables)
+            .build();
+
+    List<String> expectedFlags =
+        ImmutableList.of(
+            "--allow_remote_shutdown",
+            "--disable_update_check",
+            "--no_java_agent",
+            java8Service1EnvVars.toString());
+
+    List<String> expectedJvmArgs =
+        ImmutableList.of("-Duse_jetty9_runtime=true", "-D--enable_all_permissions=true");
 
     Map<String, String> appEngineEnvironment = ImmutableMap.of("key1", "val1", "key2", "val2");
     Map<String, String> expectedEnvironment =
@@ -583,5 +892,33 @@ public class DevServerJava9OrAboveTest {
   @Test
   public void testGetGaeRuntimeJava_isNotJava8() {
     Assert.assertEquals("java7", DevServer.getGaeRuntimeJava(false));
+  }
+
+  @Test
+  public void testGetJdkVersion_isValid() {
+    Assert.assertEquals(8, DevServer.getJdkMajorVersion("1.8"));
+    Assert.assertEquals(9, DevServer.getJdkMajorVersion("9"));
+    Assert.assertEquals(11, DevServer.getJdkMajorVersion("11"));
+    Assert.assertEquals(17, DevServer.getJdkMajorVersion("17"));
+    Assert.assertEquals(21, DevServer.getJdkMajorVersion("21"));
+
+    // These would be accepted for Java 8, but should expect them to be in
+    // `java.specification.version` syntax
+    Assert.assertEquals(8, DevServer.getJdkMajorVersion("1.8.0_181-google-v7"));
+    Assert.assertEquals(1, DevServer.getJdkMajorVersion("1.11"));
+  }
+
+  @Test
+  public void testGetJdkVersion_isInvalid_throwsIllegalArgumentException() {
+    // May be valid JDK versions names, but should expect them in `java.specification.version`
+    // syntax
+    assertThrows(IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("11.0.0"));
+    assertThrows(IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("17.0.11"));
+    assertThrows(
+        IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("11.0.0_181-google-v7"));
+
+    assertThrows(IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("12abc"));
+    assertThrows(IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("as37.5"));
+    assertThrows(IllegalArgumentException.class, () -> DevServer.getJdkMajorVersion("1.a8s"));
   }
 }

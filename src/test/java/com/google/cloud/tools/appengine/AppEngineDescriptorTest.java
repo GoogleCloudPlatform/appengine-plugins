@@ -18,17 +18,24 @@ package com.google.cloud.tools.appengine;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class AppEngineDescriptorTest {
 
@@ -53,6 +60,13 @@ public class AppEngineDescriptorTest {
   private static final String RUNTIME = "<runtime>" + RUNTIME_ID + "</runtime>";
   private static final String ENVIRONMENT =
       "<env-variables><env-var name='keya' value='vala' /><env-var name='key2' value='val2' /><env-var name='keyc' value='valc' /></env-variables>";
+  private static final String INJECTED_MALICIOUS_ENTITY = "-bar";
+  private static final String DOCTYPE_TAG_WITH_ENTITIES =
+      "<!DOCTYPE test [<!ELEMENT appengine-web-app ANY> <!ENTITY suffix \""
+          + INJECTED_MALICIOUS_ENTITY
+          + "\" > ]>";
+  private static final String PROJECT_ID_WITH_ENTITY =
+      "<application>" + TEST_ID + "&suffix;" + "</application>";
 
   private static final String XML_WITHOUT_PROJECT_ID = ROOT_START_TAG + ROOT_END_TAG;
   private static final String XML_WITHOUT_VERSION = ROOT_START_TAG + PROJECT_ID + ROOT_END_TAG;
@@ -64,6 +78,9 @@ public class AppEngineDescriptorTest {
       ROOT_START_TAG + PROJECT_ID + COMMENT_AFTER_VERSION + ROOT_END_TAG;
   private static final String XML_WITH_VERSION_AND_PROJECT_ID_WRONG_NS =
       ROOT_START_TAG_WITH_INVALID_NS + PROJECT_ID + VERSION + ROOT_END_TAG;
+
+  private static final String XML_WITH_UNSAFE_DOCTYPE =
+      DOCTYPE_TAG_WITH_ENTITIES + ROOT_START_TAG + PROJECT_ID_WITH_ENTITY + ROOT_END_TAG;
 
   @Test
   public void testParse_noProjectId() throws IOException, SAXException, AppEngineException {
@@ -219,8 +236,49 @@ public class AppEngineDescriptorTest {
     assertEquals(expectedEnvironment, environment);
   }
 
+  @Test
+  public void testParse_documentWithEntities()
+      throws IOException, SAXException, AppEngineException {
+    AppEngineDescriptor unsafelyParsedXmlDescriptor = parseUnsafe(XML_WITH_UNSAFE_DOCTYPE);
+    assertEquals(TEST_ID + INJECTED_MALICIOUS_ENTITY, unsafelyParsedXmlDescriptor.getProjectId());
+    Exception thrownWhenParsingDoctype = null;
+    AppEngineDescriptor safelyParsedXmlDescriptor = null;
+    try {
+      safelyParsedXmlDescriptor = parse(XML_WITH_UNSAFE_DOCTYPE);
+    } catch (Exception ex) {
+      thrownWhenParsingDoctype = ex;
+    }
+    assertNull(safelyParsedXmlDescriptor);
+    assertNotNull(thrownWhenParsingDoctype);
+    assertTrue(thrownWhenParsingDoctype instanceof SAXParseException);
+    assertTrue(thrownWhenParsingDoctype.getMessage().contains("DOCTYPE is disallowed"));
+  }
+
   private static AppEngineDescriptor parse(String xmlString) throws IOException, SAXException {
     return AppEngineDescriptor.parse(
         new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
+  }
+
+  private static AppEngineDescriptor parseUnsafe(String xmlString)
+      throws IOException, SAXException {
+    return UnsafeAppEngineDescriptor.parse(
+        new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
+  }
+
+  private static class UnsafeAppEngineDescriptor extends AppEngineDescriptor {
+    private UnsafeAppEngineDescriptor(Document document) {
+      super(document);
+    }
+
+    public static AppEngineDescriptor parse(InputStream in) throws IOException, SAXException {
+      Preconditions.checkNotNull(in, "Null input");
+      try {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        return new UnsafeAppEngineDescriptor(documentBuilderFactory.newDocumentBuilder().parse(in));
+      } catch (ParserConfigurationException exception) {
+        throw new SAXException("Cannot parse appengine-web.xml", exception);
+      }
+    }
   }
 }
