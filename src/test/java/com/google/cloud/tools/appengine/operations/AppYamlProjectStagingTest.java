@@ -42,7 +42,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.ComparisonFailure;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -116,6 +115,11 @@ public class AppYamlProjectStagingTest {
     stageArchive_gen2StandardPath("java17");
   }
 
+  @Test
+  public void testStageArchive_java21StandardPath() throws IOException, AppEngineException {
+    stageArchive_gen2StandardPath("java21");
+  }
+
   private void stageArchive_gen2StandardPath(String runtime)
       throws IOException, AppEngineException {
     Files.write(
@@ -139,6 +143,11 @@ public class AppYamlProjectStagingTest {
   @Test
   public void testStageArchive_java17StandardBinaryPath() throws IOException, AppEngineException {
     stageArchive_gen2StandardBinaryPath("java17");
+  }
+
+  @Test
+  public void testStageArchive_java21StandardBinaryPath() throws IOException, AppEngineException {
+    stageArchive_gen2StandardBinaryPath("java21");
   }
 
   private void stageArchive_gen2StandardBinaryPath(String runtime)
@@ -172,6 +181,11 @@ public class AppYamlProjectStagingTest {
   @Test
   public void testStageArchive_java17BinaryWithoutEntrypoint() throws IOException {
     stageArchive_gen2BinaryWithoutEntrypoint("java17");
+  }
+
+  @Test
+  public void testStageArchive_java21BinaryWithoutEntrypoint() throws IOException {
+    stageArchive_gen2BinaryWithoutEntrypoint("java21");
   }
 
   private void stageArchive_gen2BinaryWithoutEntrypoint(String runtime) throws IOException {
