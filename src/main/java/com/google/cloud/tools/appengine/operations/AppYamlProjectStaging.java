@@ -254,10 +254,10 @@ public class AppYamlProjectStaging {
       Iterable<String> classpathEntries = Splitter.onPattern("\\s+").split(jarClassPath.trim());
       for (String classpathEntry : classpathEntries) {
         // classpath entries are relative to artifact's position and relativeness should be
-        // preserved
-        // in the target directory
-        Path jarSrc = artifact.getParent().resolve(classpathEntry);
-        if (!Files.isRegularFile(jarSrc)) {
+        // preserved in the target directory
+        Path jarSrc =
+            artifact.getParent() == null ? null : artifact.getParent().resolve(classpathEntry);
+        if (jarSrc == null || !Files.isRegularFile(jarSrc)) {
           log.warning("Could not copy 'Class-Path' jar: " + jarSrc + " referenced in MANIFEST.MF");
           continue;
         }

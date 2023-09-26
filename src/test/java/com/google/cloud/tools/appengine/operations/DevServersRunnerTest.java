@@ -39,6 +39,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("NullAway")
 public class DevServersRunnerTest {
 
   @Rule public TemporaryFolder testFolder = new TemporaryFolder();

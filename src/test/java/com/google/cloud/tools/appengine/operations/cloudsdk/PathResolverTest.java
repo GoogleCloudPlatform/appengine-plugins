@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
+@SuppressWarnings("NullAway")
 public class PathResolverTest {
 
   @ClassRule public static TemporaryFolder symlinkTestArea = new TemporaryFolder();
