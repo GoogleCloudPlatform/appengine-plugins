@@ -11,4 +11,5 @@ gcloud components update
 gcloud components install app-engine-java
 
 cd github/appengine-plugins-core
+
 ./mvnw clean install cobertura:cobertura -B -U -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss:SSS

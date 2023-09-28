@@ -14,6 +14,10 @@ unset JAVA_TOOL_OPTIONS
 update-java-alternatives -s /usr/lib/jvm/java-1.8.0-openjdk-amd64
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 
+# Use GCP Maven Mirror
+mkdir -p ${HOME}/.m2
+cp settings.xml ${HOME}/.m2
+
 if [ "$EUID" -ne 0 ]
 then
   # not running as root
