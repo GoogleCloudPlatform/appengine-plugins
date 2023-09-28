@@ -9,6 +9,11 @@ sudo -E /opt/google-cloud-sdk/bin/gcloud components update -q
 sudo -E /opt/google-cloud-sdk/bin/gcloud components install app-engine-java -q
 
 cd github/appengine-plugins-core
+
+# Use GCP Maven Mirror
+mkdir -p ${HOME}/.m2
+cp settings.xml ${HOME}/.m2
+
 mvn -Prelease -B -U verify -Dtest=!FilePermissionsTest
 
 # copy pom with the name expected in the Maven repository
