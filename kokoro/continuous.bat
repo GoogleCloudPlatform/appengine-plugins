@@ -11,6 +11,6 @@ copy settings.xml "%HOME%\.m2"
 call gcloud.cmd components update --quiet
 call gcloud.cmd components install app-engine-java --quiet
 
-call mvnw.cmd clean install cobertura:cobertura -B -U
+call mvnw.cmd clean install -B -U
 
 exit /b %ERRORLEVEL%

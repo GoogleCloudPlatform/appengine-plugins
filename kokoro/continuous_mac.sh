@@ -16,4 +16,4 @@ cd github/appengine-plugins-core
 mkdir -p ${HOME}/.m2
 cp settings.xml ${HOME}/.m2
 
-./mvnw clean install cobertura:cobertura -B -U
+./mvnw clean install -B -U

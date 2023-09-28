@@ -21,8 +21,8 @@ cp settings.xml ${HOME}/.m2
 if [ "$EUID" -ne 0 ]
 then
   # not running as root
-  ./mvnw clean install cobertura:cobertura -B -U
+  ./mvnw clean install -B -U
 else
   # running as root - skip file permissions tests that don't work on Docker
-  ./mvnw clean install cobertura:cobertura -B -U -Dtest=!FilePermissionsTest
+  ./mvnw clean install -B -U -Dtest=!FilePermissionsTest
 fi
