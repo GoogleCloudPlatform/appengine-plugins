@@ -158,31 +158,6 @@
       </plugin>
 
       <plugin>
-        <groupId>com.coveo</groupId>
-        <artifactId>fmt-maven-plugin</artifactId>
-        <version>2.4.0</version>
-        <!-- use fmt:format to auto format -->
-        <dependencies>
-          <dependency>
-            <groupId>com.google.googlejavaformat</groupId>
-            <artifactId>google-java-format</artifactId>
-            <version>1.7</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <displayFiles>true</displayFiles>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>initialize</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <version>5.1.9</version>
@@ -504,6 +479,42 @@
             <executions>
               <execution>
                 <phase>verify</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- Only run fmt-maven-plugin on Java 11+ that it supports currently -->
+      <id>code-formatter</id>
+      <activation>
+        <jdk>[1.11,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.coveo</groupId>
+            <artifactId>fmt-maven-plugin</artifactId>
+            <version>2.21.1</version>
+            <!-- use fmt:format to auto format -->
+            <dependencies>
+              <dependency>
+                <groupId>com.google.googlejavaformat</groupId>
+                <artifactId>google-java-format</artifactId>
+                <version>1.17.0</version>
+              </dependency>
+            </dependencies>
+            <configuration>
+              <displayFiles>true</displayFiles>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>initialize</phase>
                 <goals>
                   <goal>check</goal>
                 </goals>
