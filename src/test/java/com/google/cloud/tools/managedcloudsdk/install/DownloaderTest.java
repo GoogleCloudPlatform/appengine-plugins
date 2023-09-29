@@ -88,7 +88,7 @@ public class DownloaderTest {
   @Test
   public void testDownload() throws IOException, InterruptedException {
     Path destination = tmp.getRoot().toPath().resolve("destination-file");
-    long testFileSize = Downloader.BUFFER_SIZE * 10 + 1;
+    long testFileSize = 80 * 1024;
     Path testSourceFile = createTestRemoteResource(testFileSize);
     URL fakeRemoteResource = testSourceFile.toUri().toURL();
 
@@ -160,7 +160,7 @@ public class DownloaderTest {
   public void testDownload_interruptTriggersCleanup()
       throws IOException, InterruptedException, ExecutionException {
     Path destination = tmp.getRoot().toPath().resolve("destination-file");
-    long testFileSize = Downloader.BUFFER_SIZE * 10 + 1;
+    long testFileSize = 80 * 1024;
     Path testSourceFile = createTestRemoteResource(testFileSize);
     URL fakeRemoteResource = testSourceFile.toUri().toURL();
 
