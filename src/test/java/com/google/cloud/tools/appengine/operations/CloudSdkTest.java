@@ -131,12 +131,6 @@ public class CloudSdkTest {
   }
 
   @Test
-  public void testValidateAppEngineJavaComponents()
-      throws AppEngineJavaComponentsNotInstalledException, CloudSdkNotFoundException {
-    new CloudSdk.Builder().build().validateAppEngineJavaComponents();
-  }
-
-  @Test
   public void testGetWindowsPythonPath() {
     assertThat(sdk.getWindowsPythonPath().toString(), anyOf(is("python"), endsWith("python.exe")));
   }

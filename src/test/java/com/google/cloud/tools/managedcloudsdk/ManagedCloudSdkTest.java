@@ -16,6 +16,9 @@
 
 package com.google.cloud.tools.managedcloudsdk;
 
+import com.google.cloud.tools.appengine.operations.CloudSdk;
+import com.google.cloud.tools.appengine.operations.cloudsdk.AppEngineJavaComponentsNotInstalledException;
+import com.google.cloud.tools.appengine.operations.cloudsdk.CloudSdkNotFoundException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExecutionException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandExitException;
 import com.google.cloud.tools.managedcloudsdk.command.CommandRunner;
@@ -107,8 +110,8 @@ public class ManagedCloudSdkTest {
   @Test
   public void testManagedCloudSdk_latest()
       throws UnsupportedOsException, ManagedSdkVerificationException,
-          ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
-          CommandExitException, IOException, SdkInstallerException {
+      ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
+      CommandExitException, IOException, SdkInstallerException, CloudSdkNotFoundException, AppEngineJavaComponentsNotInstalledException {
     ManagedCloudSdk testSdk =
         new ManagedCloudSdk(Version.LATEST, userHome, OsInfo.getSystemOsInfo());
 
@@ -135,6 +138,8 @@ public class ManagedCloudSdkTest {
     testSdk
         .newComponentInstaller()
         .installComponent(testComponent, testProgressListener, testListener);
+
+    new CloudSdk.Builder().sdkPath(testSdk.getSdkHome()).build().validateAppEngineJavaComponents();
 
     Assert.assertTrue(testSdk.isInstalled());
     Assert.assertTrue(testSdk.hasComponent(testComponent));
