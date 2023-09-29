@@ -34,7 +34,7 @@ final class Downloader {
 
   private static final Logger logger = Logger.getLogger(Downloader.class.getName());
 
-  static final int BUFFER_SIZE = 1024 * 1024;
+  static final int BUFFER_SIZE = 8 * 1024;
   private final URL address;
   private final Path destinationFile;
   private final String userAgentString;

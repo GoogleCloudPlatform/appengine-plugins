@@ -5,9 +5,6 @@ set -e
 # Display commands to stderr.
 set -x
 
-sudo -E /opt/google-cloud-sdk/bin/gcloud components update -q
-sudo -E /opt/google-cloud-sdk/bin/gcloud components install app-engine-java -q
-
 cd github/appengine-plugins-core
 
 # Use GCP Maven Mirror
