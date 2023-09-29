@@ -11,7 +11,7 @@ cd github/appengine-plugins-core
 mkdir -p ${HOME}/.m2
 cp settings.xml ${HOME}/.m2
 
-mvn -Prelease -B -U verify -Dtest=!FilePermissionsTest
+mvn -Prelease -B -U verify -Dtest=!FilePermissionsTest -Dorg.slf4j.simpleLogger.showDateTime=true -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss:SSS
 
 # copy pom with the name expected in the Maven repository
 ARTIFACT_ID=$(mvn -B help:evaluate -Dexpression=project.artifactId 2>/dev/null | grep -v "^\[")
