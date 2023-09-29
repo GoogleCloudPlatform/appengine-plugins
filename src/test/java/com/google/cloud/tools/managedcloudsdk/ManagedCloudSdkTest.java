@@ -110,8 +110,9 @@ public class ManagedCloudSdkTest {
   @Test
   public void testManagedCloudSdk_latest()
       throws UnsupportedOsException, ManagedSdkVerificationException,
-      ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
-      CommandExitException, IOException, SdkInstallerException, CloudSdkNotFoundException, AppEngineJavaComponentsNotInstalledException {
+          ManagedSdkVersionMismatchException, InterruptedException, CommandExecutionException,
+          CommandExitException, IOException, SdkInstallerException, CloudSdkNotFoundException,
+          AppEngineJavaComponentsNotInstalledException {
     ManagedCloudSdk testSdk =
         new ManagedCloudSdk(Version.LATEST, userHome, OsInfo.getSystemOsInfo());
 
