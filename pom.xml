@@ -92,7 +92,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
-      <version>1.21</version>
+      <version>1.24.0</version>
     </dependency>
 
     <!-- test dependencies -->
@@ -291,7 +291,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.10.1</version>
+            <version>3.11.0</version>
             <configuration>
               <!-- For Java 8, the plugin is overridden below, without errorprone -->
               <source>1.8</source>
