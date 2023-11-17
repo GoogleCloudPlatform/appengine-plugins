@@ -30,7 +30,7 @@ public class CommandExitException extends Exception {
    * @param errorLog additional loggable error information
    */
   public CommandExitException(int exitCode, @Nullable String errorLog) {
-    super("Process failed with exit code: " + exitCode);
+    super("Process failed with exit code: " + exitCode + "\n" + errorLog);
     this.exitCode = exitCode;
     this.errorLog = errorLog;
   }
