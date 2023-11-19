@@ -110,7 +110,7 @@ public class CommandCallerTest {
       testCommandCaller.call(fakeCommand, fakeWorkingDirectory, fakeEnvironment);
       Assert.fail("CommandExitException expected but not found.");
     } catch (CommandExitException ex) {
-      Assert.assertEquals("Process failed with exit code: 10", ex.getMessage());
+      Assert.assertEquals("Process failed with exit code: 10\nstdout\nstderr", ex.getMessage());
       Assert.assertEquals(10, ex.getExitCode());
       Assert.assertEquals("stdout\nstderr", ex.getErrorLog());
     }
