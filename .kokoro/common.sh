@@ -15,22 +15,29 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
-set -xeov pipefail
+set -eov pipefail
 
 # Get secrets from keystore and set and environment variables
 setup_environment_secrets() {
+  echo "KOKORO_KEYSTORE_DIR: ${KOKORO_KEYSTORE_DIR}"
   GPG_PASSPHRASE=$(cat "${KOKORO_KEYSTORE_DIR}"/70247_maven-gpg-passphrase)
   export GPG_PASSPHRASE
+  echo "export GPG_PASSPHRASE successful."
   GPG_TTY=$(tty)
   export GPG_TTY
+  echo "export GPG_TTY successful."
   export GPG_HOMEDIR=${TMPDIR}/gpg
+  echo "GPG_HOMEDIR is ${GPG_HOMEDIR}"
   mkdir "${GPG_HOMEDIR}"
+  echo "GPG_HOMEDIR is ${GPG_HOMEDIR}"
   mv "${KOKORO_KEYSTORE_DIR}"/70247_maven-gpg-pubkeyring "${GPG_HOMEDIR}"/pubring.gpg
   mv "${KOKORO_KEYSTORE_DIR}"/70247_maven-gpg-keyring "${GPG_HOMEDIR}"/secring.gpg
   SONATYPE_USERNAME=$(cat "${KOKORO_KEYSTORE_DIR}"/70247_sonatype-credentials | cut -f1 -d'|')
   export SONATYPE_USERNAME
+  echo "export SONATYPE_USERNAME successful."
   SONATYPE_PASSWORD=$(cat "${KOKORO_KEYSTORE_DIR}"/70247_sonatype-credentials | cut -f2 -d'|')
   export SONATYPE_PASSWORD
+  echo "export SONATYPE_PASSWORD successful."
 }
 
 create_settings_xml_file() {
