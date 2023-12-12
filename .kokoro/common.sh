@@ -19,14 +19,18 @@ set -eov pipefail
 
 # Get secrets from keystore and set and environment variables
 setup_environment_secrets() {
-  export GPG_PASSPHRASE=$(cat ${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-passphrase)
-  export GPG_TTY=$(tty)
+  GPG_PASSPHRASE=$(cat "${KOKORO_KEYSTORE_DIR}"/70247_maven-gpg-passphrase)
+  export GPG_PASSPHRASE
+  GPG_TTY=$(tty)
+  export GPG_TTY
   export GPG_HOMEDIR=${TMPDIR}/gpg
-  mkdir $GPG_HOMEDIR
-  mv ${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-pubkeyring $GPG_HOMEDIR/pubring.gpg
-  mv ${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-keyring $GPG_HOMEDIR/secring.gpg
-  export SONATYPE_USERNAME=$(cat ${KOKORO_KEYSTORE_DIR}/70247_sonatype-credentials | cut -f1 -d'|')
-  export SONATYPE_PASSWORD=$(cat ${KOKORO_KEYSTORE_DIR}/70247_sonatype-credentials | cut -f2 -d'|')
+  mkdir "${GPG_HOMEDIR}"
+  mv "${KOKORO_KEYSTORE_DIR}"/70247_maven-gpg-pubkeyring "${GPG_HOMEDIR}"/pubring.gpg
+  mv "${KOKORO_KEYSTORE_DIR}"/70247_maven-gpg-keyring "${GPG_HOMEDIR}"/secring.gpg
+  SONATYPE_USERNAME=$(cat "${KOKORO_KEYSTORE_DIR}"/70247_sonatype-credentials | cut -f1 -d'|')
+  export SONATYPE_USERNAME
+  SONATYPE_PASSWORD=$(cat "${KOKORO_KEYSTORE_DIR}"/70247_sonatype-credentials | cut -f2 -d'|')
+  export SONATYPE_PASSWORD
 }
 
 create_settings_xml_file() {
@@ -48,5 +52,5 @@ create_settings_xml_file() {
       <password>${SONATYPE_PASSWORD}</password>
     </server>
   </servers>
-</settings>" > $1
+</settings>" > "$1"
 }
