@@ -23,9 +23,6 @@ setup_environment_secrets() {
   GPG_PASSPHRASE=$(cat "${KOKORO_KEYSTORE_DIR}"/70247_maven-gpg-passphrase)
   export GPG_PASSPHRASE
   echo "export GPG_PASSPHRASE successful."
-  GPG_TTY=$(tty)
-  export GPG_TTY
-  echo "export GPG_TTY successful."
   export GPG_HOMEDIR=${TMPDIR}/gpg
   echo "GPG_HOMEDIR is ${GPG_HOMEDIR}"
   mkdir "${GPG_HOMEDIR}"
