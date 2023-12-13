@@ -1,5 +1,5 @@
 # Format:
 # module:released-version:current-version
 
-appengine-plugins-core:0.10.0:0.10.1-SNAPSHOT
-app-maven-plugin:2.5.0:2.5.1-SNAPSHOT
+appengine-plugins-core:0.10.0:0.10.1
+app-maven-plugin:2.5.0:2.5.1
