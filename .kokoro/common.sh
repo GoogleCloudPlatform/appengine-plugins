@@ -25,9 +25,9 @@ setup_environment_secrets() {
   mkdir "${GPG_HOMEDIR}"
   mv "${KOKORO_KEYSTORE_DIR}"/70247_maven-gpg-pubkeyring "${GPG_HOMEDIR}"/pubring.gpg
   mv "${KOKORO_KEYSTORE_DIR}"/70247_maven-gpg-keyring "${GPG_HOMEDIR}"/secring.gpg
-  SONATYPE_USERNAME=$(cat "${KOKORO_KEYSTORE_DIR}"/72743_sonatype_username)
+  SONATYPE_USERNAME=$(cat "${KOKORO_KEYSTORE_DIR}"/70247_sonatype-credentials | cut -f1 -d'|')
   export SONATYPE_USERNAME
-  SONATYPE_PASSWORD=$(cat "${KOKORO_KEYSTORE_DIR}"/72743_sonatype_password)
+  SONATYPE_PASSWORD=$(cat "${KOKORO_KEYSTORE_DIR}"/70247_sonatype-credentials | cut -f2 -d'|')
   export SONATYPE_PASSWORD
 }
 
