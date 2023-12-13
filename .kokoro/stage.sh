@@ -28,8 +28,6 @@ MAVEN_SETTINGS_FILE=$(realpath .)/settings.xml
 setup_environment_secrets
 create_settings_xml_file "${MAVEN_SETTINGS_FILE}"
 
-echo "${KOKORO_KEYSTORE_DIR}"
-
 # Use GCP Maven Mirror
 mkdir -p "${HOME}"/.m2
 cp settings.xml "${HOME}"/.m2
@@ -45,17 +43,18 @@ gcloud components install app-engine-java --quiet
 --batch-mode \
 --settings "${MAVEN_SETTINGS_FILE}" \
 -DskipTests=true \
+-DperformRelease=true \
 -Dgpg.executable=gpg \
 -Dgpg.passphrase="${GPG_PASSPHRASE}" \
--Dgpg.homedir="${GPG_HOMEDIR}" \
--Prelease
+-Dgpg.homedir="${GPG_HOMEDIR}"
 
 # promote release
 if [[ -n "${AUTORELEASE_PR}" ]]; then
   ./mvnw nexus-staging:release \
   --batch-mode \
   --settings "${MAVEN_SETTINGS_FILE}" \
-  -Prelease
+  --activate-profiles release-staging-repository \
+  -DperformRelease=true
 fi
 
 popd
