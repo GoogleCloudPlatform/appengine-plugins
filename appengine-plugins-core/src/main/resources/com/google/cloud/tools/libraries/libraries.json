@@ -786,6 +786,39 @@
     ]
   },
 {
+  "name": "Phishing Protection",
+  "id": "phishingprotection",
+  "serviceName": "phishingprotection.googleapis.com",
+  "serviceRoles": [
+    "roles/cloudiot.admin",
+    "roles/cloudiot.deviceController",
+    "roles/cloudiot.editor",
+    "roles/cloudiot.provisioner",
+    "roles/cloudiot.viewer",
+    "roles/cloudiot.serviceAgent"
+  ],
+  "documentation": "https://cloud.google.com/phishing-protection/docs/apis",
+  "description": "A phishing countermeasure that helps to detect phishing attacks.",
+  "transports": ["grpc"],
+  "clients": [
+    {
+      "name": "Java Client Libraries for Phishing Protection",
+      "language": "java",
+      "site": "https://cloud.google.com/phishing-protection",
+      "apireference": "https://googleapis.dev/java/google-cloud-clients/latest/index.html?com/google/cloud/phishingprotection/v1beta1/package-summary.html",
+      "infotip": "The com.google.cloud.phishingprotection packages",
+      "launchStage": "beta",
+      "source": "https://github.com/googleapis/java-phishingprotection",
+      "languageLevel": "1.7.0",
+      "mavenCoordinates": {
+        "groupId": "com.google.cloud",
+        "artifactId": "google-cloud-phishingprotection",
+        "version": "0.25.0"
+      }
+    }
+  ]
+},
+{
     "name": "reCAPTCHA Enterprise",
     "id": "recaptcha",
     "serviceName": "recaptchaenterprise.googleapis.com",
