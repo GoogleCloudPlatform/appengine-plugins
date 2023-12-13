@@ -12,6 +12,42 @@
     This Maven plugin provides goals to build and deploy Google App Engine applications.
   </description>
 
+  <organization>
+    <name>Google LLC</name>
+    <url>https://www.google.com</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>The Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>joaomartins</id>
+      <name>João Martins</name>
+      <email>joaomartins@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+    </developer>
+    <developer>
+      <id>appu</id>
+      <name>Appu Goundan</name>
+      <email>appu@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+    </developer>
+    <developer>
+      <id>meltsufin</id>
+      <name>Mike Eltsufin</name>
+      <email>meltsufin@google.com</email>
+      <organization>Google</organization>
+      <organizationUrl>http://www.google.com</organizationUrl>
+    </developer>
+  </developers>
+
   <scm>
     <connection>scm:git:https://github.com/GoogleCloudPlatform/app-maven-plugin.git
     </connection>
