@@ -36,15 +36,6 @@ cp settings.xml "${HOME}"/.m2
 
 gcloud components install app-engine-java --quiet
 
-# run unit tests
-./mvnw -B -U \
---fail-at-end \
--DskipITs clean \
--Dtest=!FilePermissionsTest \
--Dorg.slf4j.simpleLogger.showDateTime=true \
--Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss:SSS \
-install
-
 # stage release
 ./mvnw clean deploy \
 -Dorg.slf4j.simpleLogger.showDateTime=true \
