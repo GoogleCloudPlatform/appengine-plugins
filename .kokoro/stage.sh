@@ -34,27 +34,34 @@ cp settings.xml "${HOME}"/.m2
 
 gcloud components install app-engine-java --quiet
 
+echo "Staging a release"
 # stage release
 ./mvnw clean deploy \
--Dorg.slf4j.simpleLogger.showDateTime=true \
--Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss:SSS \
---show-version \
---no-transfer-progress \
---batch-mode \
---settings "${MAVEN_SETTINGS_FILE}" \
--DskipTests=true \
--DperformRelease=true \
--Dgpg.executable=gpg \
--Dgpg.passphrase="${GPG_PASSPHRASE}" \
--Dgpg.homedir="${GPG_HOMEDIR}"
+  -Dorg.slf4j.simpleLogger.showDateTime=true \
+  -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss:SSS \
+  --show-version \
+  --no-transfer-progress \
+  --batch-mode \
+  --settings "${MAVEN_SETTINGS_FILE}" \
+  -DskipTests=true \
+  -DperformRelease=true \
+  -Dgpg.executable=gpg \
+  -Dgpg.passphrase="${GPG_PASSPHRASE}" \
+  -Dgpg.homedir="${GPG_HOMEDIR}"
+
+echo "Successfully finished 'mvn deploy'"
 
 # promote release
 if [[ -n "${AUTORELEASE_PR}" ]]; then
+  echo "Promoting the staged repository"
   ./mvnw nexus-staging:release \
-  --batch-mode \
-  --settings "${MAVEN_SETTINGS_FILE}" \
-  --activate-profiles release-staging-repository \
-  -DperformRelease=true
+    --batch-mode \
+    --settings "${MAVEN_SETTINGS_FILE}" \
+    --activate-profiles release-staging-repository \
+    -DperformRelease=true
+  echo "Successfully finished 'mvn nexus-staging:release'"
+else
+  echo "AUTORELEASE_PR environment variable is not set (probably testing something). Not promoting the staged repository."
 fi
 
 popd
