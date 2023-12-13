@@ -40,6 +40,8 @@ gcloud components install app-engine-java --quiet
 ./mvnw clean deploy \
 -Dorg.slf4j.simpleLogger.showDateTime=true \
 -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss:SSS \
+--show-version \
+--no-transfer-progress \
 --batch-mode \
 --settings "${MAVEN_SETTINGS_FILE}" \
 -DskipTests=true \
