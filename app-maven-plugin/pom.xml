@@ -11,6 +11,7 @@
   <description>
     This Maven plugin provides goals to build and deploy Google App Engine applications.
   </description>
+  <url>https://github.com/GoogleCloudPlatform/appengine-plugins/tree/main/app-maven-plugin</url>
 
   <organization>
     <name>Google LLC</name>
