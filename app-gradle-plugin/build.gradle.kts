@@ -19,6 +19,8 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
  *
  */
 
+project.version = "2.5.2-SNAPSHOT" // {x-version-update:app-gradle-plugin:current}
+
 plugins {
   id("java")
   id("maven")
