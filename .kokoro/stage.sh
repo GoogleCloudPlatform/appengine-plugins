@@ -64,4 +64,9 @@ else
   echo "AUTORELEASE_PR environment variable is not set (probably testing something). Not promoting the staged repository."
 fi
 
+# release app-gradle-plugin
+pushd app-gradle-plugin
+./gradlew check prepareRelease
+popd
+
 popd

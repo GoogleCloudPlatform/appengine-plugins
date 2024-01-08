@@ -17,4 +17,3 @@ mvn -Prelease -B -U verify -Dtest=!FilePermissionsTest -Dorg.slf4j.simpleLogger.
 ARTIFACT_ID=$(mvn -B help:evaluate -Dexpression=project.artifactId 2>/dev/null | grep -v "^\[")
 PROJECT_VERSION=$(mvn -B help:evaluate -Dexpression=project.version 2>/dev/null| grep -v "^\[")
 cp pom.xml target/${ARTIFACT_ID}-${PROJECT_VERSION}.pom
-
