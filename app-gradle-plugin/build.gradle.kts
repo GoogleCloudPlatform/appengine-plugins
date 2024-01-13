@@ -1,6 +1,7 @@
 import net.researchgate.release.GitAdapter.GitConfig
 import java.util.Date
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+import java.beans.EventHandler.create
 
 /*
  * Copyright 2022 Google LLC. All Rights Reserved.
@@ -19,7 +20,8 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
  *
  */
 
-project.version = "2.5.2-SNAPSHOT" // {x-version-update:app-gradle-plugin:current}
+group = "com.google.cloud.tools"
+version = "2.5.2-SNAPSHOT" // {x-version-update:app-gradle-plugin:current}
 
 plugins {
   id("java")
@@ -29,6 +31,8 @@ plugins {
   id("com.github.sherter.google-java-format") version "0.9"
   id("checkstyle")
   id("jacoco")
+  id("maven-publish")
+  id("signing")
 }
 
 repositories {
@@ -41,8 +45,6 @@ java {
   targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-group = "com.google.cloud.tools"
-
 dependencies {
   implementation(localGroovy())
   implementation(gradleApi())
@@ -53,7 +55,6 @@ dependencies {
   testImplementation("org.hamcrest:hamcrest-library:2.2")
   testImplementation("org.mockito:mockito-core:4.11.0")
 }
-
 
 tasks.wrapper {
   gradleVersion = "6.9"
@@ -195,6 +196,32 @@ release {
     this as GitConfig
     requireBranch = """^release-v\d+.*$"""  //regex
   }
+}
+
+publishing {
+  publications {
+    create<MavenPublication>("mavenJava") {
+      artifactId = "appengine-gradle-plugin"
+      from(components["java"])
+    }
+  }
+  repositories {
+    maven {
+      url = uri("https://google.oss.sonatype.org/service/local/staging/deploy/maven2/")
+      credentials {
+        username = findProperty("ossrhUsername").toString()
+        password = findProperty("ossrhPassword").toString()
+      }
+    }
+  }
+}
+
+signing {
+  setRequired({ gradle.taskGraph.hasTask(":${name}:publishToSonatype") })
+  if (project.hasProperty("signing.gnupg.executable")) {
+    useGpgCmd()
+  }
+  sign(publishing.publications["mavenJava"])
 }
 /* RELEASING */
 

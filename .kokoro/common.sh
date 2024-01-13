@@ -52,3 +52,14 @@ create_settings_xml_file() {
   </servers>
 </settings>" > "$1"
 }
+
+create_gradle_properties_file() {
+  echo "
+signing.gnupg.executable=gpg
+signing.gnupg.homeDir=${GPG_HOMEDIR}
+signing.gnupg.keyName=${GPG_KEY_ID}
+signing.gnupg.passphrase=${GPG_PASSPHRASE}
+
+ossrhUsername=${SONATYPE_USERNAME}
+ossrhPassword=${SONATYPE_PASSWORD}" > $1
+}
