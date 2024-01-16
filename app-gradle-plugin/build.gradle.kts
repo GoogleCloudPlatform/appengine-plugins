@@ -217,7 +217,7 @@ publishing {
 }
 
 signing {
-  setRequired({ gradle.taskGraph.hasTask(":${name}:publishToSonatype") })
+  setRequired({ gradle.taskGraph.hasTask(":${name}:publishMavenJavaPublicationToMavenRepository") })
   if (project.hasProperty("signing.gnupg.executable")) {
     useGpgCmd()
   }

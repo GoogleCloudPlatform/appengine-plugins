@@ -69,10 +69,10 @@ GRADLE_SETTING_FILE=$(realpath .)/app-gradle-plugin/gradle.properties
 create_gradle_properties_file "${GRADLE_SETTING_FILE}"
 pushd app-gradle-plugin
 if [[ -n "${AUTORELEASE_PR}" ]]; then
-  ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
-  echo "Successfully finished './gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository'"
+  ./gradlew publishMavenJavaPublicationToMavenRepository
+  echo "Successfully finished './gradlew publishMavenJavaPublicationToMavenRepository'"
 else
-  ./gradlew publishToSonatype
+  ./gradlew publishMavenJavaPublicationToMavenLocal
 fi
 popd # app-gradle-plugin
 popd # repository root
