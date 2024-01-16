@@ -23,10 +23,12 @@ source "${dir}"/common.sh
 
 pushd "${dir}"/../
 
+# Set up environment variables used in release.
 MAVEN_SETTINGS_FILE=$(realpath .)/settings.xml
-
+GRADLE_SETTING_FILE=$(realpath .)/app-gradle-plugin/gradle.properties
 setup_environment_secrets
 create_settings_xml_file "${MAVEN_SETTINGS_FILE}"
+create_gradle_properties_file "${GRADLE_SETTING_FILE}"
 
 # Use GCP Maven Mirror
 mkdir -p "${HOME}"/.m2
@@ -34,6 +36,17 @@ cp settings.xml "${HOME}"/.m2
 
 gcloud components install app-engine-java --quiet
 
+# Release app-gradle-plugin
+pushd app-gradle-plugin
+if [[ -n "${AUTORELEASE_PR}" ]]; then
+  ./gradlew publishMavenJavaPublicationToMavenRepository
+  echo "Successfully finished './gradlew publishMavenJavaPublicationToMavenRepository'"
+else
+  ./gradlew publishMavenJavaPublicationToMavenLocal
+fi
+popd # app-gradle-plugin
+
+# Release app-maven-plugin
 echo "Staging a release"
 # stage release
 ./mvnw clean deploy \
@@ -64,15 +77,4 @@ else
   echo "AUTORELEASE_PR environment variable is not set (probably testing something). Not promoting the staged repository."
 fi
 
-# release app-gradle-plugin
-GRADLE_SETTING_FILE=$(realpath .)/app-gradle-plugin/gradle.properties
-create_gradle_properties_file "${GRADLE_SETTING_FILE}"
-pushd app-gradle-plugin
-if [[ -n "${AUTORELEASE_PR}" ]]; then
-  ./gradlew publishMavenJavaPublicationToMavenRepository
-  echo "Successfully finished './gradlew publishMavenJavaPublicationToMavenRepository'"
-else
-  ./gradlew publishMavenJavaPublicationToMavenLocal
-fi
-popd # app-gradle-plugin
 popd # repository root
