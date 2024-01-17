@@ -1,3 +1,5 @@
 primaryBranch: main
 releaseType: java-yoshi
 handleGHRelease: true
+manifest: true
+extraFiles: ["app-gradle-plugin/build.gradle.kts" ]
