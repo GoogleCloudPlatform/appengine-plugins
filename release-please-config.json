@@ -5,7 +5,7 @@
   "group-pull-request-title-pattern": "chore(${branch}): release ${version}",
   "packages": {
     ".": {
-      "extraFiles": ["app-gradle-plugin/build.gradle.kts"]
+      "extra-files": ["app-gradle-plugin/build.gradle.kts"]
     }
   }
 }
