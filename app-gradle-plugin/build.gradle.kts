@@ -205,7 +205,32 @@ publishing {
       from(components["java"])
       artifact(tasks.named("sourceJar"))
       artifact(tasks.named("javadocJar"))
-      artifact(tasks.named("writePom"))
+
+      pom {
+        name.set("App Engine Gradle Plugin")
+        description.set("This Gradle plugin provides tasks to build and deploy Google App Engine applications.")
+        url.set("https://github.com/GoogleCloudPlatform/appengine-plugins")
+        inceptionYear.set("2016")
+        licenses {
+          license {
+            name.set("The Apache Software License, Version 2.0")
+            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+            distribution.set("repo")
+          }
+        }
+        developers {
+          developer {
+            id.set("loosebazooka")
+            name.set("Appu Goundan")
+            email.set("appu@google.com")
+          }
+        }
+        scm {
+          connection.set("https://github.com/GoogleCloudPlatform/appengine-plugins")
+          developerConnection.set("scm:git://github.com/GoogleCloudPlatform/appengine-plugins.git")
+          url.set("https://github.com/GoogleCloudPlatform/appengine-plugins")
+        }
+      }
     }
   }
 }
