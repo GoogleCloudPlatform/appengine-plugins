@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.6.0...v2.7.0) (2024-01-18)
+
+
+### Features
+
+* add sonatype repo ([#982](https://github.com/GoogleCloudPlatform/appengine-plugins/issues/982)) ([e736975](https://github.com/GoogleCloudPlatform/appengine-plugins/commit/e736975a15ad562376598e971178fae103801f1c))
+
 ## [2.6.0](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.5.1...v2.6.0) (2024-01-17)
 
 
