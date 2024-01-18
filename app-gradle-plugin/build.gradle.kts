@@ -1,7 +1,6 @@
 import net.researchgate.release.GitAdapter.GitConfig
 import java.util.Date
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-import java.beans.EventHandler.create
 
 /*
  * Copyright 2022 Google LLC. All Rights Reserved.
@@ -32,6 +31,7 @@ plugins {
   id("checkstyle")
   id("jacoco")
   id("maven-publish")
+  id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
   id("signing")
 }
 
@@ -146,7 +146,7 @@ project.afterEvaluate {
               "name"("App Engine Gradle Plugin")
               "description"("This Gradle plugin provides tasks to build and deploy Google App Engine applications.")
 
-              "url"("https://github.com/GoogleCloudPlatform/app-gradle-plugin")
+              "url"("https://github.com/GoogleCloudPlatform/appengine-plugins")
               "inceptionYear"("2016")
 
               "scm" {
@@ -203,21 +203,26 @@ publishing {
     create<MavenPublication>("mavenJava") {
       artifactId = "appengine-gradle-plugin"
       from(components["java"])
+      artifact(tasks.named("sourceJar"))
+      artifact(tasks.named("javadocJar"))
+      artifact(tasks.named("writePom"))
     }
   }
+}
+
+nexusPublishing {
   repositories {
-    maven {
-      url = uri("https://google.oss.sonatype.org/service/local/staging/deploy/maven2/")
-      credentials {
-        username = findProperty("ossrhUsername").toString()
-        password = findProperty("ossrhPassword").toString()
-      }
+    sonatype {
+      nexusUrl.set(uri("https://google.oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://google.oss.sonatype.org/content/repositories/snapshots"))
+      username.set("ossrhUsername")
+      password.set("ossrhPassword")
     }
   }
 }
 
 signing {
-  setRequired({ gradle.taskGraph.hasTask(":${name}:publishMavenJavaPublicationToMavenRepository") })
+  setRequired({ gradle.taskGraph.hasTask(":${name}:publishToSonatype") })
   if (project.hasProperty("signing.gnupg.executable")) {
     useGpgCmd()
   }
