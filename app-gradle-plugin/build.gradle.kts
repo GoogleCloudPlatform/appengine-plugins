@@ -120,7 +120,6 @@ tasks.register<Test>("integTest") {
 }
 /* TESTING */
 
-
 /* RELEASING */
 tasks.register<Jar>("sourceJar") {
   from(sourceSets.main.get().allJava)
@@ -133,63 +132,7 @@ tasks.register<Jar>("javadocJar") {
   archiveClassifier.set("javadoc")
 }
 
-project.afterEvaluate {
-  tasks.register("writePom") {
-    val outputFile = file("$buildDir/pom/${project.name}-${project.version}.pom")
-    outputs.file(outputFile)
-
-    doLast {
-      maven {
-        pom {
-          project {
-            withGroovyBuilder {
-              "name"("App Engine Gradle Plugin")
-              "description"("This Gradle plugin provides tasks to build and deploy Google App Engine applications.")
-
-              "url"("https://github.com/GoogleCloudPlatform/appengine-plugins")
-              "inceptionYear"("2016")
-
-              "scm" {
-                "url"("https://github.com/GoogleCloudPlatform/app-gradle-plugin")
-                "connection"("scm:https://github.com/GoogleCloudPlatform/app-gradle-plugin.git")
-                "developerConnection"("scm:git://github.com/GoogleCloudPlatform/app-gradle-plugin.git")
-              }
-
-              "licenses" {
-                "license" {
-                  "name"("The Apache Software License, Version 2.0")
-                  "url"("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                  "distribution"("repo")
-                }
-              }
-              "developers" {
-                "developer" {
-                  "id"("loosebazooka")
-                  "name"("Appu Goundan")
-                  "email"("appu@google.com")
-                }
-              }
-            }
-          }
-        }.writeTo(outputFile)
-      }
-    }
-  }
-}
-
-
 // for kokoro releases
-tasks.register<Sync>("prepareRelease") {
-  from(tasks.jar)
-  from(tasks.named("sourceJar"))
-  from(tasks.named("javadocJar"))
-  from(tasks.named("writePom"))
-
-  into("${buildDir}/release-artifacts")
-
-  dependsOn(tasks.build)
-}
-
 release {
   tagTemplate = "v\$version"
   getProperty("git").apply {
