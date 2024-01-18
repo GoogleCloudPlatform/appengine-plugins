@@ -240,8 +240,10 @@ nexusPublishing {
     sonatype {
       nexusUrl.set(uri("https://google.oss.sonatype.org/service/local/"))
       snapshotRepositoryUrl.set(uri("https://google.oss.sonatype.org/content/repositories/snapshots"))
-      username.set("ossrhUsername")
-      password.set("ossrhPassword")
+      if (project.hasProperty("ossrhUsername")) {
+        username.set(project.property("ossrhUsername").toString())
+        password.set(project.property("ossrhPassword").toString())
+      }
     }
   }
 }
