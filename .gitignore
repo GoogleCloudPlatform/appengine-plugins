@@ -1,22 +1,14 @@
 **/*.iml
 target/
-.idea/modules.xml
-.idea/misc.xml
-.idea/compiler.xml
-.idea/vcs.xml
-.idea/uiDesigner.xml
-.idea/encodings.xml
-.idea/libraries/
-.idea/workspace.xml
-.idea/jarRepositories.xml
-.idea/codeStyles/Project.xml
-.idea/codeStyles/codeStyleConfig.xml
+.idea/*
 .classpath
 .project
 .settings/*
 .metadata/*
 .DS_Store
 .checkstyle
+.mvn/wrapper/maven-wrapper.jar
+app-maven-plugin/installPlugin.txt
 app-gradle-plugin/.gradle/
 app-gradle-plugin/build/
 

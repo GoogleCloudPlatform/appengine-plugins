@@ -23,7 +23,7 @@ group = "com.google.cloud.tools"
 version = "2.7.1-SNAPSHOT" // {x-version-update:app-gradle-plugin:current}
 
 plugins {
-  id("java")
+  id("java-library")
   id("maven")
   id("java-gradle-plugin")
   id("net.researchgate.release") version "2.6.0"
@@ -145,8 +145,7 @@ publishing {
   publications {
     create<MavenPublication>("mavenJava") {
       artifactId = "appengine-gradle-plugin"
-      artifact(tasks.named("sourceJar"))
-      artifact(tasks.named("javadocJar"))
+      from(components["java"])
 
       pom {
         name.set("App Engine Gradle Plugin")
