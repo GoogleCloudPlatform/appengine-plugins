@@ -121,16 +121,16 @@ tasks.register<Test>("integTest") {
 /* TESTING */
 
 /* RELEASING */
-tasks.register<Jar>("sourceJar") {
-  from(sourceSets.main.get().allJava)
-  archiveClassifier.set("sources")
-}
-
-tasks.register<Jar>("javadocJar") {
-  dependsOn(tasks.javadoc)
-  from(tasks.javadoc.map { it.destinationDir!! })
-  archiveClassifier.set("javadoc")
-}
+//tasks.register<Jar>("sourceJar") {
+//  from(sourceSets.main.get().allJava)
+//  archiveClassifier.set("sources")
+//}
+//
+//tasks.register<Jar>("javadocJar") {
+//  dependsOn(tasks.javadoc)
+//  from(tasks.javadoc.map { it.destinationDir!! })
+//  archiveClassifier.set("javadoc")
+//}
 
 // for kokoro releases
 release {
