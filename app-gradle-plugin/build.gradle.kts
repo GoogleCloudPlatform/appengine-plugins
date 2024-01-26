@@ -121,16 +121,16 @@ tasks.register<Test>("integTest") {
 /* TESTING */
 
 /* RELEASING */
-//tasks.register<Jar>("sourceJar") {
-//  from(sourceSets.main.get().allJava)
-//  archiveClassifier.set("sources")
-//}
-//
-//tasks.register<Jar>("javadocJar") {
-//  dependsOn(tasks.javadoc)
-//  from(tasks.javadoc.map { it.destinationDir!! })
-//  archiveClassifier.set("javadoc")
-//}
+tasks.register<Jar>("sourceJar") {
+  from(sourceSets.main.get().allJava)
+  archiveClassifier.set("sources")
+}
+
+tasks.register<Jar>("javadocJar") {
+  dependsOn(tasks.javadoc)
+  from(tasks.javadoc.map { it.destinationDir!! })
+  archiveClassifier.set("javadoc")
+}
 
 // for kokoro releases
 release {
@@ -143,9 +143,8 @@ release {
 
 publishing {
   publications {
-    create<MavenPublication>("mavenJava") {
+    create<MavenPublication>("pluginMaven") {
       artifactId = "appengine-gradle-plugin"
-      from(components["java"])
 
       pom {
         name.set("App Engine Gradle Plugin")
@@ -194,7 +193,7 @@ signing {
   if (project.hasProperty("signing.gnupg.executable")) {
     useGpgCmd()
   }
-  sign(publishing.publications["mavenJava"])
+  sign(publishing.publications["pluginMaven"])
 }
 /* RELEASING */
 
