@@ -72,7 +72,7 @@ if [[ -n "${AUTORELEASE_PR}" ]]; then
   ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
   echo "Successfully finished './gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository'"
 else
-  ./gradlew publishToSonatype --debug
+  ./gradlew publishToSonatype --debug --build-cache
 fi
 popd # app-gradle-plugin
 popd # repository root
