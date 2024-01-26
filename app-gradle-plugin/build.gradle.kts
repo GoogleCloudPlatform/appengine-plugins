@@ -23,7 +23,7 @@ group = "com.google.cloud.tools"
 version = "2.7.1-SNAPSHOT" // {x-version-update:app-gradle-plugin:current}
 
 plugins {
-  id("java-library")
+  id("java")
   id("maven")
   id("java-gradle-plugin")
   id("net.researchgate.release") version "2.6.0"
@@ -144,6 +144,10 @@ release {
 // disable gradlePlugin auto publishing to avoid duplicate uploads,
 // see https://github.com/gradle/gradle/issues/10384 for more info.
 gradlePlugin { isAutomatedPublishing = false }
+
+tasks.withType<GenerateModuleMetadata> {
+  enabled = false
+}
 
 publishing {
   publications {
