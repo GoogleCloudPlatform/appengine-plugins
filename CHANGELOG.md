@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.7.0...v2.8.0) (2024-01-26)
+
+
+### Features
+
+* remove duplicate uploads ([8850c5c](https://github.com/GoogleCloudPlatform/appengine-plugins/commit/8850c5c33064fc7a5a55a091ad3cc981877743b5))
+
 ## [2.7.0](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.6.0...v2.7.0) (2024-01-18)
 
 
