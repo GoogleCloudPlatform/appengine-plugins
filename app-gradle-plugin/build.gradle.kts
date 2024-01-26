@@ -141,10 +141,16 @@ release {
   }
 }
 
+// disable gradlePlugin auto publishing to avoid duplicate uploads,
+// see https://github.com/gradle/gradle/issues/10384 for more info.
+gradlePlugin { isAutomatedPublishing = false }
+
 publishing {
   publications {
-    create<MavenPublication>("pluginMaven") {
+    create<MavenPublication>("mavenJava") {
       artifactId = "appengine-gradle-plugin"
+      artifact(tasks.named("sourceJar"))
+      artifact(tasks.named("javadocJar"))
 
       pom {
         name.set("App Engine Gradle Plugin")
@@ -193,7 +199,7 @@ signing {
   if (project.hasProperty("signing.gnupg.executable")) {
     useGpgCmd()
   }
-  sign(publishing.publications["pluginMaven"])
+  sign(publishing.publications["mavenJava"])
 }
 /* RELEASING */
 
