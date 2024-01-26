@@ -149,6 +149,7 @@ publishing {
   publications {
     create<MavenPublication>("mavenJava") {
       artifactId = "appengine-gradle-plugin"
+      from(components["java"])
       artifact(tasks.named("sourceJar"))
       artifact(tasks.named("javadocJar"))
 
