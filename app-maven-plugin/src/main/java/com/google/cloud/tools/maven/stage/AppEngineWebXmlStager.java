@@ -18,7 +18,6 @@ package com.google.cloud.tools.maven.stage;
 
 import com.google.cloud.tools.appengine.AppEngineException;
 import com.google.cloud.tools.appengine.configuration.AppEngineWebXmlProjectStageConfiguration;
-import com.google.common.io.MoreFiles;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +27,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -58,7 +58,7 @@ public class AppEngineWebXmlStager implements Stager {
     if (Files.exists(stagingDirectory)) {
       stageMojo.getLog().info("Deleting the staging directory: " + stagingDirectory);
       try {
-        MoreFiles.deleteRecursively(stagingDirectory);
+        FileUtils.deleteDirectory(stagingDirectory.toFile());
       } catch (IOException ex) {
         throw new MojoExecutionException("Unable to delete staging directory.", ex);
       }
