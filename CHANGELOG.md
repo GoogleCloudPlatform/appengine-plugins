@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.8.1](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.0...v2.8.1) (2024-07-18)
+
+### Bug Fixes
+
+* Fixed a test that fails in Docker environment
+
 ## [2.8.0](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.7.0...v2.8.0) (2024-01-26)
 
 

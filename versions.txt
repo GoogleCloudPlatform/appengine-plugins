@@ -1,6 +1,6 @@
 # Format:
 # module:released-version:current-version
 
-app-maven-plugin:2.8.0:2.8.1-SNAPSHOT
-app-gradle-plugin:2.8.0:2.8.1-SNAPSHOT
-appengine-plugins-core:0.13.0:0.13.1-SNAPSHOT
+app-maven-plugin:2.8.1:2.8.1
+app-gradle-plugin:2.8.1:2.8.1
+appengine-plugins-core:0.13.1:0.13.1
