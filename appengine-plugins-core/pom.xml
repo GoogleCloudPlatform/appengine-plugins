@@ -78,6 +78,13 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>32.1.2-jre</version>
+      <exclusions>
+        <exclusion>
+          <!-- To avoid dependency convergence error with gson's errorprone -->
+          <groupId>com.google.errorprone</groupId>
+          <artifactId>error_prone_annotations</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.yaml</groupId>
