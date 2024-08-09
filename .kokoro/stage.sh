@@ -32,7 +32,16 @@ create_settings_xml_file "${MAVEN_SETTINGS_FILE}"
 mkdir -p "${HOME}"/.m2
 cp settings.xml "${HOME}"/.m2
 
-gcloud components install app-engine-java --quiet
+# AOSS 1P authentication verification (go/aoss1p:oss-binaries#usage-instructions)
+echo "gcloud config get-value core/account:"
+gcloud config get-value core/account
+echo "-------- end of gcloud --------"
+echo "AOSS authentication test:"
+wget --header="Authorization: Bearer $(gcloud auth print-access-token)" https://us-maven.pkg.dev/cloud-aoss-1p/cloud-aoss-1p-java/log4j/log4j/1.2.17/log4j-1.2.17.pom
+echo "-------- end of AOSS authentication test ------"
+
+# gcloud components install app-engine-java --quiet
+# apt-get install -y google-cloud-cli-app-engine-java
 
 echo "Staging a release"
 # stage release
@@ -40,9 +49,9 @@ echo "Staging a release"
   -Dorg.slf4j.simpleLogger.showDateTime=true \
   -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss:SSS \
   --show-version \
-  --no-transfer-progress \
   --batch-mode \
   --settings "${MAVEN_SETTINGS_FILE}" \
+  -Paoss \
   -DskipTests=true \
   -DperformRelease=true \
   -Dgpg.executable=gpg \

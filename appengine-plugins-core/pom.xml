@@ -559,5 +559,15 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>aoss</id>
+      <repositories>
+        <repository>
+          <id>aoss-artifact-registry</id>
+          <name>AOSS Repository</name>
+          <url>artifactregistry://us-maven.pkg.dev/cloud-aoss-1p/cloud-aoss-1p-java</url>
+        </repository>
+      </repositories>
+    </profile>
   </profiles>
 </project>
