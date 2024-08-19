@@ -348,7 +348,7 @@ The `deploy` configuration has the following parameters :
 | `appEngineDirectory`  | Location of configuration files (cron.yaml, dos.yaml, etc) for configuration specific deployments. |
 | `bucket`              | The Google Cloud Storage bucket used to stage files associated with the deployment. |
 | `deployables`         | The YAML files for the services or configurations you want to deploy. |
-| `imageUrl`            | Deploy with a Docker URL from the Google container registry. |
+| `imageUrl`            | Deploy with a Docker URL from the Google Artifact Registry. |
 | `project`             | The Google Cloud Project target for this deployment. |
 | `promote`             | Promote the deployed version to receive all traffic. |
 | `server`              | The App Engine server to connect to. Typically, you do not need to change this value. |
