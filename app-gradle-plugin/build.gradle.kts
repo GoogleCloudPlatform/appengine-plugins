@@ -33,6 +33,7 @@ plugins {
   id("maven-publish")
   id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
   id("signing")
+  id("com.google.cloud.artifactregistry.gradle-plugin") version "2.2.0"
 }
 
 repositories {
@@ -184,16 +185,26 @@ publishing {
       }
     }
   }
+  repositories {
+    // For OSS Exit Gate
+    maven {
+      url = uri("artifactregistry://us-maven.pkg.dev/oss-exit-gate-dev/appengine-plugins--com-google-cloud-tools--mavencentral")
+    }
+  }
 }
 
-nexusPublishing {
-  repositories {
-    sonatype {
-      nexusUrl.set(uri("https://google.oss.sonatype.org/service/local/"))
-      snapshotRepositoryUrl.set(uri("https://google.oss.sonatype.org/content/repositories/snapshots"))
-      if (project.hasProperty("ossrhUsername")) {
-        username.set(project.property("ossrhUsername").toString())
-        password.set(project.property("ossrhPassword").toString())
+if (project.hasProperty("ossrhUsername")) {
+  // The com.google.cloud.artifactregistry.gradle-plugin does not seem to work with
+  // the Sonatype publication configuration
+  nexusPublishing {
+    repositories {
+      sonatype {
+        nexusUrl.set(uri("https://google.oss.sonatype.org/service/local/"))
+        snapshotRepositoryUrl.set(uri("https://google.oss.sonatype.org/content/repositories/snapshots"))
+        if (project.hasProperty("ossrhUsername")) {
+          username.set(project.property("ossrhUsername").toString())
+          password.set(project.property("ossrhPassword").toString())
+        }
       }
     }
   }

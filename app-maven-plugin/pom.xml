@@ -370,18 +370,6 @@
           </excludes>
         </configuration>
       </plugin>
-
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.13</version>
-        <extensions>true</extensions>
-        <configuration>
-          <serverId>sonatype-nexus-staging</serverId>
-          <nexusUrl>https://google.oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>false</autoReleaseAfterClose>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
@@ -393,6 +381,31 @@
       </properties>
     </profile>
 
+    <profile>
+      <!-- Release to Sonatype (Maven Central) needs nexus-staging-maven-plugin but OSS Exit Gate
+          does not require nexus-staging-maven-plugin -->
+      <id>nexus-staging-plugin</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.13</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>sonatype-nexus-staging</serverId>
+              <nexusUrl>https://google.oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>release</id>
       <activation>
@@ -461,6 +474,15 @@
           <url>artifactregistry://us-maven.pkg.dev/cloud-aoss-1p/cloud-aoss-1p-java</url>
         </repository>
       </repositories>
+    </profile>
+    <profile>
+      <id>exitgate-artifact-registry-publishing</id>
+      <distributionManagement>
+        <repository>
+          <id>gcp-artifact-registry-maven-plugin-releases</id>
+          <url>artifactregistry://us-maven.pkg.dev/oss-exit-gate-dev/appengine-plugins--com-google-cloud-tools--mavencentral</url>
+        </repository>
+      </distributionManagement>
     </profile>
   </profiles>
 </project>
