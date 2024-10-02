@@ -188,7 +188,7 @@ publishing {
   repositories {
     // For OSS Exit Gate
     maven {
-      url = uri("artifactregistry://us-maven.pkg.dev/oss-exit-gate-dev/appengine-plugins--com-google-cloud-tools--mavencentral")
+      url = uri("artifactregistry://us-maven.pkg.dev/oss-exit-gate-prod/appengine-gradle-plugin--com-google-cloud-tools--maven-central")
     }
   }
 }

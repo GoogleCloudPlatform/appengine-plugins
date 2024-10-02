@@ -596,7 +596,7 @@
       <distributionManagement>
         <repository>
           <id>gcp-artifact-registry-maven-plugin-releases</id>
-          <url>artifactregistry://us-maven.pkg.dev/oss-exit-gate-dev/appengine-plugins--com-google-cloud-tools--mavencentral</url>
+          <url>artifactregistry://us-maven.pkg.dev/oss-exit-gate-prod/appengine-plugins-core--com-google-cloud-tools--maven-central</url>
         </repository>
       </distributionManagement>
     </profile>
