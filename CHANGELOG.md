@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.8.3](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.2...v2.8.3) (2024-12-08)
+
+* Minor changes in the release infrastructure
+
 ## [2.8.2](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.1...v2.8.2) (2024-10-17)
 
 
