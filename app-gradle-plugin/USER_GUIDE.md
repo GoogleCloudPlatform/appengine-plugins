@@ -340,3 +340,19 @@ The `deploy` configuration has the following parameters :
 | `version`             | The version of the app that will be created or replaced by this deployment. This also can be set to `GCLOUD_CONFIG` |
 
 \* setting a property to `GCLOUD_CONFIG` will deploy using the gcloud settings for the property.
+
+### How do I deploy other files with my application to App Engine?
+The `extraFilesDirectories` parameter lets you configure locations on your local drive of files that
+will be deployed with your application. See below for an example of how the parameter can be used in
+Gradle. 
+
+```gradle
+appengine {
+  deploy {
+    ...
+  }
+  stage {
+    extraFilesDirectories = "path/to/my/extras"
+  }
+}
+```
