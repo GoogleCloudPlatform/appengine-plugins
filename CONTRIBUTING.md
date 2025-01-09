@@ -1,3 +1,5 @@
+This project is currently stable, and we are primarily focused on critical bug fixes and platform evolution to ensure it continues to work for its supported use cases.
+
 Please follow the guidelines below before opening an issue or a PR:
 
 1. Ensure the issue was not already reported.
