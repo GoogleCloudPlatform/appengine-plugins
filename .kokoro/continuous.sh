@@ -14,6 +14,11 @@ cd git/appengine-plugins
 mkdir -p ${HOME}/.m2
 cp settings.xml ${HOME}/.m2
 
+# run unit tests
+./mvnw clean test -V -B -U --fail-at-end -DskipITs \
+  -Dorg.slf4j.simpleLogger.showDateTime=true \
+  -Dorg.slf4j.simpleLogger.dateTimeFormat=HH:mm:ss:SSS
+
 if [ "$EUID" -ne 0 ]
 then
   # not running as root

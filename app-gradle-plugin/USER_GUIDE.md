@@ -332,7 +332,7 @@ The `deploy` configuration has the following parameters :
 | `appEngineDirectory`  | Location of configuration files (cron.yaml, dos.yaml, etc) for configuration specific deployments. |
 | `bucket`              | The Google Cloud Storage bucket used to stage files associated with the deployment. |
 | `gcloudMode`          | The gcloud preview mode (`alpha`, `beta`, etc) to use during deployments. |
-| `imageUrl`            | Deploy with a Docker URL from the Google container registry. |
+| `imageUrl`            | Deploy with a Docker URL from the Google Artifact Registry. |
 | `projectId`           | The Google Cloud Project target for this deployment. This can also be set to `GCLOUD_CONFIG`.\* |
 | `promote`             | Promote the deployed version to receive all traffic. |
 | `server`              | The App Engine server to connect to. Typically, you do not need to change this value. |
@@ -340,3 +340,19 @@ The `deploy` configuration has the following parameters :
 | `version`             | The version of the app that will be created or replaced by this deployment. This also can be set to `GCLOUD_CONFIG` |
 
 \* setting a property to `GCLOUD_CONFIG` will deploy using the gcloud settings for the property.
+
+### How do I deploy other files with my application to App Engine?
+The `extraFilesDirectories` parameter lets you configure locations on your local drive of files that
+will be deployed with your application. See below for an example of how the parameter can be used in
+Gradle. 
+
+```gradle
+appengine {
+  deploy {
+    ...
+  }
+  stage {
+    extraFilesDirectories = "path/to/my/extras"
+  }
+}
+```

@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.8.3](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.2...v2.8.3) (2024-12-08)
+
+* Minor changes in the release infrastructure
+
+## [2.8.2](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.1...v2.8.2) (2024-10-17)
+
+
+### Documentation
+
+* use Artifact Registry ([6a0e302](https://github.com/GoogleCloudPlatform/appengine-plugins/commit/6a0e3026f0cd073b5088b2dfff45c266e2e15ef4))
+
 ## [2.8.1](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.0...v2.8.1) (2024-07-18)
 
 ### Bug Fixes

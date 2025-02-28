@@ -20,7 +20,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
  */
 
 group = "com.google.cloud.tools"
-version = "2.8.1" // {x-version-update:app-gradle-plugin:current}
+version = "2.8.3" // {x-version-update:app-gradle-plugin:current}
 
 plugins {
   id("java")
@@ -33,6 +33,7 @@ plugins {
   id("maven-publish")
   id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
   id("signing")
+  id("com.google.cloud.artifactregistry.gradle-plugin") version "2.2.0"
 }
 
 repositories {
@@ -48,7 +49,7 @@ java {
 dependencies {
   implementation(localGroovy())
   implementation(gradleApi())
-  api("com.google.cloud.tools:appengine-plugins-core:0.13.1") // {x-version-update:appengine-plugins-core:current}
+  api("com.google.cloud.tools:appengine-plugins-core:0.13.3") // {x-version-update:appengine-plugins-core:current}
 
   testImplementation("commons-io:commons-io:2.11.0")
   testImplementation("junit:junit:4.13.2")
@@ -184,16 +185,26 @@ publishing {
       }
     }
   }
+  repositories {
+    // For OSS Exit Gate
+    maven {
+      url = uri("artifactregistry://us-maven.pkg.dev/oss-exit-gate-prod/appengine-gradle-plugin--com-google-cloud-tools--maven-central")
+    }
+  }
 }
 
-nexusPublishing {
-  repositories {
-    sonatype {
-      nexusUrl.set(uri("https://google.oss.sonatype.org/service/local/"))
-      snapshotRepositoryUrl.set(uri("https://google.oss.sonatype.org/content/repositories/snapshots"))
-      if (project.hasProperty("ossrhUsername")) {
-        username.set(project.property("ossrhUsername").toString())
-        password.set(project.property("ossrhPassword").toString())
+if (project.hasProperty("ossrhUsername")) {
+  // The com.google.cloud.artifactregistry.gradle-plugin does not seem to work with
+  // the Sonatype publication configuration
+  nexusPublishing {
+    repositories {
+      sonatype {
+        nexusUrl.set(uri("https://google.oss.sonatype.org/service/local/"))
+        snapshotRepositoryUrl.set(uri("https://google.oss.sonatype.org/content/repositories/snapshots"))
+        if (project.hasProperty("ossrhUsername")) {
+          username.set(project.property("ossrhUsername").toString())
+          password.set(project.property("ossrhPassword").toString())
+        }
       }
     }
   }
