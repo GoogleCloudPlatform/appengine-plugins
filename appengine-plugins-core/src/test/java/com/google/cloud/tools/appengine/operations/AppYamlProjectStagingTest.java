@@ -1,4 +1,4 @@
-/*
+Add java25 to GEN2_RUNTIMES set, preparing the next GAE release./*
  * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -120,6 +120,11 @@ public class AppYamlProjectStagingTest {
     stageArchive_gen2StandardPath("java21");
   }
 
+  @Test
+  public void testStageArchive_java25StandardPath() throws IOException, AppEngineException {
+    stageArchive_gen2StandardPath("java25");
+  }
+  
   private void stageArchive_gen2StandardPath(String runtime)
       throws IOException, AppEngineException {
     Files.write(
