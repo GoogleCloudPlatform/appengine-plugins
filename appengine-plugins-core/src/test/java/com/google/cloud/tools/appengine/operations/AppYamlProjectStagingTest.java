@@ -1,4 +1,4 @@
-Add java25 to GEN2_RUNTIMES set, preparing the next GAE release./*
+/*
  * Copyright 2016 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
