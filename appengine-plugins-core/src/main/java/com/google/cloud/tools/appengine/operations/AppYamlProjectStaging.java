@@ -46,7 +46,7 @@ public class AppYamlProjectStaging {
   private static final String APP_YAML = "app.yaml";
 
   private static final ImmutableSet<String> GEN2_RUNTIMES =
-      ImmutableSet.of("java11", "java17", "java21");
+      ImmutableSet.of("java11", "java17", "java21", "java25");
 
   @VisibleForTesting
   static final ImmutableList<String> OTHER_YAMLS =
