@@ -124,7 +124,7 @@ public class AppYamlProjectStagingTest {
   public void testStageArchive_java25StandardPath() throws IOException, AppEngineException {
     stageArchive_gen2StandardPath("java25");
   }
-  
+
   private void stageArchive_gen2StandardPath(String runtime)
       throws IOException, AppEngineException {
     Files.write(
@@ -153,6 +153,11 @@ public class AppYamlProjectStagingTest {
   @Test
   public void testStageArchive_java21StandardBinaryPath() throws IOException, AppEngineException {
     stageArchive_gen2StandardBinaryPath("java21");
+  }
+
+  @Test
+  public void testStageArchive_java25StandardBinaryPath() throws IOException, AppEngineException {
+    stageArchive_gen2StandardBinaryPath("java25");
   }
 
   private void stageArchive_gen2StandardBinaryPath(String runtime)
@@ -191,6 +196,11 @@ public class AppYamlProjectStagingTest {
   @Test
   public void testStageArchive_java21BinaryWithoutEntrypoint() throws IOException {
     stageArchive_gen2BinaryWithoutEntrypoint("java21");
+  }
+
+  @Test
+  public void testStageArchive_java25BinaryWithoutEntrypoint() throws IOException {
+    stageArchive_gen2BinaryWithoutEntrypoint("java25");
   }
 
   private void stageArchive_gen2BinaryWithoutEntrypoint(String runtime) throws IOException {
