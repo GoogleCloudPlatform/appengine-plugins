@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.4](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.3...v2.8.4) (2025-10-20)
+
+
+### Documentation
+
+* add example of usage of extraFilesDirectories to gradle user guide ([#1041](https://github.com/GoogleCloudPlatform/appengine-plugins/issues/1041)) ([cacfe8f](https://github.com/GoogleCloudPlatform/appengine-plugins/commit/cacfe8f6c8e1d8ad4119b66853463867cd69ce9e))
+
 ## [2.8.3](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.2...v2.8.3) (2024-12-08)
 
 * Minor changes in the release infrastructure
