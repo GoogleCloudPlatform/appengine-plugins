@@ -8,6 +8,8 @@
   <packaging>pom</packaging>
 
   <properties>
+    <!-- The local filesystem path to deploy the artifacts. This is passed by
+      the mvn command in the release script. -->
     <altDeploymentRepository/>
   </properties>
 
@@ -115,6 +117,9 @@
               </execution>
               <execution>
                 <id>deploy</id>
+                <!-- This execution allows the root Maven project to deploy the
+                  Gradle plugin artifact as part of its release build. This removes
+                  the need of creating a custom release script for this repository. -->
                 <phase>deploy</phase>
                 <configuration>
                   <executable>./gradlew</executable>
