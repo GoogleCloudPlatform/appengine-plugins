@@ -186,10 +186,13 @@ publishing {
     }
   }
   repositories {
-    // For local staging
+    // For local staging of the artifacts. The release script passes this
+    // property to the Maven commmand, which passes it to the Gradle build.
     if (project.hasProperty("altDeploymentRepository")) {
         val altDeploymentRepository = project.property("altDeploymentRepository") as String
-        if (altDeploymentRepository.startsWith("local::default::file:")) {
+        if (altDeploymentRepository.startsWith("local::")) {
+            // Old maven-deploy-plugin had "local::default::file:" and the
+            // new maven-deploy-plugin has "local::file:" prefix.
             val stagingDir = altDeploymentRepository.substringAfter("file:")
             maven {
                 name = "local"
