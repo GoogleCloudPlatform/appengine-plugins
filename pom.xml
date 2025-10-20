@@ -7,6 +7,10 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <properties>
+    <altDeploymentRepository/>
+  </properties>
+
   <modules>
     <module>appengine-plugins-core</module>
     <module>app-maven-plugin</module>
@@ -102,6 +106,23 @@
                   <executable>./gradlew</executable>
                   <arguments>
                     <argument>install</argument>
+                  </arguments>
+                  <workingDirectory>app-gradle-plugin</workingDirectory>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>deploy</id>
+                <phase>deploy</phase>
+                <configuration>
+                  <executable>./gradlew</executable>
+                  <arguments>
+                    <argument>publish</argument>
+                    <argument>-x</argument>
+                    <argument>test</argument>
+                    <argument>-PaltDeploymentRepository=${altDeploymentRepository}</argument>
                   </arguments>
                   <workingDirectory>app-gradle-plugin</workingDirectory>
                 </configuration>
