@@ -384,7 +384,7 @@
     <profile>
       <!-- Release to Sonatype (Maven Central) needs nexus-staging-maven-plugin but OSS Exit Gate
           does not require nexus-staging-maven-plugin -->
-      <id>nexus-staging-plugin</id>
+      <id>release-sonatype</id>
       <activation>
         <property>
           <name>performRelease</name>
