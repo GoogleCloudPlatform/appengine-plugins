@@ -17,6 +17,17 @@
     <module>appengine-plugins-core</module>
     <module>app-maven-plugin</module>
   </modules>
+
+  <dependencies>
+    <!-- This root module does not actually use the appengine-plugins-core,
+      but it executes the Gradle in app-gradle-plugin folder, which needs
+      appengine-plugins-core -->
+    <dependency>
+      <groupId>com.google.cloud.tools</groupId>
+      <artifactId>appengine-plugins-core</artifactId>
+      <version>0.13.4-SNAPSHOT</version><!-- {x-version-update:appengine-plugins-core:current} -->
+    </dependency>
+  </dependencies>
   <!-- Do not deploy the aggregator POM -->
   <build>
     <plugins>
@@ -115,6 +126,25 @@
                   <goal>exec</goal>
                 </goals>
               </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.1</version>
+            <executions>
               <execution>
                 <id>deploy</id>
                 <!-- This execution allows the root Maven project to deploy the
