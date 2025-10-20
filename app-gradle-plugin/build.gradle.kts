@@ -186,9 +186,19 @@ publishing {
     }
   }
   repositories {
-    // For OSS Exit Gate
-    maven {
-      url = uri("artifactregistry://us-maven.pkg.dev/oss-exit-gate-prod/appengine-gradle-plugin--com-google-cloud-tools--maven-central")
+    // For local staging of the artifacts. The release script passes this
+    // property to the Maven commmand, which passes it to the Gradle build.
+    if (project.hasProperty("altDeploymentRepository")) {
+        val altDeploymentRepository = project.property("altDeploymentRepository") as String
+        if (altDeploymentRepository.startsWith("local::")) {
+            // Old maven-deploy-plugin had "local::default::file:" and the
+            // new maven-deploy-plugin has "local::file:" prefix.
+            val stagingDir = altDeploymentRepository.substringAfter("file:")
+            maven {
+                name = "local"
+                url = uri(stagingDir)
+            }
+        }
     }
   }
 }
