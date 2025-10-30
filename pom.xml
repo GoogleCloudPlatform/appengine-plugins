@@ -7,10 +7,27 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <properties>
+    <!-- The local filesystem path to deploy the artifacts. This is passed by
+      the mvn command in the release script. -->
+    <altDeploymentRepository/>
+  </properties>
+
   <modules>
     <module>appengine-plugins-core</module>
     <module>app-maven-plugin</module>
   </modules>
+
+  <dependencies>
+    <!-- This root module does not actually use the appengine-plugins-core,
+      but it executes the Gradle in app-gradle-plugin folder, which needs
+      appengine-plugins-core -->
+    <dependency>
+      <groupId>com.google.cloud.tools</groupId>
+      <artifactId>appengine-plugins-core</artifactId>
+      <version>0.13.5-SNAPSHOT</version><!-- {x-version-update:appengine-plugins-core:current} -->
+    </dependency>
+  </dependencies>
   <!-- Do not deploy the aggregator POM -->
   <build>
     <plugins>
@@ -102,6 +119,45 @@
                   <executable>./gradlew</executable>
                   <arguments>
                     <argument>install</argument>
+                  </arguments>
+                  <workingDirectory>app-gradle-plugin</workingDirectory>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.1</version>
+            <executions>
+              <execution>
+                <id>deploy</id>
+                <!-- This execution allows the root Maven project to deploy the
+                  Gradle plugin artifact as part of its release build. This removes
+                  the need of creating a custom release script for this repository. -->
+                <phase>deploy</phase>
+                <configuration>
+                  <executable>./gradlew</executable>
+                  <arguments>
+                    <argument>publish</argument>
+                    <argument>-x</argument>
+                    <argument>test</argument>
+                    <argument>-PaltDeploymentRepository=${altDeploymentRepository}</argument>
                   </arguments>
                   <workingDirectory>app-gradle-plugin</workingDirectory>
                 </configuration>

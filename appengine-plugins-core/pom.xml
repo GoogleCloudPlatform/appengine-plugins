@@ -4,7 +4,7 @@
 
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-plugins-core</artifactId>
-  <version>0.13.3</version><!-- {x-version-update:appengine-plugins-core:current} -->
+  <version>0.13.5-SNAPSHOT</version><!-- {x-version-update:appengine-plugins-core:current} -->
 
   <name>App Engine Plugins Core Library</name>
   <description>
@@ -384,7 +384,7 @@
     <profile>
       <!-- Release to Sonatype (Maven Central) needs nexus-staging-maven-plugin but OSS Exit Gate
           does not require nexus-staging-maven-plugin -->
-      <id>nexus-staging-plugin</id>
+      <id>release-sonatype</id>
       <activation>
         <property>
           <name>performRelease</name>
@@ -418,7 +418,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.7</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
