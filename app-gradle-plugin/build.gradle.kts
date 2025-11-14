@@ -51,6 +51,9 @@ dependencies {
   implementation(gradleApi())
   api("com.google.cloud.tools:appengine-plugins-core:0.13.5-SNAPSHOT") // {x-version-update:appengine-plugins-core:current}
 
+  implementation("org.apache.commons:commons-lang3:3.18.0")
+  implementation("commons-io:commons-io:2.20.0")
+
   testImplementation("commons-io:commons-io:2.11.0")
   testImplementation("junit:junit:4.13.2")
   testImplementation("org.hamcrest:hamcrest-library:2.2")
