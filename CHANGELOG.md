@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.8.5](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.4...v2.8.5) (2025-11-14)
+
+
+### Dependencies
+
+* ensure commons-lang3 v3.18.0 used for gradle ([#1058](https://github.com/GoogleCloudPlatform/appengine-plugins/issues/1058)) ([2ad9903](https://github.com/GoogleCloudPlatform/appengine-plugins/commit/2ad99037f0cb1be576ff906996ed819b84883aec))
+* upgrade commons-io to 2.20.0 ([#1056](https://github.com/GoogleCloudPlatform/appengine-plugins/issues/1056)) ([40b5cfa](https://github.com/GoogleCloudPlatform/appengine-plugins/commit/40b5cfab7391c1a09a5bb70dc73d821d47fd0e13))
+
 ## [2.8.4](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.3...v2.8.4) (2025-10-20)
 
 
