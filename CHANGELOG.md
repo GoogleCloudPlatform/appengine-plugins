@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.6](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.5...v2.8.6) (2025-11-18)
+
+
+### Dependencies
+
+* upgrade commons-lang3 to 3.18.0 ([#1061](https://github.com/GoogleCloudPlatform/appengine-plugins/issues/1061)) ([1dfcad3](https://github.com/GoogleCloudPlatform/appengine-plugins/commit/1dfcad30937a66f4414dd419a487eb6ea6a3a81c))
+
 ## [2.8.5](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.4...v2.8.5) (2025-11-14)
 
 
