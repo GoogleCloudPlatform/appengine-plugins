@@ -4,7 +4,7 @@
 
   <groupId>com.google.cloud.tools</groupId>
   <artifactId>appengine-maven-plugin</artifactId>
-  <version>2.8.6</version><!-- {x-version-update:app-maven-plugin:current} -->
+  <version>2.8.7-SNAPSHOT</version><!-- {x-version-update:app-maven-plugin:current} -->
   <packaging>maven-plugin</packaging>
 
   <name>App Engine Maven Plugin</name>
@@ -92,7 +92,7 @@
     <dependency>
       <groupId>com.google.cloud.tools</groupId>
       <artifactId>appengine-plugins-core</artifactId>
-      <version>0.13.6</version><!-- {x-version-update:appengine-plugins-core:current} -->
+      <version>0.13.7-SNAPSHOT</version><!-- {x-version-update:appengine-plugins-core:current} -->
     </dependency>
 
     <dependency>
