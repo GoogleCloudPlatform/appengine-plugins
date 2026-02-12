@@ -205,7 +205,8 @@ public class DevServer {
       connection.setDoOutput(true);
       connection.setDoInput(true);
       connection.setRequestMethod("POST");
-      connection.getOutputStream().write('\n');
+      connection.setRequestProperty("Content-Length", "0");
+      connection.getOutputStream().close();
       connection.disconnect();
       int responseCode = connection.getResponseCode();
       if (responseCode < 200 || responseCode > 299) {
