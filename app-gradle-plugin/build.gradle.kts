@@ -20,7 +20,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
  */
 
 group = "com.google.cloud.tools"
-version = "2.8.6" // {x-version-update:app-gradle-plugin:current}
+version = "2.8.7-SNAPSHOT" // {x-version-update:app-gradle-plugin:current}
 
 plugins {
   id("java")
@@ -49,7 +49,7 @@ java {
 dependencies {
   implementation(localGroovy())
   implementation(gradleApi())
-  api("com.google.cloud.tools:appengine-plugins-core:0.13.6") // {x-version-update:appengine-plugins-core:current}
+  api("com.google.cloud.tools:appengine-plugins-core:0.13.7-SNAPSHOT") // {x-version-update:appengine-plugins-core:current}
 
   implementation("org.apache.commons:commons-lang3:3.18.0")
   implementation("commons-io:commons-io:2.20.0")
