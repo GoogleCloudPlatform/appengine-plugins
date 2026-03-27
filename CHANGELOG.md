@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.7](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.6...v2.8.7) (2026-03-27)
+
+
+### Bug Fixes
+
+* Update DevServer to handle empty POST requests ([#1072](https://github.com/GoogleCloudPlatform/appengine-plugins/issues/1072)) ([5c45ff8](https://github.com/GoogleCloudPlatform/appengine-plugins/commit/5c45ff800be91da935a7a9884ba0d025a529281a))
+
 ## [2.8.6](https://github.com/GoogleCloudPlatform/appengine-plugins/compare/v2.8.5...v2.8.6) (2025-11-18)
 
 
