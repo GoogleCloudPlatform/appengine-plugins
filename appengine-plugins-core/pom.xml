@@ -292,6 +292,7 @@
        <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
+        <!-- Keep < 3.2.0 while linkage-checker-enforcer-rules:0.2.0 uses AbstractNonCacheableEnforcerRule -->
         <version>3.0.0</version>
         <dependencies>
           <dependency>

@@ -193,6 +193,14 @@
                 <groupId>org.apache.maven.doxia</groupId>
                 <artifactId>doxia-site-renderer</artifactId>
               </exclusion>
+              <exclusion>
+                <groupId>org.apache.maven.doxia</groupId>
+                <artifactId>doxia-core</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.apache.maven.doxia</groupId>
+                <artifactId>doxia-sink-api</artifactId>
+              </exclusion>
             </exclusions>
           </dependency>
         </dependencies>
