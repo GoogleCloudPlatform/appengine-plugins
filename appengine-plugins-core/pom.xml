@@ -190,6 +190,56 @@
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <version>5.1.9</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-i18n</artifactId>
+            <version>1.0-beta-10</version>
+            <exclusions>
+              <exclusion>
+                <groupId>*</groupId>
+                <artifactId>*</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-site-renderer</artifactId>
+            <version>1.0</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-i18n</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-container-default</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.bundlerepository</artifactId>
+            <version>1.6.6</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.utils</artifactId>
+            <version>1.6.0</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+        </dependencies>
         <configuration>
           <!--
              Register as an Eclipse Buddy to allow discovery of CloudSdkResolver
@@ -221,7 +271,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.10</version>
+        <version>0.8.12</version>
         <executions>
           <execution>
             <id>initialize</id>
@@ -242,7 +292,7 @@
        <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version>
+        <version>3.0.0</version>
         <dependencies>
           <dependency>
             <groupId>com.google.cloud.tools</groupId>
@@ -438,9 +488,9 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.3.2</version>
+            <version>3.11.2</version>
             <configuration>
-              <additionalparam>-Xdoclint:none</additionalparam>
+              <doclint>none</doclint>
             </configuration>
             <executions>
               <execution>
@@ -487,6 +537,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
             <configuration>
               <source>1.8</source>
               <target>1.8</target>
@@ -566,7 +617,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.3.0</version>
+            <version>3.6.0</version>
             <dependencies>
               <dependency>
                 <groupId>com.puppycrawl.tools</groupId>
